@@ -7,11 +7,11 @@
       59.8,
       39.8
     ],
-    "faces": 36092,
+    "faces": 36096,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 2,
-    "volume_cm3": 110.0,
+    "volume_cm3": 109.4,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
@@ -32,9 +32,9 @@
     "self_intersecting_faces": 0
   },
   "scan_to_model_deviation_mm": {
-    "mean": 0.63,
-    "p90": 1.31,
-    "max": 2.39
+    "mean": 0.62,
+    "p90": 1.27,
+    "max": 2.22
   },
   "params_mm": {
     "length": 100.0,
@@ -43,7 +43,7 @@
     "footprint_corner_r": 13.25301204819277,
     "base_h": 12.048192771084338,
     "base_edge_r": 1.927710843373494,
-    "slot_w": 15.0,
+    "slot_w": 15.4,
     "slot_floor": 10.843373493975903,
     "slot_floor_r": 1.927710843373494,
     "upright_outer_x": 24.096385542168676,

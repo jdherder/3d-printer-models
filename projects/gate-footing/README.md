@@ -20,7 +20,7 @@ parametric CAD model** fitted to the scan, not a smoothed scan.
       slot walls, straight drafts, true fillets, mirror-symmetric. Exported as
       STEP (Fusion) and STL (Bambu Studio). Mean deviation from the scan is 0.6 mm at real size
       (2.5 mm at scan scale), mostly where the scan is wavy.
-- [x] **Real size:** 100 mm long (the owner's measurement) with a 15 mm slot. Output is 100 × 59.8 × 39.8 mm and
+- [x] **Real size:** 100 mm long (the owner's measurement) with the slot modelled at 15.4 mm (caliper 15.1 mm + print clearance). Output is 100 × 59.8 × 39.8 mm and
       fits the A1 in one piece.
 - [ ] Check the width (59.8), height (39.8) and base thickness (12.0) against the real part.
       These are scaled from the scan, not measured.
@@ -29,7 +29,7 @@ parametric CAD model** fitted to the scan, not a smoothed scan.
 
 ## Measurements
 
-**Real (owner, 2026-09-24):** longest dimension **100 mm**, slot **"right around 15 mm"**.
+**Real (owner, 2026-09-24):** longest dimension **100 mm**. Slot **15.1 mm** (caliper). The first estimate was "right around 15".
 Both are set in `build.py` (`MEASURED_LENGTH_X_MM`, `MEASURED_OVERRIDES`). The two agree:
 scaling the scan to 100 mm makes the slot 15.9 mm, which confirms the scan's proportions.
 
@@ -42,7 +42,7 @@ Only **measured** values were measured directly. Everything else is scaled from 
 | `width`: along the slot (Y) | 248 | 59.8 | scaled |
 | `height`: top of the uprights | 165 | 39.8 | scaled |
 | `base_h`: base slab thickness | 50 | 12.0 | scaled |
-| `slot_w`: gap between the uprights | 66 | **15.0** | measured |
+| `slot_w`: gap between the uprights | 66 | **15.4** | measured 15.1 + 0.3 print clearance |
 | `slot_floor`: slot floor height | 45 | 10.8 | scaled |
 | `upright_outer_x`: outer face at base top, from centre | 100 | 24.1 | scaled |
 | `upright_draft_deg`: outer face lean | 15° | 15° | scan |
@@ -56,7 +56,8 @@ Only **measured** values were measured directly. Everything else is scaled from 
 
 - **The slot walls are flat, parallel, and vertical** (as the owner described). The scan's
   slot interior is its noisiest area (the camera can't see into it), and it read as 60–75 mm
-  wide at scan scale depending on height. The model uses the owner's measured 15 mm.
+  wide at scan scale depending on height. The model uses the owner's caliper reading of 15.1 mm plus
+  0.3 mm clearance, so **15.4 mm**.
 - The upright *outer* faces have a 15° draft. That's consistent across the scan
   (x = 92 → 76 mm over z = 80 → 140).
 - The part is mirror-symmetric about the slot centre. The scan's slot centre was 2.5 mm off,
@@ -72,8 +73,9 @@ Only **measured** values were measured directly. Everything else is scaled from 
   the drafts, fillets and rounded upright ends are all self-supporting.
 - Solid volume is 110 cm³. With 4–5 walls and 20–30 % gyroid infill, expect roughly 50–70 g.
 - Outdoors under load: **PETG**.
-- The 15 mm slot is modelled exactly. Printed slots usually come out ~0.1–0.3 mm narrow. If the
-  gate is a tight fit, bump `slot_w` in `MEASURED_OVERRIDES` (e.g. 15.3) or test-print first.
+- The slot is modelled at 15.4 mm so that it prints at about the real 15.1 mm (printed slots usually come out
+  ~0.2–0.3 mm narrow). If the test print is too tight or too loose, adjust `slot_w` in `MEASURED_OVERRIDES`
+  and rebuild.
 
 ## Pipeline
 
@@ -119,3 +121,6 @@ Only **measured** values were measured directly. Everything else is scaled from 
   selection threshold is now relative to the model's size, and the CAD is built at reference scale and then
   scaled (building directly at 100 mm gave 54 self-intersecting triangles). The viewer now frames the
   part rather than the whole build volume. Next: the owner checks the remaining dimensions, then a test print.
+- **2026-09-24:** Owner's caliper reads the slot at ~15.1 mm, and they asked to widen it. Set `slot_w` to 15.4
+  (15.1 + 0.3 mm print clearance). Rebuilt: watertight, 0 self-intersections, slot 15.4 mm at every height.
+  Next: test print and check the gate fit.

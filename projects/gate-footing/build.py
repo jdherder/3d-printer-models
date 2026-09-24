@@ -35,7 +35,8 @@ MEASURED_LENGTH_X_MM = 100.0  # owner, tape measure, 2026-09-24
 
 # Any dimension measured directly (in real mm) overrides the scaled value,
 # e.g. {"slot_w": 48.0, "height": 102.0}. Field names: see FootingParams.
-MEASURED_OVERRIDES: dict = {"slot_w": 15.0}  # owner: "right around 15 mm"
+# slot_w: caliper 15.1 mm + ~0.3 mm because printed slots come out narrow
+MEASURED_OVERRIDES: dict = {"slot_w": 15.4}
 
 # --- Scan cleanup ------------------------------------------------------------
 CUT_HEIGHT_MM = 2.0      # cut the floor away this far above the ground plane

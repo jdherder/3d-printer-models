@@ -25,7 +25,7 @@
       "param": "base_h"
     }
   ],
-  "scale_note": "Built at your measurements: 100 mm long, 15 mm slot. Type another length to preview a different size.",
+  "scale_note": "Built at your measurements: 100 mm long, slot modelled at 15.4 mm (caliper 15.1 + print clearance). Type another length to preview a different size.",
   "notes_title": "What changed in this review",
-  "notes": "Now at real size. Everything is scaled from your 100 mm length, and the slot is set to your 15 mm measurement (the scan alone suggested 15.9 mm). The shape is unchanged from the last review: flat parallel slot walls, a 15° draft on the outer faces, and rounded edges throughout. It is 0.6 mm from the scan on average. It fits the A1 easily and prints base-down with no supports."
+  "notes": "Slot widened to 15.4 mm. Your caliper read 15.1 mm, and printed slots usually come out 0.2–0.3 mm narrow, so this should print at about the real part's width. The inner faces of the uprights moved out 0.2 mm each. Nothing else changed: 100 × 59.8 × 39.8 mm, flat parallel slot walls, rounded edges, 0.6 mm from the scan on average. Fits the A1 and prints base-down with no supports."
 }
