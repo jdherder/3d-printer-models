@@ -41,17 +41,19 @@ Global context lives here and in `docs/`, and each project's `README.md` holds t
 ```
 CLAUDE.md               this file (global agent context)
 README.md               human overview + project index
-docs/                   workflow notes: printer, Fusion, Polycam
+docs/                   workflow notes: printer, Fusion, Polycam, review process
 tools/                  shared Python tooling (import from project build scripts)
   meshkit.py            scan → solid pipeline steps, CAD→mesh repair, printability report
   render.py             headless PNG previews + cross-sections (no GPU)
   inspect_mesh.py       CLI report for any mesh
+  make_viewer.py        interactive 3D review page (viewer_template.html) from review.json
 projects/
   _template/            copy this to start a new project
   <name>/
     README.md           project context: goal, measurements, status, log
     build.py            reproducible pipeline: source/ → output/ + renders/
     idealized.py        (optional) parametric CAD model fitted to the scan
+    review.json         config for the interactive review page
     source/             raw inputs, never edited (scans, photos, reference)
     output/             generated, print-ready files (STL/3MF/STEP) + report.json
     renders/            generated PNG previews (read these to "see" the model)
@@ -86,6 +88,14 @@ python tools/render.py file.stl out.png
   image). Cross-sections show more than shaded views for checking dimensions.
 - Polycam GLBs duplicate vertices at texture seams. `meshkit.load_scan` merges
   them. Without that, one object looks like hundreds of fragments.
+
+## Reviewing a model with the owner
+
+After any meaningful model change, run the review process in **`docs/review.md`**
+(or the **`/model-review <project>`** skill). It rebuilds, checks `report.json`,
+inspects the renders, generates `renders/viewer.html` (orbit, scan overlay,
+real-size preview, A1 fit), and publishes it as an Artifact **to the URL recorded
+in the project README**, so the owner's link stays stable. Then it logs the feedback.
 
 ## Working with the owner
 

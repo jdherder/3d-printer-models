@@ -1,0 +1,16 @@
+{
+  "page_title": "Gate Footing Model",
+  "title": "Gate footing: idealised model",
+  "subtitle": "Parametric CAD rebuild of the Polycam scan · Z-up · millimetres",
+  "meshes": [
+    {"path": "output/gate-footing.stl", "label": "Idealised model", "style": "solid"},
+    {"path": "output/gate-footing-scan-clean.stl", "label": "Original scan", "style": "wire", "visible": false}
+  ],
+  "dims": [
+    {"label": "Slot width", "param": "slot_w"},
+    {"label": "Base thickness", "param": "base_h"}
+  ],
+  "scale_note": "Showing scan scale. It is known to be too big. Enter the measured end-to-end length to scale everything.",
+  "notes_title": "What changed from the scan",
+  "notes": "Flat, parallel slot walls. Straight 15° draft on the outer faces. True fillets on every edge. Mirror-symmetric about the slot. Mean deviation from the scan is 2.5 mm, mostly where the scan was wavy."
+}

@@ -87,6 +87,9 @@ Most useful to measure: **overall length, width, height, slot width, base thickn
 
 ## Files
 
+- **Interactive viewer:** https://claude.ai/artifact/99u6vaQgsGqaAUmchUXR9R
+  (private to the owner). Built from `renders/viewer.html` by `tools/make_viewer.py` using
+  `review.json`. Republish to this URL on every review (see `docs/review.md`).
 - `source/polycam-2026-09-24.glb`: raw Polycam export (≈2 m of ground around the part)
 - `output/gate-footing.step`: **idealised model for Fusion** (editable solid)
 - `output/gate-footing.stl`: idealised model for Bambu Studio
@@ -102,3 +105,6 @@ Most useful to measure: **overall length, width, height, slot width, base thickn
   measurements. The owner asked for smooth sides and flat faces, so I built the idealised
   parametric CAD model (build123d), which is symmetric with flat slot walls and real fillets, exported
   as STEP and STL. Watertight, 0 self-intersections.
+- **2026-09-24:** First review with the interactive 3D viewer (link above). The owner was happy with
+  the idealised shape. The review process is now documented (`docs/review.md`, `/model-review`).
+  Next: real measurements for scale.

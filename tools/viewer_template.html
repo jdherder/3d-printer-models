@@ -1,0 +1,283 @@
+<title>__TITLE__</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root {
+  --bg: #eef0ee;
+  --panel: #f8f9f7;
+  --ink: #1d2422;
+  --muted: #5e6a66;
+  --line: #d3d8d5;
+  --accent: #1b7f79;
+  --accent-ink: #ffffff;
+  --scan: #d9532c;
+  --ok: #2f7d3a;
+  --warn: #b0561b;
+  --viewport: #e3e7e4;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141917; --panel: #1b211f; --ink: #e5ebe8; --muted: #93a19c; --line: #2c3532;
+    --accent: #3fb3aa; --accent-ink: #0d1413; --scan: #f07a55; --ok: #6cc47a; --warn: #f09a5a;
+    --viewport: #101412;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141917; --panel: #1b211f; --ink: #e5ebe8; --muted: #93a19c; --line: #2c3532;
+  --accent: #3fb3aa; --accent-ink: #0d1413; --scan: #f07a55; --ok: #6cc47a; --warn: #f09a5a;
+  --viewport: #101412;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font: 15px/1.5 "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  padding-inline: 16px; padding-block: 20px 28px;
+}
+.wrap { max-width: 1180px; margin: 0 auto; display: grid; gap: 16px; }
+header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; }
+h1 { font-size: 22px; font-weight: 600; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+.sub { color: var(--muted); margin: 0; font-size: 14px; }
+.mono { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; }
+@media (max-width: 860px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+.stage {
+  position: relative; background: var(--viewport); border: 1px solid var(--line); border-radius: 10px;
+  overflow: hidden; aspect-ratio: 4 / 3; max-width: 100%; min-height: 320px; touch-action: none; cursor: grab;
+}
+.stage:active { cursor: grabbing; }
+.stage canvas { display: block; width: 100%; height: 100%; }
+.views { position: absolute; left: 10px; top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+.hint { position: absolute; right: 12px; bottom: 10px; font-size: 12px; color: var(--muted); pointer-events: none; }
+.chip {
+  font: 500 12px/1 "IBM Plex Sans", system-ui, sans-serif; letter-spacing: 0.02em;
+  padding: 7px 10px; border-radius: 6px; border: 1px solid var(--line);
+  background: var(--panel); color: var(--ink); cursor: pointer;
+}
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.chip:focus-visible, input:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+aside { display: grid; gap: 14px; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: grid; gap: 10px; }
+.label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; margin: 0; }
+.toggles { display: grid; gap: 8px; }
+.toggle { display: flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; }
+.toggle input { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; }
+.sw { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+dl { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; font-size: 14px; }
+dt { color: var(--muted); }
+dd { margin: 0; text-align: right; }
+.scale-row { display: flex; gap: 8px; align-items: center; }
+.scale-row input[type="number"] {
+  width: 100%; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--line);
+  background: var(--bg); color: var(--ink); font: 14px "IBM Plex Mono", ui-monospace, monospace;
+}
+.status { font-size: 13px; font-weight: 500; display: flex; gap: 8px; align-items: center; }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.note { font-size: 13px; color: var(--muted); margin: 0; }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1 id="h-title"></h1>
+    <p class="sub" id="h-sub"></p>
+  </header>
+
+  <div class="layout">
+    <div class="stage" id="stage">
+      <div class="views" role="group" aria-label="Camera view">
+        <button class="chip" data-view="iso" aria-pressed="true">Iso</button>
+        <button class="chip" data-view="front" aria-pressed="false">Front</button>
+        <button class="chip" data-view="side" aria-pressed="false">Side</button>
+        <button class="chip" data-view="top" aria-pressed="false">Top</button>
+      </div>
+      <div class="hint">Drag to orbit · scroll or pinch to zoom · right-drag to pan</div>
+    </div>
+
+    <aside>
+      <section class="panel">
+        <p class="label">Show</p>
+        <div class="toggles" id="toggles">
+          <label class="toggle"><input type="checkbox" id="t-bed" checked><span class="sw" style="border:1.5px solid var(--accent)"></span>A1 build volume, 256 mm cube</label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <p class="label">Preview at real size</p>
+        <div class="scale-row">
+          <input type="number" id="real-len" min="50" max="600" step="1" placeholder="Real length, mm" aria-label="Real end-to-end length in millimetres">
+        </div>
+        <p class="note" id="scale-note"></p>
+        <dl class="mono" id="dims"></dl>
+        <div class="status" id="fit"><span class="dot"></span><span></span></div>
+      </section>
+
+      <section class="panel">
+        <p class="label" id="notes-title"></p>
+        <p class="note" id="notes"></p>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const CONFIG = __CONFIG__;
+
+function b64(s) { const bin = atob(s); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u.buffer; }
+function geometry(d) {
+  const q = new Int16Array(b64(d.pos)), n = new Int8Array(b64(d.nrm)), idx = new Uint16Array(b64(d.idx));
+  const pos = new Float32Array(q.length), nrm = new Float32Array(n.length);
+  for (let i = 0; i < q.length; i++) pos[i] = q[i] * d.scale;
+  for (let i = 0; i < n.length; i++) nrm[i] = n[i] / 127;
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+  g.setAttribute("normal", new THREE.BufferAttribute(nrm, 3));
+  g.setIndex(new THREE.BufferAttribute(idx, 1));
+  return g;
+}
+const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+const stage = document.getElementById("stage");
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+stage.prepend(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(30, 4 / 3, 1, 20000);
+scene.add(new THREE.HemisphereLight(0xffffff, 0x8a9490, 0.75));
+const key = new THREE.DirectionalLight(0xffffff, 0.75); key.position.set(-300, 600, 450); scene.add(key);
+const fill = new THREE.DirectionalLight(0xffffff, 0.25); fill.position.set(400, 200, -300); scene.add(fill);
+
+const root = new THREE.Group(); scene.add(root);
+const PALETTE = { solid: 0x9fb3b0, wire: 0xd9532c };
+const meshes = CONFIG.meshes.map((m, i) => {
+  const color = m.color ? new THREE.Color(m.color) : new THREE.Color(PALETTE[m.style] || PALETTE.solid);
+  const mat = m.style === "wire"
+    ? new THREE.MeshBasicMaterial({ color, wireframe: true, transparent: true, opacity: 0.45 })
+    : new THREE.MeshStandardMaterial({ color, roughness: 0.55, metalness: 0.05 });
+  const mesh = new THREE.Mesh(geometry(m.data), mat);
+  mesh.visible = m.visible !== false;
+  root.add(mesh);
+  const label = document.createElement("label"); label.className = "toggle";
+  const input = document.createElement("input"); input.type = "checkbox"; input.id = "t-mesh-" + i; input.checked = mesh.visible;
+  input.addEventListener("change", () => { mesh.visible = input.checked; render(); });
+  const sw = document.createElement("span"); sw.className = "sw";
+  sw.style.background = m.style === "wire" && !m.color ? "var(--scan)" : "#" + color.getHexString();
+  label.append(input, sw, document.createTextNode(m.label + (m.style === "wire" ? " (wireframe)" : "")));
+  document.getElementById("toggles").insertBefore(label, document.getElementById("toggles").lastElementChild);
+  return { mesh, mat, cfg: m };
+});
+const primary = meshes[0].mesh.geometry; primary.computeBoundingBox();
+const EXT = new THREE.Vector3(); primary.boundingBox.getSize(EXT);  // three.js Y-up: x=X, y=Z(height), z=Y
+const BASE_LEN = CONFIG.length_mm || EXT.x;
+document.getElementById("h-title").textContent = CONFIG.title;
+document.getElementById("h-sub").textContent = CONFIG.subtitle || "";
+document.getElementById("notes-title").textContent = CONFIG.notes_title || "Notes";
+document.getElementById("notes").textContent = CONFIG.notes || "";
+if (!CONFIG.notes) document.getElementById("notes").closest(".panel").hidden = true;
+const DIMS = [["Length (X)", EXT.x], ["Width (Y)", EXT.z], ["Height (Z)", EXT.y]].concat((CONFIG.dims || []).map((d) => [d.label, d.mm]));
+const dl = document.getElementById("dims");
+const dimCells = DIMS.map(([label]) => { const dt = document.createElement("dt"); dt.textContent = label; const dd = document.createElement("dd"); dl.append(dt, dd); return dd; });
+
+// A1 build volume (not scaled with the part: it is a fixed physical size)
+const bedGroup = new THREE.Group(); scene.add(bedGroup);
+const bedBox = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(256, 256, 256)), new THREE.LineBasicMaterial({ color: 0x1b7f79 }));
+bedBox.position.y = 128;
+const plate = new THREE.Mesh(new THREE.PlaneGeometry(256, 256), new THREE.MeshBasicMaterial({ color: 0x1b7f79, transparent: true, opacity: 0.08, side: THREE.DoubleSide }));
+plate.rotation.x = -Math.PI / 2; plate.position.y = 0.2;
+bedGroup.add(bedBox, plate);
+
+const grid = new THREE.GridHelper(1000, 20, 0x9aa5a1, 0xc4cbc8); grid.material.transparent = true; grid.material.opacity = 0.5; scene.add(grid);
+
+function applyTheme() {
+  const dark = css("--bg").toLowerCase() === "#141917";
+  grid.material.color.set(dark ? 0x3a4541 : 0xc4cbc8);
+  bedBox.material.color.set(css("--accent")); plate.material.color.set(css("--accent"));
+  meshes.forEach((m) => { if (m.cfg.style === "wire" && !m.cfg.color) m.mat.color.set(css("--scan")); });
+}
+
+// Minimal orbit controls: spherical camera around a target
+const FRAME = Math.max(EXT.x, EXT.y, EXT.z, 256);
+const orbit = { theta: -0.75, phi: 1.05, radius: FRAME * 2.6, target: new THREE.Vector3(0, EXT.y * 0.42, 0) };
+function place() {
+  const s = Math.sin(orbit.phi);
+  camera.position.set(orbit.target.x + orbit.radius * s * Math.sin(orbit.theta), orbit.target.y + orbit.radius * Math.cos(orbit.phi), orbit.target.z + orbit.radius * s * Math.cos(orbit.theta));
+  camera.lookAt(orbit.target);
+}
+const VIEWS = { iso: [-0.75, 1.05], front: [0, Math.PI / 2 - 0.001], side: [Math.PI / 2, Math.PI / 2 - 0.001], top: [0, 0.001] };
+let anim = null;
+function setView(name) {
+  const [t, p] = VIEWS[name]; const from = { theta: orbit.theta, phi: orbit.phi }; const start = performance.now();
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  cancelAnimationFrame(anim);
+  const step = (now) => {
+    const k = reduce ? 1 : Math.min(1, (now - start) / 450); const e = 1 - Math.pow(1 - k, 3);
+    orbit.theta = from.theta + (t - from.theta) * e; orbit.phi = from.phi + (p - from.phi) * e; place(); render();
+    if (k < 1) anim = requestAnimationFrame(step);
+  };
+  anim = requestAnimationFrame(step);
+  document.querySelectorAll("[data-view]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.view === name)));
+}
+document.querySelectorAll("[data-view]").forEach((b) => b.addEventListener("click", () => setView(b.dataset.view)));
+
+const pointers = new Map(); let pinch0 = 0;
+stage.addEventListener("contextmenu", (e) => e.preventDefault());
+stage.addEventListener("pointerdown", (e) => { if (e.target.closest(".chip")) return; stage.setPointerCapture(e.pointerId); pointers.set(e.pointerId, { x: e.clientX, y: e.clientY, b: e.button }); });
+stage.addEventListener("pointerup", (e) => { pointers.delete(e.pointerId); pinch0 = 0; });
+stage.addEventListener("pointercancel", (e) => { pointers.delete(e.pointerId); pinch0 = 0; });
+stage.addEventListener("pointermove", (e) => {
+  const p = pointers.get(e.pointerId); if (!p) return;
+  const dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY;
+  if (pointers.size === 2) {
+    const [a, b] = [...pointers.values()]; const d = Math.hypot(a.x - b.x, a.y - b.y);
+    if (pinch0) zoom(pinch0 / d); pinch0 = d; return;
+  }
+  if (p.b === 2 || e.shiftKey) {
+    const scale = orbit.radius / stage.clientHeight * 0.55;
+    const right = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 0), up = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 1);
+    orbit.target.addScaledVector(right, -dx * scale).addScaledVector(up, dy * scale);
+  } else {
+    orbit.theta -= dx * 0.008; orbit.phi = Math.min(Math.PI - 0.01, Math.max(0.01, orbit.phi - dy * 0.008));
+    document.querySelectorAll("[data-view]").forEach((b) => b.setAttribute("aria-pressed", "false"));
+  }
+  place(); render();
+});
+function zoom(f) { orbit.radius = Math.min(FRAME * 12, Math.max(FRAME * 0.3, orbit.radius * f)); place(); render(); }
+stage.addEventListener("wheel", (e) => { e.preventDefault(); zoom(Math.exp(e.deltaY * 0.0012)); }, { passive: false });
+
+function resize() {
+  const w = stage.clientWidth, h = stage.clientHeight;
+  renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); render();
+}
+function render() { renderer.render(scene, camera); }
+
+// Scale preview
+const fmt = (v) => v.toFixed(1) + " mm";
+function updateScale() {
+  const v = parseFloat(document.getElementById("real-len").value);
+  const measured = isFinite(v) && v >= 50 && v <= 600;
+  const k = measured ? v / BASE_LEN : 1;
+  root.scale.setScalar(k);
+  DIMS.forEach(([, mm], i) => { dimCells[i].textContent = fmt(mm * k); });
+  document.getElementById("scale-note").textContent = measured
+    ? `Scaled by ${k.toFixed(3)} from the model as built. Values measured directly may still differ.`
+    : (CONFIG.scale_note || "Showing the model as built. Enter a real end-to-end length to preview another size.");
+  const fits = Math.max(EXT.x, EXT.y, EXT.z) * k <= 256;
+  const fit = document.getElementById("fit");
+  fit.querySelector(".dot").style.background = fits ? "var(--ok)" : "var(--warn)";
+  fit.querySelector("span:last-child").textContent = fits ? "Fits the A1 bed in one piece" : "Too big for the A1 bed (256 mm)";
+  fit.style.color = fits ? "var(--ok)" : "var(--warn)";
+  render();
+}
+document.getElementById("real-len").addEventListener("input", updateScale);
+
+document.getElementById("t-bed").addEventListener("change", (e) => { bedGroup.visible = e.target.checked; render(); });
+
+new ResizeObserver(resize).observe(stage);
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { applyTheme(); render(); });
+new MutationObserver(() => { applyTheme(); render(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+applyTheme(); place(); updateScale(); resize();
+</script>
