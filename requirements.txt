@@ -1,0 +1,11 @@
+# Python tooling for tools/ and projects/*/build.py
+trimesh>=4.0
+numpy
+scipy
+shapely
+mapbox_earcut
+networkx
+matplotlib
+pymeshlab   # self-intersection checks, remeshing (needs libopengl0 on Linux)
+manifold3d  # fast robust mesh booleans (e.g. splitting a mesh for the bed)
+build123d   # parametric CAD (OpenCASCADE): STEP export, real fillets

@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
+# Scratch / intermediate files — keep only source/ and output/ in projects
+*.tmp
+scratch/
