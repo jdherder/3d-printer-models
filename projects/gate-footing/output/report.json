@@ -1,56 +1,56 @@
 {
-  "scale_factor": 1.0,
-  "scale_status": "SCAN SCALE - NOT REAL SIZE",
+  "scale_factor": 0.24096385542168675,
+  "scale_status": "measured",
   "idealized": {
     "extents_mm": [
-      415.0,
-      248.0,
-      165.0
+      100.0,
+      59.8,
+      39.8
     ],
-    "faces": 36096,
+    "faces": 36092,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 2,
-    "volume_cm3": 7757.2,
-    "fits_A1_as_is": false,
-    "fits_A1_any_axis_order": false,
+    "volume_cm3": 110.0,
+    "fits_A1_as_is": true,
+    "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
   },
   "scan_clean": {
     "extents_mm": [
-      428.9,
-      264.8,
-      165.0
+      103.4,
+      63.8,
+      39.8
     ],
     "faces": 6488,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 2,
-    "volume_cm3": 7769.4,
-    "fits_A1_as_is": false,
-    "fits_A1_any_axis_order": false,
+    "volume_cm3": 108.7,
+    "fits_A1_as_is": true,
+    "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
   },
   "scan_to_model_deviation_mm": {
-    "mean": 2.53,
-    "p90": 5.17,
-    "max": 9.23
+    "mean": 0.63,
+    "p90": 1.31,
+    "max": 2.39
   },
   "params_mm": {
-    "length": 415.0,
-    "width": 248.0,
-    "height": 165.0,
-    "footprint_corner_r": 55.0,
-    "base_h": 50.0,
-    "base_edge_r": 8.0,
-    "slot_w": 66.0,
-    "slot_floor": 45.0,
-    "slot_floor_r": 8.0,
-    "upright_outer_x": 100.0,
+    "length": 100.0,
+    "width": 59.75903614457831,
+    "height": 39.75903614457831,
+    "footprint_corner_r": 13.25301204819277,
+    "base_h": 12.048192771084338,
+    "base_edge_r": 1.927710843373494,
+    "slot_w": 15.0,
+    "slot_floor": 10.843373493975903,
+    "slot_floor_r": 1.927710843373494,
+    "upright_outer_x": 24.096385542168676,
     "upright_draft_deg": 15.0,
-    "upright_fillet_r": 28.0,
-    "upright_top_outer_r": 15.0,
-    "upright_top_inner_r": 6.0,
-    "upright_end_r": 60.0
+    "upright_fillet_r": 6.746987951807229,
+    "upright_top_outer_r": 3.6144578313253013,
+    "upright_top_inner_r": 1.4457831325301205,
+    "upright_end_r": 14.457831325301205
   }
 }

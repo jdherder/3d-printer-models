@@ -31,11 +31,11 @@ RENDERS = HERE / "renders"
 # The photo-mode scan's absolute scale is wrong (it says ~415 mm long, and the
 # owner says the real part is much smaller). Enter the tape-measured
 # end-to-end length here and everything (scan and model) scales to match.
-MEASURED_LENGTH_X_MM = None
+MEASURED_LENGTH_X_MM = 100.0  # owner, tape measure, 2026-09-24
 
 # Any dimension measured directly (in real mm) overrides the scaled value,
 # e.g. {"slot_w": 48.0, "height": 102.0}. Field names: see FootingParams.
-MEASURED_OVERRIDES: dict = {}
+MEASURED_OVERRIDES: dict = {"slot_w": 15.0}  # owner: "right around 15 mm"
 
 # --- Scan cleanup ------------------------------------------------------------
 CUT_HEIGHT_MM = 2.0      # cut the floor away this far above the ground plane
@@ -59,9 +59,15 @@ def main():
     OUT.mkdir(exist_ok=True)
     RENDERS.mkdir(exist_ok=True)
 
-    params = FootingParams()
-    k = MEASURED_LENGTH_X_MM / params.length if MEASURED_LENGTH_X_MM else 1.0
-    params = replace(params.scaled(k), **MEASURED_OVERRIDES)
+    # The CAD model is always built at the reference (scan) scale, where the
+    # fillets are large enough for OpenCASCADE to build and tessellate cleanly
+    # (at 100 mm long the tiny fillets tessellate into self-intersections).
+    # Real measurements are converted to reference units, then the finished
+    # solid is scaled uniformly by k, which preserves the geometry exactly.
+    ref = FootingParams()
+    k = MEASURED_LENGTH_X_MM / ref.length if MEASURED_LENGTH_X_MM else 1.0
+    ref = replace(ref, **{name: mm / k for name, mm in MEASURED_OVERRIDES.items()})
+    params = replace(ref.scaled(k), **MEASURED_OVERRIDES)  # real mm, for the report
 
     scan, leveled, center = clean_scan()
     scan.apply_scale(k)
@@ -69,9 +75,10 @@ def main():
     assert scan_info["watertight"], "cleaned scan is not watertight"
     scan.export(OUT / "gate-footing-scan-clean.stl")
 
-    part = build(params)
-    export_step(part, str(OUT / "gate-footing.step"))
-    model = mk.cad_to_mesh(part)
+    part_ref = build(ref)
+    export_step(part_ref.scale(k), str(OUT / "gate-footing.step"))
+    model = mk.cad_to_mesh(part_ref)
+    model.apply_scale(k)
     model_info = mk.report(model)
     assert model_info["watertight"], "idealised mesh is not watertight"
     model.export(OUT / "gate-footing.stl")

@@ -1,16 +1,31 @@
 {
   "page_title": "Gate Footing Model",
   "title": "Gate footing: idealised model",
-  "subtitle": "Parametric CAD rebuild of the Polycam scan · Z-up · millimetres",
+  "subtitle": "Parametric CAD rebuild of the Polycam scan · real size · Z-up · millimetres",
   "meshes": [
-    {"path": "output/gate-footing.stl", "label": "Idealised model", "style": "solid"},
-    {"path": "output/gate-footing-scan-clean.stl", "label": "Original scan", "style": "wire", "visible": false}
+    {
+      "path": "output/gate-footing.stl",
+      "label": "Idealised model",
+      "style": "solid"
+    },
+    {
+      "path": "output/gate-footing-scan-clean.stl",
+      "label": "Original scan",
+      "style": "wire",
+      "visible": false
+    }
   ],
   "dims": [
-    {"label": "Slot width", "param": "slot_w"},
-    {"label": "Base thickness", "param": "base_h"}
+    {
+      "label": "Slot width",
+      "param": "slot_w"
+    },
+    {
+      "label": "Base thickness",
+      "param": "base_h"
+    }
   ],
-  "scale_note": "Showing scan scale. It is known to be too big. Enter the measured end-to-end length to scale everything.",
-  "notes_title": "What changed from the scan",
-  "notes": "Flat, parallel slot walls. Straight 15° draft on the outer faces. True fillets on every edge. Mirror-symmetric about the slot. Mean deviation from the scan is 2.5 mm, mostly where the scan was wavy."
+  "scale_note": "Built at your measurements: 100 mm long, 15 mm slot. Type another length to preview a different size.",
+  "notes_title": "What changed in this review",
+  "notes": "Now at real size. Everything is scaled from your 100 mm length, and the slot is set to your 15 mm measurement (the scan alone suggested 15.9 mm). The shape is unchanged from the last review: flat parallel slot walls, a 15° draft on the outer faces, and rounded edges throughout. It is 0.6 mm from the scan on average. It fits the A1 easily and prints base-down with no supports."
 }

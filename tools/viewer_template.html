@@ -200,7 +200,7 @@ function applyTheme() {
 }
 
 // Minimal orbit controls: spherical camera around a target
-const FRAME = Math.max(EXT.x, EXT.y, EXT.z, 256);
+const FRAME = Math.max(EXT.x, EXT.y, EXT.z, 120);  // frame the part, not the whole build volume
 const orbit = { theta: -0.75, phi: 1.05, radius: FRAME * 2.6, target: new THREE.Vector3(0, EXT.y * 0.42, 0) };
 function place() {
   const s = Math.sin(orbit.phi);

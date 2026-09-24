@@ -89,8 +89,11 @@ def build(p: FootingParams):
                          and near(abs(e.center().X), p.slot_w / 2)), p.upright_top_inner_r)
     body = fillet(_edges(body, Axis.Y, lambda e: near(e.center().Z, hb)
                          and near(abs(e.center().X), p.upright_outer_x)), p.upright_fillet_r)
+    # Base top perimeter: everything outboard of where the upright fillet
+    # lands on the base (tangent distance R / tan(interior_angle / 2)).
+    fillet_land = p.upright_outer_x + p.upright_fillet_r / math.tan(math.radians(90 + p.upright_draft_deg) / 2)
     base_top = [e for e in body.edges() if near(e.center().Z, hb)
-                and abs(e.center().X) > p.upright_outer_x + 20]
+                and abs(e.center().X) > fillet_land + 0.01 * L]
     body = fillet(base_top, p.base_edge_r)
     assert body.is_valid, "OpenCASCADE produced an invalid solid"
     return body

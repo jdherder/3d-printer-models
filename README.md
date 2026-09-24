@@ -7,7 +7,7 @@ Autodesk Fusion, and reproducible Python cleanup pipelines.
 
 | Project | Status | Description |
 |---|---|---|
-| [gate-footing](projects/gate-footing/) | Idealised CAD model done (STEP + STL); waiting on real measurements for scale | Plastic foot that holds up a metal gate |
+| [gate-footing](projects/gate-footing/) | Real size (100 mm), print-ready STEP + STL; next: test print | Plastic foot that holds up a metal gate |
 
 ## Layout
 
