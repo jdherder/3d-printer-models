@@ -8,6 +8,7 @@ Autodesk Fusion, and reproducible Python cleanup pipelines.
 | Project | Status | Description |
 |---|---|---|
 | [gate-footing](projects/gate-footing/) | Real size (100 mm), print-ready STEP + STL; next: test print | Plastic foot that holds up a metal gate |
+| [wagon-cup-holder](projects/wagon-cup-holder/) | First design (22.3 mm bar measured); next: print the clip test slice, measure the tumbler | Bolt-tightened clip-on holder for a 20 oz Yeti on a MAC wagon push bar |
 
 ## Layout
 

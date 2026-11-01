@@ -1,0 +1,34 @@
+{
+  "page_title": "Wagon Cup Holder",
+  "title": "Wagon cup holder: first design",
+  "subtitle": "Snap-on, bolt-tightened clip for the 22.3 mm push bar · holds a 20 oz Yeti · shown in print orientation · millimetres",
+  "meshes": [
+    {
+      "path": "output/wagon-cup-holder.stl",
+      "label": "Cup holder",
+      "style": "solid"
+    },
+    {
+      "path": "renders/ref-bar.stl",
+      "label": "Push bar (22.3 mm)",
+      "style": "wire"
+    },
+    {
+      "path": "renders/ref-tumbler.stl",
+      "label": "Yeti 20 oz (retailer dims)",
+      "style": "wire"
+    }
+  ],
+  "dims": [
+    {"label": "Bar diameter", "param": "bar_d"},
+    {"label": "Clip bore", "param": "bore_d"},
+    {"label": "Clip mouth", "param": "mouth_width"},
+    {"label": "Clip length", "param": "clip_len"},
+    {"label": "Pocket base dia", "param": "pocket_base_d"},
+    {"label": "Pocket rim dia", "param": "pocket_rim_d"},
+    {"label": "Pocket depth", "param": "pocket_depth"}
+  ],
+  "scale_note": "Real size. The bar is your 22.3 mm measurement. The tumbler is from retailer listings (70 mm base, 89 mm widest), not your cup. It is drawn in print orientation: the clip's bar axis is vertical here, and the cup lies on its side. In use the bar is horizontal and the cup stands upright.",
+  "notes_title": "What to check",
+  "notes": "First design, for your feedback. The clip wraps the top of the bar with its mouth facing down. You snap it on, then tighten an M4 x 35 bolt across the two ears so it can't rotate under the cup's weight. The cup sits directly above the bar. Turn on the bar and tumbler overlays to check the fit. Please check: (1) is there room below the bar for the ears (they stick about 22 mm below the bar axis) and bolt head? (2) is the 70 mm clip length OK within your 120 mm of free bar? (3) measure your tumbler's base and widest diameter. (4) do you have an M4 x 35 screw and nut, or would you prefer a different locking method? Print the 15 mm clip test slice first."
+}

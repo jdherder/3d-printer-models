@@ -1,0 +1,69 @@
+{
+  "dimensions_status": "bar measured by owner (22.3 mm). Tumbler from retailer figures, NOT measured.",
+  "part": {
+    "extents_mm": [
+      123.3,
+      87.6,
+      87.6
+    ],
+    "faces": 3130,
+    "watertight": true,
+    "winding_consistent": true,
+    "euler_number": -2,
+    "volume_cm3": 154.9,
+    "fits_A1_as_is": true,
+    "fits_A1_any_axis_order": true,
+    "self_intersecting_faces": 0
+  },
+  "clip_test": {
+    "extents_mm": [
+      38.3,
+      36.7,
+      15.0
+    ],
+    "faces": 1848,
+    "watertight": true,
+    "winding_consistent": true,
+    "euler_number": -2,
+    "volume_cm3": 6.1,
+    "fits_A1_as_is": true,
+    "fits_A1_any_axis_order": true,
+    "self_intersecting_faces": 0
+  },
+  "checks": {
+    "overhang_area_over_45deg_mm2": 33.6,
+    "interference_with_bar_cm3": 0.0,
+    "interference_with_tumbler_cm3": 0.0
+  },
+  "params_mm": {
+    "bar_d": 22.3,
+    "bar_clearance": 0.2,
+    "clip_wall": 2.8,
+    "clip_len": 70.0,
+    "mouth_width": 20.7,
+    "ear_t": 8.0,
+    "bolt_drop": 6.5,
+    "bolt_hole_d": 4.5,
+    "head_cbore_d": 8.4,
+    "head_cbore_depth": 4.4,
+    "nut_af": 7.3,
+    "nut_depth": 3.8,
+    "lead_in": 3.5,
+    "cup_base_d": 70.0,
+    "cup_top_d": 89.0,
+    "cup_h": 165.0,
+    "pocket_depth": 80.0,
+    "pocket_clearance": 2.0,
+    "cup_wall": 3.2,
+    "floor_t": 6.5,
+    "wrap_deg": 250.0,
+    "bore_d": 22.5,
+    "snap_spread_each_lip": 0.8,
+    "bolt_length_needed": "M4 x 35 + M4 nut",
+    "pocket_base_d": 72.0,
+    "pocket_rim_d": 81.21,
+    "pocket_outer_d": 87.61,
+    "cup_rim_height_above_bar_axis": 99.0,
+    "tumbler_taper_mm_per_mm_dia": 0.1152
+  }
+}
