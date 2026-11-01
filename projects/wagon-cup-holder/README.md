@@ -83,7 +83,7 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
 ## Design decisions and why
 
 - **Layout (use frame):** the clip wraps the side rail from above, mouth facing down. The cup module hangs off its
-  outboard side: a block with the dovetail groove, a web down the outside of the rail, and the floor plate and pocket
+  outboard side: a **shaped bracket** (a pad with the dovetail groove that flares and sweeps into the web), a web down the outside of the rail, and the floor plate and pocket
   off the web. The cup axis is **83.8 mm outboard of the rail axis**, and the **cup base is 60 mm below the rail axis**, so
   the pocket rim is 20 mm above it and the rest of the tumbler rises beside the frame.
 - **The clamp bolt is still essential.** The cup is beside the rail, so a full cup (~1 kg) is a constant twist
@@ -142,7 +142,7 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
 
 `python projects/wagon-cup-holder/build.py` (~2 min):
 1. `model.py` (build123d): `build_clip` = ring + ears + boss + dovetail tongue, cut bore, mouth, bolt hole, head pocket,
-   nut slot. `build_module` = floor plate + teardrop pocket (cone cavity, side opening) + web + dovetail block with its groove.
+   nut slot. `build_module` = floor plate + teardrop pocket (cone cavity, side opening) + web + shaped neck (`_neck`) with the dovetail groove.
    Built in the **print frame** (rail axis = Z, cup axis = Y), in the assembled position.
 2. `build.py` exports each piece (STEP + STL) in its own print pose, plus the three test pieces.
 3. Checks: watertight, 0 self-intersections, overhang area (1° tolerance so the 45° faces aren't miscounted), and
@@ -201,3 +201,10 @@ Key parameters (`CupHolderParams` in `model.py`): `bar_d`, `bar_clearance`, `cli
   module along the bar (16 mm margin to each end of the window for the module). Extended the dovetail block down to the bed so it
   doesn't float (that had created an 805 mm² bridge). Added approximate latch/strut keep-out zones (`renders/ref-keepout.stl`) and
   checked the module and clip against them: 0 interference. Next: owner checks the strut doesn't reach under the cup, then the test prints.
+- **2026-11-01 (v4):** The owner didn't like the **big bulk block** between the clip and the cup holder, and asked for something
+  more flowing and integrated. Replaced it with a shaped neck (`_neck` in `model.py`): a flat pad under the dovetail whose cheeks are a constant
+  4 mm around the groove and flare at 45° out to the web (so every overhang stays 45°), a **16 mm inside fillet** sweeping the underside into
+  the web, and an **8 mm blend** from the pad's top down to the web's top. It no longer spans the module's full width. Module 190 cm³ (was 203),
+  still 0 overhang, 0 interference with the clip, rail, tumbler and keep-out zones. The dovetail test pieces keep their plain block (they only test
+  the sliding fit). Further ideas if it still feels heavy: hollow or window the neck, lower the engagement (`dt_y1`) so the pad is shorter, or
+  curve the web in toward the bar near the top once we know where the strut sweeps in.

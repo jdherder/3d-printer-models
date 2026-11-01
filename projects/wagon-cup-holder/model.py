@@ -33,8 +33,8 @@ X=pocket_cx, Z=cup_zc (running along +Y). The clip mouth faces -Y (down in use).
 import math
 from dataclasses import dataclass
 
-from build123d import (Align, Box, BuildSketch, Circle, Cone, Cylinder, Locations, Plane, Polygon,
-                       Pos, RegularPolygon, Rotation, extrude)
+from build123d import (Align, Box, BuildLine, BuildSketch, Circle, Cone, Cylinder, Line, Locations,
+                       Plane, Polygon, Pos, RegularPolygon, Rotation, ThreePointArc, extrude, make_face)
 
 
 @dataclass(frozen=True)
@@ -69,7 +69,13 @@ class CupHolderParams:
     safe_window: float = 120.0      # clear length of bar between them (owner, "roughly")
     keepout_reach: float = 26.0     # how far they stick out past the bar's OUTER SURFACE (owner: "maybe 26")
 
-    # --- Web (carries the cup out and down from the dovetail block) ---
+    # --- Neck: flares from the dovetail pad into the web (replaces the old full-width block) ---
+    neck_cheek: float = 4.0         # wall left around the dovetail groove at its mouth
+    neck_under_r: float = 16.0      # inside fillet from the neck's underside into the web
+    neck_top_r: float = 8.0         # inside fillet from the pad's top down to the web's top
+    pad_end_x: float = 24.0         # where the pad's flat underside / top end and the blends begin
+
+    # --- Web (carries the cup out and down from the dovetail pad) ---
     web_gap: float = 40.0           # rail axis to the inner face of the web. Must clear the strut + latch (below)
     web_t: float = 6.5
 
@@ -251,18 +257,8 @@ def _prism_z(draw, z0: float, z1: float):
     return extrude(sk.sketch, amount=z1 - z0)
 
 
-def _dovetail_block(p: CupHolderParams, length: float, y1: float | None = None, zc: float | None = None):
-    """The module's dovetail block with its groove (clearance `dt_clear` around the clip's tongue).
-    `zc` is the Z of the groove centre (defaults to the block's own centre, as in the test pieces).
-    The block always starts at Z=0 so it stands on the bed when the module is printed."""
-    y1 = p.dt_y1 if y1 is None else y1
-    zc = length / 2 if zc is None else zc
-    x_in = p.dt_x0 + p.dt_clear
-    x_out = p.web_gap + 2.0                       # merges into the web (24..) and ends clear of the cup
-
-    def block():
-        Polygon((x_in, p.ear_top_y), (x_out, p.ear_top_y), (x_out, y1), (x_in, y1), align=None)
-
+def _groove(p: CupHolderParams, zc: float, y1: float):
+    """The dovetail groove cutter: the clip's tongue grown by `dt_clear`, open at the pad's inner face and at both ends in Y."""
     k = 1.414 * p.dt_clear                        # normal clearance on a 45-degree flank
 
     def hw(x):
@@ -273,8 +269,65 @@ def _dovetail_block(p: CupHolderParams, length: float, y1: float | None = None, 
     def groove():
         Polygon((xa, zc - hw(xa)), (xb, zc - hw(xb)), (xb, zc + hw(xb)), (xa, zc + hw(xa)), align=None)
 
-    blk = _prism_z(block, 0.0, zc + length / 2)    # stands on the bed, so no flat underside to bridge
-    return blk - _extrude_y(groove, p.ear_top_y - 1, y1 + 1)
+    return _extrude_y(groove, p.ear_top_y - 1, y1 + 1)
+
+
+def _dovetail_block(p: CupHolderParams, length: float, y1: float | None = None, zc: float | None = None,
+                    x_out: float | None = None):
+    """A plain block with the groove. Used only for the dovetail sliding-fit test piece.
+    `zc` is the Z of the groove centre (defaults to the block's own centre). The block starts at Z=0 so it stands on the bed."""
+    y1 = p.dt_y1 if y1 is None else y1
+    zc = length / 2 if zc is None else zc
+    x_in = p.dt_x0 + p.dt_clear
+    x_out = p.dt_x0 + p.dt_h + p.dt_clear + 6.0 if x_out is None else x_out
+
+    def block():
+        Polygon((x_in, p.ear_top_y), (x_out, p.ear_top_y), (x_out, y1), (x_in, y1), align=None)
+
+    return _prism_z(block, 0.0, zc + length / 2) - _groove(p, zc, y1)
+
+
+def _neck(p: CupHolderParams, z_full: float):
+    """The shaped bracket between the dovetail pad and the web, WITHOUT the groove.
+
+    Side profile (X, Y), extruded along Z: a flat pad under the clip's tongue, an inside fillet sweeping the
+    underside down into the web, and a smaller one blending the pad's top down to the web's top.
+    Plan profile (X, Z), extruded along Y and intersected: starts `neck_cheek` wider than the groove mouth and
+    flares at 45 degrees, so the cheeks stay a constant thickness around the groove and every overhang is 45 degrees.
+    """
+    y_end = p.floor_y + p.pocket_depth            # web / pocket rim height
+    x_in = p.dt_x0 + p.dt_clear
+    xw = p.web_gap
+    ru, rt = p.neck_under_r, p.neck_top_r
+    xp = p.pad_end_x
+    y0, y1 = p.ear_top_y, p.dt_y1
+    c45 = math.cos(math.radians(45))
+
+    # Side profile, counter-clockwise from the pad's inner-bottom corner.
+    with BuildSketch(Plane.XY) as sk:
+        with BuildLine():
+            Line((x_in, y0), (xp, y0))
+            ThreePointArc((xp, y0), (xp + ru * c45, y0 - ru + ru * c45), (xp + ru, y0 - ru))
+            Line((xp + ru, y0 - ru), (xw + 2.0, y0 - ru))
+            Line((xw + 2.0, y0 - ru), (xw + 2.0, y_end))
+            Line((xw + 2.0, y_end), (xp + rt, y_end))
+            ThreePointArc((xp + rt, y_end), (xp + rt - rt * c45, y1 - rt + rt * (1 - c45)), (xp, y1 - 0.0))
+            Line((xp, y1), (x_in, y1))
+            Line((x_in, y1), (x_in, y0))
+        make_face()
+    side = extrude(sk.sketch, amount=z_full)
+
+    # Plan profile: groove half-width at the mouth + cheek, growing 1:1 with x (45 degrees).
+    zc = p.cup_zc
+    k = 1.414 * p.dt_clear
+    hw0 = p.dt_w_root / 2 + k + p.neck_cheek     # half-width at x = dt_x0
+    hw = lambda x: hw0 + (x - p.dt_x0)           # noqa: E731
+    xa, xb = x_in - 1.0, xw + 3.0
+
+    def plan():
+        Polygon((xa, zc - hw(xa)), (xb, zc - hw(xb)), (xb, zc + hw(xb)), (xa, zc + hw(xa)), align=None)
+
+    return side & _extrude_y(plan, y0 - ru - 5, y1 + 5)
 
 
 def build_module(p: CupHolderParams | None = None):
@@ -319,9 +372,9 @@ def build_module(p: CupHolderParams | None = None):
 
     opening = _extrude_y(sector, yf, y_end + 5)
 
-    # The dovetail block is added AFTER the cavity cut. It ends at x = web_gap + 2, inboard of
-    # the cavity, so nothing needs trimming. Its groove stays open at the top and the bottom.
-    return body + web - cavity - opening + _dovetail_block(p, p.clip_len, zc=p.cup_zc)
+    # The neck is added AFTER the cavity cut. It ends at x = web_gap + 2, inboard of the cavity, so nothing
+    # needs trimming. Its groove stays open at the pad's inner face and at the top and bottom.
+    return body + web - cavity - opening + (_neck(p, 2 * R) - _groove(p, zc, p.dt_y1))
 
 
 def build_dovetail_test(p: CupHolderParams | None = None, y_len: float = 14.0):

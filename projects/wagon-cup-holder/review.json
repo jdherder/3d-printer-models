@@ -1,7 +1,7 @@
 {
   "page_title": "Wagon Cup Holder",
-  "title": "Wagon cup holder: v3.1, clears the strut and latch",
-  "subtitle": "Clip stays on the side rail \u00b7 cup module lifts off its dovetail \u00b7 moved out to clear the end latch and strut \u00b7 shown assembled, in print orientation \u00b7 millimetres",
+  "title": "Wagon cup holder: v4, shaped bracket instead of a block",
+  "subtitle": "Clip stays on the side rail \u00b7 cup module lifts off its dovetail \u00b7 the bracket now flares and sweeps into the cup holder \u00b7 shown assembled, in print orientation \u00b7 millimetres",
   "meshes": [
     {
       "path": "renders/asm-module.stl",
@@ -81,5 +81,5 @@
   ],
   "scale_note": "Real size, shown assembled. The rail is your 22.3 mm tube. The tumbler is from retailer listings (70 mm base, 89 mm widest). The two wireframe blocks are the red latch and diagonal strut at each end of your 120 mm clear stretch. They are APPROXIMATE: only the ~26 mm reach is from you, and I assumed they sit only beyond the clear stretch. It is drawn in print orientation: the rail axis is vertical here and the cup lies on its side. In use the rail is horizontal and the cup stands upright, hanging off the outside of it.",
   "notes_title": "What changed, and what to check",
-  "notes": "v3.1: you said the strut and red latch reach about 26 mm out past the bar, the same at both ends, and the 120 mm is the clear stretch between them. I moved the cup out so the module's web starts 40 mm from the bar axis, about 3 mm clear of the worst-case reading of the strut and latch (26 mm past the bar's outer surface). The module is 88 mm long inside the 120 mm window, so 16 mm to spare each end, and the clip is centred on it. The cost is more twist on the clip, about 0.82 N\u00b7m for a full cup (was 0.67), still within what the bolt clamp should hold. Please check on the real wagon: (1) does the diagonal strut slope in under the cup? The cup base is 60 mm below the bar axis. If it does, I will raise the cup. (2) is anything else outboard of the bar inside the clear stretch? (3) does the empty clip block folding? Clamp the 15 mm test slice on the bar and fold. Then print the three small test pieces."
+  "notes": "v4: you didn't like the big block between the clip and the cup holder. It's gone. In its place is a shaped bracket: a slim pad around the dovetail whose walls stay about 4 mm thick around the groove and flare out at 45 degrees, then sweep into the web with a 16 mm radius underneath and an 8 mm blend on top. It no longer spans the full width of the cup holder, and it still prints with no supports. Nothing about the fit changed: same dovetail, same clip, cup still 84 mm out and 60 mm down, still clear of the latch and strut zones. Turn the clip off in the viewer to see the bracket on its own. Please tell me: (1) is this the look you wanted, or should it be slimmer still, or hollowed out with windows? (2) the earlier checks still stand: does the diagonal strut slope in under the cup, and does the empty clip block folding?"
 }
