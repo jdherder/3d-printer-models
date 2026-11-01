@@ -1,7 +1,7 @@
 {
   "page_title": "Wagon Cup Holder",
-  "title": "Wagon cup holder: v3, cup lifts off the clip",
-  "subtitle": "Clip stays on the right-hand side rail · the cup module drops onto a dovetail and lifts straight off · shown assembled, in print orientation · millimetres",
+  "title": "Wagon cup holder: v3.1, clears the strut and latch",
+  "subtitle": "Clip stays on the side rail \u00b7 cup module lifts off its dovetail \u00b7 moved out to clear the end latch and strut \u00b7 shown assembled, in print orientation \u00b7 millimetres",
   "meshes": [
     {
       "path": "renders/asm-module.stl",
@@ -22,22 +22,64 @@
       "path": "renders/ref-tumbler.stl",
       "label": "Yeti 20 oz (retailer dims)",
       "style": "wire"
+    },
+    {
+      "path": "renders/ref-keepout.stl",
+      "label": "Latch + strut zones (approx., your ~26 mm)",
+      "style": "wire"
     }
   ],
   "dims": [
-    {"label": "Rail diameter", "param": "bar_d"},
-    {"label": "Clip bore", "param": "bore_d"},
-    {"label": "Clip mouth", "param": "mouth_width"},
-    {"label": "Clip length", "param": "clip_len"},
-    {"label": "Clip above rail axis", "param": "clip_extent_above_rail_axis"},
-    {"label": "Clip below rail axis", "param": "clip_extent_below_rail_axis"},
-    {"label": "Dovetail engagement", "param": "dovetail_engagement_mm"},
-    {"label": "Cup axis out from rail", "param": "cup_axis_offset_from_rail"},
-    {"label": "Cup base below rail axis", "param": "cup_base_below_rail_axis"},
-    {"label": "Pocket base dia", "param": "pocket_base_d"},
-    {"label": "Pocket rim dia", "param": "pocket_rim_d"}
+    {
+      "label": "Rail diameter",
+      "param": "bar_d"
+    },
+    {
+      "label": "Clip bore",
+      "param": "bore_d"
+    },
+    {
+      "label": "Clip mouth",
+      "param": "mouth_width"
+    },
+    {
+      "label": "Clip length",
+      "param": "clip_len"
+    },
+    {
+      "label": "Dovetail engagement",
+      "param": "dovetail_engagement_mm"
+    },
+    {
+      "label": "Cup axis out from rail",
+      "param": "cup_axis_offset_from_rail"
+    },
+    {
+      "label": "Cup base below rail axis",
+      "param": "cup_base_below_rail_axis"
+    },
+    {
+      "label": "Pocket base dia",
+      "param": "pocket_base_d"
+    },
+    {
+      "label": "Pocket rim dia",
+      "param": "pocket_rim_d"
+    },
+    {
+      "label": "Latch/strut reach (from rail axis)",
+      "param": "latch_strut_reach_from_rail_axis"
+    },
+    {
+      "label": "Web clearance to latch/strut",
+      "param": "web_clearance_to_latch_strut"
+    },
+    {
+      "label": "Module margin to window ends",
+      "param": "module_clearance_to_window_ends_each_side"
+    }
   ],
-  "scale_note": "Real size, shown assembled. The rail is your 22.3 mm tube (assumed the same on the side rail). The tumbler is from retailer listings (70 mm base, 89 mm widest), not your cup. It is drawn in print orientation: the rail axis is vertical here and the cup lies on its side. In use the rail is horizontal and the cup stands upright, hanging off the outside of it. To take the cup off, the module lifts straight up along the dovetail.",
+  "scale_note": "Real size, shown assembled. The rail is your 22.3 mm tube. The tumbler is from retailer listings (70 mm base, 89 mm widest). The two wireframe blocks are the red latch and diagonal strut at each end of your 120 mm clear stretch. They are APPROXIMATE: only the ~26 mm reach is from you, and I assumed they sit only beyond the clear stretch. It is drawn in print orientation: the rail axis is vertical here and the cup lies on its side. In use the rail is horizontal and the cup stands upright, hanging off the outside of it.",
   "notes_title": "What changed, and what to check",
-  "notes": "v3: you need the cup off quickly for folding, so it is now two pieces. The clip (the ring with the ears and bolt) is tightened once with a hex key and stays on the rail. The cup module drops down onto the clip's dovetail, rests on the ear tops, and lifts straight off with the cup in it, one-handed, no tool. Toggle the pieces to see them apart. What stays on the rail is the clip: 70 mm long, about 28 mm above the rail axis, 24 mm below, 22 mm outboard and 18 mm inboard. Please check: (1) does that empty clip get in the way when you fold the wagon? Clamp the 15 mm test slice on the right rail and fold it. (2) is the red latch or the diagonal strut outboard of the rail in that zone? If so the module's web will hit it. (3) measure your tumbler's base and widest diameter. Then print the three small test pieces: the clamp slice and the dovetail pair."
+  "notes": "v3.1: you said the strut and red latch reach about 26 mm out past the bar, the same at both ends, and the 120 mm is the clear stretch between them. I moved the cup out so the module's web starts 40 mm from the bar axis, about 3 mm clear of the worst-case reading of the strut and latch (26 mm past the bar's outer surface). The module is 88 mm long inside the 120 mm window, so 16 mm to spare each end, and the clip is centred on it. The cost is more twist on the clip, about 0.82 N\u00b7m for a full cup (was 0.67), still within what the bolt clamp should hold. Please check on the real wagon: (1) does the diagonal strut slope in under the cup? The cup base is 60 mm below the bar axis. If it does, I will raise the cup. (2) is anything else outboard of the bar inside the clear stretch? (3) does the empty clip block folding? Clamp the 15 mm test slice on the bar and fold. Then print the three small test pieces."
 }

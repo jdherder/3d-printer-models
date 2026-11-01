@@ -18,7 +18,7 @@
   },
   "module": {
     "extents_mm": [
-      96.3,
+      112.3,
       94.5,
       87.6
     ],
@@ -26,7 +26,7 @@
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 2,
-    "volume_cm3": 159.9,
+    "volume_cm3": 203.1,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0,
@@ -66,15 +66,15 @@
   },
   "dovetail_test_groove": {
     "extents_mm": [
+      26.6,
       14.0,
-      10.6,
       70.0
     ],
     "faces": 28,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 2,
-    "volume_cm3": 6.3,
+    "volume_cm3": 21.9,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0,
@@ -85,7 +85,9 @@
     "interference_module_vs_rail_cm3": 0.0,
     "interference_module_vs_tumbler_cm3": 0.0,
     "interference_clip_vs_rail_cm3": 0.0,
-    "interference_clip_vs_tumbler_cm3": 0.0
+    "interference_clip_vs_tumbler_cm3": 0.0,
+    "interference_module_vs_latch_strut_zone_cm3": 0.0,
+    "interference_clip_vs_latch_strut_zone_cm3": 0.0
   },
   "params_mm": {
     "bar_d": 22.3,
@@ -108,7 +110,9 @@
     "dt_w_root": 34.0,
     "dt_y1": 28.0,
     "dt_clear": 0.35,
-    "web_gap": 24.0,
+    "safe_window": 120.0,
+    "keepout_reach": 26.0,
+    "web_gap": 40.0,
     "web_t": 6.5,
     "cup_base_d": 70.0,
     "cup_top_d": 89.0,
@@ -125,15 +129,19 @@
     "pocket_base_d": 72.0,
     "pocket_rim_d": 81.21,
     "pocket_outer_d": 87.61,
-    "cup_axis_offset_from_rail": 67.8,
+    "cup_axis_offset_from_rail": 83.8,
     "pocket_rim_height_above_rail_axis": 20.0,
     "cup_base_below_rail_axis": 60.0,
-    "est_cup_torque_on_clip_Nm": 0.67,
+    "est_cup_torque_on_clip_Nm": 0.82,
     "dovetail_engagement_mm": 32.0,
     "dovetail_width_tip_mm": 48.0,
     "clip_extent_above_rail_axis": 28.0,
     "clip_extent_below_rail_axis": 24.3,
     "clip_extent_outboard_of_rail_axis": 22.0,
-    "tumbler_taper_mm_per_mm_dia": 0.1152
+    "tumbler_taper_mm_per_mm_dia": 0.1152,
+    "latch_strut_reach_from_rail_axis": 37.1,
+    "web_clearance_to_latch_strut": 2.9,
+    "module_clearance_to_window_ends_each_side": 16.2,
+    "clip_clearance_to_window_ends_each_side": 25.0
   }
 }

@@ -65,8 +65,12 @@ class CupHolderParams:
     dt_y1: float = 28.0             # top of the tongue and the block (Y). Engagement = dt_y1 - ear_top_y
     dt_clear: float = 0.35          # sliding clearance per side
 
+    # --- Keep-out: the end brackets' red latch and diagonal strut, same at both ends of the bar ---
+    safe_window: float = 120.0      # clear length of bar between them (owner, "roughly")
+    keepout_reach: float = 26.0     # how far they stick out past the bar's OUTER SURFACE (owner: "maybe 26")
+
     # --- Web (carries the cup out and down from the dovetail block) ---
-    web_gap: float = 24.0           # rail axis to the inner face of the web (clears the ears + bolt tip)
+    web_gap: float = 40.0           # rail axis to the inner face of the web. Must clear the strut + latch (below)
     web_t: float = 6.5
 
     # --- 20 oz Yeti Rambler (retailer figures, NOT yet measured on the owner's cup) ---
@@ -122,6 +126,16 @@ class CupHolderParams:
     def cup_zc(self) -> float:
         """Z of the cup axis. The pocket sits on the bed (teardrop foot)."""
         return self.outer_r
+
+    @property
+    def clip_dz(self) -> float:
+        """Z shift that centres the clip (and its dovetail) on the cup module, and so on the clear window."""
+        return self.cup_zc - self.clip_len / 2
+
+    @property
+    def keepout_x(self) -> float:
+        """Outward distance from the rail axis that the latch / strut reach (worst-case reading)."""
+        return self.bar_d / 2 + self.keepout_reach
 
     @property
     def pocket_cx(self) -> float:
@@ -237,16 +251,18 @@ def _prism_z(draw, z0: float, z1: float):
     return extrude(sk.sketch, amount=z1 - z0)
 
 
-def _dovetail_block(p: CupHolderParams, length: float, y1: float | None = None):
-    """The module's dovetail block with its groove (clearance `dt_clear` around the clip's tongue)."""
+def _dovetail_block(p: CupHolderParams, length: float, y1: float | None = None, zc: float | None = None):
+    """The module's dovetail block with its groove (clearance `dt_clear` around the clip's tongue).
+    `zc` is the Z of the groove centre (defaults to the block's own centre, as in the test pieces).
+    The block always starts at Z=0 so it stands on the bed when the module is printed."""
     y1 = p.dt_y1 if y1 is None else y1
+    zc = length / 2 if zc is None else zc
     x_in = p.dt_x0 + p.dt_clear
     x_out = p.web_gap + 2.0                       # merges into the web (24..) and ends clear of the cup
 
     def block():
         Polygon((x_in, p.ear_top_y), (x_out, p.ear_top_y), (x_out, y1), (x_in, y1), align=None)
 
-    zc = length / 2
     k = 1.414 * p.dt_clear                        # normal clearance on a 45-degree flank
 
     def hw(x):
@@ -257,7 +273,7 @@ def _dovetail_block(p: CupHolderParams, length: float, y1: float | None = None):
     def groove():
         Polygon((xa, zc - hw(xa)), (xb, zc - hw(xb)), (xb, zc + hw(xb)), (xa, zc + hw(xa)), align=None)
 
-    blk = _prism_z(block, 0.0, length)
+    blk = _prism_z(block, 0.0, zc + length / 2)    # stands on the bed, so no flat underside to bridge
     return blk - _extrude_y(groove, p.ear_top_y - 1, y1 + 1)
 
 
@@ -305,7 +321,7 @@ def build_module(p: CupHolderParams | None = None):
 
     # The dovetail block is added AFTER the cavity cut. It ends at x = web_gap + 2, inboard of
     # the cavity, so nothing needs trimming. Its groove stays open at the top and the bottom.
-    return body + web - cavity - opening + _dovetail_block(p, p.clip_len)
+    return body + web - cavity - opening + _dovetail_block(p, p.clip_len, zc=p.cup_zc)
 
 
 def build_dovetail_test(p: CupHolderParams | None = None, y_len: float = 14.0):
@@ -326,6 +342,6 @@ def build_dovetail_test(p: CupHolderParams | None = None, y_len: float = 14.0):
 
 
 def build(p: CupHolderParams | None = None):
-    """Both pieces as a dict, in the shared print frame (assembled position)."""
+    """Both pieces as a dict, in the shared print frame (assembled position, clip centred on the module)."""
     p = p or CupHolderParams()
-    return {"clip": build_clip(p), "module": build_module(p)}
+    return {"clip": Pos(0, 0, p.clip_dz) * build_clip(p), "module": build_module(p)}

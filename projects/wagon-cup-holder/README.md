@@ -20,12 +20,12 @@ and off quickly as it will need to be off for folding").
 - [x] Tube measured by the owner: round, **22.3 mm** diameter, **~120 mm** free length
 - [x] Parametric CAD model (`model.py`): **clip** + **cup module** + two small test pieces. STEP + STL, watertight,
       0 self-intersections, no collisions in the assembled position, no supports
-- [x] Fits the A1 (module 96 × 95 × 88 mm, clip 52 × 40 × 70 mm)
+- [x] Fits the A1 (module 112 × 95 × 88 mm, clip 52 × 40 × 70 mm)
 - [ ] **Owner: confirm the clip spot** (straight section of the right-hand side rail) and that the **empty clip
       doesn't block folding**. See "Folding" below
 - [x] Tumbler: owner is fine with the retailer figures for now (70 mm base, 89 mm widest). Re-check against the real cup before the full print
-- [ ] **Blocking: the diagonal strut and red latch sit further out than the push bar** (owner, photos 2026-11-01). The module's web and the
-      cup would hit them as designed. Need how far out and where along the bar. See Open questions 1
+- [x] Strut + red latch clearance (v3.1): they sit further out than the bar, ~26 mm (owner's estimate), the same at both ends. The cup
+      is now moved out to clear them. **Still an estimate: check it against the real wagon before the full print** (Open questions 2)
 - [ ] **Print the three small test pieces first** (a few minutes to an hour each): the clamp slice, and the dovetail pair
 - [ ] Print the clip and module in PETG, test on the wagon with a full cup, adjust
 
@@ -37,7 +37,7 @@ and off quickly as it will need to be off for folding").
 - The cup **module** has the matching groove (0.35 mm clearance per side). It **drops straight down onto the tongue**
   and rests on the tops of the clip's ears, so **gravity holds it seated**. To remove it, lift it straight up
   ~32 mm and it comes off with the cup in it, one-handed, no tool.
-- The module's weight is carried by the ear tops (a vertical stop). The cup's twist (0.67 N·m full) is carried as a
+- The module's weight is carried by the ear tops (a vertical stop). The cup's twist (0.82 N·m full) is carried as a
   couple across the 32 mm dovetail height (~20 N), which is small.
 - **No detent yet.** To lift off, the module has to move up 32 mm, and a wagon bump is very unlikely to do that. If it
   hops in testing, add a small click detent (bump on the tongue flank + dimple in the groove) or a lanyard.
@@ -84,10 +84,10 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
 
 - **Layout (use frame):** the clip wraps the side rail from above, mouth facing down. The cup module hangs off its
   outboard side: a block with the dovetail groove, a web down the outside of the rail, and the floor plate and pocket
-  off the web. The cup axis is **67.8 mm outboard of the rail axis**, and the **cup base is 60 mm below the rail axis**, so
+  off the web. The cup axis is **83.8 mm outboard of the rail axis**, and the **cup base is 60 mm below the rail axis**, so
   the pocket rim is 20 mm above it and the rest of the tumbler rises beside the frame.
 - **The clamp bolt is still essential.** The cup is beside the rail, so a full cup (~1 kg) is a constant twist
-  of about **0.67 N·m** on the clip. A snap-fit's friction at rest is ~0.1 N·m (the lips just touch the tube with no
+  of about **0.82 N·m** on the clip. A snap-fit's friction at rest is ~0.1 N·m (the lips just touch the tube with no
   preload). So the clip has **two ears and an M4 bolt across the mouth**. Tightening it pulls the C closed around the
   tube (roughly belt-like, so ~4× the bolt force presses on the tube, enough for ~1.5+ N·m even at modest tightness).
   That's a rough estimate, so **verify with the clamp test slice** (try to twist the tightened slice on the real rail by hand).
@@ -113,7 +113,7 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
 
 - PETG, 0.2 mm layers, 4–5 walls, 15–20 % gyroid infill, brim on (the module's web is 88 mm tall and only 6.5 mm thick).
 - Orientation is already built into each STL. Don't re-orient them.
-- Volumes: module 160 cm³ and clip 47 cm³ solid. Expect roughly 70–90 g and 25–35 g with those settings.
+- Volumes: module 203 cm³ and clip 47 cm³ solid. Expect roughly 80–100 g and 25–35 g with those settings.
 - **Test prints, in order:**
   1. `wagon-cup-clip-test.stl`: 15 mm ring + ears. Snap it on the real rail, add the M4 bolt, and tighten.
      Check the snap force and try to twist it.
@@ -125,11 +125,13 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
 ## Open questions
 
 1. **Does the empty clip block folding?** See "Folding" above. Test with the clamp slice on the rail.
-2. **The red latch and the diagonal strut sit further out than the push bar** (owner confirmed from photos). They're at the end
-   bracket of the bar, and the strut runs down and away from it. The module's web is a plate 88 mm long (along the bar) that sits
-   ~24–30 mm out from the bar axis and drops 60+ mm, and the cup is 68 mm out. **Need:** (a) which end of the bar has the latch and
-   strut (the pusher's left or right?), (b) how far out from the bar's outer surface they reach, (c) how far along the bar the
-   latch and strut extend from the bracket, and (d) what the other end looks like.
+2. **The red latch and the diagonal strut sit further out than the push bar** (owner, from photos). Owner's answers: same at both ends,
+   they reach "maybe 26 mm" out (taken as 26 mm past the bar's **outer surface**, i.e. 37.2 mm from the bar axis, the cautious reading),
+   and the 120 mm is the clear, unobstructed stretch of bar between them. The module's web now starts **40 mm** from the bar axis
+   (2.8 mm clear of that), the module is 88 mm long inside the 120 mm window (16 mm each side), and the clip is centred on it.
+   **Still assumed (modelled as two blocks at the ends of the window, shown in the viewer):** the latch/strut only exist
+   beyond the 120 mm window, and nothing else is outboard of the bar inside it. The diagonal strut slopes down from the bracket, so please
+   check on the real wagon that it doesn't reach under the cup (the cup base is 60 mm below the bar axis). If it does, raise the cup (`floor_drop`).
 3. ~~Is the side rail really 22.3 mm?~~ Confirmed by the owner: **22.3 mm** (set as `bar_d`).
 4. **Which way should the cup open?** The pocket's side opening faces along the rail. Mirror or flip if you'd rather it faced the pusher.
 5. Does the owner's tumbler have a handle? (The pocket assumes the plain Rambler.)
@@ -148,7 +150,7 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
    clip/tumbler (all must be 0). Writes `output/report.json` and the renders.
 
 Key parameters (`CupHolderParams` in `model.py`): `bar_d`, `bar_clearance`, `clip_wall`, `clip_len`, `mouth_width`,
-`dt_clear`, `dt_w_root`, `dt_y1`, `web_gap`, `floor_drop`, `cup_base_d`, `cup_top_d`, `pocket_depth`, `pocket_clearance`, `wrap_deg`.
+`dt_clear`, `dt_w_root`, `dt_y1`, `web_gap`, `keepout_reach`, `safe_window`, `floor_drop`, `cup_base_d`, `cup_top_d`, `pocket_depth`, `pocket_clearance`, `wrap_deg`.
 
 ## Files
 
@@ -193,3 +195,9 @@ Key parameters (`CupHolderParams` in `model.py`): `bar_d`, `bar_clearance`, `cli
   **side rail is 22.3 mm** and that the **retailer tumbler figures are fine for now**. No model change yet: I need to know which
   end has the latch and strut, how far out they reach, and how far along the bar they extend before I move the cup.
   Likely fixes: shift the module toward the free end of the bar, push the cup further out (`web_gap`), and/or raise it (`floor_drop`).
+- **2026-11-01 (v3.1):** Owner's answers on the strut and latch: the **same at both ends**, they reach **~26 mm** out past the bar,
+  and the **120 mm is the clear stretch between them**. Retailer tumbler dims accepted for now. Moved the cup out: `web_gap` 24 → **40 mm**
+  (cup axis 83.8 mm from the bar axis, twist 0.67 → 0.82 N·m, still within the clamp's estimated capacity). Centred the clip on the
+  module along the bar (16 mm margin to each end of the window for the module). Extended the dovetail block down to the bed so it
+  doesn't float (that had created an 805 mm² bridge). Added approximate latch/strut keep-out zones (`renders/ref-keepout.stl`) and
+  checked the module and clip against them: 0 interference. Next: owner checks the strut doesn't reach under the cup, then the test prints.

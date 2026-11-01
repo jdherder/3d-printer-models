@@ -59,12 +59,13 @@ def shifted(solid, cx, cy):
 
 
 def print_pose(solid):
-    """Individual print pose: longest footprint axis along X, footprint centred on the XY origin."""
+    """Individual print pose: longest footprint axis along X, centred on the XY origin, resting on Z=0."""
     bb = solid.bounding_box()
     turn = (bb.max.Y - bb.min.Y) > (bb.max.X - bb.min.X)
     s = solid.rotate(Axis.Z, 90) if turn else solid
-    cx, cy = bbox_center(s.bounding_box())
-    return Pos(-cx, -cy, 0) * s
+    bb2 = s.bounding_box()
+    cx, cy = bbox_center(bb2)
+    return Pos(-cx, -cy, -bb2.min.Z) * s
 
 
 def overhang_area_mm2(mesh, max_angle_deg=45.0, tol_deg=1.0):
@@ -76,12 +77,30 @@ def overhang_area_mm2(mesh, max_angle_deg=45.0, tol_deg=1.0):
     return float(mesh.area_faces[bad].sum())
 
 
+def keepout_mesh(p, cx, cy):
+    """Approximate zones where the end brackets' red latch + diagonal strut live, one at each end of the
+    clear window, centred on the cup module. Only the OUTWARD REACH (keepout_reach past the bar surface) is
+    from the owner; the Y extent and the 'they sit only beyond the clear window' assumption are mine."""
+    zc = p.cup_zc
+    half = p.safe_window / 2
+    x0, x1 = 0.0, p.keepout_x
+    y0, y1 = -110.0, 15.0
+    depth = 40.0
+    boxes = []
+    for z0, z1 in ((zc + half, zc + half + depth), (zc - half - depth, zc - half)):
+        b = trimesh.creation.box(extents=[x1 - x0, y1 - y0, z1 - z0])
+        b.apply_translation([(x0 + x1) / 2 - cx, (y0 + y1) / 2 - cy, (z0 + z1) / 2])
+        boxes.append(b)
+    return trimesh.util.concatenate(boxes)
+
+
 def interference_cm3(a, b):
     inter = a.intersection(b, engine="manifold")
     return float(abs(inter.volume)) / 1000.0 if len(inter.faces) else 0.0
 
 
-def section_axes(ax, meshes, normal, origin, axes, title, colors=("black", "tab:green", "tab:blue", "tab:red")):
+def section_axes(ax, meshes, normal, origin, axes, title,
+                 colors=("black", "tab:green", "tab:blue", "tab:red", "tab:orange")):
     for m, c in zip(meshes, colors):
         segs = section_segments(m, normal, origin, axes)
         if len(segs):
@@ -135,6 +154,8 @@ def main():
     cup_p = Pos(p.pocket_cx, p.floor_y, p.cup_zc) * (Rotation(-90, 0, 0) * cone)
     rail = mk.cad_to_mesh(shifted(rail_p, cx, cy))
     cup = mk.cad_to_mesh(shifted(cup_p, cx, cy))
+    keepout = keepout_mesh(p, cx, cy)
+    keepout.export(RENDERS / "ref-keepout.stl")
     clip.export(RENDERS / "asm-clip.stl")
     module.export(RENDERS / "asm-module.stl")
     rail.export(RENDERS / "ref-bar.stl")
@@ -147,6 +168,8 @@ def main():
         "interference_module_vs_tumbler_cm3": round(interference_cm3(module, cup), 3),
         "interference_clip_vs_rail_cm3": round(interference_cm3(clip, rail), 3),
         "interference_clip_vs_tumbler_cm3": round(interference_cm3(clip, cup), 3),
+        "interference_module_vs_latch_strut_zone_cm3": round(interference_cm3(module, keepout), 3),
+        "interference_clip_vs_latch_strut_zone_cm3": round(interference_cm3(clip, keepout), 3),
     }
     for name, val in checks.items():
         assert val < 0.01, f"{name} = {val}: parts collide"
@@ -170,6 +193,10 @@ def main():
         "clip_extent_below_rail_axis": round(-p.ear_bottom_y, 1),
         "clip_extent_outboard_of_rail_axis": round(p.dt_x0 + p.dt_h, 1),
         "tumbler_taper_mm_per_mm_dia": round(taper, 4),
+        "latch_strut_reach_from_rail_axis": round(p.keepout_x, 1),
+        "web_clearance_to_latch_strut": round(p.web_gap - p.keepout_x, 1),
+        "module_clearance_to_window_ends_each_side": round((p.safe_window - 2 * p.outer_r) / 2, 1),
+        "clip_clearance_to_window_ends_each_side": round((p.safe_window - p.clip_len) / 2, 1),
     })
     report = {
         "dimensions_status": "Tube measured by owner (22.3 mm); assumed same on the right side rail. "
@@ -194,28 +221,28 @@ def main():
                  sections_y=(rail_y,), sections_x=())
 
     fig, axs = plt.subplots(2, 2, figsize=(18, 14))
-    z_mid = p.clip_len / 2
-    section_axes(axs[0, 0], [clip, module, rail], [0, 0, 1], [0, 0, z_mid - 14], [0, 1],
-                 f"across the rail at z={z_mid - 14:g}: clip (black), module (green), rail (blue)")
+    z_sec = p.cup_zc - 14
+    section_axes(axs[0, 0], [clip, module, rail, keepout], [0, 0, 1], [0, 0, z_sec], [0, 1],
+                 f"across the rail at z={z_sec:.0f}: clip (black), module (green), rail (blue)")
     section_axes(axs[0, 1], [module, cup], [0, 1, 0], [0, p.floor_y + p.pocket_depth / 2 - cy, 0], [0, 2],
                  "across the pocket mid-height: wall (black), tumbler (green)")
     section_axes(axs[1, 0], [clip, module], [0, 1, 0], [0, 10.0 - cy, 0], [0, 2],
                  "through the dovetail at y=+10 above the rail axis: tongue (black) in groove (green)")
-    section_axes(axs[1, 1], [clip, module, rail], [0, 1, 0], [0, p.bolt_y - cy, 0], [0, 2],
-                 "through the bolt axis: ears, nut slot, head pocket (black)")
+    section_axes(axs[1, 1], [clip, module, keepout], [0, 1, 0], [0, p.bolt_y - cy, 0], [0, 2],
+                 "through the bolt axis: ears, nut slot, head pocket (black), latch/strut zones (blue)")
     fig.suptitle("wagon cup holder: cross-sections (print orientation, mm)", fontsize=15)
     fig.savefig(RENDERS / "sections.png", dpi=70, bbox_inches="tight")
     plt.close(fig)
 
     # In-use pose: rail horizontal (fore-aft), cup upright, hanging off the outside of the rail.
     # Print frame (X out, Y up, Z along the rail) -> use frame (rail, out, up) = (z, x, y).
-    use = trimesh.util.concatenate([module, clip, rail, cup])
+    use = trimesh.util.concatenate([module, clip, rail, cup, keepout])
     use.vertices = np.c_[use.vertices[:, 2], use.vertices[:, 0], use.vertices[:, 1]]
     use.vertices -= [use.bounds[:, 0].mean(), use.bounds[:, 1].mean(), use.bounds[0, 2]]
     use.fix_normals()
     render_sheet(use, str(RENDERS / "in-use.png"),
                  title="in use: rail along X, clip on the rail, cup module hanging off the outside",
-                 labels=["clip + module + rail + tumbler"], sections_y=(0.0,), sections_x=())
+                 labels=["module + clip + rail + tumbler + latch/strut zones"], sections_y=(0.0,), sections_x=())
 
 
 if __name__ == "__main__":
