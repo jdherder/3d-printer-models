@@ -1,32 +1,55 @@
 # Wagon cup holder
 
-A cup holder that clamps onto the **right-hand side rail** of the owner's
+A two-piece cup holder for the **right-hand side rail** of the owner's
 [MAC Sports push/pull wagon](https://macsports.com/products/mac-sports-push-pull-wagon)
-(the push-handle frame, as seen from the pusher) and holds a **20 oz Yeti Rambler** hanging off the
-outside of the wagon.
+(the push-handle frame, as seen from the pusher). A **clip stays on the rail**, and the **cup module lifts on and
+off it in a couple of seconds**, so it can come off for folding the wagon. It holds a **20 oz Yeti Rambler**
+hanging off the outside of the wagon.
 
 ![holder in print orientation](renders/cup-holder.png)
 
 ## Goal
 
-A snap-on, bolt-tightened clip on the side rail, with a pocket that holds a 20 oz Yeti tumbler upright,
-hanging off the side of the wagon (the owner's idea: "hanging off to the side of the wagon", and hanging
-lower rather than level with the rail).
+A tool-free way to take the cup off and put it back, with the cup hanging off the side of the wagon, lower than
+the rail (the owner's requirements: "hanging off to the side of the wagon", "hanging lower", and "needs to go on
+and off quickly as it will need to be off for folding").
 
 ## Status
 
 - [x] Reference photos saved (`source/`): the product photo and six photos of the push frame with a tape measure
 - [x] Tube measured by the owner: round, **22.3 mm** diameter, **~120 mm** free length
-- [x] Parametric CAD model (`model.py`), STEP + STL, watertight, 0 self-intersections, no supports
-- [x] Fits the A1 in one piece (130 × 87 × 88 mm), checked for collisions against the rail and tumbler
-- [ ] **Owner: confirm this is the right spot.** The clip goes on the **straight section of the right-hand side
-      rail**, with the cup outside it. See "What I read from the photos"
+- [x] Parametric CAD model (`model.py`): **clip** + **cup module** + two small test pieces. STEP + STL, watertight,
+      0 self-intersections, no collisions in the assembled position, no supports
+- [x] Fits the A1 (module 96 × 95 × 88 mm, clip 52 × 40 × 70 mm)
+- [ ] **Owner: confirm the clip spot** (straight section of the right-hand side rail) and that the **empty clip
+      doesn't block folding**. See "Folding" below
 - [ ] **Owner: measure the actual tumbler** (base and widest diameter). The pocket uses retailer figures
 - [ ] **Owner: what's near the clip spot?** The red latch, the diagonal flat strut, and the end cap
-      (see Open questions)
-- [ ] **Print the clip-only test slice first** (`output/wagon-cup-clip-test.stl`, 15 mm, a few minutes)
-      to check the snap fit and the bolt clamp on the real tube
-- [ ] Print the full holder in PETG, test on the wagon with a full cup, adjust
+- [ ] **Print the three small test pieces first** (a few minutes to an hour each): the clamp slice, and the dovetail pair
+- [ ] Print the clip and module in PETG, test on the wagon with a full cup, adjust
+
+## How the quick release works
+
+- The **clip** (ring + ears + M4 bolt) is snapped on and **tightened once with a hex key**. It stays on the rail.
+  On its outboard side there's a boss with a **vertical 45° dovetail tongue** (34 mm wide at the root, 48 mm at the tip,
+  7 mm tall, **32 mm of vertical engagement**).
+- The cup **module** has the matching groove (0.35 mm clearance per side). It **drops straight down onto the tongue**
+  and rests on the tops of the clip's ears, so **gravity holds it seated**. To remove it, lift it straight up
+  ~32 mm and it comes off with the cup in it, one-handed, no tool.
+- The module's weight is carried by the ear tops (a vertical stop). The cup's twist (0.67 N·m full) is carried as a
+  couple across the 32 mm dovetail height (~20 N), which is small.
+- **No detent yet.** To lift off, the module has to move up 32 mm, and a wagon bump is very unlikely to do that. If it
+  hops in testing, add a small click detent (bump on the tongue flank + dimple in the groove) or a lanyard.
+
+### Folding
+
+What stays on the rail when the cup is off: the **clip is 70 mm long and extends about 28 mm above the rail axis,
+24 mm below it, 22 mm outboard and 18 mm inboard** (the ears and the dovetail boss). **Whether that blocks folding is the
+big unknown.** I can't tell from the photos what the rail does when the wagon folds. Cheap check before printing the
+whole thing: print the clip (or just the 15 mm clamp slice, which has the ears but not the boss), clamp it on the right
+rail where it would go, and fold the wagon. If it gets in the way, move it along the rail, or loosen the bolt and remove
+the whole clip (a hex key and ~10 s) when you fold. Don't want the tool? A thumb-screw or wing-nut instead of the nut
+is an easy change.
 
 ## What I read from the photos (2026-11-01)
 
@@ -39,7 +62,6 @@ fits the stretch between the end cap and the red latch. The outside of the rail 
 
 **Assumptions to confirm:** the side rail is the same 22.3 mm round tube the owner measured; the clip
 can sit on the free ~120 mm; and nothing outboard of the rail (latch, strut) is in the way of the web.
-These are the open questions below, not measurements.
 
 ## Measurements
 
@@ -59,65 +81,71 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
 
 ## Design decisions and why
 
-- **Layout (use frame):** the clip wraps the side rail from above, mouth facing down. A **shelf** runs outward
-  from the top of the clip, a vertical **web** drops down the outside of the rail, and the **floor plate and pocket** hang
-  off the web. The cup axis is **67.8 mm outboard of the rail axis**, and the **cup base is 60 mm below the rail axis**,
-  so the pocket rim is 20 mm above it and the rest of the tumbler rises beside the frame.
-- **The clamp bolt is essential, not optional.** The cup is beside the rail, so a full cup (~1 kg) is a constant twist
-  of about **0.67 N·m** on the clip. A snap-fit's friction at rest is ~0.1 N·m (the lips just touch the tube with no preload).
-  So the clip has **two ears and an M4 bolt across the mouth**. Tightening it pulls the C closed around the tube
-  (roughly belt-like, so ~4× the bolt force presses on the tube, enough for ~1.5+ N·m even at modest tightness). That's
-  a rough estimate, so **verify with the test slice** (try to twist the tightened slice on the real rail by hand).
+- **Layout (use frame):** the clip wraps the side rail from above, mouth facing down. The cup module hangs off its
+  outboard side: a block with the dovetail groove, a web down the outside of the rail, and the floor plate and pocket
+  off the web. The cup axis is **67.8 mm outboard of the rail axis**, and the **cup base is 60 mm below the rail axis**, so
+  the pocket rim is 20 mm above it and the rest of the tumbler rises beside the frame.
+- **The clamp bolt is still essential.** The cup is beside the rail, so a full cup (~1 kg) is a constant twist
+  of about **0.67 N·m** on the clip. A snap-fit's friction at rest is ~0.1 N·m (the lips just touch the tube with no
+  preload). So the clip has **two ears and an M4 bolt across the mouth**. Tightening it pulls the C closed around the
+  tube (roughly belt-like, so ~4× the bolt force presses on the tube, enough for ~1.5+ N·m even at modest tightness).
+  That's a rough estimate, so **verify with the clamp test slice** (try to twist the tightened slice on the real rail by hand).
   *Hardware: 1 × M4 × 35 socket-head screw + 1 × M4 nut.*
-- **Bolt access:** the nut slides into a slot from the bottom of the inboard ear (no tool needed to hold it). The screw
-  head sits in a pocket on the outboard ear, reached with a hex key **through a 12 mm window in the web, from inside the
-  empty pocket**. So tighten the bolt **before** you put the cup in.
+- **Bolt access:** with the module off, the +X ear's outer face is clear. The nut slides into a slot from the bottom of the
+  inboard ear. The head sits in a pocket on the outboard ear.
 - **Snap geometry:** the mouth is 20.7 mm wide against the 22.3 mm tube, so each arm spreads ~0.8 mm
   (≈1% strain at the 2.8 mm wall, fine for PETG). Estimated push-on force is ~5–10 kgf, so
-  **test with the clip slice**. If it's too stiff, raise `mouth_width` or lower `clip_wall`. If it's loose, do the reverse.
+  **test with the clamp slice**. If it's too stiff, raise `mouth_width` or lower `clip_wall`. If it's loose, do the reverse.
 - **Pocket:** a tapered cone (matches the Yeti's taper) 80 mm deep, with 1 mm radial clearance, wrapping the
   cup 250° so it can't slide out sideways. It's open on one side so it prints without supports.
-- **Printed on its side:** the clip's bore axis is vertical on the bed. The ring's layers then run around the
-  circle, so the arms flex along the layers. Shelf, web and floor are all prisms extruded along the build axis,
-  so they stand on the bed with no overhangs. The pocket lies on a 45° teardrop foot. No supports. The only steep
-  faces are small (~4 mm) bridges over the bolt, nut and window openings.
+- **Printed on its side:** both pieces are built in a frame where the clip's bore axis is vertical on the bed. The ring's
+  layers then run around the circle, so the arms flex along the layers. The dovetail flanks are 45° so they need no
+  supports. The pocket lies on a 45° teardrop foot. The module has **no steep faces at all**, and the clip has ~33 mm² of
+  small (~4 mm) bridges over the bolt and nut openings.
 - **Material:** PETG (outdoor, sun, flexing clip). PLA creeps and softens in a hot car or in the sun, and
   ASA/ABS warp on the open-frame A1.
-- **Earlier design (superseded):** the first version had the cup standing directly on top of the bar. The owner
-  wanted it hanging off the side, and the photos showed the side rail is the place for that. That version is in git history.
+- **History:** v1 had the cup standing on top of the bar. v2 hung it off the side rail as one piece, with a hex-key
+  window through the web so the bolt could be reached. v3 (this) splits it so the cup comes off without a tool. The window
+  is gone, since the bolt is reached with the module off. Earlier versions are in git history.
 
 ## Print settings (suggested, not yet test-printed)
 
-- PETG, 0.2 mm layers, 4–5 walls, 15–20 % gyroid infill, brim on (the web is 88 mm tall and only 6.5 mm thick).
-- Orientation is already built into the STL: clip bore vertical, pocket on its side. Don't re-orient it.
-- Volume 184 cm³ solid. Expect roughly 80–100 g with those settings.
-- If the clip arms crack when snapping, print the clip slice with more walls and a lower mouth interference first.
+- PETG, 0.2 mm layers, 4–5 walls, 15–20 % gyroid infill, brim on (the module's web is 88 mm tall and only 6.5 mm thick).
+- Orientation is already built into each STL. Don't re-orient them.
+- Volumes: module 160 cm³ and clip 47 cm³ solid. Expect roughly 70–90 g and 25–35 g with those settings.
+- **Test prints, in order:**
+  1. `wagon-cup-clip-test.stl`: 15 mm ring + ears. Snap it on the real rail, add the M4 bolt, and tighten.
+     Check the snap force and try to twist it.
+  2. `wagon-dovetail-test-tongue.stl` + `wagon-dovetail-test-groove.stl`: print both, slide them together
+     (groove block drops onto the tongue from above). Should slide with a light push and not rattle. Adjust
+     `dt_clear` (0.35 mm per side now) if it's too tight or sloppy.
+  3. The full clip and module.
 
 ## Open questions
 
-1. **The red latch and the diagonal strut.** Where exactly are they relative to the free 120 mm? The web is a plate
+1. **Does the empty clip block folding?** See "Folding" above. Test with the clamp slice on the rail.
+2. **The red latch and the diagonal strut.** Where exactly are they relative to the free 120 mm? The module's web is a plate
    88 mm long (along the rail) that sits ~24–30 mm out from the rail axis and drops 60+ mm. If the latch or
-   strut is outboard of the rail there, the holder will hit it. A photo of the right rail from outside and below, with a ruler, would settle it.
-2. **Is the side rail really 22.3 mm?** The measurement was of "the bar". If the rail differs, set `bar_d` in `build.py`.
-3. **Which way should the cup open?** The pocket's side opening faces along the rail (toward the end cap in the current
-   layout). Mirror or flip if you'd rather it faced the pusher.
-4. Does the owner's tumbler have a handle? (The pocket assumes the plain Rambler.)
-5. Would a rubber strip or inner-tube liner on the rail be wanted for extra grip? (Easy to add.)
-6. The wagon folds. Does the holder need to come off to fold it? (It does: undo the bolt, pull it off.)
+   strut is outboard of the rail there, the module will hit it. A photo of the right rail from outside and below, with a ruler, would settle it.
+3. **Is the side rail really 22.3 mm?** The measurement was of "the bar". If the rail differs, set `bar_d` in `build.py`.
+4. **Which way should the cup open?** The pocket's side opening faces along the rail. Mirror or flip if you'd rather it faced the pusher.
+5. Does the owner's tumbler have a handle? (The pocket assumes the plain Rambler.)
+6. Is a click detent wanted, or is gravity enough?
+7. Would a rubber strip or inner-tube liner on the rail be wanted for extra grip? (Easy to add.)
 
 ## Pipeline
 
-`python projects/wagon-cup-holder/build.py` (~1 min):
-1. `model.py` (build123d): clip ring + ears → shelf + web + floor plate + teardrop pocket (cone cavity, side
-   opening) → cut bore, mouth, bolt hole, head pocket, nut slot, hex-key window. Built in the **print frame**
-   (rail axis = Z, cup axis = Y), so no rotation is needed.
-2. `build.py` centres it, exports STEP + STL, and builds the 15 mm clip test slice.
-3. Checks: watertight, 0 self-intersections, interference with a ghost rail and a ghost tumbler (both must be 0),
-   overhang area (with a 1° tolerance so the 45° foot isn't miscounted). Writes `output/report.json` and the renders.
+`python projects/wagon-cup-holder/build.py` (~2 min):
+1. `model.py` (build123d): `build_clip` = ring + ears + boss + dovetail tongue, cut bore, mouth, bolt hole, head pocket,
+   nut slot. `build_module` = floor plate + teardrop pocket (cone cavity, side opening) + web + dovetail block with its groove.
+   Built in the **print frame** (rail axis = Z, cup axis = Y), in the assembled position.
+2. `build.py` exports each piece (STEP + STL) in its own print pose, plus the three test pieces.
+3. Checks: watertight, 0 self-intersections, overhang area (1° tolerance so the 45° faces aren't miscounted), and
+   interference of every pair in the assembled position: module/clip, module/rail, module/tumbler, clip/rail,
+   clip/tumbler (all must be 0). Writes `output/report.json` and the renders.
 
-Key parameters (`CupHolderParams` in `model.py`): `bar_d`, `bar_clearance`, `clip_wall`, `clip_len`,
-`mouth_width`, `web_gap`, `floor_drop`, `cup_base_d`, `cup_top_d`, `pocket_depth`, `pocket_clearance`, `wrap_deg`.
-The pocket rim must stay above the shelf (`floor_drop` ≤ ~62 with the default 80 mm pocket), or the cup bulges into the shelf.
+Key parameters (`CupHolderParams` in `model.py`): `bar_d`, `bar_clearance`, `clip_wall`, `clip_len`, `mouth_width`,
+`dt_clear`, `dt_w_root`, `dt_y1`, `web_gap`, `floor_drop`, `cup_base_d`, `cup_top_d`, `pocket_depth`, `pocket_clearance`, `wrap_deg`.
 
 ## Files
 
@@ -127,12 +155,14 @@ The pocket rim must stay above the shelf (`floor_drop` ≤ ~62 with the default 
 - `source/wagon-photo-2026-11-01.jpg`: the owner's first photo (product shot, arrow marks the bar)
 - `source/wagon-photo-2026-11-01-rail-1..6.jpg`: the owner's photos of the push frame, with tape measure
 - `model.py`: parametric CAD. `build.py`: pipeline
-- `output/wagon-cup-holder.step`: editable solid for Fusion (print orientation)
-- `output/wagon-cup-holder.stl`: print-ready holder
-- `output/wagon-cup-clip-test.stl`: 15 mm clip-only slice for the fit test
+- `output/wagon-cup-clip.step/.stl`: the clip that stays on the rail
+- `output/wagon-cup-module.step/.stl`: the cup module that lifts on and off
+- `output/wagon-cup-clip-test.stl`: 15 mm ring + ears slice, for the snap and clamp test
+- `output/wagon-dovetail-test-tongue.stl`, `output/wagon-dovetail-test-groove.stl`: sliding-fit test pair
 - `output/report.json`: dimensions, checks, parameters
 - `renders/cup-holder.png`, `renders/sections.png`, `renders/in-use.png`: previews and sections
-- `renders/ref-bar.stl`, `renders/ref-tumbler.stl`: ghost rail and tumbler for the viewer
+- `renders/asm-clip.stl`, `renders/asm-module.stl`, `renders/ref-bar.stl`, `renders/ref-tumbler.stl`:
+  assembled-position meshes and the ghost rail and tumbler for the viewer
 
 ## Log
 
@@ -147,5 +177,11 @@ The pocket rim must stay above the shelf (`floor_drop` ≤ ~62 with the default 
   with side rails, and the right side rail is the spot. Redesigned: clip on the side rail, shelf + web carrying a
   pocket **67.8 mm outboard** with the cup base **60 mm below the rail**, a hex-key window through the web for the bolt,
   and the nut on a slide-in slot. The cup twist on the clip is now constant (~0.67 N·m), so the bolt clamp is
-  essential. Watertight, 0 self-intersections, no collisions with the rail or tumbler, no supports, 130 × 87 × 88 mm.
-  Next: owner confirms the spot, checks the latch/strut clearance, measures the tumbler, and prints the clip slice.
+  essential.
+- **2026-11-01 (v3):** The owner needs it to **go on and off quickly** because it has to be off for folding. Offered three
+  options (stay-on clip + sliding cup module, cam lever, strap). The owner chose the **stay-on clip + sliding module**.
+  Split the part in two: the clip (ring, ears, bolt, boss, 45° dovetail tongue) stays on the rail, and the module (dovetail
+  block, web, floor, pocket) drops on from above, resting on the ear tops, and lifts straight off. Dropped the shelf and the
+  hex-key window. Added two test prints for the sliding fit. All pairs interference-free, both pieces watertight, no steep
+  faces on the module. Next: owner checks the empty clip against folding, confirms the clip spot and latch/strut
+  clearance, measures the tumbler, and prints the test pieces.

@@ -1,24 +1,41 @@
 {
   "dimensions_status": "Tube measured by owner (22.3 mm); assumed same on the right side rail. Tumbler from retailer figures, NOT measured.",
-  "part": {
+  "clip": {
     "extents_mm": [
-      130.0,
-      86.5,
-      87.6
+      52.3,
+      40.3,
+      70.0
     ],
-    "faces": 3618,
+    "faces": 1800,
     "watertight": true,
     "winding_consistent": true,
-    "euler_number": -4,
-    "volume_cm3": 184.3,
+    "euler_number": -2,
+    "volume_cm3": 46.6,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
-    "self_intersecting_faces": 0
+    "self_intersecting_faces": 0,
+    "overhang_area_over_45deg_mm2": 33.1
   },
-  "clip_test": {
+  "module": {
     "extents_mm": [
-      36.7,
+      96.3,
+      94.5,
+      87.6
+    ],
+    "faces": 1330,
+    "watertight": true,
+    "winding_consistent": true,
+    "euler_number": 2,
+    "volume_cm3": 159.9,
+    "fits_A1_as_is": true,
+    "fits_A1_any_axis_order": true,
+    "self_intersecting_faces": 0,
+    "overhang_area_over_45deg_mm2": 0.0
+  },
+  "clamp_test_slice": {
+    "extents_mm": [
       38.3,
+      36.7,
       15.0
     ],
     "faces": 1844,
@@ -28,12 +45,47 @@
     "volume_cm3": 6.0,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
-    "self_intersecting_faces": 0
+    "self_intersecting_faces": 0,
+    "overhang_area_over_45deg_mm2": 33.1
+  },
+  "dovetail_test_tongue": {
+    "extents_mm": [
+      17.0,
+      14.0,
+      70.0
+    ],
+    "faces": 28,
+    "watertight": true,
+    "winding_consistent": true,
+    "euler_number": 2,
+    "volume_cm3": 13.8,
+    "fits_A1_as_is": true,
+    "fits_A1_any_axis_order": true,
+    "self_intersecting_faces": 0,
+    "overhang_area_over_45deg_mm2": 0.0
+  },
+  "dovetail_test_groove": {
+    "extents_mm": [
+      14.0,
+      10.6,
+      70.0
+    ],
+    "faces": 28,
+    "watertight": true,
+    "winding_consistent": true,
+    "euler_number": 2,
+    "volume_cm3": 6.3,
+    "fits_A1_as_is": true,
+    "fits_A1_any_axis_order": true,
+    "self_intersecting_faces": 0,
+    "overhang_area_over_45deg_mm2": 0.0
   },
   "checks": {
-    "overhang_area_over_45deg_mm2": 33.1,
-    "interference_with_bar_cm3": 0.0,
-    "interference_with_tumbler_cm3": 0.0
+    "interference_module_vs_clip_cm3": 0.0,
+    "interference_module_vs_rail_cm3": 0.0,
+    "interference_module_vs_tumbler_cm3": 0.0,
+    "interference_clip_vs_rail_cm3": 0.0,
+    "interference_clip_vs_tumbler_cm3": 0.0
   },
   "params_mm": {
     "bar_d": 22.3,
@@ -49,10 +101,15 @@
     "nut_af": 7.3,
     "nut_depth": 3.8,
     "lead_in": 3.5,
-    "window_d": 12.0,
+    "ear_top_y": -4.0,
+    "boss_x0": 11.0,
+    "dt_x0": 15.0,
+    "dt_h": 7.0,
+    "dt_w_root": 34.0,
+    "dt_y1": 28.0,
+    "dt_clear": 0.35,
     "web_gap": 24.0,
     "web_t": 6.5,
-    "shelf_t": 6.5,
     "cup_base_d": 70.0,
     "cup_top_d": 89.0,
     "cup_h": 165.0,
@@ -64,7 +121,7 @@
     "wrap_deg": 250.0,
     "bore_d": 22.5,
     "snap_spread_each_lip": 0.8,
-    "bolt_length_needed": "M4 x 35 + M4 nut",
+    "bolt_needed": "M4 x 35 socket-head screw + M4 nut",
     "pocket_base_d": 72.0,
     "pocket_rim_d": 81.21,
     "pocket_outer_d": 87.61,
@@ -72,6 +129,11 @@
     "pocket_rim_height_above_rail_axis": 20.0,
     "cup_base_below_rail_axis": 60.0,
     "est_cup_torque_on_clip_Nm": 0.67,
+    "dovetail_engagement_mm": 32.0,
+    "dovetail_width_tip_mm": 48.0,
+    "clip_extent_above_rail_axis": 28.0,
+    "clip_extent_below_rail_axis": 24.3,
+    "clip_extent_outboard_of_rail_axis": 22.0,
     "tumbler_taper_mm_per_mm_dia": 0.1152
   }
 }

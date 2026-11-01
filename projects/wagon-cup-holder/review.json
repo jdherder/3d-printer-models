@@ -1,11 +1,16 @@
 {
   "page_title": "Wagon Cup Holder",
-  "title": "Wagon cup holder: v2, hanging off the side rail",
-  "subtitle": "Bolt-tightened clip on the right-hand side rail · hangs a 20 oz Yeti off the outside of the wagon · shown in print orientation · millimetres",
+  "title": "Wagon cup holder: v3, cup lifts off the clip",
+  "subtitle": "Clip stays on the right-hand side rail · the cup module drops onto a dovetail and lifts straight off · shown assembled, in print orientation · millimetres",
   "meshes": [
     {
-      "path": "output/wagon-cup-holder.stl",
-      "label": "Cup holder",
+      "path": "renders/asm-module.stl",
+      "label": "Cup module (lifts off)",
+      "style": "solid"
+    },
+    {
+      "path": "renders/asm-clip.stl",
+      "label": "Clip (stays on the rail)",
       "style": "solid"
     },
     {
@@ -24,13 +29,15 @@
     {"label": "Clip bore", "param": "bore_d"},
     {"label": "Clip mouth", "param": "mouth_width"},
     {"label": "Clip length", "param": "clip_len"},
+    {"label": "Clip above rail axis", "param": "clip_extent_above_rail_axis"},
+    {"label": "Clip below rail axis", "param": "clip_extent_below_rail_axis"},
+    {"label": "Dovetail engagement", "param": "dovetail_engagement_mm"},
     {"label": "Cup axis out from rail", "param": "cup_axis_offset_from_rail"},
     {"label": "Cup base below rail axis", "param": "cup_base_below_rail_axis"},
     {"label": "Pocket base dia", "param": "pocket_base_d"},
-    {"label": "Pocket rim dia", "param": "pocket_rim_d"},
-    {"label": "Pocket depth", "param": "pocket_depth"}
+    {"label": "Pocket rim dia", "param": "pocket_rim_d"}
   ],
-  "scale_note": "Real size. The rail is your 22.3 mm tube (assumed the same on the side rail). The tumbler is from retailer listings (70 mm base, 89 mm widest), not your cup. It is drawn in print orientation: the clip's rail axis is vertical here and the cup lies on its side. In use the rail is horizontal and the cup stands upright, hanging off the outside of it.",
+  "scale_note": "Real size, shown assembled. The rail is your 22.3 mm tube (assumed the same on the side rail). The tumbler is from retailer listings (70 mm base, 89 mm widest), not your cup. It is drawn in print orientation: the rail axis is vertical here and the cup lies on its side. In use the rail is horizontal and the cup stands upright, hanging off the outside of it. To take the cup off, the module lifts straight up along the dovetail.",
   "notes_title": "What changed, and what to check",
-  "notes": "v2: you wanted the cup hanging off the side of the wagon, and your photos show the right-hand side rail is the place for that. The clip wraps the rail with its mouth facing down; a shelf and a web carry the cup out 68 mm and down 60 mm to a pocket beside the frame. The cup now twists the clip all the time (about 0.7 N·m full), so the M4 x 35 bolt across the clip's ears is essential. You reach its head with a hex key through the window in the web, from inside the empty pocket, so tighten it before the cup goes in. Please check: (1) is the side rail the same 22.3 mm tube? (2) is the red latch or the diagonal strut outboard of the rail in the 70 mm clip zone? If so the web will hit it. (3) is the clip the right spot, not further toward the end cap? (4) measure your tumbler's base and widest diameter. Print the 15 mm clip test slice first."
+  "notes": "v3: you need the cup off quickly for folding, so it is now two pieces. The clip (the ring with the ears and bolt) is tightened once with a hex key and stays on the rail. The cup module drops down onto the clip's dovetail, rests on the ear tops, and lifts straight off with the cup in it, one-handed, no tool. Toggle the pieces to see them apart. What stays on the rail is the clip: 70 mm long, about 28 mm above the rail axis, 24 mm below, 22 mm outboard and 18 mm inboard. Please check: (1) does that empty clip get in the way when you fold the wagon? Clamp the 15 mm test slice on the right rail and fold it. (2) is the red latch or the diagonal strut outboard of the rail in that zone? If so the module's web will hit it. (3) measure your tumbler's base and widest diameter. Then print the three small test pieces: the clamp slice and the dovetail pair."
 }
