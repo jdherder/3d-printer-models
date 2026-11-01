@@ -23,8 +23,9 @@ and off quickly as it will need to be off for folding").
 - [x] Fits the A1 (module 96 × 95 × 88 mm, clip 52 × 40 × 70 mm)
 - [ ] **Owner: confirm the clip spot** (straight section of the right-hand side rail) and that the **empty clip
       doesn't block folding**. See "Folding" below
-- [ ] **Owner: measure the actual tumbler** (base and widest diameter). The pocket uses retailer figures
-- [ ] **Owner: what's near the clip spot?** The red latch, the diagonal flat strut, and the end cap
+- [x] Tumbler: owner is fine with the retailer figures for now (70 mm base, 89 mm widest). Re-check against the real cup before the full print
+- [ ] **Blocking: the diagonal strut and red latch sit further out than the push bar** (owner, photos 2026-11-01). The module's web and the
+      cup would hit them as designed. Need how far out and where along the bar. See Open questions 1
 - [ ] **Print the three small test pieces first** (a few minutes to an hour each): the clamp slice, and the dovetail pair
 - [ ] Print the clip and module in PETG, test on the wagon with a full cup, adjust
 
@@ -124,10 +125,12 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
 ## Open questions
 
 1. **Does the empty clip block folding?** See "Folding" above. Test with the clamp slice on the rail.
-2. **The red latch and the diagonal strut.** Where exactly are they relative to the free 120 mm? The module's web is a plate
-   88 mm long (along the rail) that sits ~24–30 mm out from the rail axis and drops 60+ mm. If the latch or
-   strut is outboard of the rail there, the module will hit it. A photo of the right rail from outside and below, with a ruler, would settle it.
-3. **Is the side rail really 22.3 mm?** The measurement was of "the bar". If the rail differs, set `bar_d` in `build.py`.
+2. **The red latch and the diagonal strut sit further out than the push bar** (owner confirmed from photos). They're at the end
+   bracket of the bar, and the strut runs down and away from it. The module's web is a plate 88 mm long (along the bar) that sits
+   ~24–30 mm out from the bar axis and drops 60+ mm, and the cup is 68 mm out. **Need:** (a) which end of the bar has the latch and
+   strut (the pusher's left or right?), (b) how far out from the bar's outer surface they reach, (c) how far along the bar the
+   latch and strut extend from the bracket, and (d) what the other end looks like.
+3. ~~Is the side rail really 22.3 mm?~~ Confirmed by the owner: **22.3 mm** (set as `bar_d`).
 4. **Which way should the cup open?** The pocket's side opening faces along the rail. Mirror or flip if you'd rather it faced the pusher.
 5. Does the owner's tumbler have a handle? (The pocket assumes the plain Rambler.)
 6. Is a click detent wanted, or is gravity enough?
@@ -185,3 +188,8 @@ Key parameters (`CupHolderParams` in `model.py`): `bar_d`, `bar_clearance`, `cli
   hex-key window. Added two test prints for the sliding fit. All pairs interference-free, both pieces watertight, no steep
   faces on the module. Next: owner checks the empty clip against folding, confirms the clip spot and latch/strut
   clearance, measures the tumbler, and prints the test pieces.
+- **2026-11-01 (v3 feedback):** The owner sent two more photos of the push frame: the **diagonal bar and the red latch sit a bit
+  further out than the push bar** the holder clips to, so they're in the way of a cup hanging off the outside. Also confirmed the
+  **side rail is 22.3 mm** and that the **retailer tumbler figures are fine for now**. No model change yet: I need to know which
+  end has the latch and strut, how far out they reach, and how far along the bar they extend before I move the cup.
+  Likely fixes: shift the module toward the free end of the bar, push the cup further out (`web_gap`), and/or raise it (`floor_drop`).
