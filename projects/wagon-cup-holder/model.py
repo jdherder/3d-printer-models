@@ -1,56 +1,62 @@
-"""Parametric cup holder that clamps onto the MAC wagon's push bar (build123d).
+"""Parametric side-hanging cup holder for the MAC wagon's right-hand side rail (build123d).
 
 Design (see README for the reasoning):
-  * A C-shaped clip wraps the round push bar (22.3 mm) over its top, mouth facing down.
-    It snaps on (the mouth is narrower than the bar) and holds itself in place.
-  * Two ears flank the mouth and an M4 bolt across them clamps the clip onto the bar.
-    Without it the clip can rotate on the bar: a cup standing above the bar is an
-    inverted pendulum, and snap-fit friction alone is ~10x too weak to hold it.
-  * A floor plate sits on top of the clip and a tapered pocket for the 20 oz Yeti
-    rises from it. The cup stands directly over the bar, so its weight goes straight
-    down through the clip and there's no static twisting torque on the bar.
+  * A C-shaped clip wraps the round side rail (22.3 mm), mouth facing down. It snaps
+    on (the mouth is narrower than the rail), and two ears with an M4 bolt clamp it so
+    it can't rotate. Clamping is essential here: the cup hangs off the side of the
+    rail, so its weight is a constant twist on the clip (~0.7-1 N*m), far more than
+    snap-fit friction.
+  * A shelf runs outward from the top of the clip, a vertical web drops down along the
+    outside of the rail, and a floor plate + tapered pocket for the 20 oz Yeti hang
+    off the web, outboard of the rail, with the cup base `floor_drop` below the rail.
 
 The model is built in the PRINT frame, not the use frame:
 
-    Z  = the bar axis (clip bore). In use this is horizontal, along the bar.
+    Z  = the rail axis (clip bore). In use this is horizontal, fore-aft.
     Y  = the cup axis, pointing up out of the pocket. In use this is vertical.
-    X  = across the pocket (in use: toward/away from the pusher)
+    X  = outward from the rail, toward the cup (in use: away from the wagon's side)
     Z=0 is the bed.
 
 Printing this way keeps the clip's layer lines running around the ring (strong
-when it flexes) and puts the pocket on its side with a 45-degree teardrop foot
-and an open side, so nothing needs supports. `build.py` rotates it so the longest
-footprint axis is X and centres it.
+when it flexes), and every plate (shelf, web, floor) is a prism extruded along Z
+or Y, so it stands on the bed with no overhangs. The pocket lies on its side on a
+45-degree teardrop foot with an open side. No supports are needed.
 
-Origin: the bar axis is at X=0, Y=0 (running along Z). The cup axis is at
-X=0, Z=cup_zc (running along +Y). The clip mouth faces -Y.
+Origin: the rail axis is at X=0, Y=0 (running along Z). The cup axis is at
+X=pocket_cx, Z=cup_zc (running along +Y). The clip mouth faces -Y (down in use).
 """
 
 import math
 from dataclasses import dataclass
 
-from build123d import (Align, BuildSketch, Circle, Cone, Cylinder, Locations, Plane, Polygon,
+from build123d import (Align, Box, BuildSketch, Circle, Cone, Cylinder, Locations, Plane, Polygon,
                        Pos, RegularPolygon, Rotation, extrude)
 
 
 @dataclass(frozen=True)
 class CupHolderParams:
-    # --- Push bar (owner measured ~22.3 mm round tube) ---
+    # --- Side rail (owner measured ~22.3 mm round tube; assumed the same on the rail) ---
     bar_d: float = 22.3
     bar_clearance: float = 0.2      # on the diameter. The printed bore shrinks ~0.2 mm
     clip_wall: float = 2.8          # ring wall. Thinner = easier snap, thicker = stiffer
-    clip_len: float = 70.0          # along the bar (owner has ~120 mm free)
-    mouth_width: float = 20.7       # opening between the lips. Narrower than the bar to snap
+    clip_len: float = 70.0          # along the rail (owner has ~120 mm free)
+    mouth_width: float = 20.7       # opening between the lips. Narrower than the rail to snap
 
     # --- Clamp ears + bolt (M4 x 35 and an M4 nut) ---
     ear_t: float = 8.0              # ear thickness (X), either side of the mouth
-    bolt_drop: float = 6.5          # bolt axis below the bar's lowest point
+    bolt_drop: float = 6.5          # bolt axis below the rail's lowest point
     bolt_hole_d: float = 4.5        # M4 clearance, teardrop-shaped so it prints without support
     head_cbore_d: float = 8.4       # socket-head cap screw pocket
     head_cbore_depth: float = 4.4
     nut_af: float = 7.3             # M4 nut is 7.0 across flats, plus clearance
     nut_depth: float = 3.8          # M4 nut is 3.2 thick
     lead_in: float = 3.5            # 45-degree guide at the bottom of the mouth
+    window_d: float = 12.0          # hex-key access hole through the web, in line with the bolt
+
+    # --- Shelf / web (carries the cup out and down from the clip) ---
+    web_gap: float = 24.0           # rail axis to the inner face of the web (clears the ears + bolt tip)
+    web_t: float = 6.5
+    shelf_t: float = 6.5            # thickness of the shelf joining the clip to the web
 
     # --- 20 oz Yeti Rambler (retailer figures, NOT yet measured on the owner's cup) ---
     cup_base_d: float = 70.0        # 2.75 in base
@@ -61,7 +67,8 @@ class CupHolderParams:
 
     # --- Pocket / floor ---
     cup_wall: float = 3.2
-    floor_t: float = 6.5            # floor plate thickness above the clip
+    floor_t: float = 6.5
+    floor_drop: float = 60.0        # cup base this far below the rail axis (rim must stay above the shelf)
     wrap_deg: float = 250.0         # how far the pocket wall wraps the cup (>180 holds it)
 
     # --- Derived ---
@@ -75,8 +82,8 @@ class CupHolderParams:
 
     @property
     def floor_y(self) -> float:
-        """Y of the pocket floor (where the cup base sits)."""
-        return self.clip_r_out + self.floor_t - 1.5  # plate overlaps the ring by 1.5 mm
+        """Y of the pocket floor (where the cup base sits), below the rail axis."""
+        return -self.floor_drop
 
     @property
     def bolt_y(self) -> float:
@@ -84,8 +91,12 @@ class CupHolderParams:
 
     @property
     def ear_bottom_y(self) -> float:
-        nut_ac = self.nut_af / math.cos(math.radians(30))   # across corners, vertex up
+        nut_ac = self.nut_af / math.cos(math.radians(30))   # across corners
         return self.bolt_y - nut_ac / 2 - 2.4
+
+    @property
+    def bolt_z(self) -> float:
+        return self.clip_len / 2
 
     def pocket_r(self, depth: float) -> float:
         """Inner radius of the pocket `depth` mm above the floor."""
@@ -100,6 +111,11 @@ class CupHolderParams:
     def cup_zc(self) -> float:
         """Z of the cup axis. The pocket sits on the bed (teardrop foot)."""
         return self.outer_r
+
+    @property
+    def pocket_cx(self) -> float:
+        """X of the cup axis: the pocket's outer wall is tangent to the web's inner face."""
+        return self.web_gap + self.outer_r
 
 
 # --------------------------------------------------------------------------------------
@@ -119,7 +135,7 @@ def _clip_solid(p: CupHolderParams, length: float):
 
 
 def _clip_cuts(p: CupHolderParams, length: float):
-    """Bore + mouth (with lead-in) + bolt hole, head pocket and nut trap."""
+    """Bore + mouth (with lead-in) + bolt hole, head pocket (+X ear) and nut slot (-X ear)."""
     w = p.mouth_width / 2
     bore = Pos(0, 0, -1) * Cylinder(p.bore_r, length + 2, align=(Align.CENTER, Align.CENTER, Align.MIN))
 
@@ -130,7 +146,8 @@ def _clip_cuts(p: CupHolderParams, length: float):
                 (-(w + li), yb - 0.1), (-w, yb + li), align=None)
     mouth = extrude(sk.sketch, length + 2)
 
-    # Bolt, head pocket and nut trap all lie along X at (y = bolt_y, z = length/2).
+    zb = length / 2
+
     def teardrop(r):
         """Circle with a 45-degree point on top (+Z), so a horizontal hole prints without support."""
         k = r / math.sqrt(2)
@@ -139,17 +156,24 @@ def _clip_cuts(p: CupHolderParams, length: float):
 
     def cut_along_x(x0, depth, draw):
         with BuildSketch(Plane.YZ.offset(x0)) as sk:
-            with Locations((p.bolt_y, length / 2)):
+            with Locations((p.bolt_y, zb)):
                 draw()
         return extrude(sk.sketch, depth)
 
     x_out = w + p.ear_t
     hole = cut_along_x(-x_out - 1, 2 * x_out + 2, lambda: teardrop(p.bolt_hole_d / 2))
-    head = cut_along_x(-x_out - 1, p.head_cbore_depth + 1, lambda: teardrop(p.head_cbore_d / 2))
-    # Hex nut with a flat top (rotation 0 puts flats up/down), so it only bridges ~4 mm.
-    nut = cut_along_x(x_out - p.nut_depth, p.nut_depth + 1,
-                      lambda: RegularPolygon(p.nut_af / 2 / math.cos(math.radians(30)), 6, rotation=0))
-    return bore, mouth, hole, head, nut
+    # Screw head sits in a pocket on the +X (outboard) ear, reached through the web window.
+    head = cut_along_x(x_out - p.head_cbore_depth, p.head_cbore_depth + 1,
+                       lambda: teardrop(p.head_cbore_d / 2))
+    # The nut slides in from the bottom of the -X ear into a hex pocket with a flat top,
+    # so it only bridges ~4 mm. The slot below it is open to the ear's bottom end.
+    nut_ac = p.nut_af / math.cos(math.radians(30))
+    nut = cut_along_x(-x_out - 1, p.nut_depth + 1,
+                      lambda: RegularPolygon(nut_ac / 2, 6, rotation=0))
+    slot_h = yb - 1.0 - p.bolt_y  # negative: slot runs from the nut centre down past the ear's end
+    slot = Pos(-x_out - 1 + (p.nut_depth + 1) / 2, p.bolt_y + slot_h / 2, zb) * Box(
+        p.nut_depth + 1, abs(slot_h), p.nut_af)
+    return bore, mouth, hole, head, nut, slot
 
 
 def build_clip(p: CupHolderParams, length: float | None = None):
@@ -177,43 +201,80 @@ def _extrude_y(draw, y0: float, y1: float):
     return Rotation(90, 0, 0) * extrude(sk.sketch, amount=y1 - y0)
 
 
+def _prism_z(draw, z0: float, z1: float):
+    """Extrude a 2D shape drawn in world (x, y) so it spans Z = z0..z1."""
+    with BuildSketch(Plane.XY.offset(z0)) as sk:
+        draw()
+    return extrude(sk.sketch, amount=z1 - z0)
+
+
 def build(p: CupHolderParams | None = None):
     p = p or CupHolderParams()
-    R, zc, yf = p.outer_r, p.cup_zc, p.floor_y
+    R, zc, cx, yf = p.outer_r, p.cup_zc, p.pocket_cx, p.floor_y
     y_plate0 = yf - p.floor_t
     y_end = yf + p.pocket_depth
 
-    # Plate + pocket wall: the teardrop silhouette (circle with 45-degree tangents down
+    # Floor plate + pocket wall: the teardrop silhouette (circle with 45-degree tangents down
     # to a flat foot on the bed), extruded along +Y.
     a = R * (math.sqrt(2) - 1)  # half-width of the flat foot
     s = R / math.sqrt(2)
 
     def teardrop():
-        with Locations((0, zc)):
+        with Locations((cx, zc)):
             Circle(R)
-        Polygon((-a, 0), (a, 0), (s, zc - s), (0, zc), (-s, zc - s), align=None)
+        Polygon((cx - a, 0), (cx + a, 0), (cx + s, zc - s), (cx, zc), (cx - s, zc - s), align=None)
 
     body = _extrude_y(teardrop, y_plate0, y_end)
+
+    # Web: a vertical plate (a prism along Z) from the floor up to the shelf, tangent to the pocket.
+    shelf_y1 = p.clip_r_out
+    shelf_y0 = shelf_y1 - p.shelf_t
+    x_web1 = p.web_gap + p.web_t
+
+    def web_profile():
+        Polygon((p.web_gap, y_plate0), (x_web1, y_plate0), (x_web1, shelf_y1), (p.web_gap, shelf_y1), align=None)
+
+    web = _prism_z(web_profile, 0.0, 2 * R)
+
+    # Shelf: joins the top of the clip to the web (a prism along Z, the clip's length).
+    def shelf_profile():
+        Polygon((0, shelf_y0), (x_web1, shelf_y0), (x_web1, shelf_y1), (0, shelf_y1), align=None)
+
+    shelf = _prism_z(shelf_profile, 0.0, p.clip_len)
 
     # Pocket cavity: a cone along +Y rising from the floor.
     r0, r1 = p.pocket_r(0), p.pocket_r(p.pocket_depth + 2)
     cone = Cone(r0, r1, p.pocket_depth + 2, align=(Align.CENTER, Align.CENTER, Align.MIN))
-    cavity = Pos(0, yf, zc) * (Rotation(-90, 0, 0) * cone)
+    cavity = Pos(cx, yf, zc) * (Rotation(-90, 0, 0) * cone)
 
     # Side opening facing +Z: leaves wrap_deg of wall around the cup, cut above the floor only.
     half = (360.0 - p.wrap_deg) / 2
     far = 4 * R
-    fan = [(0, zc)] + [(far * math.sin(math.radians(ang)), zc + far * math.cos(math.radians(ang)))
-                       for ang in (-half, -half / 2, 0, half / 2, half)]
+    fan = [(cx, zc)] + [(cx + far * math.sin(math.radians(ang)), zc + far * math.cos(math.radians(ang)))
+                        for ang in (-half, -half / 2, 0, half / 2, half)]
 
     def sector():
         Polygon(*fan, align=None)
 
     opening = _extrude_y(sector, yf, y_end + 5)
 
-    # The clip is solid here. Its bore, mouth and bolt are cut last, so the floor plate
-    # merges with the ring wall without ever entering the bore.
-    part = body + _clip_solid(p, p.clip_len) - cavity - opening
+    # Hex-key window through the web, in line with the bolt (reached from inside the empty pocket).
+    r = p.window_d / 2
+    k = r / math.sqrt(2)
+    xw0 = p.ear_t + p.mouth_width / 2 + 0.5
+
+    def window_shape():
+        with Locations((p.bolt_y, p.bolt_z)):
+            Circle(r)
+            Polygon((-k, k), (k, k), (0, r * math.sqrt(2)), align=None)
+
+    with BuildSketch(Plane.YZ.offset(xw0)) as sk:
+        window_shape()
+    window = extrude(sk.sketch, x_web1 + p.web_t - xw0)
+
+    # The clip is solid here. Its bore, mouth and bolt are cut last, so the shelf merges
+    # with the ring wall without ever entering the bore.
+    part = body + web + shelf + _clip_solid(p, p.clip_len) - cavity - opening - window
     for cut in _clip_cuts(p, p.clip_len):
         part = part - cut
     return part

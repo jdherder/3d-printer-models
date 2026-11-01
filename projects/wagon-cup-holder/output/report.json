@@ -1,37 +1,37 @@
 {
-  "dimensions_status": "bar measured by owner (22.3 mm). Tumbler from retailer figures, NOT measured.",
+  "dimensions_status": "Tube measured by owner (22.3 mm); assumed same on the right side rail. Tumbler from retailer figures, NOT measured.",
   "part": {
     "extents_mm": [
-      123.3,
-      87.6,
+      130.0,
+      86.5,
       87.6
     ],
-    "faces": 3130,
+    "faces": 3618,
     "watertight": true,
     "winding_consistent": true,
-    "euler_number": -2,
-    "volume_cm3": 154.9,
+    "euler_number": -4,
+    "volume_cm3": 184.3,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
   },
   "clip_test": {
     "extents_mm": [
-      38.3,
       36.7,
+      38.3,
       15.0
     ],
-    "faces": 1848,
+    "faces": 1844,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": -2,
-    "volume_cm3": 6.1,
+    "volume_cm3": 6.0,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
   },
   "checks": {
-    "overhang_area_over_45deg_mm2": 33.6,
+    "overhang_area_over_45deg_mm2": 33.1,
     "interference_with_bar_cm3": 0.0,
     "interference_with_tumbler_cm3": 0.0
   },
@@ -49,6 +49,10 @@
     "nut_af": 7.3,
     "nut_depth": 3.8,
     "lead_in": 3.5,
+    "window_d": 12.0,
+    "web_gap": 24.0,
+    "web_t": 6.5,
+    "shelf_t": 6.5,
     "cup_base_d": 70.0,
     "cup_top_d": 89.0,
     "cup_h": 165.0,
@@ -56,6 +60,7 @@
     "pocket_clearance": 2.0,
     "cup_wall": 3.2,
     "floor_t": 6.5,
+    "floor_drop": 60.0,
     "wrap_deg": 250.0,
     "bore_d": 22.5,
     "snap_spread_each_lip": 0.8,
@@ -63,7 +68,10 @@
     "pocket_base_d": 72.0,
     "pocket_rim_d": 81.21,
     "pocket_outer_d": 87.61,
-    "cup_rim_height_above_bar_axis": 99.0,
+    "cup_axis_offset_from_rail": 67.8,
+    "pocket_rim_height_above_rail_axis": 20.0,
+    "cup_base_below_rail_axis": 60.0,
+    "est_cup_torque_on_clip_Nm": 0.67,
     "tumbler_taper_mm_per_mm_dia": 0.1152
   }
 }

@@ -2,7 +2,7 @@
 
     python projects/wagon-cup-holder/build.py
 
-model.py (parametric build123d)
+model.py (parametric build123d, built in the print frame; no rotation needed)
   -> output/wagon-cup-holder.step        editable solid for Fusion (print orientation)
   -> output/wagon-cup-holder.stl         print-ready mesh
   -> output/wagon-cup-clip-test.stl      15 mm slice of the clip only, for the snap-fit test print
@@ -37,7 +37,7 @@ RENDERS = HERE / "renders"
 # --- Real measurements (owner) ------------------------------------------------
 # Change a value here (or in CupHolderParams) and re-run. Nothing is scan-derived.
 MEASURED = {
-    "bar_d": 22.3,      # owner, 2026-11-01: "about 22.3 mm" round push bar
+    "bar_d": 22.3,      # owner, 2026-11-01: "about 22.3 mm" round tube (assumed the same on the side rail)
 }
 # Retailer figures for a 20 oz Yeti Rambler, NOT measured on the owner's cup yet:
 #   cup_base_d 70 (2.75 in), cup_top_d 89 (3.5 in at the lid), cup_h ~165.
@@ -48,28 +48,25 @@ CLIP_TEST_LEN = 15.0
 
 
 def final_transform(part_bb):
-    """Print frame -> output frame: rotate 90 deg about Z so the longest footprint axis is X,
-    then centre the footprint on the XY origin. Z (the bed) is unchanged."""
-    # After rotating (x, y) -> (-y, x): X range = -ymax..-ymin, Y range = xmin..xmax.
-    cx = -(part_bb.min.Y + part_bb.max.Y) / 2
-    cy = (part_bb.min.X + part_bb.max.X) / 2
-    return cx, cy
+    """Print frame -> output frame: just centre the footprint on the XY origin (Z is the bed).
+    The longest footprint axis is already X (asserted in main)."""
+    return (part_bb.min.X + part_bb.max.X) / 2, (part_bb.min.Y + part_bb.max.Y) / 2
 
 
 def to_final_cad(solid, cx, cy):
-    return Pos(-cx, -cy, 0) * solid.rotate(Axis.Z, 90)
+    return Pos(-cx, -cy, 0) * solid
 
 
 def to_final_mesh(mesh, cx, cy):
     m = mesh.copy()
-    m.apply_transform(trimesh.transformations.rotation_matrix(np.pi / 2, [0, 0, 1]))
     m.apply_translation([-cx, -cy, 0])
     return m
 
 
-def overhang_area_mm2(mesh, max_angle_deg=45.0):
-    """Area of faces that face down more steeply than the overhang limit (excluding the bed contact)."""
-    limit = -np.sin(np.radians(max_angle_deg))
+def overhang_area_mm2(mesh, max_angle_deg=45.0, tol_deg=1.0):
+    """Area of faces that face down more steeply than the overhang limit (excluding the bed contact).
+    The tolerance keeps faces at exactly 45 deg (the teardrop foot) from tipping over on rounding."""
+    limit = -np.sin(np.radians(max_angle_deg + tol_deg))
     n, c = mesh.face_normals, mesh.triangles_center
     bad = (n[:, 2] < limit) & (c[:, 2] > 0.05)
     return float(mesh.area_faces[bad].sum())
@@ -99,7 +96,9 @@ def main():
 
     # ---- Main part ----------------------------------------------------------------
     solid_p = build(p)
-    cx, cy = final_transform(solid_p.bounding_box())
+    bb = solid_p.bounding_box()
+    assert (bb.max.X - bb.min.X) >= (bb.max.Y - bb.min.Y), "longest footprint axis should be X"
+    cx, cy = final_transform(bb)
     solid = to_final_cad(solid_p, cx, cy)
     export_step(solid, str(OUT / "wagon-cup-holder.step"))
     model = mk.cad_to_mesh(solid)
@@ -119,7 +118,7 @@ def main():
     # ---- Ghost bar + tumbler (same frame as the part) -----------------------------------
     bar_p = Pos(0, 0, -20) * Cylinder(p.bar_d / 2, 160, align=(Align.CENTER, Align.CENTER, Align.MIN))
     cone = Cone(p.cup_base_d / 2, p.cup_top_d / 2, p.cup_h, align=(Align.CENTER, Align.CENTER, Align.MIN))
-    cup_p = Pos(0, p.floor_y, p.cup_zc) * (Rotation(-90, 0, 0) * cone)
+    cup_p = Pos(p.pocket_cx, p.floor_y, p.cup_zc) * (Rotation(-90, 0, 0) * cone)
     bar = mk.cad_to_mesh(to_final_cad(bar_p, cx, cy))
     cup = mk.cad_to_mesh(to_final_cad(cup_p, cx, cy))
     bar.export(RENDERS / "ref-bar.stl")
@@ -144,11 +143,14 @@ def main():
         "pocket_base_d": round(2 * p.pocket_r(0), 2),
         "pocket_rim_d": round(2 * p.pocket_r(p.pocket_depth), 2),
         "pocket_outer_d": round(2 * p.outer_r, 2),
-        "cup_rim_height_above_bar_axis": round(p.floor_y + p.pocket_depth, 1),
+        "cup_axis_offset_from_rail": round(p.pocket_cx, 1),
+        "pocket_rim_height_above_rail_axis": round(p.floor_y + p.pocket_depth, 1),
+        "cup_base_below_rail_axis": round(-p.floor_y, 1),
+        "est_cup_torque_on_clip_Nm": round(1.0 * 9.81 * p.pocket_cx / 1000, 2),
         "tumbler_taper_mm_per_mm_dia": round(taper, 4),
     })
     report = {
-        "dimensions_status": "bar measured by owner (22.3 mm). Tumbler from retailer figures, NOT measured.",
+        "dimensions_status": "Tube measured by owner (22.3 mm); assumed same on the right side rail. Tumbler from retailer figures, NOT measured.",
         "part": info,
         "clip_test": clip_info,
         "checks": checks,
@@ -158,36 +160,37 @@ def main():
     print(json.dumps({"part": info, "checks": checks}, indent=2))
 
     # ---- Renders --------------------------------------------------------------------------
-    bar_y = 0.0                                    # the bar axis is at Y=0 in the final frame
+    rail_y = -cy                                   # the rail axis (Y_print = 0) in the final frame
     render_sheet([model, bar, cup], str(RENDERS / "cup-holder.png"),
-                 title="wagon cup holder, print orientation (black = holder, red = 22.3 mm bar, "
+                 title="wagon cup holder, print orientation (black = holder, red = 22.3 mm rail, "
                        "blue = Yeti 20 oz from retailer dims)",
-                 labels=["cup holder", "push bar", "tumbler"],
-                 sections_y=(bar_y,), sections_x=())
+                 labels=["cup holder", "side rail", "tumbler"],
+                 sections_y=(rail_y,), sections_x=())
 
-    # Cross-sections that render_sheet can't draw: across the bar (Z plane) and across the cup.
-    fig, axs = plt.subplots(1, 3, figsize=(20, 7))
+    # Cross-sections that render_sheet can't draw (planes whose normal is Z or whose axes differ).
+    fig, axs = plt.subplots(2, 2, figsize=(18, 14))
     z_mid = p.clip_len / 2
-    section_axes(axs[0], [model, bar], [0, 0, 1], [0, 0, z_mid], [0, 1],
-                 f"across the bar, z={z_mid:g}: clip (black), bar (blue)")
-    cup_x = -cx + 0 - p.floor_y - p.pocket_depth / 2   # final-frame X of a plane through the pocket
-    section_axes(axs[1], [model, cup], [1, 0, 0], [cup_x, 0, 0], [1, 2],
+    section_axes(axs[0, 0], [model, bar], [0, 0, 1], [0, 0, z_mid], [0, 1],
+                 f"across the rail at z={z_mid:g}: clip + shelf + web (black), rail (blue)")
+    section_axes(axs[0, 1], [model, cup], [0, 1, 0], [0, p.floor_y + p.pocket_depth / 2 - cy, 0], [0, 2],
                  "across the pocket mid-height: wall (black), tumbler (blue)")
-    section_axes(axs[2], [clip, ], [0, 0, 1], [0, 0, CLIP_TEST_LEN / 2], [0, 1],
-                 "fit-test clip slice (15 mm)")
+    section_axes(axs[1, 0], [model, bar], [0, 1, 0], [0, p.bolt_y - cy, 0], [0, 2],
+                 "through the bolt axis: ears, nut slot, key window (black), rail (blue)")
+    section_axes(axs[1, 1], [clip], [0, 0, 1], [0, 0, CLIP_TEST_LEN / 2], [0, 1],
+                 "fit-test clip slice (15 mm), at the bolt")
     fig.suptitle("wagon cup holder: cross-sections (print orientation, mm)", fontsize=15)
     fig.savefig(RENDERS / "sections.png", dpi=70, bbox_inches="tight")
     plt.close(fig)
 
-    # In-use pose: bar horizontal, cup upright. P frame (X, Y, Z) -> use frame (Y, Z, X).
-    combined = trimesh.util.concatenate([model, bar, cup])
-    use = combined.copy()
-    use.vertices = np.c_[use.vertices[:, 2], use.vertices[:, 1], -use.vertices[:, 0]]  # (x,y,z)->(z,y,-x): bar -> X, cup axis -> up
+    # In-use pose: rail horizontal (fore-aft), cup upright, hanging off the outside of the rail.
+    # Print frame (X out, Y up, Z along the rail) -> use frame (rail, out, up) = (z, x, y).
+    use = trimesh.util.concatenate([model, bar, cup])
+    use.vertices = np.c_[use.vertices[:, 2], use.vertices[:, 0], use.vertices[:, 1]]
     use.vertices -= [use.bounds[:, 0].mean(), use.bounds[:, 1].mean(), use.bounds[0, 2]]
     use.fix_normals()
     render_sheet(use, str(RENDERS / "in-use.png"),
-                 title="in use: bar horizontal along X, cup standing upright (holder + bar + tumbler)",
-                 labels=["holder + bar + tumbler"], sections_y=(0.0,), sections_x=())
+                 title="in use: rail along X, cup hanging off its outside (holder + rail + tumbler)",
+                 labels=["holder + rail + tumbler"], sections_y=(0.0,), sections_x=())
 
 
 if __name__ == "__main__":
