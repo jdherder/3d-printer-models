@@ -2,19 +2,19 @@
   "dimensions_status": "Tube measured by owner (22.3 mm); assumed same on the right side rail. Tumbler from retailer figures, NOT measured.",
   "clip": {
     "extents_mm": [
-      52.3,
-      40.3,
+      55.8,
+      42.3,
       70.0
     ],
-    "faces": 1800,
+    "faces": 1440,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": -2,
-    "volume_cm3": 46.6,
+    "volume_cm3": 54.6,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0,
-    "overhang_area_over_45deg_mm2": 33.1
+    "overhang_area_over_45deg_mm2": 194.4
   },
   "module": {
     "extents_mm": [
@@ -34,19 +34,41 @@
   },
   "clamp_test_slice": {
     "extents_mm": [
-      38.3,
-      36.7,
-      15.0
+      41.9,
+      40.7,
+      26.0
     ],
-    "faces": 1844,
+    "faces": 1484,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": -2,
-    "volume_cm3": 6.0,
+    "volume_cm3": 12.2,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0,
-    "overhang_area_over_45deg_mm2": 33.1
+    "overhang_area_over_45deg_mm2": 194.4
+  },
+  "bolt_and_nut": {
+    "wagon-bolt": {
+      "extents_mm": [
+        23.4,
+        23.4,
+        49.0
+      ],
+      "watertight": true,
+      "volume_cm3": 5.26,
+      "faces": 92816
+    },
+    "wagon-nut": {
+      "extents_mm": [
+        13.0,
+        15.0,
+        6.5
+      ],
+      "watertight": true,
+      "volume_cm3": 0.66,
+      "faces": 15144
+    }
   },
   "dovetail_test_tongue": {
     "extents_mm": [
@@ -87,7 +109,12 @@
     "interference_clip_vs_rail_cm3": 0.0,
     "interference_clip_vs_tumbler_cm3": 0.0,
     "interference_module_vs_latch_strut_zone_cm3": 0.0,
-    "interference_clip_vs_latch_strut_zone_cm3": 0.0
+    "interference_clip_vs_latch_strut_zone_cm3": 0.0,
+    "interference_bolt_vs_clip_cm3": 0.0,
+    "interference_bolt_vs_module_cm3": 0.0,
+    "interference_bolt_vs_rail_cm3": 0.0,
+    "interference_nut_vs_clip_cm3": 0.0,
+    "interference_nut_vs_module_cm3": 0.0
   },
   "params_mm": {
     "bar_d": 22.3,
@@ -95,13 +122,11 @@
     "clip_wall": 2.8,
     "clip_len": 70.0,
     "mouth_width": 20.7,
-    "ear_t": 8.0,
+    "ear_t": 10.0,
     "bolt_drop": 6.5,
-    "bolt_hole_d": 4.5,
-    "head_cbore_d": 8.4,
-    "head_cbore_depth": 4.4,
-    "nut_af": 7.3,
-    "nut_depth": 3.8,
+    "bolt_hole_d": 9.0,
+    "nut_af": 13.5,
+    "nut_depth": 6.9,
     "lead_in": 3.5,
     "ear_top_y": -4.0,
     "boss_x0": 11.0,
@@ -129,7 +154,9 @@
     "wrap_deg": 250.0,
     "bore_d": 22.5,
     "snap_spread_each_lip": 0.8,
-    "bolt_needed": "M4 x 35 socket-head screw + M4 nut",
+    "bolt_needed": "printed M8 x 1.5 knob bolt + printed hex nut (output/wagon-bolt.stl, wagon-nut.stl)",
+    "bolt_thread": "M8 x 1.5, nut gap 0.25 mm radial, shank 40 mm, knob 24 mm",
+    "bolt_tip_recess_from_outer_ear_face_mm": 0.7,
     "pocket_base_d": 72.0,
     "pocket_rim_d": 81.21,
     "pocket_outer_d": 87.61,
@@ -140,7 +167,7 @@
     "dovetail_engagement_mm": 32.0,
     "dovetail_width_tip_mm": 48.0,
     "clip_extent_above_rail_axis": 28.0,
-    "clip_extent_below_rail_axis": 24.3,
+    "clip_extent_below_rail_axis": 27.8,
     "clip_extent_outboard_of_rail_axis": 22.0,
     "tumbler_taper_mm_per_mm_dia": 0.1152,
     "latch_strut_reach_from_rail_axis": 37.1,

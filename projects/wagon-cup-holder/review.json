@@ -1,7 +1,7 @@
 {
   "page_title": "Wagon Cup Holder",
-  "title": "Wagon cup holder: v4, shaped bracket instead of a block",
-  "subtitle": "Clip stays on the side rail \u00b7 cup module lifts off its dovetail \u00b7 the bracket now flares and sweeps into the cup holder \u00b7 shown assembled, in print orientation \u00b7 millimetres",
+  "title": "Wagon cup holder: v5, printed bolt and nut",
+  "subtitle": "Clip stays on the side rail \u00b7 cup module lifts off its dovetail \u00b7 printed M8 knob bolt and nut clamp the clip \u00b7 shown assembled, in print orientation \u00b7 millimetres",
   "meshes": [
     {
       "path": "renders/asm-module.stl",
@@ -11,6 +11,16 @@
     {
       "path": "renders/asm-clip.stl",
       "label": "Clip (stays on the rail)",
+      "style": "solid"
+    },
+    {
+      "path": "renders/asm-bolt.stl",
+      "label": "Printed bolt (knob on the inboard side)",
+      "style": "solid"
+    },
+    {
+      "path": "renders/asm-nut.stl",
+      "label": "Printed nut (outboard ear)",
       "style": "solid"
     },
     {
@@ -81,5 +91,5 @@
   ],
   "scale_note": "Real size, shown assembled. The rail is your 22.3 mm tube. The tumbler is from retailer listings (70 mm base, 89 mm widest). The two wireframe blocks are the red latch and diagonal strut at each end of your 120 mm clear stretch. They are APPROXIMATE: only the ~26 mm reach is from you, and I assumed they sit only beyond the clear stretch. It is drawn in print orientation: the rail axis is vertical here and the cup lies on its side. In use the rail is horizontal and the cup stands upright, hanging off the outside of it.",
   "notes_title": "What changed, and what to check",
-  "notes": "v4: you didn't like the big block between the clip and the cup holder. It's gone. In its place is a shaped bracket: a slim pad around the dovetail whose walls stay about 4 mm thick around the groove and flare out at 45 degrees, then sweep into the web with a 16 mm radius underneath and an 8 mm blend on top. It no longer spans the full width of the cup holder, and it still prints with no supports. Nothing about the fit changed: same dovetail, same clip, cup still 84 mm out and 60 mm down, still clear of the latch and strut zones. Turn the clip off in the viewer to see the bracket on its own. Please tell me: (1) is this the look you wanted, or should it be slimmer still, or hollowed out with windows? (2) the earlier checks still stand: does the diagonal strut slope in under the cup, and does the empty clip block folding?"
+  "notes": "v5: you can now print the bolt and nut, so there is nothing to buy. A printed M4 thread would strip, so the clamp uses a printed M8 x 1.5 bolt with a big scalloped knob (hand-tighten only, no tool) and a printed hex nut. The clip's ears are thicker and have a nut pocket on both sides, so the nut can go on either ear. The knob is on the inboard side by default so you can reach it with the cup module on. The clip's ring, mouth and bore are unchanged, so the snap fit you tested should be the same. Print the bolt, the nut and the new 26 mm clamp slice first (quick), then the full clip and module. Please check: (1) does the nut turn onto the bolt by hand, with no rattle and no binding? (2) is there room for the 24 mm knob on the inboard side, or would you rather have it on the outboard side? (3) do the printed threads hold a firm hand-tightening on the real rail?"
 }

@@ -5,7 +5,8 @@
 model.py (parametric build123d, built in the print frame)
   -> output/wagon-cup-clip.step/.stl             clip: stays on the rail
   -> output/wagon-cup-module.step/.stl           cup module: lifts on and off the clip's dovetail
-  -> output/wagon-cup-clip-test.stl              15 mm ring + ears slice, for the snap/clamp test print
+  -> output/wagon-cup-clip-test.stl              26 mm ring + ears slice, for the snap/clamp test print
+  -> output/wagon-bolt.stl, wagon-nut.stl        printed M8 x 1.5 clamp bolt (knob head) and hex nut
   -> output/wagon-dovetail-test-tongue.stl       short tongue block -+ sliding-fit test print
   -> output/wagon-dovetail-test-groove.stl       short groove block -+ (print both, slide together)
   -> output/report.json                          dimensions, checks, parameters
@@ -30,6 +31,7 @@ import numpy as np  # noqa: E402
 import trimesh  # noqa: E402
 from build123d import Align, Axis, Cone, Cylinder, Pos, Rotation, export_step  # noqa: E402
 from matplotlib.collections import LineCollection  # noqa: E402
+from fasteners import FastenerParams, make_bolt, make_nut  # noqa: E402
 from model import CupHolderParams, build, build_clip, build_dovetail_test  # noqa: E402
 from render import render_sheet, section_segments  # noqa: E402
 
@@ -46,7 +48,7 @@ MEASURED = {
 # Put the real numbers here once measured, e.g. {"cup_base_d": 71.0, "cup_top_d": 88.5}
 CUP_OVERRIDES: dict = {}
 
-CLIP_TEST_LEN = 15.0
+CLIP_TEST_LEN = 26.0   # long enough for the 13.5 mm nut pocket plus walls
 DOVETAIL_TEST_Y = 14.0
 
 
@@ -161,6 +163,38 @@ def main():
     rail.export(RENDERS / "ref-bar.stl")
     cup.export(RENDERS / "ref-tumbler.stl")
 
+    # ---- Printed clamp bolt + nut -----------------------------------------------------------------
+    fp = FastenerParams()
+    bolt_local = make_bolt(fp)
+    nut_local = make_nut(fp)
+    fasteners = {}
+    for name, m in (("wagon-bolt", bolt_local), ("wagon-nut", nut_local)):
+        out = m.copy()
+        out.apply_translation([0, 0, -out.bounds[0, 2]])                  # rest on Z=0
+        assert out.is_watertight, f"{name} mesh is not watertight"
+        out.export(OUT / f"{name}.stl")
+        fasteners[name] = {"extents_mm": [round(float(v), 1) for v in out.extents],
+                           "watertight": bool(out.is_watertight),
+                           "volume_cm3": round(float(out.volume) / 1000.0, 2),
+                           "faces": int(len(out.faces))}
+
+    def place(mesh, x_local0):
+        """Local fastener frame (axis Z) -> assembled frame: axis along +X at the clamp bolt's position."""
+        m = mesh.copy()
+        m.apply_transform(trimesh.transformations.rotation_matrix(np.pi / 2, [0, 1, 0]))   # z -> +x
+        m.apply_translation([x_local0, p.bolt_y, p.clip_dz + p.clip_len / 2])
+        m.apply_translation([-cx, -cy, 0])
+        return m
+
+    x_out = p.mouth_width / 2 + p.ear_t
+    bolt_asm = place(bolt_local, -x_out)                    # knob on the inboard (-X) ear, shank through to +X
+    nut_asm = place(nut_local, x_out - p.nut_depth)         # nut seated in the outboard (+X) ear's pocket
+    bolt_asm.export(RENDERS / "asm-bolt-full.stl")          # full-res, for checks
+    bolt_view = place(make_bolt(fp, ntheta=36, rows_per_pitch=10), -x_out)
+    bolt_view.export(RENDERS / "asm-bolt.stl")              # light preview mesh for the viewer
+    nut_asm.export(RENDERS / "asm-nut.stl")
+    (RENDERS / "asm-bolt-full.stl").unlink()
+
     # ---- Checks (assembled position) -------------------------------------------------------------
     checks = {
         "interference_module_vs_clip_cm3": round(interference_cm3(module, clip), 3),
@@ -170,6 +204,11 @@ def main():
         "interference_clip_vs_tumbler_cm3": round(interference_cm3(clip, cup), 3),
         "interference_module_vs_latch_strut_zone_cm3": round(interference_cm3(module, keepout), 3),
         "interference_clip_vs_latch_strut_zone_cm3": round(interference_cm3(clip, keepout), 3),
+        "interference_bolt_vs_clip_cm3": round(interference_cm3(bolt_asm, clip), 3),
+        "interference_bolt_vs_module_cm3": round(interference_cm3(bolt_asm, module), 3),
+        "interference_bolt_vs_rail_cm3": round(interference_cm3(bolt_asm, rail), 3),
+        "interference_nut_vs_clip_cm3": round(interference_cm3(nut_asm, clip), 3),
+        "interference_nut_vs_module_cm3": round(interference_cm3(nut_asm, module), 3),
     }
     for name, val in checks.items():
         assert val < 0.01, f"{name} = {val}: parts collide"
@@ -179,7 +218,9 @@ def main():
     params.update({
         "bore_d": round(2 * p.bore_r, 2),
         "snap_spread_each_lip": round((p.bar_d - p.mouth_width) / 2, 2),
-        "bolt_needed": "M4 x 35 socket-head screw + M4 nut",
+        "bolt_needed": "printed M8 x 1.5 knob bolt + printed hex nut (output/wagon-bolt.stl, wagon-nut.stl)",
+        "bolt_thread": f"M{fp.major:g} x {fp.pitch:g}, nut gap {fp.thread_clr} mm radial, shank {fp.length:g} mm, knob {fp.knob_d:g} mm",
+        "bolt_tip_recess_from_outer_ear_face_mm": round(x_out - (fp.length - x_out), 2),
         "pocket_base_d": round(2 * p.pocket_r(0), 2),
         "pocket_rim_d": round(2 * p.pocket_r(p.pocket_depth), 2),
         "pocket_outer_d": round(2 * p.outer_r, 2),
@@ -204,6 +245,7 @@ def main():
         "clip": clip_info,
         "module": module_info,
         "clamp_test_slice": clamp_info,
+        "bolt_and_nut": fasteners,
         "dovetail_test_tongue": tongue_info,
         "dovetail_test_groove": groove_info,
         "checks": checks,
@@ -236,7 +278,7 @@ def main():
 
     # In-use pose: rail horizontal (fore-aft), cup upright, hanging off the outside of the rail.
     # Print frame (X out, Y up, Z along the rail) -> use frame (rail, out, up) = (z, x, y).
-    use = trimesh.util.concatenate([module, clip, rail, cup, keepout])
+    use = trimesh.util.concatenate([module, clip, rail, cup, keepout, bolt_view, nut_asm])
     use.vertices = np.c_[use.vertices[:, 2], use.vertices[:, 0], use.vertices[:, 1]]
     use.vertices -= [use.bounds[:, 0].mean(), use.bounds[:, 1].mean(), use.bounds[0, 2]]
     use.fix_normals()

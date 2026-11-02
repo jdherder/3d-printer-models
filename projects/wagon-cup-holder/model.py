@@ -46,14 +46,12 @@ class CupHolderParams:
     clip_len: float = 70.0          # along the rail (owner has ~120 mm free)
     mouth_width: float = 20.7       # opening between the lips. Narrower than the rail to snap
 
-    # --- Clamp ears + bolt (M4 x 35 and an M4 nut) ---
-    ear_t: float = 8.0              # ear thickness (X), either side of the mouth
+    # --- Clamp ears + printed M8 x 1.5 bolt with a knob, and a printed hex nut (see fasteners.py) ---
+    ear_t: float = 10.0             # ear thickness (X), either side of the mouth
     bolt_drop: float = 6.5          # bolt axis below the rail's lowest point
-    bolt_hole_d: float = 4.5        # M4 clearance, teardrop-shaped so it prints without support
-    head_cbore_d: float = 8.4       # socket-head cap screw pocket
-    head_cbore_depth: float = 4.4
-    nut_af: float = 7.3             # M4 nut is 7.0 across flats, plus clearance
-    nut_depth: float = 3.8          # M4 nut is 3.2 thick
+    bolt_hole_d: float = 9.0        # clears the 8 mm thread. Teardrop-shaped so it prints without support
+    nut_af: float = 13.5            # pocket across flats: the printed nut is 13.0, plus clearance
+    nut_depth: float = 6.9          # the printed nut is 6.5 thick
     lead_in: float = 3.5            # 45-degree guide at the bottom of the mouth
 
     # --- Dovetail between clip and module (slides along Y: the module drops on from above) ---
@@ -166,7 +164,9 @@ def _clip_solid(p: CupHolderParams, length: float):
 
 
 def _clip_cuts(p: CupHolderParams, length: float):
-    """Bore + mouth (with lead-in) + bolt hole, head pocket (+X ear) and nut slot (-X ear)."""
+    """Bore + mouth (with lead-in) + bolt hole + a nut pocket and slide-in slot on BOTH ears.
+
+    The nut goes in either one (your choice of which side the knob is on); the knob covers the other."""
     w = p.mouth_width / 2
     bore = Pos(0, 0, -1) * Cylinder(p.bore_r, length + 2, align=(Align.CENTER, Align.CENTER, Align.MIN))
 
@@ -193,18 +193,17 @@ def _clip_cuts(p: CupHolderParams, length: float):
 
     x_out = w + p.ear_t
     hole = cut_along_x(-x_out - 1, 2 * x_out + 2, lambda: teardrop(p.bolt_hole_d / 2))
-    # Screw head sits in a pocket on the +X (outboard) ear, reached with the module off.
-    head = cut_along_x(x_out - p.head_cbore_depth, p.head_cbore_depth + 1,
-                       lambda: teardrop(p.head_cbore_d / 2))
-    # The nut slides in from the bottom of the -X ear into a hex pocket with a flat top,
-    # so it only bridges ~4 mm. The slot below it is open to the ear's bottom end.
+    # Hex nut pockets (flat top, so they only bridge ~5 mm) on the outer face of each ear, plus a slot below each
+    # that is open to the ear's bottom end, so the nut slides in from underneath.
     nut_ac = p.nut_af / math.cos(math.radians(30))
-    nut = cut_along_x(-x_out - 1, p.nut_depth + 1,
-                      lambda: RegularPolygon(nut_ac / 2, 6, rotation=0))
     slot_h = yb - 1.0 - p.bolt_y  # negative: slot runs from the nut centre down past the ear's end
-    slot = Pos(-x_out - 1 + (p.nut_depth + 1) / 2, p.bolt_y + slot_h / 2, zb) * Box(
-        p.nut_depth + 1, abs(slot_h), p.nut_af)
-    return bore, mouth, hole, head, nut, slot
+    pockets = []
+    for side in (-1, 1):
+        x0 = -x_out - 1 if side < 0 else x_out - p.nut_depth
+        pockets.append(cut_along_x(x0, p.nut_depth + 1, lambda: RegularPolygon(nut_ac / 2, 6, rotation=0)))
+        xc = side * (x_out - p.nut_depth / 2 + 0.5)
+        pockets.append(Pos(xc, p.bolt_y + slot_h / 2, zb) * Box(p.nut_depth + 1, abs(slot_h), p.nut_af))
+    return (bore, mouth, hole, *pockets)
 
 
 def _tongue_profile(p: CupHolderParams, zc: float):

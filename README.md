@@ -8,7 +8,7 @@ Autodesk Fusion, and reproducible Python cleanup pipelines.
 | Project | Status | Description |
 |---|---|---|
 | [gate-footing](projects/gate-footing/) | Real size (100 mm), print-ready STEP + STL; next: test print | Plastic foot that holds up a metal gate |
-| [wagon-cup-holder](projects/wagon-cup-holder/) | v4: two pieces (clip stays on the rail, cup lifts off) with a shaped bracket; next: test prints, check the strut and folding clearance | Side-rail cup holder for a 20 oz Yeti on a MAC wagon, quick on/off for folding |
+| [wagon-cup-holder](projects/wagon-cup-holder/) | v5: clip + lift-off cup module + printed M8 knob bolt and nut; next: print the bolt, nut and clamp slice, then the full parts | Side-rail cup holder for a 20 oz Yeti on a MAC wagon, quick on/off for folding |
 
 ## Layout
 

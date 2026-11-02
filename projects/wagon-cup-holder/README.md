@@ -31,7 +31,7 @@ and off quickly as it will need to be off for folding").
 
 ## How the quick release works
 
-- The **clip** (ring + ears + M4 bolt) is snapped on and **tightened once with a hex key**. It stays on the rail.
+- The **clip** (ring + ears + printed M8 knob bolt and nut) is snapped on and **tightened by hand with the knob**. It stays on the rail.
   On its outboard side there's a boss with a **vertical 45° dovetail tongue** (34 mm wide at the root, 48 mm at the tip,
   7 mm tall, **32 mm of vertical engagement**).
 - The cup **module** has the matching groove (0.35 mm clearance per side). It **drops straight down onto the tongue**
@@ -47,10 +47,9 @@ and off quickly as it will need to be off for folding").
 What stays on the rail when the cup is off: the **clip is 70 mm long and extends about 28 mm above the rail axis,
 24 mm below it, 22 mm outboard and 18 mm inboard** (the ears and the dovetail boss). **Whether that blocks folding is the
 big unknown.** I can't tell from the photos what the rail does when the wagon folds. Cheap check before printing the
-whole thing: print the clip (or just the 15 mm clamp slice, which has the ears but not the boss), clamp it on the right
+whole thing: print the clip (or just the 26 mm clamp slice, which has the ears but not the boss), clamp it on the right
 rail where it would go, and fold the wagon. If it gets in the way, move it along the rail, or loosen the bolt and remove
-the whole clip (a hex key and ~10 s) when you fold. Don't want the tool? A thumb-screw or wing-nut instead of the nut
-is an easy change.
+the whole clip (a few turns of the knob, no tool) when you fold.
 
 ## What I read from the photos (2026-11-01)
 
@@ -88,10 +87,16 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
   the pocket rim is 20 mm above it and the rest of the tumbler rises beside the frame.
 - **The clamp bolt is still essential.** The cup is beside the rail, so a full cup (~1 kg) is a constant twist
   of about **0.82 N·m** on the clip. A snap-fit's friction at rest is ~0.1 N·m (the lips just touch the tube with no
-  preload). So the clip has **two ears and an M4 bolt across the mouth**. Tightening it pulls the C closed around the
+  preload). So the clip has **two ears and a printed M8 bolt across the mouth**. Tightening it pulls the C closed around the
   tube (roughly belt-like, so ~4× the bolt force presses on the tube, enough for ~1.5+ N·m even at modest tightness).
   That's a rough estimate, so **verify with the clamp test slice** (try to twist the tightened slice on the real rail by hand).
-  *Hardware: 1 × M4 × 35 socket-head screw + 1 × M4 nut.*
+  *Hardware: none to buy. Print `output/wagon-bolt.stl` (M8 × 1.5 with a 24 mm scalloped knob) and `output/wagon-nut.stl`
+  (13 mm hex).* Why not M4: a printed M4 thread (0.7 mm pitch) is finer than FDM can hold and would strip long before it
+  reached the ~100–200 N the clamp needs. M8 × 1.5 prints and holds, but **printed in PETG it's finger-tight only. Don't use pliers.**
+  A 40 mm shank passes through both 10 mm ears (and across the 20.7 mm mouth) and its tip sits 0.7 mm inside the outer face of the nut ear.
+  Threads are generated directly as a mesh (`fasteners.py`), with a 0.25 mm radial gap between the bolt and nut thread surfaces.
+  The nut slides into a hex pocket from the open bottom of the ear. **Both ears have the pocket**, so the nut can go on either side and the knob
+  on the other. By default the knob is on the **inboard** ear (reachable with the cup module on) and the nut on the outboard ear.
 - **Bolt access:** with the module off, the +X ear's outer face is clear. The nut slides into a slot from the bottom of the
   inboard ear. The head sits in a pocket on the outboard ear.
 - **Snap geometry:** the mouth is 20.7 mm wide against the 22.3 mm tube, so each arm spreads ~0.8 mm
@@ -102,7 +107,7 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
 - **Printed on its side:** both pieces are built in a frame where the clip's bore axis is vertical on the bed. The ring's
   layers then run around the circle, so the arms flex along the layers. The dovetail flanks are 45° so they need no
   supports. The pocket lies on a 45° teardrop foot. The module has **no steep faces at all**, and the clip has ~33 mm² of
-  small (~4 mm) bridges over the bolt and nut openings.
+  small (~5–8 mm) flat bridges over the nut pockets and slots (194 mm² in total).
 - **Material:** PETG (outdoor, sun, flexing clip). PLA creeps and softens in a hot car or in the sun, and
   ASA/ABS warp on the open-frame A1.
 - **History:** v1 had the cup standing on top of the bar. v2 hung it off the side rail as one piece, with a hex-key
@@ -115,7 +120,9 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
 - Orientation is already built into each STL. Don't re-orient them.
 - Volumes: module 203 cm³ and clip 47 cm³ solid. Expect roughly 80–100 g and 25–35 g with those settings.
 - **Test prints, in order:**
-  1. `wagon-cup-clip-test.stl`: 15 mm ring + ears. Snap it on the real rail, add the M4 bolt, and tighten.
+  0. `wagon-bolt.stl` + `wagon-nut.stl`: print these with the clamp slice. Screw the nut onto the bolt before anything else.
+     It should turn on by hand with no rattle. If it binds, raise `thread_clr` in `fasteners.py` (0.25 → 0.3). If it's sloppy, lower it (0.2).
+  1. `wagon-cup-clip-test.stl`: 26 mm ring + ears. Snap it on the real rail, slide the nut into an ear's pocket from below, add the bolt, and tighten by hand.
      Check the snap force and try to twist it.
   2. `wagon-dovetail-test-tongue.stl` + `wagon-dovetail-test-groove.stl`: print both, slide them together
      (groove block drops onto the tongue from above). Should slide with a light push and not rattle. Adjust
@@ -141,8 +148,7 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
 ## Pipeline
 
 `python projects/wagon-cup-holder/build.py` (~2 min):
-1. `model.py` (build123d): `build_clip` = ring + ears + boss + dovetail tongue, cut bore, mouth, bolt hole, head pocket,
-   nut slot. `build_module` = floor plate + teardrop pocket (cone cavity, side opening) + web + shaped neck (`_neck`) with the dovetail groove.
+1. `model.py` (build123d): `build_clip` = ring + ears + boss + dovetail tongue, cut bore, mouth, bolt hole, and a nut pocket + slot in each ear. `build_module` = floor plate + teardrop pocket (cone cavity, side opening) + web + shaped neck (`_neck`) with the dovetail groove.
    Built in the **print frame** (rail axis = Z, cup axis = Y), in the assembled position.
 2. `build.py` exports each piece (STEP + STL) in its own print pose, plus the three test pieces.
 3. Checks: watertight, 0 self-intersections, overhang area (1° tolerance so the 45° faces aren't miscounted), and
@@ -162,7 +168,8 @@ Key parameters (`CupHolderParams` in `model.py`): `bar_d`, `bar_clearance`, `cli
 - `model.py`: parametric CAD. `build.py`: pipeline
 - `output/wagon-cup-clip.step/.stl`: the clip that stays on the rail
 - `output/wagon-cup-module.step/.stl`: the cup module that lifts on and off
-- `output/wagon-cup-clip-test.stl`: 15 mm ring + ears slice, for the snap and clamp test
+- `output/wagon-cup-clip-test.stl`: 26 mm ring + ears slice, for the snap and clamp test
+- `output/wagon-bolt.stl`, `output/wagon-nut.stl`: printed M8 × 1.5 clamp bolt (knob head) and hex nut. `fasteners.py` generates them
 - `output/wagon-dovetail-test-tongue.stl`, `output/wagon-dovetail-test-groove.stl`: sliding-fit test pair
 - `output/report.json`: dimensions, checks, parameters
 - `renders/cup-holder.png`, `renders/sections.png`, `renders/in-use.png`: previews and sections
@@ -208,3 +215,11 @@ Key parameters (`CupHolderParams` in `model.py`): `bar_d`, `bar_clearance`, `cli
   still 0 overhang, 0 interference with the clip, rail, tumbler and keep-out zones. The dovetail test pieces keep their plain block (they only test
   the sliding fit). Further ideas if it still feels heavy: hollow or window the neck, lower the engagement (`dt_y1`) so the pad is shorter, or
   curve the web in toward the bar near the top once we know where the strut sweeps in.
+- **2026-11-02 (v5):** The owner printed the three test parts: **the clip fit well**, and the dovetail pair "will probably work" but that print
+  was messy (they were 70 mm tall posts on a small footprint). Decided to go straight to the full print. The owner also asked for a **printed
+  bolt and nut**. A printed M4 would strip, so the ears are redesigned for a **printed M8 × 1.5 knob bolt and hex nut** (`fasteners.py`): ears
+  8 → 10 mm thick, 9 mm bolt hole, 13.5 mm nut pockets and slide-in slots on both ears (nut on either side), clamp slice 15 → 26 mm. The knob
+  lets the clamp be tightened by hand, without a hex key. Checks: bolt and nut watertight and mesh with 0 interference at any position,
+  the bolt clears the clip, module and rail, the nut fits its pocket. **The clip geometry changed, so the old clip that "fit well" was the
+  M4 version. The bore, mouth and ring are unchanged, so the snap fit should be identical.** Next: owner prints the bolt, the nut and the new
+  clamp slice (quick), and the full clip and module.
