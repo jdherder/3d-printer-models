@@ -20,7 +20,7 @@ and off quickly as it will need to be off for folding").
 - [x] Tube measured by the owner: round, **22.3 mm** diameter, **~120 mm** free length
 - [x] Parametric CAD model (`model.py`): **clip** + **cup module** + two small test pieces. STEP + STL, watertight,
       0 self-intersections, no collisions in the assembled position, no supports
-- [x] Fits the A1 (module 112 × 95 × 88 mm, clip 52 × 40 × 70 mm)
+- [x] Fits the A1 (module 112 × 95 × 73 mm, clip 56 × 42 × 70 mm)
 - [ ] **Owner: confirm the clip spot** (straight section of the right-hand side rail) and that the **empty clip
       doesn't block folding**. See "Folding" below
 - [x] Tumbler: owner is fine with the retailer figures for now (70 mm base, 89 mm widest). Re-check against the real cup before the full print
@@ -103,10 +103,11 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
   (≈1% strain at the 2.8 mm wall, fine for PETG). Estimated push-on force is ~5–10 kgf, so
   **test with the clamp slice**. If it's too stiff, raise `mouth_width` or lower `clip_wall`. If it's loose, do the reverse.
 - **Pocket:** a tapered cone (matches the Yeti's taper) 80 mm deep, with 1 mm radial clearance, wrapping the
-  cup 250° so it can't slide out sideways. It's open on one side so it prints without supports.
+  cup **262°** so it can't slide out sideways (derived: the lip is set to end level with the top of the web and bracket, see `z_top`).
+  It's open on one side so it prints without supports. The opening is the "notch" you see: it faces along the rail.
 - **Printed on its side:** both pieces are built in a frame where the clip's bore axis is vertical on the bed. The ring's
   layers then run around the circle, so the arms flex along the layers. The dovetail flanks are 45° so they need no
-  supports. The pocket lies on a 45° teardrop foot. The module has **no steep faces at all**, and the clip has ~33 mm² of
+  supports. The pocket lies on a 45° teardrop foot. The module has **no steep faces at all**, and is 73 mm tall, so it's stable on the bed, and the clip has ~33 mm² of
   small (~5–8 mm) flat bridges over the nut pockets and slots (194 mm² in total).
 - **Material:** PETG (outdoor, sun, flexing clip). PLA creeps and softens in a hot car or in the sun, and
   ASA/ABS warp on the open-frame A1.
@@ -223,3 +224,10 @@ Key parameters (`CupHolderParams` in `model.py`): `bar_d`, `bar_clearance`, `cli
   the bolt clears the clip, module and rail, the nut fits its pocket. **The clip geometry changed, so the old clip that "fit well" was the
   M4 version. The bore, mouth and ring are unchanged, so the snap fit should be identical.** Next: owner prints the bolt, the nut and the new
   clamp slice (quick), and the full clip and module.
+- **2026-11-02 (v5.1):** The owner circled a **notch in the holder piece** in the viewer. It was two things: the pocket's side opening (intentional, so
+  the pocket prints on its side without supports), and a leftover where the back wall (a full-height 87.6 mm plate) stuck up ~19 mm past the lip of the
+  curved wall with a hard square corner and a thin slit between them. Fixed: the web now stops at `z_top` (72.65 mm, set by the 4 mm cheek the dovetail
+  groove needs), its top outer corner is chamfered along the pocket's outer circle up to the lip, the opening angle is derived so the lip ends level
+  with it (wrap 250° → 262°), and the whole module, including the round floor disc, is cut flat at that height. Module 188 → 184 cm³, and
+  **88 → 73 mm tall**. Still 0 overhang and 0 interference everywhere. Did not trim the web lower than the groove allows: that would have left no wall
+  on the groove's +Z side.

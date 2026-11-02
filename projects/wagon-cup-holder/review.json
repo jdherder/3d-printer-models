@@ -1,6 +1,6 @@
 {
   "page_title": "Wagon Cup Holder",
-  "title": "Wagon cup holder: v5, printed bolt and nut",
+  "title": "Wagon cup holder: v5.1, notch cleaned up",
   "subtitle": "Clip stays on the side rail \u00b7 cup module lifts off its dovetail \u00b7 printed M8 knob bolt and nut clamp the clip \u00b7 shown assembled, in print orientation \u00b7 millimetres",
   "meshes": [
     {
@@ -91,5 +91,5 @@
   ],
   "scale_note": "Real size, shown assembled. The rail is your 22.3 mm tube. The tumbler is from retailer listings (70 mm base, 89 mm widest). The two wireframe blocks are the red latch and diagonal strut at each end of your 120 mm clear stretch. They are APPROXIMATE: only the ~26 mm reach is from you, and I assumed they sit only beyond the clear stretch. It is drawn in print orientation: the rail axis is vertical here and the cup lies on its side. In use the rail is horizontal and the cup stands upright, hanging off the outside of it.",
   "notes_title": "What changed, and what to check",
-  "notes": "v5: you can now print the bolt and nut, so there is nothing to buy. A printed M4 thread would strip, so the clamp uses a printed M8 x 1.5 bolt with a big scalloped knob (hand-tighten only, no tool) and a printed hex nut. The clip's ears are thicker and have a nut pocket on both sides, so the nut can go on either ear. The knob is on the inboard side by default so you can reach it with the cup module on. The clip's ring, mouth and bore are unchanged, so the snap fit you tested should be the same. Print the bolt, the nut and the new 26 mm clamp slice first (quick), then the full clip and module. Please check: (1) does the nut turn onto the bolt by hand, with no rattle and no binding? (2) is there room for the 24 mm knob on the inboard side, or would you rather have it on the outboard side? (3) do the printed threads hold a firm hand-tightening on the real rail?"
+  "notes": "v5.1: you circled the notch in the holder piece. It was a leftover: the back wall was a full-height plate sticking up about 19 mm past the lip of the curved wall, with a hard corner and a thin slit between them. Now the back wall stops at the same height as the bracket and the lip, its top corner follows the curve of the pocket up to the lip, and the round floor disc is cut flat at the same line, so everything finishes level. The pocket now wraps the cup a bit more (262 degrees instead of 250), and the module is 73 mm tall instead of 88, so it is more stable to print. The opening on the pocket's side is intentional: it lets the pocket print on its side with no supports, and in use it faces along the rail. Nothing about the fit changed. Please check: (1) does it look cleaner now? (2) is the printed bolt and nut test going OK?"
 }

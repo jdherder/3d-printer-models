@@ -236,7 +236,10 @@ def main():
         "tumbler_taper_mm_per_mm_dia": round(taper, 4),
         "latch_strut_reach_from_rail_axis": round(p.keepout_x, 1),
         "web_clearance_to_latch_strut": round(p.web_gap - p.keepout_x, 1),
-        "module_clearance_to_window_ends_each_side": round((p.safe_window - 2 * p.outer_r) / 2, 1),
+        "module_clearance_to_window_ends_each_side": round(min(p.safe_window / 2 - p.cup_zc,
+                                                               p.safe_window / 2 - (p.z_top - p.cup_zc)), 1),
+        "web_top_z_mm": round(p.z_top, 1),
+        "pocket_wrap_deg": round(p.wrap_actual_deg, 1),
         "clip_clearance_to_window_ends_each_side": round((p.safe_window - p.clip_len) / 2, 1),
     })
     report = {

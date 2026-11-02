@@ -88,7 +88,7 @@ class CupHolderParams:
     cup_wall: float = 3.2
     floor_t: float = 6.5
     floor_drop: float = 60.0        # cup base this far below the rail axis
-    wrap_deg: float = 250.0         # how far the pocket wall wraps the cup (>180 holds it)
+    wrap_deg: float | None = None   # how far the pocket wall wraps the cup. None = derived, so the lip ends level with the web top
 
     # --- Derived ---
     @property
@@ -140,6 +140,25 @@ class CupHolderParams:
     def keepout_x(self) -> float:
         """Outward distance from the rail axis that the latch / strut reach (worst-case reading)."""
         return self.bar_d / 2 + self.keepout_reach
+
+    @property
+    def z_top(self) -> float:
+        """Top of the web and the bracket along the rail: just enough to leave the dovetail groove its full cheek."""
+        k = 1.414 * self.dt_clear
+        half_at_groove_tip = self.dt_w_root / 2 + (self.dt_h + self.dt_clear) + k + self.neck_cheek
+        return self.cup_zc + half_at_groove_tip
+
+    @property
+    def opening_half_deg(self) -> float:
+        """Half-angle of the pocket's side opening, measured from the +Z direction."""
+        if self.wrap_deg is not None:
+            return (360.0 - self.wrap_deg) / 2
+        c = (self.z_top - self.cup_zc) / self.outer_r
+        return math.degrees(math.acos(max(-1.0, min(1.0, c))))
+
+    @property
+    def wrap_actual_deg(self) -> float:
+        return 360.0 - 2 * self.opening_half_deg
 
     @property
     def pocket_cx(self) -> float:
@@ -347,13 +366,20 @@ def build_module(p: CupHolderParams | None = None):
 
     body = _extrude_y(teardrop, y_plate0, y_end)
 
-    # Web: a vertical plate (a prism along Z) from the floor up to the rim, tangent to the pocket.
+    # Web: a vertical plate from the floor up to the rim, tangent to the pocket. It stops at z_top, and its top outer
+    # corner is chamfered along the pocket's outer circle up to the lip, so the plate, the lip and the bracket all end
+    # level and there is no step or slit between the plate and the curved wall.
     x_web1 = p.web_gap + p.web_t
+    half = p.opening_half_deg
+    z_top = p.z_top
+    x_lip = cx - R * math.sin(math.radians(half))                       # outer corner of the wall's lip
+    dz = math.sqrt(max(R * R - (cx - x_web1) ** 2, 0.0))
+    z_fuse = min(zc + dz, z_top)                                         # where the circle crosses the plate's outer face
 
     def web_profile():
-        Polygon((p.web_gap, y_plate0), (x_web1, y_plate0), (x_web1, y_end), (p.web_gap, y_end), align=None)
+        Polygon((p.web_gap, 0.0), (x_web1, 0.0), (x_web1, z_fuse), (x_lip, z_top), (p.web_gap, z_top), align=None)
 
-    web = _prism_z(web_profile, 0.0, 2 * R)
+    web = _extrude_y(web_profile, y_plate0, y_end)
 
     # Pocket cavity: a cone along +Y rising from the floor.
     r0, r1 = p.pocket_r(0), p.pocket_r(p.pocket_depth + 2)
@@ -361,7 +387,6 @@ def build_module(p: CupHolderParams | None = None):
     cavity = Pos(cx, yf, zc) * (Rotation(-90, 0, 0) * cone)
 
     # Side opening facing +Z: leaves wrap_deg of wall around the cup, cut above the floor only.
-    half = (360.0 - p.wrap_deg) / 2
     far = 4 * R
     fan = [(cx, zc)] + [(cx + far * math.sin(math.radians(ang)), zc + far * math.cos(math.radians(ang)))
                         for ang in (-half, -half / 2, 0, half / 2, half)]
@@ -373,7 +398,9 @@ def build_module(p: CupHolderParams | None = None):
 
     # The neck is added AFTER the cavity cut. It ends at x = web_gap + 2, inboard of the cavity, so nothing
     # needs trimming. Its groove stays open at the pad's inner face and at the top and bottom.
-    return body + web - cavity - opening + (_neck(p, 2 * R) - _groove(p, zc, p.dt_y1))
+    module = body + web - cavity - opening + (_neck(p, z_top) - _groove(p, zc, p.dt_y1))
+    # Everything finishes level at z_top: the lip, the web, the bracket, and the floor disc, which is trimmed flat here.
+    return module - Pos(0, 0, z_top + 100) * Box(1000, 1000, 200)
 
 
 def build_dovetail_test(p: CupHolderParams | None = None, y_len: float = 14.0):

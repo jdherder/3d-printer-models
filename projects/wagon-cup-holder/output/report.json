@@ -20,13 +20,13 @@
     "extents_mm": [
       112.3,
       94.5,
-      87.6
+      72.7
     ],
-    "faces": 1624,
+    "faces": 1496,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 2,
-    "volume_cm3": 189.9,
+    "volume_cm3": 184.5,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0,
@@ -151,7 +151,7 @@
     "cup_wall": 3.2,
     "floor_t": 6.5,
     "floor_drop": 60.0,
-    "wrap_deg": 250.0,
+    "wrap_deg": null,
     "bore_d": 22.5,
     "snap_spread_each_lip": 0.8,
     "bolt_needed": "printed M8 x 1.5 knob bolt + printed hex nut (output/wagon-bolt.stl, wagon-nut.stl)",
@@ -173,6 +173,8 @@
     "latch_strut_reach_from_rail_axis": 37.1,
     "web_clearance_to_latch_strut": 2.9,
     "module_clearance_to_window_ends_each_side": 16.2,
+    "web_top_z_mm": 72.7,
+    "pocket_wrap_deg": 262.4,
     "clip_clearance_to_window_ends_each_side": 25.0
   }
 }
