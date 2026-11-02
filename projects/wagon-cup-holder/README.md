@@ -4,75 +4,80 @@ A two-piece cup holder for the **right-hand side rail** of the owner's
 [MAC Sports push/pull wagon](https://macsports.com/products/mac-sports-push-pull-wagon)
 (the push-handle frame, as seen from the pusher). A **clip stays on the rail**, and the **cup module lifts on and
 off it in a couple of seconds**, so it can come off for folding the wagon. It holds a **20 oz Yeti Rambler**
-hanging off the outside of the wagon.
+hanging off the outside of the wagon. The clip is clamped by a **printed M8 knob bolt and nut** (nothing to buy).
 
-![holder in print orientation](renders/cup-holder.png)
+![the holder](renders/cup-holder.png)
 
 ## Goal
 
 A tool-free way to take the cup off and put it back, with the cup hanging off the side of the wagon, lower than
-the rail (the owner's requirements: "hanging off to the side of the wagon", "hanging lower", and "needs to go on
-and off quickly as it will need to be off for folding").
+the rail, and the whole thing looking like **one natural, flowing object** (the owner's words: "weird notches, walls, angles that
+feel unnatural... it could all just flow together more seamlessly").
 
 ## Status
 
-- [x] Reference photos saved (`source/`): the product photo and six photos of the push frame with a tape measure
-- [x] Tube measured by the owner: round, **22.3 mm** diameter, **~120 mm** free length
-- [x] Parametric CAD model (`model.py`): **clip** + **cup module** + two small test pieces. STEP + STL, watertight,
-      0 self-intersections, no collisions in the assembled position, no supports
-- [x] Fits the A1 (module 112 × 95 × 73 mm, clip 56 × 42 × 70 mm)
-- [ ] **Owner: confirm the clip spot** (straight section of the right-hand side rail) and that the **empty clip
-      doesn't block folding**. See "Folding" below
-- [x] Tumbler: owner is fine with the retailer figures for now (70 mm base, 89 mm widest). Re-check against the real cup before the full print
-- [x] Strut + red latch clearance (v3.1): they sit further out than the bar, ~26 mm (owner's estimate), the same at both ends. The cup
-      is now moved out to clear them. **Still an estimate: check it against the real wagon before the full print** (Open questions 2)
-- [ ] **Print the three small test pieces first** (a few minutes to an hour each): the clamp slice, and the dovetail pair
-- [ ] Print the clip and module in PETG, test on the wagon with a full cup, adjust
+- [x] Reference photos saved (`source/`)
+- [x] Tube measured by the owner: round, **22.3 mm** (confirmed on the side rail), **~120 mm** clear
+- [x] Owner OK with the retailer figures for the tumbler for now
+- [x] Strut + red latch: they sit further out than the bar (~26 mm, same at both ends). The cup is placed to clear them
+- [x] **v6 rebuilt as one blended form** (see "How it's made"): module 112.1 × 87.7 × 90.5 mm,
+      clip 51.8 × 42.9 × 70 mm. Both single watertight bodies, 0 interference everywhere
+- [x] Printed: **the clip test (fit well)** and the dovetail pair (will probably work). Owner is printing the bolt and nut + clamp slice
+- [ ] **Owner: does v6 look right?** Natural, flowing, no weird notches
+- [ ] **Owner: check the strut doesn't slope in under the cup** (cup base is 60 mm below the rail axis)
+- [ ] **Owner: does the empty clip block folding?** (see "Folding")
+- [ ] Print the full clip and module in PETG, test on the wagon with a full cup, adjust
 
-## How the quick release works
+## How it works
 
-- The **clip** (ring + ears + printed M8 knob bolt and nut) is snapped on and **tightened by hand with the knob**. It stays on the rail.
-  On its outboard side there's a boss with a **vertical 45° dovetail tongue** (34 mm wide at the root, 48 mm at the tip,
-  7 mm tall, **32 mm of vertical engagement**).
+- The **clip** (ring + ears) is snapped on and **tightened by hand with the knob** of the printed bolt. It stays on the rail.
+  On its outboard side a vertical **dovetail tongue** (34 mm wide at the root, 48 mm at the tip, 7 mm tall,
+  **28 mm of vertical engagement**).
 - The cup **module** has the matching groove (0.35 mm clearance per side). It **drops straight down onto the tongue**
   and rests on the tops of the clip's ears, so **gravity holds it seated**. To remove it, lift it straight up
-  ~32 mm and it comes off with the cup in it, one-handed, no tool.
-- The module's weight is carried by the ear tops (a vertical stop). The cup's twist (0.82 N·m full) is carried as a
-  couple across the 32 mm dovetail height (~20 N), which is small.
-- **No detent yet.** To lift off, the module has to move up 32 mm, and a wagon bump is very unlikely to do that. If it
-  hops in testing, add a small click detent (bump on the tongue flank + dimple in the groove) or a lanyard.
+  ~28 mm and it comes off with the cup in it, one-handed, no tool.
+- The cup is a **tapered ring** that follows the Yeti's taper, closed at the bottom, open at the top. A slim **stem** sweeps from its
+  inboard side back to the dovetail pad. The rim, the stem and the pad all end in one **flat top plane** (24 mm above the rail axis).
+- **No detent yet.** To lift off, the module has to move up 28 mm; a wagon bump is very unlikely to do that. If it hops in testing,
+  add a small click detent (bump on the tongue flank + dimple in the groove) or a lanyard.
+
+### How it's made (v6)
+
+v1–v5.1 stacked flat prisms (a plate, a block, a disc, a bracket) and filleted where they met. That always reads as assembled. v6 builds
+each piece as **one continuous field with smooth blends** (`sdf.py`, `model.py`), then meshes it. Joins are true blends and every edge that meets
+the top plane is rounded. Everything that has to be exact (the dovetail tongue and groove, the rail bore, the snap mouth, the bolt hole and
+the nut pockets) is **cut exactly afterwards** on the mesh. The cup now **prints upright** (floor on the bed), so the pocket is a plain closed
+ring: the side opening that caused the "notch" in v5 is gone.
+
+**The trade:** the clip and module are now **meshes (STL), not editable CAD (STEP)**, so they can't be opened as solids in Fusion. Change the numbers in
+`model.py` and rebuild. The last editable STEP version (v5.1) is in git history (commit "v5.1: clean up the notch").
 
 ### Folding
 
-What stays on the rail when the cup is off: the **clip is 70 mm long and extends about 28 mm above the rail axis,
-24 mm below it, 22 mm outboard and 18 mm inboard** (the ears and the dovetail boss). **Whether that blocks folding is the
-big unknown.** I can't tell from the photos what the rail does when the wagon folds. Cheap check before printing the
-whole thing: print the clip (or just the 26 mm clamp slice, which has the ears but not the boss), clamp it on the right
-rail where it would go, and fold the wagon. If it gets in the way, move it along the rail, or loosen the bolt and remove
-the whole clip (a few turns of the knob, no tool) when you fold.
+What stays on the rail when the cup is off: the **clip is 70 mm long and extends about 24 mm above the rail axis,
+27.8 mm below it, ~22 mm outboard and ~20 mm inboard** (the ears and the dovetail tongue). **Whether that blocks folding is still unknown.**
+Cheap check: clamp the 26 mm clamp slice (`wagon-cup-clip-test.stl`, ears but no tongue) on the right rail where the clip would go and fold the wagon. If it gets in the way,
+move it along the rail, or loosen the knob and take the whole clip off (a few turns, no tool) when you fold.
 
 ## What I read from the photos (2026-11-01)
 
-The push frame is a **U-shaped tube**: a foam-covered grip bar across the back (only ~9 in, ~230 mm, between its
-end brackets, mostly foam), and at each end a round powder-coated tube bends 90° into a **side rail** that runs
-toward the wagon. Each side rail has a black end cap and a red latch, and there's a diagonal flat strut below it.
-With the tape, the **right-hand side rail's straight run is roughly 8–9 in (200–230 mm)**, and the owner's "~120 mm free"
-fits the stretch between the end cap and the red latch. The outside of the rail is open air. This is the
-"hanging off the side" spot, so the model is built for it.
+The push frame is a **U-shaped tube**: a foam-covered grip bar across the back (~9 in between its end brackets, mostly foam), and at each end a round
+powder-coated tube bends into a **side rail** toward the wagon. Each side rail has a black end cap and a red latch, and a diagonal flat strut below it.
+The right-hand side rail's straight run is roughly 8–9 in, and the owner's "~120 mm" is the clear, unobstructed stretch between the latch/strut at each end.
+The outside of the rail is open air. This is the "hanging off the side" spot.
 
-**Assumptions to confirm:** the side rail is the same 22.3 mm round tube the owner measured; the clip
-can sit on the free ~120 mm; and nothing outboard of the rail (latch, strut) is in the way of the web.
+**Owner's answers on the strut and latch:** the same at both ends, they reach "maybe 26 mm" out. I took that as 26 mm past the bar's **outer surface**
+(37.2 mm from the bar axis, the cautious reading). The cup's outer wall is **40 mm** from the bar axis at the rim (2.9 mm clear of that).
 
 ## Measurements
 
 | Feature | Real (mm) | Source | Notes |
 |---|---|---|---|
-| Tube outer diameter | **22.3** | owner, "about" | Calipers on a painted tube read ±0.2. Re-measure if the clip is loose or tight. Assumed the same on the side rail |
-| Free rail length (right side) | **~120** | owner, "roughly" | Clip is 70 mm long |
-| Side rail straight run | ~200–230 | tape photos (rough read) | End cap to the bend. The latch is near the bend |
-| Grip bar between end brackets | ~230 | tape photos (rough read) | Mostly foam. Not used |
-| Tumbler base diameter | 70 (2.75 in) | retailer listing | **Not measured on the owner's cup** |
-| Tumbler widest diameter (lid) | 89 (3.5 in) | retailer listing | **Not measured on the owner's cup** |
+| Tube outer diameter | **22.3** | owner, confirmed on the side rail | Calipers on a painted tube read ±0.2 |
+| Clear rail length | **~120** | owner, "roughly" | Clip is 70 mm long, the cup ring is 88.07 mm wide. Cup + clip are centred on it |
+| Strut + latch reach past the bar's surface | ~26 | owner, "maybe" | Same at both ends. Modelled as two blocks beyond the clear window |
+| Tumbler base diameter | 70 (2.75 in) | retailer listing | Owner OK with this for now |
+| Tumbler widest diameter (lid) | 89 (3.5 in) | retailer listing | Owner OK with this for now |
 | Tumbler height | 168–175 (6.6–6.9 in) | retailer listings | Only used to size the taper |
 
 Retailer sources: [Rogue](https://www.roguefitness.com/yeti-rambler-20oz-tumbler),
@@ -81,101 +86,72 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
 
 ## Design decisions and why
 
-- **Layout (use frame):** the clip wraps the side rail from above, mouth facing down. The cup module hangs off its
-  outboard side: a **shaped bracket** (a pad with the dovetail groove that flares and sweeps into the web), a web down the outside of the rail, and the floor plate and pocket
-  off the web. The cup axis is **83.8 mm outboard of the rail axis**, and the **cup base is 60 mm below the rail axis**, so
-  the pocket rim is 20 mm above it and the rest of the tumbler rises beside the frame.
-- **The clamp bolt is still essential.** The cup is beside the rail, so a full cup (~1 kg) is a constant twist
-  of about **0.82 N·m** on the clip. A snap-fit's friction at rest is ~0.1 N·m (the lips just touch the tube with no
-  preload). So the clip has **two ears and a printed M8 bolt across the mouth**. Tightening it pulls the C closed around the
-  tube (roughly belt-like, so ~4× the bolt force presses on the tube, enough for ~1.5+ N·m even at modest tightness).
-  That's a rough estimate, so **verify with the clamp test slice** (try to twist the tightened slice on the real rail by hand).
-  *Hardware: none to buy. Print `output/wagon-bolt.stl` (M8 × 1.5 with a 24 mm scalloped knob) and `output/wagon-nut.stl`
-  (13 mm hex).* Why not M4: a printed M4 thread (0.7 mm pitch) is finer than FDM can hold and would strip long before it
-  reached the ~100–200 N the clamp needs. M8 × 1.5 prints and holds, but **printed in PETG it's finger-tight only. Don't use pliers.**
-  A 40 mm shank passes through both 10 mm ears (and across the 20.7 mm mouth) and its tip sits 0.7 mm inside the outer face of the nut ear.
-  Threads are generated directly as a mesh (`fasteners.py`), with a 0.25 mm radial gap between the bolt and nut thread surfaces.
-  The nut slides into a hex pocket from the open bottom of the ear. **Both ears have the pocket**, so the nut can go on either side and the knob
-  on the other. By default the knob is on the **inboard** ear (reachable with the cup module on) and the nut on the outboard ear.
-- **Bolt access:** with the module off, the +X ear's outer face is clear. The nut slides into a slot from the bottom of the
-  inboard ear. The head sits in a pocket on the outboard ear.
-- **Snap geometry:** the mouth is 20.7 mm wide against the 22.3 mm tube, so each arm spreads ~0.8 mm
-  (≈1% strain at the 2.8 mm wall, fine for PETG). Estimated push-on force is ~5–10 kgf, so
-  **test with the clamp slice**. If it's too stiff, raise `mouth_width` or lower `clip_wall`. If it's loose, do the reverse.
-- **Pocket:** a tapered cone (matches the Yeti's taper) 80 mm deep, with 1 mm radial clearance, wrapping the
-  cup **262°** so it can't slide out sideways (derived: the lip is set to end level with the top of the web and bracket, see `z_top`).
-  It's open on one side so it prints without supports. The opening is the "notch" you see: it faces along the rail.
-- **Printed on its side:** both pieces are built in a frame where the clip's bore axis is vertical on the bed. The ring's
-  layers then run around the circle, so the arms flex along the layers. The dovetail flanks are 45° so they need no
-  supports. The pocket lies on a 45° teardrop foot. The module has **no steep faces at all**, and is 73 mm tall, so it's stable on the bed, and the clip has ~33 mm² of
-  small (~5–8 mm) flat bridges over the nut pockets and slots (194 mm² in total).
-- **Material:** PETG (outdoor, sun, flexing clip). PLA creeps and softens in a hot car or in the sun, and
-  ASA/ABS warp on the open-frame A1.
-- **History:** v1 had the cup standing on top of the bar. v2 hung it off the side rail as one piece, with a hex-key
-  window through the web so the bolt could be reached. v3 (this) splits it so the cup comes off without a tool. The window
-  is gone, since the bolt is reached with the module off. Earlier versions are in git history.
+- **Layout (use frame: rail along X, Z up):** the clip wraps the side rail from above, mouth facing down. The module hangs off its outboard side. The cup axis is
+  **84 mm outboard of the rail axis**, and the **cup base is 60 mm below it**, so the rim is 24 mm above it.
+- **The clamp is still essential.** The cup is beside the rail, so a full cup (~1 kg) is a constant twist of about **0.82 N·m** on the clip.
+  A snap-fit's friction at rest is ~0.1 N·m. So the clip has **two ears and a printed M8 bolt across the mouth**: tightening pulls the C closed around the tube
+  (roughly belt-like, so ~4× the bolt force presses on the tube). That's an estimate, so **verify with the clamp slice** (try to twist the tightened slice on the real rail).
+- **Printed bolt and nut:** M8 × 1.5 with a 24 mm scalloped knob (`fasteners.py`). A printed M4 would strip. **PETG threads are finger-tight only, no pliers.**
+  Nut gap 0.25 mm radial. The nut slides into a hex pocket from the open bottom of the ear. **Both ears have the pocket**, so the nut can go either side. By default the knob is
+  **inboard** (reachable with the module on) and the nut outboard.
+- **Snap geometry:** the mouth is 20.7 mm wide against the 22.3 mm tube, so each arm spreads ~0.8 mm (≈1% strain, fine for PETG). The owner's test
+  print fit well.
+- **Printing:** the **module prints upright** (base chamfered at exactly 45°, the stem's underside is a self-supporting ≥45° sweep, the dovetail groove is a vertical channel).
+  The **clip prints with its ring axis vertical** (layers run around the ring, so the arms flex along the layers). Overhang area over 45°: module 62.5 mm² (the pad's flat seat),
+  clip 247.3 mm² (flat-topped nut pockets and slots, ≤ 8 mm bridges). No supports.
+- **Material:** PETG (outdoor, sun, flexing clip). PLA creeps and softens in a hot car or in the sun, and ASA/ABS warp on the open-frame A1.
+- **History:** v1 cup on top of the bar; v2 hung off the side rail; v3 split into clip + module (quick release); v3.1 moved the cup out to clear the strut; v4 shaped bracket
+  instead of a slab; v5 printed M8 bolt and nut; v5.1 trimmed the notch; **v6 (this) rebuilt both pieces as one blended form**. Earlier versions are in git history.
 
 ## Print settings (suggested, not yet test-printed)
 
-- PETG, 0.2 mm layers, 4–5 walls, 15–20 % gyroid infill, brim on (the module's web is 88 mm tall and only 6.5 mm thick).
+- PETG, 0.2 mm layers, 4–5 walls, 15–20 % gyroid infill. Brim on the clip (it stands on a small footprint). The module stands on a ~88 mm base, so it needs less.
 - Orientation is already built into each STL. Don't re-orient them.
-- Volumes: module 203 cm³ and clip 47 cm³ solid. Expect roughly 80–100 g and 25–35 g with those settings.
+- Volumes: module 142 cm³ and clip 49.9 cm³ solid. Expect roughly 60–80 g and 25–35 g with those settings.
 - **Test prints, in order:**
-  0. `wagon-bolt.stl` + `wagon-nut.stl`: print these with the clamp slice. Screw the nut onto the bolt before anything else.
-     It should turn on by hand with no rattle. If it binds, raise `thread_clr` in `fasteners.py` (0.25 → 0.3). If it's sloppy, lower it (0.2).
-  1. `wagon-cup-clip-test.stl`: 26 mm ring + ears. Snap it on the real rail, slide the nut into an ear's pocket from below, add the bolt, and tighten by hand.
-     Check the snap force and try to twist it.
-  2. `wagon-dovetail-test-tongue.stl` + `wagon-dovetail-test-groove.stl`: print both, slide them together
-     (groove block drops onto the tongue from above). Should slide with a light push and not rattle. Adjust
-     `dt_clear` (0.35 mm per side now) if it's too tight or sloppy.
+  0. `wagon-bolt.stl` + `wagon-nut.stl`: screw the nut onto the bolt by hand. If it binds, raise `thread_clr` in `fasteners.py` (0.25 → 0.3). If sloppy, lower it (0.2).
+  1. `wagon-cup-clip-test.stl`: 26 mm ring + ears. Snap it on, slide the nut into a pocket from below, add the bolt, tighten by hand, and try to twist it.
+  2. `wagon-dovetail-test-tongue.stl` + `wagon-dovetail-test-groove.stl`: now flat pieces, 14 mm tall. The groove block slides down onto the tongue.
+     Adjust `dt_clear` (0.35 mm per side now) if it's too tight or sloppy.
   3. The full clip and module.
 
 ## Open questions
 
-1. **Does the empty clip block folding?** See "Folding" above. Test with the clamp slice on the rail.
-2. **The red latch and the diagonal strut sit further out than the push bar** (owner, from photos). Owner's answers: same at both ends,
-   they reach "maybe 26 mm" out (taken as 26 mm past the bar's **outer surface**, i.e. 37.2 mm from the bar axis, the cautious reading),
-   and the 120 mm is the clear, unobstructed stretch of bar between them. The module's web now starts **40 mm** from the bar axis
-   (2.8 mm clear of that), the module is 88 mm long inside the 120 mm window (16 mm each side), and the clip is centred on it.
-   **Still assumed (modelled as two blocks at the ends of the window, shown in the viewer):** the latch/strut only exist
-   beyond the 120 mm window, and nothing else is outboard of the bar inside it. The diagonal strut slopes down from the bracket, so please
-   check on the real wagon that it doesn't reach under the cup (the cup base is 60 mm below the bar axis). If it does, raise the cup (`floor_drop`).
-3. ~~Is the side rail really 22.3 mm?~~ Confirmed by the owner: **22.3 mm** (set as `bar_d`).
-4. **Which way should the cup open?** The pocket's side opening faces along the rail. Mirror or flip if you'd rather it faced the pusher.
-5. Does the owner's tumbler have a handle? (The pocket assumes the plain Rambler.)
-6. Is a click detent wanted, or is gravity enough?
-7. Would a rubber strip or inner-tube liner on the rail be wanted for extra grip? (Easy to add.)
+1. **Does the empty clip block folding?** See "Folding" above.
+2. **Does the diagonal strut slope in under the cup?** The cup base is 60 mm below the bar axis. If it does, raise the cup (`floor_drop`).
+3. **Is there room for the 24 mm knob on the inboard side**, or would the owner rather have it outboard?
+4. Does the owner's tumbler have a handle? Is its base edge rounded? (The ghost tumbler assumes a 3.5 mm base-edge radius; the pocket floor has a 3 mm fillet.)
+5. Is a click detent wanted, or is gravity enough?
+6. Would a rubber strip or inner-tube liner on the rail be wanted for extra grip? (Easy to add.)
 
 ## Pipeline
 
 `python projects/wagon-cup-holder/build.py` (~2 min):
-1. `model.py` (build123d): `build_clip` = ring + ears + boss + dovetail tongue, cut bore, mouth, bolt hole, and a nut pocket + slot in each ear. `build_module` = floor plate + teardrop pocket (cone cavity, side opening) + web + shaped neck (`_neck`) with the dovetail groove.
-   Built in the **print frame** (rail axis = Z, cup axis = Y), in the assembled position.
-2. `build.py` exports each piece (STEP + STL) in its own print pose, plus the three test pieces.
-3. Checks: watertight, 0 self-intersections, overhang area (1° tolerance so the 45° faces aren't miscounted), and
-   interference of every pair in the assembled position: module/clip, module/rail, module/tumbler, clip/rail,
-   clip/tumbler (all must be 0). Writes `output/report.json` and the renders.
+1. `model.py`: `build_module` = tapered cup ring + stem/pad as signed-distance fields, smooth-unioned, hollowed, top plane rounded, meshed with marching cubes (`sdf.py`,
+   0.5 mm cells, decimated), then the dovetail groove cut exactly. `build_clip` = ring + ears + boss as a field, meshed, the dovetail tongue unioned exactly, then the bore,
+   mouth, bolt hole and nut pockets + slots cut exactly. Booleans are `manifold3d`. Only the largest body is kept (booleans on coplanar faces leave slivers).
+2. `build.py` exports each piece in its print pose, the test pieces, and the bolt and nut (`fasteners.py`).
+3. Checks, in the assembled (real use) pose: both pieces watertight and one body, overhang area, and the interference of every pair: module/clip (a contact, ≤ 0.01 cm³),
+   module/rail, module/tumbler, clip/rail, clip/tumbler, both vs the strut/latch zones, bolt vs clip/module/rail, nut vs clip/module (all must be ~0).
 
-Key parameters (`CupHolderParams` in `model.py`): `bar_d`, `bar_clearance`, `clip_wall`, `clip_len`, `mouth_width`,
-`dt_clear`, `dt_w_root`, `dt_y1`, `web_gap`, `keepout_reach`, `safe_window`, `floor_drop`, `cup_base_d`, `cup_top_d`, `pocket_depth`, `pocket_clearance`, `wrap_deg`.
+Key parameters (`CupHolderParams` in `model.py`): `bar_d`, `clip_wall`, `clip_len`, `mouth_width`, `dt_clear`, `inboard_gap`, `floor_drop`, `pocket_depth`, `cup_*`,
+`pocket_clearance`, `stem_half_w`, `blend_k` (how soft the stem-to-cup blend is), `top_round_k`, `pad_stem_k`, `base_chamfer`, `voxel`.
+Needs `scikit-image` (marching cubes), in `requirements.txt`.
 
 ## Files
 
 - **Interactive viewer:** https://claude.ai/artifact/Anqg9yywWNz2pW6LNgwWoN (private to the owner).
-  Built from `renders/viewer.html` by `tools/make_viewer.py` using `review.json`. Republish to this
-  URL on every review (see `docs/review.md`)
-- `source/wagon-photo-2026-11-01.jpg`: the owner's first photo (product shot, arrow marks the bar)
-- `source/wagon-photo-2026-11-01-rail-1..6.jpg`: the owner's photos of the push frame, with tape measure
-- `model.py`: parametric CAD. `build.py`: pipeline
-- `output/wagon-cup-clip.step/.stl`: the clip that stays on the rail
-- `output/wagon-cup-module.step/.stl`: the cup module that lifts on and off
+  Built from `renders/viewer.html` by `tools/make_viewer.py` using `review.json`. Republish to this URL on every review (see `docs/review.md`)
+- `source/wagon-photo-2026-11-01.jpg`, `source/wagon-photo-2026-11-01-rail-1..6.jpg`: the owner's photos
+- `model.py`: the two pieces. `sdf.py`: the blend toolkit. `fasteners.py`: printed bolt and nut. `build.py`: pipeline
+- `output/wagon-cup-clip.stl`: the clip that stays on the rail
+- `output/wagon-cup-module.stl`: the cup module that lifts on and off
 - `output/wagon-cup-clip-test.stl`: 26 mm ring + ears slice, for the snap and clamp test
-- `output/wagon-bolt.stl`, `output/wagon-nut.stl`: printed M8 × 1.5 clamp bolt (knob head) and hex nut. `fasteners.py` generates them
+- `output/wagon-bolt.stl`, `output/wagon-nut.stl`: printed M8 × 1.5 clamp bolt (knob head) and hex nut
 - `output/wagon-dovetail-test-tongue.stl`, `output/wagon-dovetail-test-groove.stl`: sliding-fit test pair
 - `output/report.json`: dimensions, checks, parameters
 - `renders/cup-holder.png`, `renders/sections.png`, `renders/in-use.png`: previews and sections
-- `renders/asm-clip.stl`, `renders/asm-module.stl`, `renders/ref-bar.stl`, `renders/ref-tumbler.stl`:
-  assembled-position meshes and the ghost rail and tumbler for the viewer
+- `renders/asm-*.stl`, `renders/ref-*.stl`: light assembled-position meshes, the ghost rail, tumbler and strut/latch zones, for the viewer
 
 ## Log
 
@@ -231,3 +207,12 @@ Key parameters (`CupHolderParams` in `model.py`): `bar_d`, `bar_clearance`, `cli
   with it (wrap 250° → 262°), and the whole module, including the round floor disc, is cut flat at that height. Module 188 → 184 cm³, and
   **88 → 73 mm tall**. Still 0 overhang and 0 interference everywhere. Did not trim the web lower than the groove allows: that would have left no wall
   on the groove's +Z side.
+- **2026-11-02 (v6):** The owner still found **"weird notches, walls, angles that feel unnatural"** and asked for the model to **"flow together more seamlessly"**.
+  Diagnosis: every version so far was a union of flat prisms with fillets, which always looks assembled. **Rebuilt both pieces from scratch as one blended form.**
+  Module: a tapered closed cup ring (it prints upright, so the side opening, and the notch it caused, are gone), with a slim stem that sweeps back to the
+  dovetail pad, joined by smooth blends, ending in one flat top plane with every edge rounded. Clip: ring + rounded ears + boss as one blended body with the dovetail
+  tongue and all the fit-critical cuts made exactly. Cup base 45° chamfered, stem underside ≥ 45°, so it still prints with no supports. **Trade-off: the pieces are now meshes (STL), not
+  editable STEP.** Module 142 cm³ (was 184), one body, 0 interference with the clip (contact only), rail, tumbler, bolt, nut and the strut/latch zones.
+  Found and fixed on the way: a bug where the stem's 45° underside ran past the cup's base and stuck out as a blob; smooth unions bulging at shared planes (the clip's ends,
+  the boss-to-ear seat); a 5 mm pocket-floor fillet that collided with a sharp-edged ghost tumbler (now a 3 mm fillet and a 3.5 mm base-edge radius on the ghost).
+  Added `scikit-image` to `requirements.txt`. Next: owner reviews the look, and prints the bolt/nut/clamp slice and then the full parts.

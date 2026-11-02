@@ -9,3 +9,4 @@ matplotlib
 pymeshlab   # self-intersection checks, remeshing (needs libopengl0 on Linux)
 manifold3d  # fast robust mesh booleans (e.g. splitting a mesh for the bed)
 build123d   # parametric CAD (OpenCASCADE): STEP export, real fillets
+scikit-image  # marching cubes: meshing the signed-distance-field bodies (projects/wagon-cup-holder)
