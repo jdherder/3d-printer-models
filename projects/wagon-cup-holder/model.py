@@ -90,7 +90,8 @@ class CupHolderParams:
     grip_lip: float = 1.6           # the lips overlap the strut's outer face by this much (snap)
     grip_lead: float = 1.6          # lead-in at the mouth
     grip_clearance: float = 0.3     # total clearance round the strut (0.2 per side). The middle test clip. Set from the strut-grip test
-    leg_w: float = 16.0             # width of the leg along the rail
+    leg_w: float = 16.0             # width of the arm along the strut
+    arm_y_out: float = 24.0         # outer edge of the arm, from the rail axis (outward)
     leg_round: float = 2.5
 
     # --- Shape of the blend ---
@@ -322,12 +323,13 @@ def _U_to_C(p: CupHolderParams, length: float | None = None) -> np.ndarray:
 
 
 def grip_mouth_cutter(p: CupHolderParams) -> trimesh.Trimesh:
-    """The slot that opens the C toward the outside, with lead-ins, in the strut frame (x outward, y in-plane normal, z along the strut)."""
+    """The slot that opens the C toward the INBOARD side (the bar), with lead-ins, in the strut frame (x outward, y in-plane normal, z along the strut).
+    The closed wall is on the cup side, so the cup's weight pushes the strut into a solid wall instead of out through the mouth."""
     s = p.strut_size + p.grip_clearance
     h = s / 2 + p.grip_wall
     m = s - 2 * p.grip_lip
     li = p.grip_lead
-    poly = [(0, -m / 2), (h - li, -m / 2), (h + 0.2, -m / 2 - li - 0.3), (h + 0.2, m / 2 + li + 0.3), (h - li, m / 2), (0, m / 2)]
+    poly = [(0, -m / 2), (-(h - li), -m / 2), (-(h + 0.2), -m / 2 - li - 0.3), (-(h + 0.2), m / 2 + li + 0.3), (-(h - li), m / 2), (0, m / 2)]
     return prism_z(poly, -p.grip_len / 2 - 2.0, p.grip_len / 2 + 2.0)
 
 
@@ -383,19 +385,20 @@ def build_clip(p: CupHolderParams | None = None, length: float | None = None, do
     body = sdf.smin(ring, ears, 4.0)
     body = sdf.smax(body, np.abs(Z - zc) - L / 2, 0.8)       # smooth unions bulge where shapes share a plane: cut the ends flat
     if two_point:
-        # Leg: a rounded plate that continues the outboard ear downward, on the INBOARD side of the strut, to the grip.
-        zleg = zc + p.grip_x                                   # centre of the leg along the rail (C frame)
-        y_top = ear_bot + 8.0                                  # starts inside the ear
-        y_bot = g_origin[2] - 6.0
-        leg_out = p.strut_yc - (p.strut_size + p.grip_clearance) / 2          # the leg's outer face = the grip cavity's back plane
-        leg = sdf.sd_round_box(X, Y, Z, ((w + leg_out) / 2, (y_top + y_bot) / 2, zleg), ((leg_out - w) / 2, (y_top - y_bot) / 2, p.leg_w / 2), p.leg_round)
-        # Grip: the C's outer envelope, a rounded box in the strut's own frame. Its cavity and mouth are cut exactly afterwards.
+        # Arm: a rounded block that runs from the grip's up-slope side wall (the strut's upper face) up to the ears' underside. It lies on the
+        # ring side of the strut, so it never crosses the strut itself. Coordinates are in the strut frame (xg = outward, yg = in-plane normal, zg = along).
         dxu, dyu, dzu = (Z - zc) - g_origin[0], X - g_origin[1], Y - g_origin[2]                       # U-frame offsets from the grip centre
         xg = dyu
         yg = g_R[0, 1] * dxu + g_R[2, 1] * dzu
         zg = g_R[0, 2] * dxu + g_R[2, 2] * dzu
+        ey_z = g_R[2, 1]                                                                           # vertical part of the in-plane normal (negative: ey points down)
+        arm_far = (ear_bot + 4.0 - g_origin[2]) / (-ey_z) - g_h if ey_z < 0 else 30.0                # how far past the grip's side wall, along -ey, to reach just inside the ears
+        y_a0, y_a1 = w + p.lead_in + 0.5, p.arm_y_out                                              # Y range of the arm (clears the ring mouth's lead-in)
+        arm = sdf.sd_round_box(xg, yg, zg, ((y_a0 + y_a1) / 2 - p.strut_yc, -(2 * g_h + arm_far - 2.0) / 2, 0.0),
+                               ((y_a1 - y_a0) / 2, (arm_far + 2.0) / 2, p.leg_w / 2), p.leg_round)
+        # Grip: the C's outer envelope, a rounded box in the strut's own frame. Its cavity and mouth are cut exactly afterwards.
         envelope = sdf.sd_round_box(xg, yg, zg, (0.0, 0.0, 0.0), (g_h, g_h, p.grip_len / 2), 3.0)
-        body = sdf.smin(sdf.smin(body, leg, 5.0), envelope, 5.0)
+        body = sdf.smin(sdf.smin(body, arm, 5.0), envelope, 5.0)
     mesh = sdf.to_mesh(body, grid, target_faces=p.clip_faces)
 
     parts = [mesh]

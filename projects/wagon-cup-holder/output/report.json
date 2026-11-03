@@ -3,16 +3,16 @@
   "clip": {
     "extents_mm": [
       81.0,
-      51.6,
+      51.7,
       72.1
     ],
-    "faces": 51640,
+    "faces": 54522,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 2,
-    "volume_cm3": 48.1,
+    "volume_cm3": 51.2,
     "fits_A1_as_is": true,
-    "overhang_area_over_45deg_mm2": 820.9,
+    "overhang_area_over_45deg_mm2": 645.6,
     "supports": "needed under the strut grip and leg: with the ring axis vertical the grip tunnel runs ~31 deg above horizontal, so its ceiling and the leg underside overhang. Use normal (auto) supports, 'support on build plate + model'; the ring, mouth and dovetail print without"
   },
   "module": {
@@ -59,12 +59,12 @@
   },
   "strut_grip_test": {
     "extents_mm": [
-      71.9,
-      20.8,
+      71.4,
+      19.8,
       24.0
     ],
     "watertight": true,
-    "note": "three C-clips for the 13.5 mm square strut, 0.3 mm clearance; lips 1.6 / 2.0 / 2.4 mm = 16 / 20 / 24 mm tall; print upright"
+    "note": "three C-clips for the 13.5 mm square strut, 0.3 mm clearance; lips 1.2 / 1.6 / 2.0 mm = 16 / 20 / 24 mm tall; print upright"
   },
   "checks": {
     "interference_module_vs_clip_cm3": 0.0019,
@@ -121,6 +121,7 @@
     "grip_lead": 1.6,
     "grip_clearance": 0.3,
     "leg_w": 16.0,
+    "arm_y_out": 24.0,
     "leg_round": 2.5,
     "neck_cheek": 4.0,
     "stem_half_w": 20.0,
@@ -139,18 +140,18 @@
     "strut_nominal_gap_mm": 5.5,
     "strut_gap_sensitivity": {
       "gap_4_mm": {
-        "clip_overlap_mm3": 528.0,
+        "clip_overlap_mm3": 128.9,
         "module_overlap_mm3": 0.0,
         "rotation_to_follow_deg": 1.74
       },
       "gap_7_mm": {
-        "clip_overlap_mm3": 85.3,
+        "clip_overlap_mm3": 397.0,
         "module_overlap_mm3": 0.0,
         "rotation_to_follow_deg": 1.74
       }
     },
     "grip_centre_depth_below_bar_axis_mm": 43.5,
-    "leg_length_mm": 35.5,
+    "arm_y_out_mm": 24.0,
     "pocket_base_d": 72.0,
     "pocket_rim_d": 81.67,
     "pocket_outer_rim_d": 88.07,

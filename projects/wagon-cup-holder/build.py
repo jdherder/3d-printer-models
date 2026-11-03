@@ -123,12 +123,12 @@ def dovetail_tests(p):
 
 def strut_grip_test(p):
     """Three short C-clips for the square strut, same clearance (p.grip_clearance), with deeper and deeper lips, to find how much
-    holding power is enough. The first strut test clips (lip 1.0, 2.5 wall, 0.4 clearance) snapped on but popped off under a full cup.
-    Print upright. Told apart by height: 16 mm = lip 1.6 / wall 3.0 (the new default), 20 mm = lip 2.0 / wall 3.0, 24 mm = lip 2.4 / wall 3.5."""
+    holding power is enough. In v8 the C's closed wall faces the cup, so these lips only keep the clip on when the cup is not pulling.
+    Print upright, with the mouth side toward you. Told apart by height: 16 mm = lip 1.2, 20 mm = lip 1.6 (the default), 24 mm = lip 2.0; walls 3.0."""
     from shapely.geometry import box
     lead, rr = p.grip_lead, 2.5
     parts, x = [], 0.0
-    for lip, wall, height in ((1.6, 3.0, 16.0), (2.0, 3.0, 20.0), (2.4, 3.5, 24.0)):
+    for lip, wall, height in ((1.2, 3.0, 16.0), (1.6, 3.0, 20.0), (2.0, 3.0, 24.0)):
         s = p.strut_size + p.grip_clearance
         h = s / 2 + wall
         outer = box(-h, -h, h, h).buffer(-rr).buffer(rr)                      # rounded outside corners
@@ -181,7 +181,7 @@ def main():
     assert grip.is_watertight, "strut grip test is not watertight"
     grip.export(OUT / "wagon-strut-grip-test.stl")
     grip_info = {"extents_mm": [round(float(v), 1) for v in grip.extents], "watertight": bool(grip.is_watertight),
-                 "note": "three C-clips for the 13.5 mm square strut, 0.3 mm clearance; lips 1.6 / 2.0 / 2.4 mm = 16 / 20 / 24 mm tall; print upright"}
+                 "note": "three C-clips for the 13.5 mm square strut, 0.3 mm clearance; lips 1.2 / 1.6 / 2.0 mm = 16 / 20 / 24 mm tall; print upright"}
 
     for stale in ("wagon-bolt.stl", "wagon-nut.stl", "wagon-cup-clip-test.stl"):    # the screw clamp is gone: the strut grip locks the clip
         (OUT / stale).unlink(missing_ok=True)
@@ -228,7 +228,7 @@ def main():
         "strut_nominal_gap_mm": p.strut_gap_in,
         "strut_gap_sensitivity": gap_sensitivity,
         "grip_centre_depth_below_bar_axis_mm": round(float(p.strut_depth(p.grip_x)), 1),
-        "leg_length_mm": round(float(p.strut_depth(p.grip_x)) - p.clip_r_out + 6.0, 1),
+        "arm_y_out_mm": p.arm_y_out,
         "pocket_base_d": round(2 * p.pocket_r(0), 2),
         "pocket_rim_d": round(2 * p.r_in(p.top_z), 2),
         "pocket_outer_rim_d": round(2 * p.rim_outer_r, 2),
@@ -266,7 +266,7 @@ def main():
         ax.imshow(img, extent=ext)
         ax.set_title(name)
         ax.axis("off")
-    fig.suptitle("wagon cup holder v7: two-point clip + cup module, in use orientation (rail along X, Z up; the strut-side end is +X)", fontsize=15)
+    fig.suptitle("wagon cup holder v8: two-point clip + cup module, in use orientation (rail along X, Z up; the strut-side end is +X)", fontsize=15)
     fig.savefig(RENDERS / "cup-holder.png", dpi=55, bbox_inches="tight")
     plt.close(fig)
 
@@ -274,7 +274,7 @@ def main():
     col = ("black", "tab:green", "tab:blue", "tab:red", "tab:orange")
     gx = p.grip_x
     section_axes(axs[0, 0], [module_U, clip_U, rail, strut, cup], col, [1, 0, 0], [gx, 0, 0], [1, 2],
-                 f"across the rail through the grip (X=+{gx:g}): module (black), clip with leg + grip (green), rail + strut (blue/red), tumbler (orange)")
+                 f"across the rail through the grip (X=+{gx:g}): module (black), clip with arm + grip (green), rail + strut (blue/red), tumbler (orange)")
     section_axes(axs[0, 1], [module_U, clip_U, rail, strut], col, [0, 0, 1], [0, 0, 10.0], [0, 1],
                  "plan at Z=+10: module (black) with the clip's dovetail tongue (green) in its groove, rail (blue), strut (red)")
     section_axes(axs[1, 0], [module_U, cup], ("black", "tab:blue"), [0, 1, 0], [0, p.cup_axis_y, 0], [0, 2],
@@ -289,7 +289,7 @@ def main():
     segs_ax.add_patch(plt.Rectangle((-sz / 2, -sz / 2), sz, sz, fc="#9ca3af", ec="#1f2937", alpha=0.7, zorder=0))
     segs_ax.set_aspect("equal"); segs_ax.grid(alpha=0.4); segs_ax.set_xlim(-16, 22); segs_ax.set_ylim(-16, 16)
     segs_ax.set_title("section across the strut at the grip: the 13.5 mm square strut (grey) in the C. Cup side is to the right", fontsize=11)
-    fig.suptitle("wagon cup holder v7: cross-sections (real orientation, mm)", fontsize=15)
+    fig.suptitle("wagon cup holder v8: cross-sections (real orientation, mm)", fontsize=15)
     fig.savefig(RENDERS / "sections.png", dpi=70, bbox_inches="tight")
     plt.close(fig)
 

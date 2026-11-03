@@ -1,7 +1,7 @@
 {
   "page_title": "Wagon Cup Holder",
-  "title": "Wagon cup holder: v7.1, stronger strut grip",
-  "subtitle": "Ring on the side rail + a C-grip on the angled strut \u00b7 no screw \u00b7 the clip and the cup lift off together for folding \u00b7 shown assembled in its real orientation (rail left to right, strut end on the left) \u00b7 millimetres",
+  "title": "Wagon cup holder: v8, strut grip flipped",
+  "subtitle": "Ring on the side rail + a C-grip on the angled strut whose closed wall faces the cup \u00b7 no screw \u00b7 a full cup pushes the grip on tighter \u00b7 shown assembled in its real orientation (rail left to right) \u00b7 millimetres",
   "meshes": [
     {
       "path": "renders/asm-module.stl",
@@ -86,5 +86,5 @@
   ],
   "scale_note": "Real size, shown assembled in its real orientation: the rail runs left to right, the cup stands upright and hangs off the outside of it. The rail is your 22.3 mm tube; the angled strut is your 13.5 mm square bar, drawn as a straight line at ~59\u00b0 from the tape photos (so it is accurate to roughly a few mm). The gap between the rail and the strut is the least certain number (4 to 7 mm, drawn at 5.5). The tumbler is from retailer listings. The wireframe blocks are the red latch zones (approximate).",
   "notes_title": "What changed, and what to check",
-  "notes": "v7.1: the v7 clip fit well but its strut grip let go under a full cup. The cup's weight pushes the strut toward the grip's mouth, so the lips are what hold it. The lips are now 1.6 mm deep (was 1.0) on 3 mm walls (was 2.5), the clearance is 0.3 mm (was 0.4) and the grip is 22 mm long (was 18), which I estimate roughly triples the holding force. Only the clip changes: your printed module still fits. Please check: (1) the grip section (cup side to the right): lips wrap the strut's outer face; (2) print the new grip test (three lip depths: 1.6 / 2.0 / 2.4 mm = 16 / 20 / 24 mm tall) and tell me which holds under a pull but still goes on by hand; (3) which snap let go before, the strut grip or the ring on the bar?"
+  "notes": "v8: the v7 / v7.1 strut grip let go under a full cup, because the cup's weight pushes the strut toward the grip's mouth. The C is now flipped: its closed wall faces the cup and its mouth faces the bar, so the weight presses the strut into a solid wall. The old leg is replaced by a short diagonal arm from under the ring down to the grip's upper side. Same ring, dovetail and cup module (your printed module still fits). To fit it: hold the clip above the bar, push it in toward the wagon so the strut snaps into the grip, then slide it down along the strut until the ring clicks onto the bar. Please check: (1) the grip section (cup side to the right): the closed wall is on the cup side; (2) the arm goes from the ring down and toward the strut end (on your LEFT when viewed from outside); (3) print the new grip test (lips 1.2 / 1.6 / 2.0 mm = 16 / 20 / 24 mm tall, mouth toward you) and tell me which goes on by hand and stays on."
 }
