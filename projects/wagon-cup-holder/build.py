@@ -5,7 +5,6 @@
 model.py (signed-distance-field bodies + exact cuts; see its docstring)
   -> output/wagon-cup-clip.stl             clip: stays on the rail (printed ring-axis-vertical)
   -> output/wagon-cup-module.stl           cup module: lifts on and off the clip's dovetail (printed upright)
-  -> output/wagon-cup-clip-test.stl        26 mm ring + ears slice, for the snap / clamp test print
   -> output/wagon-dovetail-test-tongue.stl, wagon-dovetail-test-groove.stl    sliding-fit test pair
   -> output/report.json                    dimensions, checks, parameters
   -> renders/*.png                         previews and sections
@@ -29,8 +28,8 @@ import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import trimesh  # noqa: E402
 from matplotlib.collections import LineCollection  # noqa: E402
-from model import (CupHolderParams, build_clip, build_module, clip_to_U, print_pose, prism_x, prism_z,  # noqa: E402
-                   boolean_difference, boolean_union)
+from model import (CupHolderParams, build_clip, build_module, clip_to_U, print_pose, prism_z, strut_frame,  # noqa: E402
+                   strut_ghost, boolean_difference)
 from render import rasterize, section_segments  # noqa: E402
 from sdf import decimate  # noqa: E402
 from shapely.geometry import Polygon as ShapelyPolygon  # noqa: E402
@@ -45,16 +44,6 @@ MEASURED = {
 # Retailer figures for a 20 oz Yeti Rambler (owner OK with these for now): base 70, widest 89, height ~165.
 CUP_OVERRIDES: dict = {}
 
-STRUT_MM = 13.5                # owner, 2026-11-03: the angled strut is 13.5 mm in both directions (a square section)
-
-CLIP_TEST_LEN = 20.0           # long enough for the 7.4 mm nut pocket and the 9.6 mm head pocket plus walls
-
-# Standard M4 hardware the clip is designed for (see README). Used for the fit checks and the viewer only.
-BOLT_LEN = 30.0                # the shortest common length that works: engages 2.5 of the nut's 3.2 mm. 35 mm engages it fully
-WASHER_OD, WASHER_T = 9.0, 0.8
-HEAD_D, HEAD_H = 7.0, 4.0     # M4 socket cap screw
-SHANK_D = 4.0
-NUT_AF, NUT_T = 7.0, 3.2
 DOVETAIL_TEST_H = 14.0
 
 
@@ -118,30 +107,6 @@ def keepout_ghost(p):
     return trimesh.util.concatenate(boxes)
 
 
-def hardware_ghosts(p, bolt_len=BOLT_LEN):
-    """The M4 cap screw (with its washer) and nut, in the clip's own frame C, so the checks prove they fit the pockets."""
-    x_out = p.mouth_width / 2 + p.ear_t
-    zc, yb = p.clip_len / 2, p.bolt_y
-    floor_x = -(x_out - p.head_cbore_depth)                  # floor of the head pocket (the washer rests on it)
-
-    def cyl_x(r, x0, x1):
-        m = trimesh.creation.cylinder(radius=r, height=x1 - x0, sections=64)
-        m.apply_transform(trimesh.transformations.rotation_matrix(np.pi / 2, [0, 1, 0]))      # axis -> x
-        m.apply_translation([(x0 + x1) / 2, yb, zc])
-        return m
-
-    under = floor_x - WASHER_T                               # underside of the head
-    bolt = boolean_union([cyl_x(WASHER_OD / 2, under, floor_x), cyl_x(HEAD_D / 2, under - HEAD_H, under),
-                          cyl_x(SHANK_D / 2, under, under + bolt_len)])
-    seat = x_out - p.nut_depth
-    r = NUT_AF / 2 / np.cos(np.radians(30))
-    hexagon = [(yb + r * np.cos(np.radians(60 * i)), zc + r * np.sin(np.radians(60 * i))) for i in range(6)]
-    nut = prism_x(hexagon, seat, seat + NUT_T)
-    return bolt, nut, {"bolt_len_mm": bolt_len, "tip_x": round(under + bolt_len, 2), "nut_seat_x": round(seat, 2),
-                       "nut_engaged_mm": round(max(min(under + bolt_len, seat + NUT_T) - seat, 0.0), 2),
-                       "tip_past_ear_face_mm": round(max(under + bolt_len - x_out, 0.0), 2)}
-
-
 def dovetail_tests(p):
     """Two short exact pieces to test the sliding fit only, printed flat: a plate with the tongue, and a block with the groove."""
     wr, h = p.dt_w_root / 2, p.dt_h
@@ -156,14 +121,14 @@ def dovetail_tests(p):
     return tongue_piece, boolean_difference(block, [groove])
 
 
-def strut_grip_test():
+def strut_grip_test(p):
     """Three short C-clips for the square strut, from snug to loose, so the owner can find which one snaps on and holds.
     Print upright. They differ in clearance and are told apart by height: 16 mm = 0.2 mm clearance, 20 mm = 0.4, 24 mm = 0.6."""
     from shapely.geometry import box
-    wall, lip, lead, rr = 2.5, 1.0, 1.2, 2.5
+    wall, lip, lead, rr = p.grip_wall, p.grip_lip, p.grip_lead, 2.5
     parts, x = [], 0.0
     for clearance, height in ((0.2, 16.0), (0.4, 20.0), (0.6, 24.0)):
-        s = STRUT_MM + clearance
+        s = p.strut_size + clearance
         h = s / 2 + wall
         outer = box(-h, -h, h, h).buffer(-rr).buffer(rr)                      # rounded outside corners
         mouth_w = s - 2 * lip                                                 # narrower than the strut, so it snaps over it
@@ -205,30 +170,30 @@ def main():
 
     module_print, module_info = export_print("wagon-cup-module", module_U)
     clip_print, clip_info = export_print("wagon-cup-clip", clip_C)
-    _, slice_info = export_print("wagon-cup-clip-test", build_clip(p, CLIP_TEST_LEN, dovetail=False))
+    clip_info["supports"] = ("needed under the strut grip and leg: with the ring axis vertical the grip tunnel runs ~31 deg above horizontal, "
+                             "so its ceiling and the leg underside overhang. Use normal (auto) supports, 'support on build plate + model'; "
+                             "the ring, mouth and dovetail print without")
     tongue_t, groove_t = dovetail_tests(p)
     _, tongue_info = export_print("wagon-dovetail-test-tongue", tongue_t)
     _, groove_info = export_print("wagon-dovetail-test-groove", groove_t)
-    grip = strut_grip_test()
+    grip = strut_grip_test(p)
     assert grip.is_watertight, "strut grip test is not watertight"
     grip.export(OUT / "wagon-strut-grip-test.stl")
     grip_info = {"extents_mm": [round(float(v), 1) for v in grip.extents], "watertight": bool(grip.is_watertight),
                  "note": "three C-clips for the 13.5 mm square strut; clearance 0.2 / 0.4 / 0.6 mm = 16 / 20 / 24 mm tall; print upright"}
 
-    # ---- Hardware: standard M4 screw + washer + nut (placed in the assembled pose) -------------------------
-    bolt_C, nut_C, hardware = hardware_ghosts(p)
-    bolt_U, nut_U = clip_to_U(bolt_C, p), clip_to_U(nut_C, p)
-    for stale in ("wagon-bolt.stl", "wagon-nut.stl"):        # the printed M8 bolt and nut snapped; real hardware is used now
+    for stale in ("wagon-bolt.stl", "wagon-nut.stl", "wagon-cup-clip-test.stl"):    # the screw clamp is gone: the strut grip locks the clip
         (OUT / stale).unlink(missing_ok=True)
 
     # ---- Ghosts + checks (assembled, real use orientation) --------------------------------------------
     rail, cup, keepout = rail_ghost(p), tumbler_ghost(p), keepout_ghost(p)
+    strut = strut_ghost(p)                                                  # nominal gap: the clip's grip is built around this
+    strut_view = strut_ghost(p, t0=-59.0, t1=215.0)                         # pivot screw down toward the lower frame, for the viewer
     pairs = {
         "module_vs_clip": (module_U, clip_U), "module_vs_rail": (module_U, rail), "module_vs_tumbler": (module_U, cup),
         "clip_vs_rail": (clip_U, rail), "clip_vs_tumbler": (clip_U, cup),
         "module_vs_latch_strut_zone": (module_U, keepout), "clip_vs_latch_strut_zone": (clip_U, keepout),
-        "bolt_vs_clip": (bolt_U, clip_U), "bolt_vs_module": (bolt_U, module_U), "bolt_vs_rail": (bolt_U, rail),
-        "nut_vs_clip": (nut_U, clip_U), "nut_vs_module": (nut_U, module_U),
+        "clip_vs_strut": (clip_U, strut), "module_vs_strut": (module_U, strut),
     }
     checks = {f"interference_{k}_cm3": round(interference_cm3(a, b), 4) for k, (a, b) in pairs.items()}
     # module_vs_clip is a CONTACT (the pad rests on the ear tops): marching-cubes noise of ~0.2 mm leaves a couple of mm3.
@@ -236,11 +201,18 @@ def main():
         limit = 0.01 if "module_vs_clip" in k else 0.002
         assert v < limit, f"{k} = {v} cm3: parts collide"
 
+    # How far the strut's position can differ from my estimate before the clip must rotate on the bar (informational, not a pass/fail):
+    gap_sensitivity = {}
+    for gap in (4.0, 7.0):
+        st = strut_ghost(p, gap=gap)
+        gap_sensitivity[f"gap_{gap:g}_mm"] = {"clip_overlap_mm3": round(interference_cm3(clip_U, st) * 1000, 1),
+                                              "module_overlap_mm3": round(interference_cm3(module_U, st) * 1000, 1),
+                                              "rotation_to_follow_deg": round(float(np.degrees(np.arctan(abs(gap - p.strut_gap_in) / np.hypot(*strut_frame(p)[0][1:])))), 2)}
+
     # viewer meshes: light copies (the viewer limits meshes to 65k vertices)
     for name, m, faces in (("asm-module", module_U, 36000), ("asm-clip", clip_U, 26000)):
         decimate(m, faces).export(RENDERS / f"{name}.stl")
-    bolt_U.export(RENDERS / "asm-bolt.stl")
-    nut_U.export(RENDERS / "asm-nut.stl")
+    strut_view.export(RENDERS / "ref-strut.stl")
     rail.export(RENDERS / "ref-bar.stl")
     cup.export(RENDERS / "ref-tumbler.stl")
     keepout.export(RENDERS / "ref-keepout.stl")
@@ -251,8 +223,11 @@ def main():
     params.update({
         "bore_d": round(2 * p.bore_r, 2),
         "snap_spread_each_lip": round((p.bar_d - p.mouth_width) / 2, 2),
-        "hardware": "M4 x 30 (or 35) socket cap screw + 9 mm washer + M4 hex nut. Head in the inboard ear, nut in the outboard ear",
-        "hardware_fit": hardware,
+        "clamp": "two-point: ring on the bar + a leg to a C-clip on the angled strut. No screw, nut or pockets",
+        "strut_nominal_gap_mm": p.strut_gap_in,
+        "strut_gap_sensitivity": gap_sensitivity,
+        "grip_centre_depth_below_bar_axis_mm": round(float(p.strut_depth(p.grip_x)), 1),
+        "leg_length_mm": round(float(p.strut_depth(p.grip_x)) - p.clip_r_out + 6.0, 1),
         "pocket_base_d": round(2 * p.pocket_r(0), 2),
         "pocket_rim_d": round(2 * p.r_in(p.top_z), 2),
         "pocket_outer_rim_d": round(2 * p.rim_outer_r, 2),
@@ -272,16 +247,16 @@ def main():
     })
     report = {
         "dimensions_status": "Tube measured by owner (22.3 mm, confirmed on the side rail). Tumbler from retailer figures (owner OK for now).",
-        "clip": clip_info, "module": module_info, "clamp_test_slice": slice_info,
+        "clip": clip_info, "module": module_info,
         "dovetail_test_tongue": tongue_info, "dovetail_test_groove": groove_info, "strut_grip_test": grip_info,
-        "hardware": hardware, "checks": checks, "params_mm": params,
+        "checks": checks, "params_mm": params,
     }
     (OUT / "report.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({"clip": clip_info, "module": module_info, "checks": checks}, indent=2))
 
     # ---- Renders ---------------------------------------------------------------------------------------------
     cy = p.cup_axis_y
-    assembled = trimesh.util.concatenate([module_U, clip_U, bolt_U, nut_U])
+    assembled = trimesh.util.concatenate([module_U, clip_U])
     views = {"from the rail side, above": ((0.0, 1.0, -0.55), (0, 0, 1)), "from the rail side, below": ((0.35, 1.0, 0.7), (0, 0, 1)),
              "from outboard, above": ((-0.5, -1.0, -0.6), (0, 0, 1)), "from underneath": ((0.0, 0.15, 1.0), (0, 1, 0))}
     fig, axs = plt.subplots(2, 2, figsize=(16, 16))
@@ -290,32 +265,40 @@ def main():
         ax.imshow(img, extent=ext)
         ax.set_title(name)
         ax.axis("off")
-    fig.suptitle("wagon cup holder v6: clip + cup module + printed bolt and nut, in use orientation (rail along X, Z up)", fontsize=15)
+    fig.suptitle("wagon cup holder v7: two-point clip + cup module, in use orientation (rail along X, Z up; the strut-side end is +X)", fontsize=15)
     fig.savefig(RENDERS / "cup-holder.png", dpi=55, bbox_inches="tight")
     plt.close(fig)
 
     fig, axs = plt.subplots(2, 2, figsize=(18, 14))
-    col = ("black", "tab:green", "tab:red", "tab:red", "tab:blue", "tab:orange")
-    set1 = [module_U, clip_U, bolt_U, nut_U, rail, cup]
-    section_axes(axs[0, 0], set1, col, [1, 0, 0], [0, 0, 0], [1, 2],
-                 "mid-plane across the rail (X=0): module (black), clip (green), bolt/nut (red), rail (blue), tumbler (orange)")
-    section_axes(axs[0, 1], [module_U, clip_U, rail], col, [0, 0, 1], [0, 0, 10.0], [0, 1],
-                 "plan at Z=+10: module (black) with the clip's dovetail tongue (green) in its groove, rail (blue)")
-    section_axes(axs[1, 0], [module_U, cup], ("black", "tab:blue"), [0, 1, 0], [0, cy, 0], [0, 2],
+    col = ("black", "tab:green", "tab:blue", "tab:red", "tab:orange")
+    gx = p.grip_x
+    section_axes(axs[0, 0], [module_U, clip_U, rail, strut, cup], col, [1, 0, 0], [gx, 0, 0], [1, 2],
+                 f"across the rail through the grip (X=+{gx:g}): module (black), clip with leg + grip (green), rail + strut (blue/red), tumbler (orange)")
+    section_axes(axs[0, 1], [module_U, clip_U, rail, strut], col, [0, 0, 1], [0, 0, 10.0], [0, 1],
+                 "plan at Z=+10: module (black) with the clip's dovetail tongue (green) in its groove, rail (blue), strut (red)")
+    section_axes(axs[1, 0], [module_U, cup], ("black", "tab:blue"), [0, 1, 0], [0, p.cup_axis_y, 0], [0, 2],
                  "through the cup axis: module wall and floor (black), tumbler (blue)")
-    section_axes(axs[1, 1], [clip_U, bolt_U, nut_U, module_U], col, [0, 0, 1], [0, 0, p.bolt_y], [0, 1],
-                 "plan through the clamp bolt axis: clip ears (green), bolt and nut (red), module (black)")
-    fig.suptitle("wagon cup holder v6: cross-sections (real orientation, mm)", fontsize=15)
+    origin, Rg = strut_frame(p)
+    segs_ax = axs[1, 1]
+    sec = clip_U.section(plane_origin=origin, plane_normal=Rg[:, 2])
+    for e in sec.entities:
+        pts = sec.vertices[e.points] - origin
+        segs_ax.plot(pts @ Rg[:, 0], pts @ Rg[:, 1], "k", lw=2)
+    sz = p.strut_size
+    segs_ax.add_patch(plt.Rectangle((-sz / 2, -sz / 2), sz, sz, fc="#9ca3af", ec="#1f2937", alpha=0.7, zorder=0))
+    segs_ax.set_aspect("equal"); segs_ax.grid(alpha=0.4); segs_ax.set_xlim(-16, 22); segs_ax.set_ylim(-16, 16)
+    segs_ax.set_title("section across the strut at the grip: the 13.5 mm square strut (grey) in the C. Cup side is to the right", fontsize=11)
+    fig.suptitle("wagon cup holder v7: cross-sections (real orientation, mm)", fontsize=15)
     fig.savefig(RENDERS / "sections.png", dpi=70, bbox_inches="tight")
     plt.close(fig)
 
     img_views = {"from the rail side, above": views["from the rail side, above"], "from outboard, above": views["from outboard, above"]}
     fig, axs = plt.subplots(1, 2, figsize=(16, 8))
-    full = trimesh.util.concatenate([module_U, clip_U, bolt_U, nut_U, rail, cup])
+    full = trimesh.util.concatenate([module_U, clip_U, strut_view, rail, cup])
     for ax, (name, (d, up)) in zip(axs, img_views.items()):
         img, ext = rasterize(full, np.array(d, float), np.array(up, float), px=800)
         ax.imshow(img, extent=ext)
-        ax.set_title(name + " (with the 22.3 mm rail and the tumbler)")
+        ax.set_title(name + " (with the rail, the strut and the tumbler)")
         ax.axis("off")
     fig.savefig(RENDERS / "in-use.png", dpi=55, bbox_inches="tight")
     plt.close(fig)

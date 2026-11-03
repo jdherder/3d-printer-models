@@ -1,7 +1,7 @@
 {
   "page_title": "Wagon Cup Holder",
-  "title": "Wagon cup holder: v6.1, standard M4 hardware",
-  "subtitle": "Clip stays on the side rail \u00b7 cup module lifts off its dovetail \u00b7 clamped by an ordinary M4 screw, washer and nut \u00b7 shown assembled in its real orientation (rail left to right, cup upright) \u00b7 millimetres",
+  "title": "Wagon cup holder: v7, two-point pop-off clip",
+  "subtitle": "Ring on the side rail + a C-grip on the angled strut \u00b7 no screw \u00b7 the clip and the cup lift off together for folding \u00b7 shown assembled in its real orientation (rail left to right, strut end on the left) \u00b7 millimetres",
   "meshes": [
     {
       "path": "renders/asm-module.stl",
@@ -10,17 +10,7 @@
     },
     {
       "path": "renders/asm-clip.stl",
-      "label": "Clip (stays on the rail)",
-      "style": "solid"
-    },
-    {
-      "path": "renders/asm-bolt.stl",
-      "label": "M4 x 30 screw + washer (inboard ear)",
-      "style": "solid"
-    },
-    {
-      "path": "renders/asm-nut.stl",
-      "label": "M4 nut (outboard ear)",
+      "label": "Clip (ring on rail + grip on strut; pops off)",
       "style": "solid"
     },
     {
@@ -31,6 +21,11 @@
     {
       "path": "renders/ref-tumbler.stl",
       "label": "Yeti 20 oz (retailer dims)",
+      "style": "wire"
+    },
+    {
+      "path": "renders/ref-strut.stl",
+      "label": "Angled strut (13.5 mm square, nominal gap 5.5 mm)",
       "style": "wire"
     },
     {
@@ -89,7 +84,7 @@
       "param": "module_clearance_to_window_ends_each_side"
     }
   ],
-  "scale_note": "Real size, shown assembled in its real orientation: the rail runs left to right, the cup stands upright and hangs off the outside of it. The rail is your 22.3 mm tube. The tumbler is from retailer listings (70 mm base, 89 mm widest). The two wireframe blocks are the red latch and diagonal strut at each end of your 120 mm clear stretch. They are APPROXIMATE: only the ~26 mm reach is from you, and I assumed they sit only beyond the clear stretch.",
+  "scale_note": "Real size, shown assembled in its real orientation: the rail runs left to right, the cup stands upright and hangs off the outside of it. The rail is your 22.3 mm tube; the angled strut is your 13.5 mm square bar, drawn as a straight line at ~59\u00b0 from the tape photos (so it is accurate to roughly a few mm). The gap between the rail and the strut is the least certain number (4 to 7 mm, drawn at 5.5). The tumbler is from retailer listings. The wireframe blocks are the red latch zones (approximate).",
   "notes_title": "What changed, and what to check",
-  "notes": "v6.1: most hobby kits stop short of a 40 mm bolt, so the clip is redesigned around ordinary M4 hardware. The screw head and washer now sit recessed in the inboard ear and the nut in the outboard ear, each in a 5 mm deep pocket with a 3 mm wall behind it. That shortens the run, so an M4 x 30 works (it engages 2.5 of the nut's 3.2 mm) and an M4 x 35 engages it fully. The ears are 8 mm thick now, so the clip hangs 3.5 mm less below the rail. The ring, mouth, dovetail and the whole cup module are unchanged, so only the clip needs reprinting. The screw, washer and nut are shown in place. Please check: (1) what is the longest M4 screw in your kit? (2) is there room for the screw head and a 3 mm hex key on the inboard side? (3) the old checks still stand: the strut under the cup, and folding."
+  "notes": "v7: the bolted clip blocked folding the handle, so the clip no longer clamps. Its ring just snaps on the rail, and a short leg reaches down to a C-shaped grip that snaps onto the angled strut. Two grips hold it in place (the strut grip stops the cup's weight twisting it round the bar, and the slope stops it sliding along), so there is no screw, nut or hardware. To fold the wagon, lift the cup off and pull the clip off the bar and strut: it comes away in one piece. The dovetail and the cup module are unchanged, so your printed module still fits. Please check: (1) the leg is on the strut-pivot side of the ring: viewed from outside with the cup toward you, the strut end is on your LEFT; (2) the grip sits on the strut with its lips on the outer face; (3) print the strut grip test pieces first and tell me which of the three (16/20/24 mm tall) snaps on and holds."
 }
