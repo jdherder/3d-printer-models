@@ -45,6 +45,8 @@ MEASURED = {
 # Retailer figures for a 20 oz Yeti Rambler (owner OK with these for now): base 70, widest 89, height ~165.
 CUP_OVERRIDES: dict = {}
 
+STRUT_MM = 13.5                # owner, 2026-11-03: the angled strut is 13.5 mm in both directions (a square section)
+
 CLIP_TEST_LEN = 20.0           # long enough for the 7.4 mm nut pocket and the 9.6 mm head pocket plus walls
 
 # Standard M4 hardware the clip is designed for (see README). Used for the fit checks and the viewer only.
@@ -154,6 +156,29 @@ def dovetail_tests(p):
     return tongue_piece, boolean_difference(block, [groove])
 
 
+def strut_grip_test():
+    """Three short C-clips for the square strut, from snug to loose, so the owner can find which one snaps on and holds.
+    Print upright. They differ in clearance and are told apart by height: 16 mm = 0.2 mm clearance, 20 mm = 0.4, 24 mm = 0.6."""
+    from shapely.geometry import box
+    wall, lip, lead, rr = 2.5, 1.0, 1.2, 2.5
+    parts, x = [], 0.0
+    for clearance, height in ((0.2, 16.0), (0.4, 20.0), (0.6, 24.0)):
+        s = STRUT_MM + clearance
+        h = s / 2 + wall
+        outer = box(-h, -h, h, h).buffer(-rr).buffer(rr)                      # rounded outside corners
+        mouth_w = s - 2 * lip                                                 # narrower than the strut, so it snaps over it
+        mouth = ShapelyPolygon([(-mouth_w / 2, 0), (mouth_w / 2, 0), (mouth_w / 2, h - lead), (mouth_w / 2 + lead, h + 0.1),
+                                (-mouth_w / 2 - lead, h + 0.1), (-mouth_w / 2, h - lead)])
+        profile = outer.difference(box(-s / 2, -s / 2, s / 2, s / 2)).difference(mouth)
+        m = trimesh.creation.extrude_polygon(profile, height)
+        m.apply_translation([x, 0, 0])
+        parts.append(m)
+        x += s + 2 * wall + 6.0
+    mesh = trimesh.util.concatenate(parts)
+    mesh.apply_translation([-(mesh.bounds[0, 0] + mesh.bounds[1, 0]) / 2, 0, 0])
+    return mesh
+
+
 def section_axes(ax, meshes, colors, normal, origin, axes, title):
     for m, c in zip(meshes, colors):
         segs = section_segments(m, normal, origin, axes)
@@ -184,6 +209,11 @@ def main():
     tongue_t, groove_t = dovetail_tests(p)
     _, tongue_info = export_print("wagon-dovetail-test-tongue", tongue_t)
     _, groove_info = export_print("wagon-dovetail-test-groove", groove_t)
+    grip = strut_grip_test()
+    assert grip.is_watertight, "strut grip test is not watertight"
+    grip.export(OUT / "wagon-strut-grip-test.stl")
+    grip_info = {"extents_mm": [round(float(v), 1) for v in grip.extents], "watertight": bool(grip.is_watertight),
+                 "note": "three C-clips for the 13.5 mm square strut; clearance 0.2 / 0.4 / 0.6 mm = 16 / 20 / 24 mm tall; print upright"}
 
     # ---- Hardware: standard M4 screw + washer + nut (placed in the assembled pose) -------------------------
     bolt_C, nut_C, hardware = hardware_ghosts(p)
@@ -243,7 +273,7 @@ def main():
     report = {
         "dimensions_status": "Tube measured by owner (22.3 mm, confirmed on the side rail). Tumbler from retailer figures (owner OK for now).",
         "clip": clip_info, "module": module_info, "clamp_test_slice": slice_info,
-        "dovetail_test_tongue": tongue_info, "dovetail_test_groove": groove_info,
+        "dovetail_test_tongue": tongue_info, "dovetail_test_groove": groove_info, "strut_grip_test": grip_info,
         "hardware": hardware, "checks": checks, "params_mm": params,
     }
     (OUT / "report.json").write_text(json.dumps(report, indent=2) + "\n")

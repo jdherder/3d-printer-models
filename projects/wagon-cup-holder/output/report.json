@@ -70,6 +70,15 @@
     "fits_A1_as_is": true,
     "overhang_area_over_45deg_mm2": 0.0
   },
+  "strut_grip_test": {
+    "extents_mm": [
+      68.5,
+      19.1,
+      24.0
+    ],
+    "watertight": true,
+    "note": "three C-clips for the 13.5 mm square strut; clearance 0.2 / 0.4 / 0.6 mm = 16 / 20 / 24 mm tall; print upright"
+  },
   "hardware": {
     "bolt_len_mm": 30.0,
     "tip_x": 15.85,

@@ -76,6 +76,10 @@ The outside of the rail is open air. This is the "hanging off the side" spot.
 | Tube outer diameter | **22.3** | owner, confirmed on the side rail | Calipers on a painted tube read ±0.2 |
 | Clear rail length | **~120** | owner, "roughly" | Clip is 70 mm long, the cup ring is 88.07 mm wide. Cup + clip are centred on it |
 | Strut + latch reach past the bar's surface | ~26 | owner, "maybe" | Same at both ends. Modelled as two blocks beyond the clear window |
+| **Angled strut section** | **13.5 × 13.5** (square) | owner, calipers, 2026-11-03 | Same both ways. Not yet known if hollow |
+| Strut: inner face past the bar's surface | ~7 (estimate) | top-down caliper photo, scaled off the 22.3 mm bar | ±3 mm. Confirm with a ruler (C) |
+| Strut: outer face past the bar's surface | ~20 (estimate) | same | The owner had guessed ~26. Confirm with a ruler (C) |
+| Strut slope | ~55° from horizontal, ~1.5 mm of drop per mm toward the middle | front tape photo | Steeper than the 45° I assumed. Rough (perspective). Confirm with one D reading |
 | Tumbler base diameter | 70 (2.75 in) | retailer listing | Owner OK with this for now |
 | Tumbler widest diameter (lid) | 89 (3.5 in) | retailer listing | Owner OK with this for now |
 | Tumbler height | 168–175 (6.6–6.9 in) | retailer listings | Only used to size the taper |
@@ -146,11 +150,12 @@ Needs `scikit-image` (marching cubes), in `requirements.txt`.
 
 - **Interactive viewer:** https://claude.ai/artifact/Anqg9yywWNz2pW6LNgwWoN (private to the owner).
   Built from `renders/viewer.html` by `tools/make_viewer.py` using `review.json`. Republish to this URL on every review (see `docs/review.md`)
-- `source/wagon-photo-2026-11-01.jpg`, `source/wagon-photo-2026-11-01-rail-1..6.jpg`: the owner's photos
+- `source/wagon-photo-2026-11-01.jpg`, `source/wagon-photo-2026-11-01-rail-1..6.jpg`, `source/wagon-photo-2026-11-03-strut-*.jpg` (caliper on the strut, top-down; tape beside the strut, front): the owner's photos
 - `model.py`: the two pieces. `sdf.py`: the blend toolkit. `build.py`: pipeline
 - `output/wagon-cup-clip.stl`: the clip that stays on the rail
 - `output/wagon-cup-module.stl`: the cup module that lifts on and off
 - `output/wagon-cup-clip-test.stl`: 20 mm ring + ears slice, for the snap and clamp test
+- `output/wagon-strut-grip-test.stl`: three C-clips for the 13.5 mm square strut (0.2 / 0.4 / 0.6 mm clearance = 16 / 20 / 24 mm tall), print upright
 - `output/wagon-dovetail-test-tongue.stl`, `output/wagon-dovetail-test-groove.stl`: sliding-fit test pair
 - `output/report.json`: dimensions, checks, parameters
 - `renders/cup-holder.png`, `renders/sections.png`, `renders/in-use.png`: previews and sections
@@ -233,4 +238,11 @@ Needs `scikit-image` (marching cubes), in `requirements.txt`.
   Checked against the clip: **M4 × 30 and × 35 are in it** (use 30 first, 35 if it feels short); M4 SHCS head (7 × 4 mm) fits the 9.6 mm pocket; plain hex nut fits the 7.4 mm pocket. Things to check on arrival: flat washer is
   ~9 mm OD × 0.8 mm (a 10 mm one won't fit the pocket; leave it out, and an M4 × 30 then engages the nut fully); don't use the spring washers in the pocket. **Black oxide rusts outdoors**: oil the screw, or use A2 stainless
   if it becomes a nuisance. 12.9 steel will crush PETG, so snug + 1/8 turn only. Next: owner prints the 20 mm clamp slice and tries the hardware, then the full clip.
+- **2026-11-03 (two-point clip idea):** The owner folded the handle with the cup piece off: **the bolted clip, still on the bar, blocks the fold.** They proposed using the angled strut for support, then, keeping the dovetail
+  so other attachments can be made, **a clip that is similar to now but extends down and clips a second time onto the strut**. Reasoning: two grips locate the clip fully (the strut grip stops rotation about the bar and sliding along it),
+  so the ears, screw and nut can go, and the whole clip pops off in one motion for folding. Risks noted: the frame has play (make the strut grip forgiving), the cup moves out a few mm for the grip, the arm must pass under the module's stem.
+  Owner measured the strut: **13.5 mm in both directions** (square section). From the top-down caliper photo (scaled off the 22.3 mm bar) the strut's inner face is ~7 mm and its outer face ~20 mm past the bar's surface
+  (~31 mm from the bar axis; the model's keep-out used 37). From the front tape photo the strut is **steeper than assumed, ~55°**, so it is ~60 mm below the bar axis about 40 mm from its bracket pivot, and the grip
+  would sit near the ring's strut-side end with a ~45 mm arm. **Built `wagon-strut-grip-test.stl`**: three C-clips (0.2 / 0.4 / 0.6 mm clearance, 1 mm lips, 2.5 mm walls, lead-in) to find which snaps on and holds the real strut.
+  Next: owner prints it and reports which clip works, confirms C and one D with a ruler, and says which end of the bar the strut hangs from on the right-hand frame (the arm goes to that end). Then build the two-point clip.
 
