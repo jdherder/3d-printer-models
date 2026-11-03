@@ -77,9 +77,10 @@ The outside of the rail is open air. This is the "hanging off the side" spot.
 | Clear rail length | **~120** | owner, "roughly" | Clip is 70 mm long, the cup ring is 88.07 mm wide. Cup + clip are centred on it |
 | Strut + latch reach past the bar's surface | ~26 | owner, "maybe" | Same at both ends. Modelled as two blocks beyond the clear window |
 | **Angled strut section** | **13.5 × 13.5** (square) | owner, calipers, 2026-11-03 | Same both ways. Not yet known if hollow |
-| Strut: inner face past the bar's surface | ~7 (estimate) | top-down caliper photo, scaled off the 22.3 mm bar | ±3 mm. Confirm with a ruler (C) |
-| Strut: outer face past the bar's surface | ~20 (estimate) | same | The owner had guessed ~26. Confirm with a ruler (C) |
-| Strut slope | ~55° from horizontal, ~1.5 mm of drop per mm toward the middle | front tape photo | Steeper than the 45° I assumed. Rough (perspective). Confirm with one D reading |
+| Strut: inner face past the bar's surface | ~4–7 (estimate) | top-down photos: caliper shot scaled off the 22.3 mm bar gave ~7, the horizontal-tape shot gave ~4 | The two disagree by 3 mm (perspective). The ring can rotate on the bar, which absorbs a few mm. Ask for one ruler reading |
+| Strut: outer face past the bar's surface | ~15–20 (estimate) | same two photos | The owner had guessed ~26 |
+| **Strut slope and depth** | **~59° from horizontal.** Centreline depth below the bar axis ≈ **1.63 × x − 7 mm**, x = distance along the bar from the strut's pivot screw | three vertical-tape photos (2026-11-03): 65 / 130 / 200 mm at x = 44 / 84 / 127 mm | Fit within ~1 mm of those three points, but they're pixel readings of photos at slightly different depths: treat as ±10%. At x = 30 / 43 / 73 / 103: ≈ 42 / 63 / 112 / 161 mm |
+| Bracket screws, centre to centre | ~150–165 | tape photos | The clear stretch (~120 mm, owner) starts ~13 mm from the strut's pivot screw |
 | Tumbler base diameter | 70 (2.75 in) | retailer listing | Owner OK with this for now |
 | Tumbler widest diameter (lid) | 89 (3.5 in) | retailer listing | Owner OK with this for now |
 | Tumbler height | 168–175 (6.6–6.9 in) | retailer listings | Only used to size the taper |
@@ -245,4 +246,10 @@ Needs `scikit-image` (marching cubes), in `requirements.txt`.
   (~31 mm from the bar axis; the model's keep-out used 37). From the front tape photo the strut is **steeper than assumed, ~55°**, so it is ~60 mm below the bar axis about 40 mm from its bracket pivot, and the grip
   would sit near the ring's strut-side end with a ~45 mm arm. **Built `wagon-strut-grip-test.stl`**: three C-clips (0.2 / 0.4 / 0.6 mm clearance, 1 mm lips, 2.5 mm walls, lead-in) to find which snaps on and holds the real strut.
   Next: owner prints it and reports which clip works, confirms C and one D with a ruler, and says which end of the bar the strut hangs from on the right-hand frame (the arm goes to that end). Then build the two-point clip.
+- **2026-11-03 (strut photos):** The owner sent six photos with no text: an overview, a view from above, a horizontal tape from the bar across to the strut, and **three vertical tapes hung from the top of the bar at three
+  places along it** with the strut crossing behind each. Read off: the strut is a straight line at **~59°**, **depth below the bar axis ≈ 1.63·x − 7 mm** (x from the pivot screw): 65 / 130 / 200 mm at x = 44 / 84 / 127 mm
+  (three points within ~1 mm of the fit; they are my pixel readings, so ±10%). So at the window's strut-side end the strut is shallow (14 mm at x = 13), ~45 mm down at x = 31, ~110 mm at the window's middle. That favours putting the
+  ring at the **strut-side end of the clear stretch** with a **short leg (~30 mm)** to the strut grip, not a long arm from the middle. Horizontal-tape photo gives the bar-to-strut gap as ~4 mm vs ~7 from the caliper shot: they disagree, so asked for one
+  ruler reading. Drew a **concept diagram** of the two-point clip on the measured frame for the owner to check. Open: which end of the bar the strut hangs from on the **right-hand** frame (the arm goes to that end); which strut-grip test clip
+  (16/20/24 mm = 0.2/0.4/0.6 mm clearance) works; what hit when the handle folded. Not yet modelled: the two-point clip.
 
