@@ -229,3 +229,8 @@ Needs `scikit-image` (marching cubes), in `requirements.txt`.
   washer in a **5 mm-deep round pocket in the inboard ear**, the nut in a **5 mm-deep hex pocket in the outboard ear** (7.4 mm AF), 3 mm walls behind both, clamp slice 26 → 20 mm. Verified: M4 × 30 engages 2.5 of the nut's 3.2 mm,
   M4 × 35 fully. All 12 interference checks pass with a modelled screw, washer and nut in place. Checked that the **module the owner already printed fits the new clip equally** (contact only, 1.9 mm³), so **only the clip needs
   reprinting**. Removed `fasteners.py` and the printed bolt/nut STLs (git history has them). Asked: what is the longest M4 in the owner's kit?
+- **2026-11-03 (hardware kit):** The owner found a candidate kit: Kernmax 320-piece **M4 socket head cap screw assortment** (12.9 black-oxide alloy steel; M4 × 25/30/35/40/45/50 mm, with hex nuts, flat washers, spring washers and a hex key).
+  Checked against the clip: **M4 × 30 and × 35 are in it** (use 30 first, 35 if it feels short); M4 SHCS head (7 × 4 mm) fits the 9.6 mm pocket; plain hex nut fits the 7.4 mm pocket. Things to check on arrival: flat washer is
+  ~9 mm OD × 0.8 mm (a 10 mm one won't fit the pocket; leave it out, and an M4 × 30 then engages the nut fully); don't use the spring washers in the pocket. **Black oxide rusts outdoors**: oil the screw, or use A2 stainless
+  if it becomes a nuisance. 12.9 steel will crush PETG, so snug + 1/8 turn only. Next: owner prints the 20 mm clamp slice and tries the hardware, then the full clip.
+
