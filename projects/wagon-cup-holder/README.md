@@ -4,7 +4,7 @@ A two-piece cup holder for the **right-hand side rail** of the owner's
 [MAC Sports push/pull wagon](https://macsports.com/products/mac-sports-push-pull-wagon)
 (the push-handle frame, as seen from the pusher). A **clip stays on the rail**, and the **cup module lifts on and
 off it in a couple of seconds**, so it can come off for folding the wagon. It holds a **20 oz Yeti Rambler**
-hanging off the outside of the wagon. The clip is clamped by a **printed M8 knob bolt and nut** (nothing to buy).
+hanging off the outside of the wagon. The clip is clamped by a **standard M8 × 45 bolt, nut and fender washer** (hardware store, about $5).
 
 ![the holder](renders/cup-holder.png)
 
@@ -22,7 +22,7 @@ feel unnatural... it could all just flow together more seamlessly").
 - [x] Strut + red latch: they sit further out than the bar (~26 mm, same at both ends). The cup is placed to clear them
 - [x] **v6 rebuilt as one blended form** (see "How it's made"): module 112.1 × 87.7 × 90.5 mm,
       clip 51.8 × 42.9 × 70 mm. Both single watertight bodies, 0 interference everywhere
-- [x] Printed: **the clip test (fit well)** and the dovetail pair (will probably work). Owner is printing the bolt and nut + clamp slice
+- [x] Printed: the clip test (fit well), the dovetail pair (will probably work) and the full parts (**"worked for the most part"**). **The printed bolt snapped**, so the clamp now uses real hardware
 - [ ] **Owner: does v6 look right?** Natural, flowing, no weird notches
 - [ ] **Owner: check the strut doesn't slope in under the cup** (cup base is 60 mm below the rail axis)
 - [ ] **Owner: does the empty clip block folding?** (see "Folding")
@@ -30,7 +30,7 @@ feel unnatural... it could all just flow together more seamlessly").
 
 ## How it works
 
-- The **clip** (ring + ears) is snapped on and **tightened by hand with the knob** of the printed bolt. It stays on the rail.
+- The **clip** (ring + ears) is snapped on and **tightened with an M8 bolt** (13 mm wrench). It stays on the rail.
   On its outboard side a vertical **dovetail tongue** (34 mm wide at the root, 48 mm at the tip, 7 mm tall,
   **28 mm of vertical engagement**).
 - The cup **module** has the matching groove (0.35 mm clearance per side). It **drops straight down onto the tongue**
@@ -91,9 +91,14 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
 - **The clamp is still essential.** The cup is beside the rail, so a full cup (~1 kg) is a constant twist of about **0.82 N·m** on the clip.
   A snap-fit's friction at rest is ~0.1 N·m. So the clip has **two ears and a printed M8 bolt across the mouth**: tightening pulls the C closed around the tube
   (roughly belt-like, so ~4× the bolt force presses on the tube). That's an estimate, so **verify with the clamp slice** (try to twist the tightened slice on the real rail).
-- **Printed bolt and nut:** M8 × 1.5 with a 24 mm scalloped knob (`fasteners.py`). A printed M4 would strip. **PETG threads are finger-tight only, no pliers.**
-  Nut gap 0.25 mm radial. The nut slides into a hex pocket from the open bottom of the ear. **Both ears have the pocket**, so the nut can go either side. By default the knob is
-  **inboard** (reachable with the module on) and the nut outboard.
+- **Hardware: a real bolt and nut (the printed M8 bolt snapped, and its thread fit the printed nut badly).** Buy:
+  **M8 × 45 mm hex bolt** (coarse pitch, 1.25), **one M8 hex nut** (13 mm across flats, standard thickness, **not** a nylon-insert nut: it is too tall for the pocket),
+  and **one M8 fender washer, ~24 mm OD** (not a regular 16 mm washer: it would sit half over the hex pocket and slot). Stainless A2/304 is best outdoors.
+  US imperial equivalent: **5/16"-18 × 1¾" hex bolt, 5/16"-18 hex nut, 5/16" fender washer** (1" OD). Both fit the clip as modelled (9.0 mm hole, 13.5 mm hex pocket, 6.9 mm deep).
+  Length check against the model, with a 2 mm washer under the head: 40 mm only engages the nut by 4.2 mm, **45 mm engages it fully and pokes out 2.3 mm** past the outer ear (clear of the module), 50 mm pokes out 7.3 mm.
+  35 mm is too short. The nut sits captive in the **outboard** ear's pocket and can't spin. The head and washer go on the **inboard** ear; tighten with a 13 mm (or 1/2") wrench or socket.
+  Snug, then about 1/8 turn: the ears are PETG, so don't crush them. Both ears have the pocket, so the nut can go on either side.
+  (`fasteners.py` and the printed bolt/nut STLs are kept but no longer used.)
 - **Snap geometry:** the mouth is 20.7 mm wide against the 22.3 mm tube, so each arm spreads ~0.8 mm (≈1% strain, fine for PETG). The owner's test
   print fit well.
 - **Printing:** the **module prints upright** (base chamfered at exactly 45°, the stem's underside is a self-supporting ≥45° sweep, the dovetail groove is a vertical channel).
@@ -216,3 +221,8 @@ Needs `scikit-image` (marching cubes), in `requirements.txt`.
   Found and fixed on the way: a bug where the stem's 45° underside ran past the cup's base and stuck out as a blob; smooth unions bulging at shared planes (the clip's ends,
   the boss-to-ear seat); a 5 mm pocket-floor fillet that collided with a sharp-edged ghost tumbler (now a 3 mm fillet and a 3.5 mm base-edge radius on the ghost).
   Added `scikit-image` to `requirements.txt`. Next: owner reviews the look, and prints the bolt/nut/clamp slice and then the full parts.
+- **2026-11-03:** The owner printed the full v6 parts: **"the model worked for the most part"**. **The printed M8 bolt snapped** and its thread didn't fit well with the printed nut,
+  so they'll use a real bolt and nut and asked what to buy and what sizes are common in a set. Answer: **M8 × 45 mm hex bolt + M8 hex nut + M8 fender washer (~24 mm OD)**, or
+  5/16"-18 × 1¾" with a 5/16" nut and fender washer in imperial. Checked against the model: nothing needs to change (9.0 mm hole, 13.5 mm hex pocket, 6.9 mm deep, 20.7 mm gap, 10 mm ears).
+  45 mm is the right length with a washer; 40 mm only just engages the nut; 35 mm is too short. Avoid nylon-insert nuts (too tall for the pocket). Offered: a printed hex-socket knob
+  that slips over the bolt head for finger-tightening (the bolt carries the load, the knob only turns it). Waiting on: what else "for the most part" covers (what didn't work?).
