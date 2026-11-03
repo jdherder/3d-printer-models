@@ -39,12 +39,15 @@ class CupHolderParams:
     clip_len: float = 70.0          # along the rail (owner has ~120 mm clear)
     mouth_width: float = 20.7       # opening between the lips. Narrower than the rail to snap
 
-    # --- Clamp ears + printed M8 x 1.5 bolt with a knob, and a printed hex nut (see fasteners.py) ---
-    ear_t: float = 10.0             # ear thickness, either side of the mouth
+    # --- Clamp ears + standard M4 hardware (see README). The screw HEAD (with a washer) sits in a round pocket in the INBOARD ear
+    #     and the NUT in a hex pocket in the OUTBOARD ear, both recessed deep, so a common M4 x 30 (or 35) bolt is long enough. ---
+    ear_t: float = 8.0              # ear thickness, either side of the mouth
     bolt_drop: float = 6.5          # bolt axis below the rail's lowest point
-    bolt_hole_d: float = 9.0        # clears the 8 mm thread. Teardrop-shaped so it prints without support
-    nut_af: float = 13.5            # pocket across flats: the printed nut is 13.0, plus clearance
-    nut_depth: float = 6.9          # the printed nut is 6.5 thick
+    bolt_hole_d: float = 4.5        # M4 clearance. Teardrop-shaped so it prints without support
+    head_cbore_d: float = 9.6       # round pocket for an M4 cap-screw head (7 mm) on a 9 mm washer
+    head_cbore_depth: float = 5.0   # 4 mm head + 0.8 mm washer + 0.2 mm. Leaves a 3 mm wall behind it
+    nut_af: float = 7.4             # hex pocket across flats: an M4 nut is 7.0, plus clearance
+    nut_depth: float = 5.0          # an M4 nut is 3.2 thick, seated deep. Leaves a 3 mm wall in front of it
     lead_in: float = 3.5            # 45-degree guide at the bottom of the mouth
     ear_top_y: float = -4.0         # top of the ears (Z in use). The module's pad rests here
     ear_round: float = 4.0          # rounding of the ears' bottom and side edges
@@ -311,19 +314,23 @@ def build_clip(p: CupHolderParams | None = None, length: float | None = None, do
     yb, li = ear_bot, p.lead_in
     cut.append(prism_z([(-w, 0), (w, 0), (w, yb + li), (w + li, yb - 0.1), (-(w + li), yb - 0.1), (-w, yb + li)],
                        -2.0, L + 2.0))                                                                # mouth + lead-in
-    r = p.bolt_hole_d / 2
-    k = r / math.sqrt(2)
-    circ = ShapelyPolygon([(p.bolt_y + r * math.cos(a), zc + r * math.sin(a)) for a in np.linspace(0, 2 * math.pi, 64, endpoint=False)])
-    tri = ShapelyPolygon([(p.bolt_y - k, zc + k), (p.bolt_y + k, zc + k), (p.bolt_y, zc + r * math.sqrt(2))])
-    tear = circ.union(tri)
-    cut.append(prism_x(list(tear.exterior.coords)[:-1], -x_out - 1.0, x_out + 1.0))                  # bolt hole (teardrop)
+    def teardrop_poly(r):
+        """A circle with a 45-degree point on top (+z), so a horizontal hole prints without support."""
+        k = r / math.sqrt(2)
+        circ = ShapelyPolygon([(p.bolt_y + r * math.cos(a), zc + r * math.sin(a)) for a in np.linspace(0, 2 * math.pi, 64, endpoint=False)])
+        tri = ShapelyPolygon([(p.bolt_y - k, zc + k), (p.bolt_y + k, zc + k), (p.bolt_y, zc + r * math.sqrt(2))])
+        return list(circ.union(tri).exterior.coords)[:-1]
+
+    cut.append(prism_x(teardrop_poly(p.bolt_hole_d / 2), -x_out - 1.0, x_out + 1.0))                  # bolt hole
+    # Inboard ear: round pocket for the screw head + washer, open to the outside (the 3 mm wall behind it is the bearing face).
+    cut.append(prism_x(teardrop_poly(p.head_cbore_d / 2), -x_out - 1.0, -x_out + p.head_cbore_depth))
+    # Outboard ear: hex pocket for the nut (flat top, so it only bridges a few mm) plus a slot open to the ear's bottom end,
+    # so the nut slides in from underneath.
     nut_ac = p.nut_af / math.cos(math.radians(30))
     hexagon = [(p.bolt_y + nut_ac / 2 * math.cos(math.radians(60 * i)), zc + nut_ac / 2 * math.sin(math.radians(60 * i))) for i in range(6)]
     slot_poly = [(p.bolt_y, zc - p.nut_af / 2), (yb - 1.0, zc - p.nut_af / 2), (yb - 1.0, zc + p.nut_af / 2), (p.bolt_y, zc + p.nut_af / 2)]
-    for side in (-1, 1):                                                                              # nut pocket + slide-in slot, both ears
-        xa, xb = (x_out - p.nut_depth, x_out + 1.0) if side > 0 else (-x_out - 1.0, -x_out + p.nut_depth)
-        cut.append(prism_x(hexagon, xa, xb))
-        cut.append(prism_x(slot_poly, xa, xb))
+    cut.append(prism_x(hexagon, x_out - p.nut_depth, x_out + 1.0))
+    cut.append(prism_x(slot_poly, x_out - p.nut_depth, x_out + 1.0))
     return boolean_difference(mesh, cut)
 
 

@@ -1,7 +1,7 @@
 {
   "page_title": "Wagon Cup Holder",
-  "title": "Wagon cup holder: v6, one flowing form",
-  "subtitle": "Clip stays on the side rail \u00b7 cup module lifts off its dovetail \u00b7 printed M8 knob bolt and nut \u00b7 shown assembled in its real orientation (rail left to right, cup upright) \u00b7 millimetres",
+  "title": "Wagon cup holder: v6.1, standard M4 hardware",
+  "subtitle": "Clip stays on the side rail \u00b7 cup module lifts off its dovetail \u00b7 clamped by an ordinary M4 screw, washer and nut \u00b7 shown assembled in its real orientation (rail left to right, cup upright) \u00b7 millimetres",
   "meshes": [
     {
       "path": "renders/asm-module.stl",
@@ -15,12 +15,12 @@
     },
     {
       "path": "renders/asm-bolt.stl",
-      "label": "Printed bolt (knob on the inboard side)",
+      "label": "M4 x 30 screw + washer (inboard ear)",
       "style": "solid"
     },
     {
       "path": "renders/asm-nut.stl",
-      "label": "Printed nut (outboard ear)",
+      "label": "M4 nut (outboard ear)",
       "style": "solid"
     },
     {
@@ -91,5 +91,5 @@
   ],
   "scale_note": "Real size, shown assembled in its real orientation: the rail runs left to right, the cup stands upright and hangs off the outside of it. The rail is your 22.3 mm tube. The tumbler is from retailer listings (70 mm base, 89 mm widest). The two wireframe blocks are the red latch and diagonal strut at each end of your 120 mm clear stretch. They are APPROXIMATE: only the ~26 mm reach is from you, and I assumed they sit only beyond the clear stretch.",
   "notes_title": "What changed, and what to check",
-  "notes": "v6: you still felt weird notches, walls and angles. I agree with the cause: every version so far was flat blocks and plates stuck together, with fillets where they met. I rebuilt both pieces from scratch as one continuous form. The cup is now a plain tapered ring that stands upright when printed, so the side opening (the notch) is gone. A slim stem sweeps from the cup back to the dovetail pad, blended in rather than joined, and the rim, stem and pad all end in one flat top with every edge rounded. The clip is softened the same way. The fit-critical parts (the dovetail, the rail bore, the snap mouth, the bolt hole and nut pockets) are still cut exactly. Same fit, same size, same bolt and nut. It still prints with no supports. One trade-off: these two pieces are now STL meshes, not editable STEP files. Please tell me: (1) does it look natural now, or is something still off (stem too thick, rim, the clip's ears)? (2) the old checks still stand: does the strut slope in under the cup, and does the empty clip block folding?"
+  "notes": "v6.1: most hobby kits stop short of a 40 mm bolt, so the clip is redesigned around ordinary M4 hardware. The screw head and washer now sit recessed in the inboard ear and the nut in the outboard ear, each in a 5 mm deep pocket with a 3 mm wall behind it. That shortens the run, so an M4 x 30 works (it engages 2.5 of the nut's 3.2 mm) and an M4 x 35 engages it fully. The ears are 8 mm thick now, so the clip hangs 3.5 mm less below the rail. The ring, mouth, dovetail and the whole cup module are unchanged, so only the clip needs reprinting. The screw, washer and nut are shown in place. Please check: (1) what is the longest M4 screw in your kit? (2) is there room for the screw head and a 3 mm hex key on the inboard side? (3) the old checks still stand: the strut under the cup, and folding."
 }

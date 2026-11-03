@@ -4,7 +4,7 @@ A two-piece cup holder for the **right-hand side rail** of the owner's
 [MAC Sports push/pull wagon](https://macsports.com/products/mac-sports-push-pull-wagon)
 (the push-handle frame, as seen from the pusher). A **clip stays on the rail**, and the **cup module lifts on and
 off it in a couple of seconds**, so it can come off for folding the wagon. It holds a **20 oz Yeti Rambler**
-hanging off the outside of the wagon. The clip is clamped by a **standard M8 × 45 bolt, nut and fender washer** (hardware store, about $5).
+hanging off the outside of the wagon. The clip is clamped by a **standard M4 screw, washer and nut** (an ordinary hardware kit has them).
 
 ![the holder](renders/cup-holder.png)
 
@@ -22,7 +22,7 @@ feel unnatural... it could all just flow together more seamlessly").
 - [x] Strut + red latch: they sit further out than the bar (~26 mm, same at both ends). The cup is placed to clear them
 - [x] **v6 rebuilt as one blended form** (see "How it's made"): module 112.1 × 87.7 × 90.5 mm,
       clip 51.8 × 42.9 × 70 mm. Both single watertight bodies, 0 interference everywhere
-- [x] Printed: the clip test (fit well), the dovetail pair (will probably work) and the full parts (**"worked for the most part"**). **The printed bolt snapped**, so the clamp now uses real hardware
+- [x] Printed: the clip test (fit well), the dovetail pair (will probably work) and the full parts (**"worked for the most part"**). **The printed bolt snapped**, so the clamp uses real M4 hardware now (clip needs a reprint)
 - [ ] **Owner: does v6 look right?** Natural, flowing, no weird notches
 - [ ] **Owner: check the strut doesn't slope in under the cup** (cup base is 60 mm below the rail axis)
 - [ ] **Owner: does the empty clip block folding?** (see "Folding")
@@ -30,7 +30,7 @@ feel unnatural... it could all just flow together more seamlessly").
 
 ## How it works
 
-- The **clip** (ring + ears) is snapped on and **tightened with an M8 bolt** (13 mm wrench). It stays on the rail.
+- The **clip** (ring + ears) is snapped on and **tightened with an M4 screw** (3 mm hex key). It stays on the rail.
   On its outboard side a vertical **dovetail tongue** (34 mm wide at the root, 48 mm at the tip, 7 mm tall,
   **28 mm of vertical engagement**).
 - The cup **module** has the matching groove (0.35 mm clearance per side). It **drops straight down onto the tongue**
@@ -56,8 +56,8 @@ ring: the side opening that caused the "notch" in v5 is gone.
 
 What stays on the rail when the cup is off: the **clip is 70 mm long and extends about 24 mm above the rail axis,
 27.8 mm below it, ~22 mm outboard and ~20 mm inboard** (the ears and the dovetail tongue). **Whether that blocks folding is still unknown.**
-Cheap check: clamp the 26 mm clamp slice (`wagon-cup-clip-test.stl`, ears but no tongue) on the right rail where the clip would go and fold the wagon. If it gets in the way,
-move it along the rail, or loosen the knob and take the whole clip off (a few turns, no tool) when you fold.
+Cheap check: clamp the 20 mm clamp slice (`wagon-cup-clip-test.stl`, ears but no tongue) on the right rail where the clip would go and fold the wagon. If it gets in the way,
+move it along the rail, or loosen the screw and take the whole clip off (a few turns of a hex key) when you fold.
 
 ## What I read from the photos (2026-11-01)
 
@@ -89,16 +89,15 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
 - **Layout (use frame: rail along X, Z up):** the clip wraps the side rail from above, mouth facing down. The module hangs off its outboard side. The cup axis is
   **84 mm outboard of the rail axis**, and the **cup base is 60 mm below it**, so the rim is 24 mm above it.
 - **The clamp is still essential.** The cup is beside the rail, so a full cup (~1 kg) is a constant twist of about **0.82 N·m** on the clip.
-  A snap-fit's friction at rest is ~0.1 N·m. So the clip has **two ears and a printed M8 bolt across the mouth**: tightening pulls the C closed around the tube
+  A snap-fit's friction at rest is ~0.1 N·m. So the clip has **two ears and an M4 screw across the mouth**: tightening pulls the C closed around the tube
   (roughly belt-like, so ~4× the bolt force presses on the tube). That's an estimate, so **verify with the clamp slice** (try to twist the tightened slice on the real rail).
-- **Hardware: a real bolt and nut (the printed M8 bolt snapped, and its thread fit the printed nut badly).** Buy:
-  **M8 × 45 mm hex bolt** (coarse pitch, 1.25), **one M8 hex nut** (13 mm across flats, standard thickness, **not** a nylon-insert nut: it is too tall for the pocket),
-  and **one M8 fender washer, ~24 mm OD** (not a regular 16 mm washer: it would sit half over the hex pocket and slot). Stainless A2/304 is best outdoors.
-  US imperial equivalent: **5/16"-18 × 1¾" hex bolt, 5/16"-18 hex nut, 5/16" fender washer** (1" OD). Both fit the clip as modelled (9.0 mm hole, 13.5 mm hex pocket, 6.9 mm deep).
-  Length check against the model, with a 2 mm washer under the head: 40 mm only engages the nut by 4.2 mm, **45 mm engages it fully and pokes out 2.3 mm** past the outer ear (clear of the module), 50 mm pokes out 7.3 mm.
-  35 mm is too short. The nut sits captive in the **outboard** ear's pocket and can't spin. The head and washer go on the **inboard** ear; tighten with a 13 mm (or 1/2") wrench or socket.
-  Snug, then about 1/8 turn: the ears are PETG, so don't crush them. Both ears have the pocket, so the nut can go on either side.
-  (`fasteners.py` and the printed bolt/nut STLs are kept but no longer used.)
+- **Hardware: standard M4, sized for what kits actually contain.** (The printed M8 bolt snapped. M8 then needed 45 mm bolts, and most kits stop short of 40 mm, even in M4.)
+  The screw **head and washer sit in a round pocket in the INBOARD ear** (reachable with the module on) and the **nut in a hex pocket in the OUTBOARD ear** (slid in from the bottom
+  of the ear, captive so it can't spin). Both pockets are cut deep (5 mm of an 8 mm ear), which shortens the run the screw must cross, and each leaves a **3 mm wall** to bear on.
+  Buy / use: **M4 socket cap screw, 30 mm or 35 mm**, **one M4 hex nut** (plain, 7 mm across flats, 3.2 mm thick; **not nyloc**, it is too tall), **one standard M4 washer** (9 mm OD, 0.8 mm; a bigger one won't fit the pocket)
+  and a **3 mm hex key**. Checked against the model: **M4 × 30 engages 2.5 of the nut's 3.2 mm (~3½ threads)**, **M4 × 35 engages it fully and pokes out 2.5 mm**, M4 × 40 pokes out 7.5 mm. **M4 × 25 is too short.**
+  Hex-head M4 also fits (the round pocket is 9.6 mm). Stainless is best outdoors. **Snug, then 1/8 turn.** A 3 mm key makes it easy to crush PETG. The clip hangs 24.3 mm below the rail axis (was 27.8 with M8).
+  The model includes the screw, washer and nut as ghosts and checks that they fit the holes and pockets with no collision.
 - **Snap geometry:** the mouth is 20.7 mm wide against the 22.3 mm tube, so each arm spreads ~0.8 mm (≈1% strain, fine for PETG). The owner's test
   print fit well.
 - **Printing:** the **module prints upright** (base chamfered at exactly 45°, the stem's underside is a self-supporting ≥45° sweep, the dovetail groove is a vertical channel).
@@ -106,7 +105,7 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
   clip 247.3 mm² (flat-topped nut pockets and slots, ≤ 8 mm bridges). No supports.
 - **Material:** PETG (outdoor, sun, flexing clip). PLA creeps and softens in a hot car or in the sun, and ASA/ABS warp on the open-frame A1.
 - **History:** v1 cup on top of the bar; v2 hung off the side rail; v3 split into clip + module (quick release); v3.1 moved the cup out to clear the strut; v4 shaped bracket
-  instead of a slab; v5 printed M8 bolt and nut; v5.1 trimmed the notch; **v6 (this) rebuilt both pieces as one blended form**. Earlier versions are in git history.
+  instead of a slab; v5 printed M8 bolt and nut (snapped); **v6.1 standard M4 hardware, recessed**; v5.1 trimmed the notch; **v6 (this) rebuilt both pieces as one blended form**. Earlier versions are in git history.
 
 ## Print settings (suggested, not yet test-printed)
 
@@ -114,8 +113,8 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
 - Orientation is already built into each STL. Don't re-orient them.
 - Volumes: module 142 cm³ and clip 49.9 cm³ solid. Expect roughly 60–80 g and 25–35 g with those settings.
 - **Test prints, in order:**
-  0. `wagon-bolt.stl` + `wagon-nut.stl`: screw the nut onto the bolt by hand. If it binds, raise `thread_clr` in `fasteners.py` (0.25 → 0.3). If sloppy, lower it (0.2).
-  1. `wagon-cup-clip-test.stl`: 26 mm ring + ears. Snap it on, slide the nut into a pocket from below, add the bolt, tighten by hand, and try to twist it.
+  1. `wagon-cup-clip-test.stl`: **20 mm ring + ears (new M4 pockets)**. Snap it on, slide the nut into the outboard pocket from below, drop the washer and screw into the inboard pocket,
+     tighten with the 3 mm key, and try to twist it on the rail. The clip you printed already (10 mm ears for the printed M8) fit the rail well, and the ring and mouth are unchanged.
   2. `wagon-dovetail-test-tongue.stl` + `wagon-dovetail-test-groove.stl`: now flat pieces, 14 mm tall. The groove block slides down onto the tongue.
      Adjust `dt_clear` (0.35 mm per side now) if it's too tight or sloppy.
   3. The full clip and module.
@@ -124,7 +123,7 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
 
 1. **Does the empty clip block folding?** See "Folding" above.
 2. **Does the diagonal strut slope in under the cup?** The cup base is 60 mm below the bar axis. If it does, raise the cup (`floor_drop`).
-3. **Is there room for the 24 mm knob on the inboard side**, or would the owner rather have it outboard?
+3. **Is there room for the screw head and a 3 mm hex key on the inboard side?** (The head is recessed 0.2 mm inside the ear, so nothing sticks out.)
 4. Does the owner's tumbler have a handle? Is its base edge rounded? (The ghost tumbler assumes a 3.5 mm base-edge radius; the pocket floor has a 3 mm fillet.)
 5. Is a click detent wanted, or is gravity enough?
 6. Would a rubber strip or inner-tube liner on the rail be wanted for extra grip? (Easy to add.)
@@ -135,7 +134,7 @@ Enter measured tumbler values in `CUP_OVERRIDES` in `build.py`.
 1. `model.py`: `build_module` = tapered cup ring + stem/pad as signed-distance fields, smooth-unioned, hollowed, top plane rounded, meshed with marching cubes (`sdf.py`,
    0.5 mm cells, decimated), then the dovetail groove cut exactly. `build_clip` = ring + ears + boss as a field, meshed, the dovetail tongue unioned exactly, then the bore,
    mouth, bolt hole and nut pockets + slots cut exactly. Booleans are `manifold3d`. Only the largest body is kept (booleans on coplanar faces leave slivers).
-2. `build.py` exports each piece in its print pose, the test pieces, and the bolt and nut (`fasteners.py`).
+2. `build.py` exports each piece in its print pose and the test pieces, and models the M4 screw, washer and nut as ghosts for the fit checks and the viewer.
 3. Checks, in the assembled (real use) pose: both pieces watertight and one body, overhang area, and the interference of every pair: module/clip (a contact, ≤ 0.01 cm³),
    module/rail, module/tumbler, clip/rail, clip/tumbler, both vs the strut/latch zones, bolt vs clip/module/rail, nut vs clip/module (all must be ~0).
 
@@ -148,11 +147,10 @@ Needs `scikit-image` (marching cubes), in `requirements.txt`.
 - **Interactive viewer:** https://claude.ai/artifact/Anqg9yywWNz2pW6LNgwWoN (private to the owner).
   Built from `renders/viewer.html` by `tools/make_viewer.py` using `review.json`. Republish to this URL on every review (see `docs/review.md`)
 - `source/wagon-photo-2026-11-01.jpg`, `source/wagon-photo-2026-11-01-rail-1..6.jpg`: the owner's photos
-- `model.py`: the two pieces. `sdf.py`: the blend toolkit. `fasteners.py`: printed bolt and nut. `build.py`: pipeline
+- `model.py`: the two pieces. `sdf.py`: the blend toolkit. `build.py`: pipeline
 - `output/wagon-cup-clip.stl`: the clip that stays on the rail
 - `output/wagon-cup-module.stl`: the cup module that lifts on and off
-- `output/wagon-cup-clip-test.stl`: 26 mm ring + ears slice, for the snap and clamp test
-- `output/wagon-bolt.stl`, `output/wagon-nut.stl`: printed M8 × 1.5 clamp bolt (knob head) and hex nut
+- `output/wagon-cup-clip-test.stl`: 20 mm ring + ears slice, for the snap and clamp test
 - `output/wagon-dovetail-test-tongue.stl`, `output/wagon-dovetail-test-groove.stl`: sliding-fit test pair
 - `output/report.json`: dimensions, checks, parameters
 - `renders/cup-holder.png`, `renders/sections.png`, `renders/in-use.png`: previews and sections
@@ -226,3 +224,8 @@ Needs `scikit-image` (marching cubes), in `requirements.txt`.
   5/16"-18 × 1¾" with a 5/16" nut and fender washer in imperial. Checked against the model: nothing needs to change (9.0 mm hole, 13.5 mm hex pocket, 6.9 mm deep, 20.7 mm gap, 10 mm ears).
   45 mm is the right length with a washer; 40 mm only just engages the nut; 35 mm is too short. Avoid nylon-insert nuts (too tall for the pocket). Offered: a printed hex-socket knob
   that slips over the bolt head for finger-tightening (the bolt carries the load, the knob only turns it). Waiting on: what else "for the most part" covers (what didn't work?).
+- **2026-11-03 (v6.1):** Owner asked whether to go back to M3 or M4 now that real bolts are the plan, then noted **most kits don't include a 40 mm bolt, even in M4**. Tried M3/M4/M5/M8 ears in the model first:
+  all build; M4 hangs 3.5 mm lower than M8 would; M3 is too fiddly (5.5 mm nut, 1.9 mm seat strip). Went with **M4 and redesigned the clip so a common M4 × 30 works**: ears 10 → **8 mm**, bolt hole 4.5 mm, the screw head + 9 mm
+  washer in a **5 mm-deep round pocket in the inboard ear**, the nut in a **5 mm-deep hex pocket in the outboard ear** (7.4 mm AF), 3 mm walls behind both, clamp slice 26 → 20 mm. Verified: M4 × 30 engages 2.5 of the nut's 3.2 mm,
+  M4 × 35 fully. All 12 interference checks pass with a modelled screw, washer and nut in place. Checked that the **module the owner already printed fits the new clip equally** (contact only, 1.9 mm³), so **only the clip needs
+  reprinting**. Removed `fasteners.py` and the printed bolt/nut STLs (git history has them). Asked: what is the longest M4 in the owner's kit?

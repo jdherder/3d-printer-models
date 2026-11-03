@@ -7,7 +7,6 @@ model.py (signed-distance-field bodies + exact cuts; see its docstring)
   -> output/wagon-cup-module.stl           cup module: lifts on and off the clip's dovetail (printed upright)
   -> output/wagon-cup-clip-test.stl        26 mm ring + ears slice, for the snap / clamp test print
   -> output/wagon-dovetail-test-tongue.stl, wagon-dovetail-test-groove.stl    sliding-fit test pair
-  -> output/wagon-bolt.stl, wagon-nut.stl  printed M8 x 1.5 clamp bolt (knob head) and hex nut (fasteners.py)
   -> output/report.json                    dimensions, checks, parameters
   -> renders/*.png                         previews and sections
   -> renders/asm-*.stl, ref-*.stl          assembled-position meshes (real use orientation) for the viewer and checks
@@ -29,9 +28,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import trimesh  # noqa: E402
-from fasteners import FastenerParams, make_bolt, make_nut  # noqa: E402
 from matplotlib.collections import LineCollection  # noqa: E402
-from model import (CupHolderParams, build_clip, build_module, clip_to_U, print_pose, prism_z,  # noqa: E402
+from model import (CupHolderParams, build_clip, build_module, clip_to_U, print_pose, prism_x, prism_z,  # noqa: E402
                    boolean_difference, boolean_union)
 from render import rasterize, section_segments  # noqa: E402
 from sdf import decimate  # noqa: E402
@@ -47,7 +45,14 @@ MEASURED = {
 # Retailer figures for a 20 oz Yeti Rambler (owner OK with these for now): base 70, widest 89, height ~165.
 CUP_OVERRIDES: dict = {}
 
-CLIP_TEST_LEN = 26.0           # long enough for the 13.5 mm nut pocket plus walls
+CLIP_TEST_LEN = 20.0           # long enough for the 7.4 mm nut pocket and the 9.6 mm head pocket plus walls
+
+# Standard M4 hardware the clip is designed for (see README). Used for the fit checks and the viewer only.
+BOLT_LEN = 30.0                # the shortest common length that works: engages 2.5 of the nut's 3.2 mm. 35 mm engages it fully
+WASHER_OD, WASHER_T = 9.0, 0.8
+HEAD_D, HEAD_H = 7.0, 4.0     # M4 socket cap screw
+SHANK_D = 4.0
+NUT_AF, NUT_T = 7.0, 3.2
 DOVETAIL_TEST_H = 14.0
 
 
@@ -111,12 +116,28 @@ def keepout_ghost(p):
     return trimesh.util.concatenate(boxes)
 
 
-def place_in_C(mesh, x0, p):
-    """Fastener frame (axis Z) -> clip frame C: axis along +x at the clamp bolt's position, local z=0 at x0."""
-    m = mesh.copy()
-    m.apply_transform(trimesh.transformations.rotation_matrix(np.pi / 2, [0, 1, 0]))   # z -> +x
-    m.apply_translation([x0, p.bolt_y, p.clip_len / 2])
-    return m
+def hardware_ghosts(p, bolt_len=BOLT_LEN):
+    """The M4 cap screw (with its washer) and nut, in the clip's own frame C, so the checks prove they fit the pockets."""
+    x_out = p.mouth_width / 2 + p.ear_t
+    zc, yb = p.clip_len / 2, p.bolt_y
+    floor_x = -(x_out - p.head_cbore_depth)                  # floor of the head pocket (the washer rests on it)
+
+    def cyl_x(r, x0, x1):
+        m = trimesh.creation.cylinder(radius=r, height=x1 - x0, sections=64)
+        m.apply_transform(trimesh.transformations.rotation_matrix(np.pi / 2, [0, 1, 0]))      # axis -> x
+        m.apply_translation([(x0 + x1) / 2, yb, zc])
+        return m
+
+    under = floor_x - WASHER_T                               # underside of the head
+    bolt = boolean_union([cyl_x(WASHER_OD / 2, under, floor_x), cyl_x(HEAD_D / 2, under - HEAD_H, under),
+                          cyl_x(SHANK_D / 2, under, under + bolt_len)])
+    seat = x_out - p.nut_depth
+    r = NUT_AF / 2 / np.cos(np.radians(30))
+    hexagon = [(yb + r * np.cos(np.radians(60 * i)), zc + r * np.sin(np.radians(60 * i))) for i in range(6)]
+    nut = prism_x(hexagon, seat, seat + NUT_T)
+    return bolt, nut, {"bolt_len_mm": bolt_len, "tip_x": round(under + bolt_len, 2), "nut_seat_x": round(seat, 2),
+                       "nut_engaged_mm": round(max(min(under + bolt_len, seat + NUT_T) - seat, 0.0), 2),
+                       "tip_past_ear_face_mm": round(max(under + bolt_len - x_out, 0.0), 2)}
 
 
 def dovetail_tests(p):
@@ -151,8 +172,7 @@ def main():
         stale.unlink()
 
     p = replace(CupHolderParams(), **MEASURED, **CUP_OVERRIDES)
-    fp = FastenerParams()
-
+    
     # ---- The two pieces -----------------------------------------------------------------------
     module_U = build_module(p)
     clip_C = build_clip(p)
@@ -165,19 +185,11 @@ def main():
     _, tongue_info = export_print("wagon-dovetail-test-tongue", tongue_t)
     _, groove_info = export_print("wagon-dovetail-test-groove", groove_t)
 
-    # ---- Printed clamp bolt + nut -----------------------------------------------------------------
-    bolt_local, nut_local = make_bolt(fp), make_nut(fp)
-    fasteners = {}
-    for name, m in (("wagon-bolt", bolt_local), ("wagon-nut", nut_local)):
-        out = m.copy()
-        out.apply_translation([0, 0, -out.bounds[0, 2]])
-        assert out.is_watertight, f"{name} is not watertight"
-        out.export(OUT / f"{name}.stl")
-        fasteners[name] = {"extents_mm": [round(float(v), 1) for v in out.extents], "watertight": bool(out.is_watertight),
-                           "volume_cm3": round(float(out.volume) / 1000.0, 2), "faces": int(len(out.faces))}
-    x_out = p.mouth_width / 2 + p.ear_t
-    bolt_U = clip_to_U(place_in_C(bolt_local, -x_out, p), p)                       # knob on the inboard (-x) ear
-    nut_U = clip_to_U(place_in_C(nut_local, x_out - p.nut_depth, p), p)            # nut seated in the outboard ear's pocket
+    # ---- Hardware: standard M4 screw + washer + nut (placed in the assembled pose) -------------------------
+    bolt_C, nut_C, hardware = hardware_ghosts(p)
+    bolt_U, nut_U = clip_to_U(bolt_C, p), clip_to_U(nut_C, p)
+    for stale in ("wagon-bolt.stl", "wagon-nut.stl"):        # the printed M8 bolt and nut snapped; real hardware is used now
+        (OUT / stale).unlink(missing_ok=True)
 
     # ---- Ghosts + checks (assembled, real use orientation) --------------------------------------------
     rail, cup, keepout = rail_ghost(p), tumbler_ghost(p), keepout_ghost(p)
@@ -197,9 +209,7 @@ def main():
     # viewer meshes: light copies (the viewer limits meshes to 65k vertices)
     for name, m, faces in (("asm-module", module_U, 36000), ("asm-clip", clip_U, 26000)):
         decimate(m, faces).export(RENDERS / f"{name}.stl")
-    make_bolt(fp, ntheta=36, rows_per_pitch=10).copy()
-    place_view = clip_to_U(place_in_C(make_bolt(fp, ntheta=36, rows_per_pitch=10), -x_out, p), p)
-    place_view.export(RENDERS / "asm-bolt.stl")
+    bolt_U.export(RENDERS / "asm-bolt.stl")
     nut_U.export(RENDERS / "asm-nut.stl")
     rail.export(RENDERS / "ref-bar.stl")
     cup.export(RENDERS / "ref-tumbler.stl")
@@ -211,7 +221,8 @@ def main():
     params.update({
         "bore_d": round(2 * p.bore_r, 2),
         "snap_spread_each_lip": round((p.bar_d - p.mouth_width) / 2, 2),
-        "bolt": f"printed M{fp.major:g} x {fp.pitch:g} knob bolt + hex nut, nut gap {fp.thread_clr} mm radial, shank {fp.length:g} mm",
+        "hardware": "M4 x 30 (or 35) socket cap screw + 9 mm washer + M4 hex nut. Head in the inboard ear, nut in the outboard ear",
+        "hardware_fit": hardware,
         "pocket_base_d": round(2 * p.pocket_r(0), 2),
         "pocket_rim_d": round(2 * p.r_in(p.top_z), 2),
         "pocket_outer_rim_d": round(2 * p.rim_outer_r, 2),
@@ -233,7 +244,7 @@ def main():
         "dimensions_status": "Tube measured by owner (22.3 mm, confirmed on the side rail). Tumbler from retailer figures (owner OK for now).",
         "clip": clip_info, "module": module_info, "clamp_test_slice": slice_info,
         "dovetail_test_tongue": tongue_info, "dovetail_test_groove": groove_info,
-        "bolt_and_nut": fasteners, "checks": checks, "params_mm": params,
+        "hardware": hardware, "checks": checks, "params_mm": params,
     }
     (OUT / "report.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({"clip": clip_info, "module": module_info, "checks": checks}, indent=2))
