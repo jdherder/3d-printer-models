@@ -85,11 +85,11 @@ class CupHolderParams:
     strut_icpt: float = -7.0        # depth below the bar axis = strut_slope * x + strut_icpt, x measured from the strut's pivot screw
     ring_x_from_pivot: float = 55.0 # ring centre, measured from the pivot screw: puts the ring at the strut end of the clear stretch
     grip_x: float = 24.0            # the grip is this far from the ring centre, toward the pivot. The strut is shallow there (~45 mm below the bar)
-    grip_len: float = 18.0          # length of the grip along the strut
-    grip_wall: float = 2.5
-    grip_lip: float = 1.0           # the lips overlap the strut's outer face by this much (snap)
-    grip_lead: float = 1.2          # lead-in at the mouth
-    grip_clearance: float = 0.4     # total clearance round the strut (0.2 per side). The middle test clip. Set from the strut-grip test
+    grip_len: float = 22.0          # length of the grip along the strut
+    grip_wall: float = 3.0
+    grip_lip: float = 1.6           # the lips overlap the strut's outer face by this much (snap)
+    grip_lead: float = 1.6          # lead-in at the mouth
+    grip_clearance: float = 0.3     # total clearance round the strut (0.2 per side). The middle test clip. Set from the strut-grip test
     leg_w: float = 16.0             # width of the leg along the rail
     leg_round: float = 2.5
 

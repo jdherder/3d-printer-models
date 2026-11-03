@@ -27,7 +27,8 @@ feel unnatural... it could all just flow together more seamlessly").
       the owner found the **bolted clip blocks folding the handle** even with the cup off
 - [x] Strut measured: **13.5 mm square**, straight line ~59°, depth below the bar axis ≈ 1.63·x − 7 mm (x from the pivot screw). Owner confirmed which end it hangs from and the layout
 - [x] **v7 built: two-point clip** (ring + leg + strut C-grip, no screw). 0 interference with rail, strut, tumbler, latch zones. The module is unchanged (the printed one still fits)
-- [ ] **Print `wagon-strut-grip-test.stl`** (three C-clips, 16 / 20 / 24 mm tall = 0.2 / 0.4 / 0.6 mm clearance) and report which snaps on and holds the real strut. Set `grip_clearance` to it
+- [x] **Printed the v7 clip: "worked really well", the grip fit the strut nicely, but it un-snapped from the strut under a full cup** (see the 2026-11-03 v7.1 log entry)
+- [ ] **Print the v7.1 `wagon-strut-grip-test.stl`** (three C-clips, same 0.3 mm clearance, lips 1.6 / 2.0 / 2.4 mm = 16 / 20 / 24 mm tall), pull and twist each on the strut, and report which holds. Then print the full v7.1 clip
 - [ ] **Owner: check the leg side** (see "How it works") and that the strut gap looks right (nominal 5.5 mm, could be 4 to 7)
 - [ ] Print the full clip **with supports** (see "Print settings"), try it on the wagon with a full cup, fold the handle
 - [ ] Ruler reading of the gap from the bar's surface to the strut's inner face (to pin the gap down)
@@ -35,7 +36,7 @@ feel unnatural... it could all just flow together more seamlessly").
 ## How it works
 
 - The **clip** has two grips. A **ring** (22.5 mm bore, 2.8 mm wall, 70 mm long) snaps onto the right-hand side rail at the **strut end** of the clear stretch. A **leg** runs down
-  from the ring's strut-side end to a **C-shaped grip** (13.9 mm square tunnel, 18 mm long, 2.5 mm walls, 1 mm lips, with a lead-in) that snaps onto the **angled strut** about 45 mm below the bar. No screw, nut or tool.
+  from the ring's strut-side end to a **C-shaped grip** (13.8 mm square tunnel, 22 mm long, 3 mm walls, 1.6 mm lips, with a lead-in; v7.1) that snaps onto the **angled strut** about 45 mm below the bar. No screw, nut or tool.
 - **Why two grips:** the cup (~1 kg) hangs ~84 mm out, which twists a lone ring round the bar (~0.8 N·m, far more than snap friction can resist). The strut grip stops that twist (it can't move out or in), and because the strut slopes it also
   stops the clip sliding along the bar. The ring can rotate about 2° to absorb the strut-gap error (±1.5 mm), and a depth error of ~5 mm just slides the clip ~3 mm along the bar.
 - **Leg orientation (check before you print):** viewed from outside the wagon, cup toward you, the **strut end is on your LEFT** and the leg goes to the left, down to the strut. The ring sits on the bar at the left end of the clear stretch.
@@ -76,7 +77,7 @@ frame. Take both off to fold; the cup can stay in the clip and come off with it.
 - **Clip: turn supports on** (normal/auto, "build plate and model"), then clean the grip's tunnel with a small tool. Support the leg and the grip only; the ring bore, mouth and dovetail don't need it. Paint supports off the bore if the slicer puts any there.
 - Volumes: module ~144 cm³ and clip ~47 cm³ solid. Expect roughly 60–80 g and 25–35 g with those settings.
 - **Test prints, in order:**
-  1. `wagon-strut-grip-test.stl`: three C-clips (16 / 20 / 24 mm tall = 0.2 / 0.4 / 0.6 mm clearance). Press each onto the strut and shake. Tell me which snaps on and holds without rattling. The clip you printed already (ring) fit the rail well.
+  1. `wagon-strut-grip-test.stl`: three C-clips, 0.3 mm clearance, lips **1.6 / 2.0 / 2.4 mm** (16 / 20 / 24 mm tall). Press each onto the strut, then pull on it the way a full cup would (outward, away from the bar) and tell me which holds without feeling too hard to put on. The first version (lip 1.0 mm, 2.5 mm wall) fit nicely but let go under a full cup.
   2. `wagon-dovetail-test-tongue.stl` + `wagon-dovetail-test-groove.stl` (already done: "will probably work").
   3. The full clip (with supports) and, if the module needs it, the module. The printed v6 module already fits the new clip (the dovetail is unchanged).
 
@@ -84,7 +85,7 @@ frame. Take both off to fold; the cup can stay in the clip and come off with it.
 
 1. **Strut gap:** the nominal 5.5 mm between the bar surface and the strut's inner face is a guess (photos say 4 to 7). The ring can absorb ±1.5 mm by rotating ~2°. A ruler reading would pin it down.
 2. **Is the strut hollow?** (A hollow tube could squash a little in the grip; a solid bar would not.)
-3. **Grip clearance:** which test clip (0.2 / 0.4 / 0.6 mm) works? Set `grip_clearance` to it.
+3. **Grip holding power:** which test clip (lip 1.6 / 2.0 / 2.4 mm) holds under a full cup and still goes on by hand? Set `grip_lip` / `grip_wall` to it. Also: which snap let go, the strut grip or the ring on the bar?
 4. **What hit when the old clip blocked folding?** Does anything else foul when the handle folds (e.g. the leg against the latch)?
 5. **Does the strut slope in under the cup?** The cup base is 60 mm below the bar axis; the model checks this against the 59° line with 0 overlap.
 6. Does the owner's tumbler have a handle? Is its base edge rounded? (The ghost tumbler assumes a 3.5 mm base-edge radius.)
@@ -214,3 +215,8 @@ Needs `scikit-image` (marching cubes), in `requirements.txt`.
   18 mm long, 2.5 mm walls, 1 mm lips and a 1.2 mm lead-in, at 24 mm from the ring's strut-side end, ~65 mm below the bar axis. Leg 16 mm wide. Checks: clip vs strut 0, module vs strut 0, clip vs rail/tumbler/latch zones 0, module vs clip 0.002 cm³ (contact).
   Gap sensitivity (informational): at 4 mm and 7 mm gap the clip would need to rotate <2° to follow. **Printability: the clip needs supports** (710.8 mm² of overhang from the tilted grip tunnel and leg underside in the print pose). Accepted for now rather than
   loosening the grip. Module unchanged (so the owner's printed module still fits). Dropped the M4 hardware and the 20 mm clamp slice (`wagon-cup-clip-test.stl`). Viewer config updated. Next: owner prints the strut grip test (16/20/24) and reports which works; then the full clip with supports.
+- **2026-11-03 (v7.1, grip holds harder):** Owner printed the v7 clip: **"worked really well", the strut grip fit nicely, but under pressure (a full cup) it wasn't tight enough and un-snapped.**
+  Reasoning: the cup (~1 kg, 84 mm out) twists the clip about the bar, and the strut grip sits ~43 mm below the bar, so it takes ~1.9 × the cup's weight (~19 N static, 2–3× that in bumps) **pushing the strut toward the grip's mouth**: the load is an ejection force, the same direction as the snap-off.
+  A 1 mm lip on 2.5 mm walls snaps off at about the force it snaps on with, so that was too little margin. **Changes (clip only, the module is unchanged):** lips 1.0 → **1.6 mm** deep, walls 2.5 → **3.0 mm** (stiffer lips; holding force goes up ~2.8×, estimated),
+  clearance 0.4 → **0.3 mm** (less rattle and cocking), grip 18 → **22 mm** long (less rocking), lead-in 1.2 → 1.6 mm (so it is still pressable). Lip bending strain ~2.5% (PETG is fine for this, not for repeated hard use). All interference checks still 0; overhang area 820.9 mm² (supports as before).
+  Rebuilt `wagon-strut-grip-test.stl` as three lip depths at the new clearance. Fallback if it still pops: flip the C so its closed wall faces the cup and the mouth faces the bar (then the cup load pushes the strut into a solid wall; needs a leg re-route), or add a strap slot. Next: owner prints the grip test, then the full clip.

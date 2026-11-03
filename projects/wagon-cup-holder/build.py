@@ -122,13 +122,14 @@ def dovetail_tests(p):
 
 
 def strut_grip_test(p):
-    """Three short C-clips for the square strut, from snug to loose, so the owner can find which one snaps on and holds.
-    Print upright. They differ in clearance and are told apart by height: 16 mm = 0.2 mm clearance, 20 mm = 0.4, 24 mm = 0.6."""
+    """Three short C-clips for the square strut, same clearance (p.grip_clearance), with deeper and deeper lips, to find how much
+    holding power is enough. The first strut test clips (lip 1.0, 2.5 wall, 0.4 clearance) snapped on but popped off under a full cup.
+    Print upright. Told apart by height: 16 mm = lip 1.6 / wall 3.0 (the new default), 20 mm = lip 2.0 / wall 3.0, 24 mm = lip 2.4 / wall 3.5."""
     from shapely.geometry import box
-    wall, lip, lead, rr = p.grip_wall, p.grip_lip, p.grip_lead, 2.5
+    lead, rr = p.grip_lead, 2.5
     parts, x = [], 0.0
-    for clearance, height in ((0.2, 16.0), (0.4, 20.0), (0.6, 24.0)):
-        s = p.strut_size + clearance
+    for lip, wall, height in ((1.6, 3.0, 16.0), (2.0, 3.0, 20.0), (2.4, 3.5, 24.0)):
+        s = p.strut_size + p.grip_clearance
         h = s / 2 + wall
         outer = box(-h, -h, h, h).buffer(-rr).buffer(rr)                      # rounded outside corners
         mouth_w = s - 2 * lip                                                 # narrower than the strut, so it snaps over it
@@ -180,7 +181,7 @@ def main():
     assert grip.is_watertight, "strut grip test is not watertight"
     grip.export(OUT / "wagon-strut-grip-test.stl")
     grip_info = {"extents_mm": [round(float(v), 1) for v in grip.extents], "watertight": bool(grip.is_watertight),
-                 "note": "three C-clips for the 13.5 mm square strut; clearance 0.2 / 0.4 / 0.6 mm = 16 / 20 / 24 mm tall; print upright"}
+                 "note": "three C-clips for the 13.5 mm square strut, 0.3 mm clearance; lips 1.6 / 2.0 / 2.4 mm = 16 / 20 / 24 mm tall; print upright"}
 
     for stale in ("wagon-bolt.stl", "wagon-nut.stl", "wagon-cup-clip-test.stl"):    # the screw clamp is gone: the strut grip locks the clip
         (OUT / stale).unlink(missing_ok=True)

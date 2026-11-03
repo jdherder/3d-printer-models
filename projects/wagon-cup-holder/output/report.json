@@ -2,17 +2,17 @@
   "dimensions_status": "Tube measured by owner (22.3 mm, confirmed on the side rail). Tumbler from retailer figures (owner OK for now).",
   "clip": {
     "extents_mm": [
-      79.0,
-      51.1,
-      70.7
+      81.0,
+      51.6,
+      72.1
     ],
-    "faces": 50678,
+    "faces": 51640,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 2,
-    "volume_cm3": 47.0,
+    "volume_cm3": 48.1,
     "fits_A1_as_is": true,
-    "overhang_area_over_45deg_mm2": 710.8,
+    "overhang_area_over_45deg_mm2": 820.9,
     "supports": "needed under the strut grip and leg: with the ring axis vertical the grip tunnel runs ~31 deg above horizontal, so its ceiling and the leg underside overhang. Use normal (auto) supports, 'support on build plate + model'; the ring, mouth and dovetail print without"
   },
   "module": {
@@ -59,12 +59,12 @@
   },
   "strut_grip_test": {
     "extents_mm": [
-      68.5,
-      19.1,
+      71.9,
+      20.8,
       24.0
     ],
     "watertight": true,
-    "note": "three C-clips for the 13.5 mm square strut; clearance 0.2 / 0.4 / 0.6 mm = 16 / 20 / 24 mm tall; print upright"
+    "note": "three C-clips for the 13.5 mm square strut, 0.3 mm clearance; lips 1.6 / 2.0 / 2.4 mm = 16 / 20 / 24 mm tall; print upright"
   },
   "checks": {
     "interference_module_vs_clip_cm3": 0.0019,
@@ -115,11 +115,11 @@
     "strut_icpt": -7.0,
     "ring_x_from_pivot": 55.0,
     "grip_x": 24.0,
-    "grip_len": 18.0,
-    "grip_wall": 2.5,
-    "grip_lip": 1.0,
-    "grip_lead": 1.2,
-    "grip_clearance": 0.4,
+    "grip_len": 22.0,
+    "grip_wall": 3.0,
+    "grip_lip": 1.6,
+    "grip_lead": 1.6,
+    "grip_clearance": 0.3,
     "leg_w": 16.0,
     "leg_round": 2.5,
     "neck_cheek": 4.0,
@@ -139,12 +139,12 @@
     "strut_nominal_gap_mm": 5.5,
     "strut_gap_sensitivity": {
       "gap_4_mm": {
-        "clip_overlap_mm3": 464.2,
+        "clip_overlap_mm3": 528.0,
         "module_overlap_mm3": 0.0,
         "rotation_to_follow_deg": 1.74
       },
       "gap_7_mm": {
-        "clip_overlap_mm3": 36.3,
+        "clip_overlap_mm3": 85.3,
         "module_overlap_mm3": 0.0,
         "rotation_to_follow_deg": 1.74
       }

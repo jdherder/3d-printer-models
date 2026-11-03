@@ -1,6 +1,6 @@
 {
   "page_title": "Wagon Cup Holder",
-  "title": "Wagon cup holder: v7, two-point pop-off clip",
+  "title": "Wagon cup holder: v7.1, stronger strut grip",
   "subtitle": "Ring on the side rail + a C-grip on the angled strut \u00b7 no screw \u00b7 the clip and the cup lift off together for folding \u00b7 shown assembled in its real orientation (rail left to right, strut end on the left) \u00b7 millimetres",
   "meshes": [
     {
@@ -86,5 +86,5 @@
   ],
   "scale_note": "Real size, shown assembled in its real orientation: the rail runs left to right, the cup stands upright and hangs off the outside of it. The rail is your 22.3 mm tube; the angled strut is your 13.5 mm square bar, drawn as a straight line at ~59\u00b0 from the tape photos (so it is accurate to roughly a few mm). The gap between the rail and the strut is the least certain number (4 to 7 mm, drawn at 5.5). The tumbler is from retailer listings. The wireframe blocks are the red latch zones (approximate).",
   "notes_title": "What changed, and what to check",
-  "notes": "v7: the bolted clip blocked folding the handle, so the clip no longer clamps. Its ring just snaps on the rail, and a short leg reaches down to a C-shaped grip that snaps onto the angled strut. Two grips hold it in place (the strut grip stops the cup's weight twisting it round the bar, and the slope stops it sliding along), so there is no screw, nut or hardware. To fold the wagon, lift the cup off and pull the clip off the bar and strut: it comes away in one piece. The dovetail and the cup module are unchanged, so your printed module still fits. Please check: (1) the leg is on the strut-pivot side of the ring: viewed from outside with the cup toward you, the strut end is on your LEFT; (2) the grip sits on the strut with its lips on the outer face; (3) print the strut grip test pieces first and tell me which of the three (16/20/24 mm tall) snaps on and holds."
+  "notes": "v7.1: the v7 clip fit well but its strut grip let go under a full cup. The cup's weight pushes the strut toward the grip's mouth, so the lips are what hold it. The lips are now 1.6 mm deep (was 1.0) on 3 mm walls (was 2.5), the clearance is 0.3 mm (was 0.4) and the grip is 22 mm long (was 18), which I estimate roughly triples the holding force. Only the clip changes: your printed module still fits. Please check: (1) the grip section (cup side to the right): lips wrap the strut's outer face; (2) print the new grip test (three lip depths: 1.6 / 2.0 / 2.4 mm = 16 / 20 / 24 mm tall) and tell me which holds under a pull but still goes on by hand; (3) which snap let go before, the strut grip or the ring on the bar?"
 }
