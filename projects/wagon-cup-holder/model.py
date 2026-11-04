@@ -60,7 +60,8 @@ class CupHolderParams:
     dt_x0: float = 15.5             # tongue root plane, outward from the rail axis
     dt_h: float = 7.0               # tongue height (outward)
     dt_w_root: float = 34.0         # tongue width along the rail at the root. 45-degree flanks widen it by 2*dt_h
-    dt_clear: float = 0.35          # sliding clearance per side
+    dt_clear: float = 0.20          # sliding clearance per side (v8.3: was 0.35; tightened so the module doesn't ride up with the tumbler)
+    dt_boss_clear: float = 0.35     # the clip's boss width is still sized with the old clearance, so the clip is unchanged by dt_clear
 
     # --- 20 oz Yeti Rambler (retailer figures; owner is fine with these for now) ---
     cup_base_d: float = 70.0        # 2.75 in base
@@ -158,8 +159,8 @@ class CupHolderParams:
 
     @property
     def pad_front(self) -> float:
-        """Outward position of the pad's front face (the tongue root plus the sliding clearance)."""
-        return self.dt_x0 + self.dt_clear
+        """Outward position of the pad's front face (the tongue root plus the face clearance, kept at the old 0.35: the flanks do the locating)."""
+        return self.dt_x0 + self.dt_boss_clear
 
     @property
     def tongue_tip(self) -> float:
@@ -254,8 +255,9 @@ def module_field(p: CupHolderParams):
 
     # Stem + pad. Plan view (X, Y): a pad that flares at 45 degrees with the groove's cheeks, blending into a slimmer stem.
     yf, yt = p.pad_front, p.tongue_tip
-    hw0 = p.dt_half_width(yf) + p.neck_cheek
-    hw1 = p.dt_half_width(yt) + p.neck_cheek
+    side = 1.414 * (p.dt_boss_clear - p.dt_clear)             # keeps the pad's sides flush with the clip's boss, which is sized at the old clearance
+    hw0 = p.dt_half_width(yf) + side + p.neck_cheek
+    hw1 = p.dt_half_width(yt) + side + p.neck_cheek
     pad_poly = [(-hw0, yf), (hw0, yf), (hw1, yt), (hw1, yt + 3.0), (-hw1, yt + 3.0), (-hw1, yt)]
     # round the pad's convex corners (shrink the polygon, grow the field), then blend it into the stem
     pad_shrunk = ShapelyPolygon(pad_poly).buffer(-p.pad_round, join_style=2)
@@ -380,7 +382,7 @@ def build_clip(p: CupHolderParams | None = None, length: float | None = None, do
         ears = e if ears is None else np.minimum(ears, e)
     if dovetail:
         # Boss: the vertical plate on the outboard side that the module's pad faces. Same outline as the pad's front face.
-        hw_pad = p.dt_half_width(p.pad_front) + p.neck_cheek
+        hw_pad = p.dt_w_root / 2 + p.dt_boss_clear + 1.414 * p.dt_boss_clear + p.neck_cheek      # = the old pad width at dt_clear 0.35
         boss_y0, boss_y1 = ear_top - 8.0, p.top_z       # starts inside the ear, so the two overlap instead of just touching
         boss = sdf.sd_round_box(X, Y, Z, ((p.dt_x0 + 11.0) / 2, (boss_y0 + boss_y1) / 2, zc),
                                 ((p.dt_x0 - 11.0) / 2, (boss_y1 - boss_y0) / 2, hw_pad), 3.0)

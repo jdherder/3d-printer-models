@@ -31,6 +31,7 @@ feel unnatural... it could all just flow together more seamlessly").
 - [x] **v8 built: the strut grip is flipped** so the closed wall of the C faces the cup and the mouth faces the bar. The cup's pull now presses the strut into a solid wall. Same ring, dovetail and module (printed module still fits)
 - [x] Owner report: lifting the tumbler out sometimes lifts the whole module off the dovetail and it "sticks" to the cup. **Added a 10 mm vent hole through the pocket floor** (module reprint, or drill the printed one)
 - [x] Owner thinks the sticking is the tumbler **wedging in the tapered pocket**, not suction. **v8.2: pocket opened up** (floor clearance 2 → 4 mm on the diameter, plus a draft that adds 0.02 mm per mm of height, so 85.4 mm at the rim). The vent hole stays
+- [x] Owner: make the dovetail a little tighter. **v8.3: dovetail clearance 0.35 → 0.20 mm per side** on the module's groove (the clip is unchanged). Three groove test blocks (0.30 / 0.20 / 0.10) to pick the tightest that still slides by hand
 - [ ] **Print `wagon-strut-grip-test.stl`** (v8: three C-clips, lips 1.2 / 1.6 / 2.0 mm = 16 / 20 / 24 mm tall), check which goes on by hand and stays on, then print the full v8 clip (with supports)
 - [ ] **Owner: check the arm side** (see "How it works") and that the strut gap looks right (nominal 5.5 mm, could be 4 to 7)
 - [ ] Print the full clip **with supports** (see "Print settings"), try it on the wagon with a full cup, fold the handle
@@ -47,7 +48,7 @@ feel unnatural... it could all just flow together more seamlessly").
   3) **slide it down along the strut** until the ring clicks onto the bar from above. To take it off: lift it up along the strut until the ring clears the bar, then pull it out. The weight of the cup never pulls it off.
 - **Arm orientation (check before you print):** viewed from outside the wagon, cup toward you, the **strut end is on your LEFT**. A short diagonal **arm** runs from under the ring's outboard ear, down and to the left, to the grip on the strut's upper side. The ring sits on the bar at the left end of the clear stretch.
 - On the clip's outboard side is the vertical **dovetail tongue** (34 mm wide at the root, 48 mm at the tip, 7 mm tall, 28 mm of vertical engagement). It is unchanged, so other attachments can be made for it.
-- The cup **module** has the matching groove (0.35 mm clearance per side). It **drops straight down onto the tongue** and rests on the tops of the clip's ears, so **gravity holds it seated**. To remove it, lift it ~28 mm.
+- The cup **module** has the matching groove (**0.20 mm clearance per side** since v8.3; was 0.35). It **drops straight down onto the tongue** and rests on the tops of the clip's ears, so **gravity holds it seated**. To remove it, lift it ~28 mm.
 - To fold the wagon: lift the cup off, then pull the clip off the bar and strut in one motion (or leave the cup on and lift both off together).
 - The cup is a **tapered ring** that follows the Yeti's taper, closed at the bottom, open at the top. A slim **stem** sweeps from its inboard side back to the dovetail pad. The rim, the stem and the pad all end in one **flat top plane**.
 - **Vent hole:** a 10 mm hole through the middle of the pocket floor (`vent_d`) lets air in under the tumbler's base when it is lifted out, so it can't suck the module up with it. It also drains rain. Prints fine (vertical hole).
@@ -85,7 +86,7 @@ frame. Take both off to fold; the cup can stay in the clip and come off with it.
 - Volumes: module ~144 cm³ and clip ~47 cm³ solid. Expect roughly 60–80 g and 25–35 g with those settings.
 - **Test prints, in order:**
   1. `wagon-strut-grip-test.stl`: three C-clips, 0.3 mm clearance, lips **1.2 / 1.6 / 2.0 mm** (16 / 20 / 24 mm tall), **mouth toward you**. Push each onto the strut from the bar side (the mouth faces the bar when worn), then push it the way a full cup would (outward, away from the bar: it should jam against the closed wall) and tell me which one goes on and off by hand but doesn't fall off by itself.
-  2. `wagon-dovetail-test-tongue.stl` + `wagon-dovetail-test-groove.stl` (already done: "will probably work").
+  2. `wagon-dovetail-test-tongue.stl` + `wagon-dovetail-test-groove-0.30.stl` / `-0.20.stl` / `-0.10.stl` (clearance per side; the first pair, at 0.35, "will probably work"). Slide each groove block onto the tongue plate. Take the tightest one that still slides on by hand without force, and tell me; I'll set `dt_clear` to it.
   3. The full clip (with supports) and, if the module needs it, the module. The printed v6 module already fits the new clip (the dovetail is unchanged).
 
 ## Open questions
@@ -121,7 +122,7 @@ Needs `scikit-image` (marching cubes), in `requirements.txt`.
 - `output/wagon-cup-clip.stl`: the clip that stays on the rail
 - `output/wagon-cup-module.stl`: the cup module that lifts on and off
 - `output/wagon-strut-grip-test.stl`: three C-clips for the 13.5 mm square strut (0.2 / 0.4 / 0.6 mm clearance = 16 / 20 / 24 mm tall), print upright
-- `output/wagon-dovetail-test-tongue.stl`, `output/wagon-dovetail-test-groove.stl`: sliding-fit test pair
+- `output/wagon-dovetail-test-tongue.stl`, `output/wagon-dovetail-test-groove-0.30.stl` / `-0.20.stl` / `-0.10.stl`: sliding-fit tests (tongue plate + three groove blocks, clearance per side)
 - `output/report.json`: dimensions, checks, parameters
 - `renders/cup-holder.png`, `renders/sections.png`, `renders/in-use.png`: previews and sections
 - `renders/asm-*.stl`, `renders/ref-*.stl`: light assembled-position meshes, the ghost rail, tumbler and strut/latch zones, for the viewer
@@ -240,3 +241,7 @@ Needs `scikit-image` (marching cubes), in `requirements.txt`.
   the tumbler is ~70 / ~79.7 mm there on the retailer numbers). That leaves about 2 mm per side at the floor and ~2.8 mm at the rim for a tumbler that is bigger than the listing, and the tumbler can tip ~2° without binding. Side effects: the cup axis moves out from 84.0 to **85.9 mm** from the rail (the strut and latch gaps get bigger),
   the module is 115.7 mm long (was 112.1; the zone checks still pass), and the cup is a little looser. All checks still 0 (tumbler, rail, clip, strut, latch zones), watertight, overhang 42 mm². The vent hole stays (it also drains water). The dovetail and clip are unchanged. Needs a module reprint.
   If it still drags the module up: a dovetail retention (detent or magnets). If it rattles: set `pocket_clearance` to 3.
+- **2026-11-04 (v8.3, tighter dovetail):** Owner: "I bet we could make the dovetail a little tighter" (the module riding up with the tumbler). **`dt_clear` 0.35 → 0.20 mm per side**, which narrows the module's groove only: the clip's tongue is exact and its boss is
+  held at the old width (new `dt_boss_clear` = 0.35), so **the clip files are byte-identical and only the module needs a reprint**. The pad's front face keeps its 0.35 mm gap to the boss (the 45° flanks do the locating; a first try that shrank that gap too made the pad touch the clip's slightly proud boss,
+  6.8 mm³). Checked at full resolution: seat contact 0.002 cm³ (same as before), the module lifts off with no overlap above ~10 mm. **A tighter clearance on a 45° flank only helps if the printed parts actually touch lightly:** at 0.20 a good print may still be loose. So the test set is now one tongue plate + three groove blocks
+  at **0.30 / 0.20 / 0.10** (replaces the single groove test). Pick the tightest that slides by hand. If even 0.10 doesn't stop the module riding up, the cup pocket (v8.2) or a detent/magnets are the next steps.

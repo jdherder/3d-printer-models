@@ -107,18 +107,23 @@ def keepout_ghost(p):
     return trimesh.util.concatenate(boxes)
 
 
-def dovetail_tests(p):
-    """Two short exact pieces to test the sliding fit only, printed flat: a plate with the tongue, and a block with the groove."""
+def dovetail_tests(p, clearances=(0.30, 0.20, 0.10)):
+    """Short exact pieces to test the sliding fit only, printed flat: one plate with the tongue, and one groove block per clearance
+    (per side). 0.35 was the first test; the full parts are now at p.dt_clear."""
     wr, h = p.dt_w_root / 2, p.dt_h
     x0 = p.dt_x0
     plate = ShapelyPolygon([(-30, x0 - 5), (30, x0 - 5), (30, x0), (-30, x0)])
     tongue = ShapelyPolygon([(-wr, x0 - 1), (wr, x0 - 1), (wr, x0), (wr + h, x0 + h), (-wr - h, x0 + h), (-wr, x0)])
     tongue_piece = prism_z(list(plate.union(tongue).exterior.coords)[:-1], 0.0, DOVETAIL_TEST_H)
-    block = prism_z([(-30, p.pad_front), (30, p.pad_front), (30, p.pad_front + 12), (-30, p.pad_front + 12)], 0.0, DOVETAIL_TEST_H)
-    y0, y1 = x0 - 0.5, p.tongue_tip
-    groove = prism_z([(-p.dt_half_width(y0), y0), (p.dt_half_width(y0), y0), (p.dt_half_width(y1), y1), (-p.dt_half_width(y1), y1)],
-                     -1.0, DOVETAIL_TEST_H + 1.0)
-    return tongue_piece, boolean_difference(block, [groove])
+    grooves = {}
+    for c in clearances:
+        q = replace(p, dt_clear=c)
+        block = prism_z([(-30, q.pad_front), (30, q.pad_front), (30, q.pad_front + 12), (-30, q.pad_front + 12)], 0.0, DOVETAIL_TEST_H)
+        y0, y1 = x0 - 0.5, q.tongue_tip
+        groove = prism_z([(-q.dt_half_width(y0), y0), (q.dt_half_width(y0), y0), (q.dt_half_width(y1), y1), (-q.dt_half_width(y1), y1)],
+                         -1.0, DOVETAIL_TEST_H + 1.0)
+        grooves[c] = boolean_difference(block, [groove])
+    return tongue_piece, grooves
 
 
 def strut_grip_test(p):
@@ -174,9 +179,12 @@ def main():
     clip_info["supports"] = ("needed under the strut grip and leg: with the ring axis vertical the grip tunnel runs ~31 deg above horizontal, "
                              "so its ceiling and the leg underside overhang. Use normal (auto) supports, 'support on build plate + model'; "
                              "the ring, mouth and dovetail print without")
-    tongue_t, groove_t = dovetail_tests(p)
+    tongue_t, groove_ts = dovetail_tests(p)
     _, tongue_info = export_print("wagon-dovetail-test-tongue", tongue_t)
-    _, groove_info = export_print("wagon-dovetail-test-groove", groove_t)
+    groove_info = {}
+    for c, g in groove_ts.items():
+        _, groove_info[f"{c:.2f}_mm_per_side"] = export_print(f"wagon-dovetail-test-groove-{c:.2f}", g)
+    (OUT / "wagon-dovetail-test-groove.stl").unlink(missing_ok=True)
     grip = strut_grip_test(p)
     assert grip.is_watertight, "strut grip test is not watertight"
     grip.export(OUT / "wagon-strut-grip-test.stl")
