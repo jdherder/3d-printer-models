@@ -30,6 +30,7 @@ feel unnatural... it could all just flow together more seamlessly").
 - [x] Printed the v7 clip: "worked really well", the grip fit the strut nicely, but it **un-snapped from the strut under a full cup**. v7.1 (deeper lips, thicker walls) **still didn't hold** a full cup
 - [x] **v8 built: the strut grip is flipped** so the closed wall of the C faces the cup and the mouth faces the bar. The cup's pull now presses the strut into a solid wall. Same ring, dovetail and module (printed module still fits)
 - [x] Owner report: lifting the tumbler out sometimes lifts the whole module off the dovetail and it "sticks" to the cup. **Added a 10 mm vent hole through the pocket floor** (module reprint, or drill the printed one)
+- [x] Owner thinks the sticking is the tumbler **wedging in the tapered pocket**, not suction. **v8.2: pocket opened up** (floor clearance 2 → 4 mm on the diameter, plus a draft that adds 0.02 mm per mm of height, so 85.4 mm at the rim). The vent hole stays
 - [ ] **Print `wagon-strut-grip-test.stl`** (v8: three C-clips, lips 1.2 / 1.6 / 2.0 mm = 16 / 20 / 24 mm tall), check which goes on by hand and stays on, then print the full v8 clip (with supports)
 - [ ] **Owner: check the arm side** (see "How it works") and that the strut gap looks right (nominal 5.5 mm, could be 4 to 7)
 - [ ] Print the full clip **with supports** (see "Print settings"), try it on the wagon with a full cup, fold the handle
@@ -95,7 +96,7 @@ frame. Take both off to fold; the cup can stay in the clip and come off with it.
 4. **What hit when the old clip blocked folding?** Does anything else foul when the handle folds (e.g. the leg against the latch)?
 5. **Does the strut slope in under the cup?** The cup base is 60 mm below the bar axis; the model checks this against the 59° line with 0 overlap.
 6. Does the owner's tumbler have a handle? Is its base edge rounded? (The ghost tumbler assumes a 3.5 mm base-edge radius.)
-7. **Does the module still lift off with the tumbler after the vent hole?** If so the next step is a light retention on the dovetail (a click detent, or two small magnets in the boss and pad), or a roomier pocket (`pocket_clearance` 2 → 3 mm) in case the tumbler wedges in the taper.
+7. **Does the tumbler now lift out without bringing the module with it?** (Pocket 74 mm at the floor, 85.4 mm at the rim.) If it still does, the next step is a light retention on the dovetail (a click detent, or two small magnets in the boss and pad). Is the tumbler too loose now?
 
 ## Pipeline
 
@@ -108,7 +109,7 @@ frame. Take both off to fold; the cup can stay in the clip and come off with it.
    module/rail, module/tumbler, clip/rail, clip/tumbler, clip/strut, module/strut, both vs the latch zones (all must be ~0).
 
 Key parameters (`CupHolderParams` in `model.py`): `bar_d`, `clip_wall`, `clip_len`, `mouth_width`, `dt_clear`, `strut_gap_in`, `strut_slope`, `grip_clearance`, `grip_x`, `inboard_gap`, `floor_drop`, `pocket_depth`, `cup_*`,
-`pocket_clearance`, `stem_half_w`, `blend_k` (how soft the stem-to-cup blend is), `top_round_k`, `pad_stem_k`, `base_chamfer`, `voxel`.
+`pocket_clearance`, `pocket_draft`, `stem_half_w`, `blend_k` (how soft the stem-to-cup blend is), `top_round_k`, `pad_stem_k`, `base_chamfer`, `voxel`.
 Needs `scikit-image` (marching cubes), in `requirements.txt`.
 
 ## Files
@@ -234,3 +235,8 @@ Needs `scikit-image` (marching cubes), in `requirements.txt`.
 - **2026-11-04 (vent hole):** Owner: **lifting the cup out sometimes brings the whole cup holder off the dovetail, and it "sticks" to the cup.** Likely cause (not confirmed): the pocket is closed at the bottom, so the tumbler's flat base seals against the floor and suction
   (plus friction in the taper) lifts the ~80 g module, which is held only by gravity. **Fix: a 10 mm vent hole through the floor on the cup axis** (`vent_d`). Module is still one watertight body (now genus 1), overhang unchanged (41.9 mm²), 0 interference with the tumbler,
   clip, rail and strut. The dovetail and the clip are unchanged. The module needs a reprint, or **drill a 10 mm hole through the middle of the floor of the printed one to test it first**. If it still lifts the module, next options are a dovetail retention (detent or magnets) or a looser pocket.
+- **2026-11-04 (v8.2, pocket opened up):** Owner is pretty sure the sticking is **wedging**: the tumbler jams in the pocket and lifts the (gravity-held) module with it. The pocket followed the retailer taper with only 1 mm of room per side at every height, so a tumbler a
+  little bigger than the listing (or tilted as it is lifted) binds. **Changes (module only):** `pocket_clearance` 2.0 → **4.0 mm** on the diameter at the floor, and new `pocket_draft` **0.02 mm per mm** of height, so the pocket is 74.0 mm at the floor and 85.4 mm at the rim (was 72 / 81.7 at the same heights:
+  the tumbler is ~70 / ~79.7 mm there on the retailer numbers). That leaves about 2 mm per side at the floor and ~2.8 mm at the rim for a tumbler that is bigger than the listing, and the tumbler can tip ~2° without binding. Side effects: the cup axis moves out from 84.0 to **85.9 mm** from the rail (the strut and latch gaps get bigger),
+  the module is 115.7 mm long (was 112.1; the zone checks still pass), and the cup is a little looser. All checks still 0 (tumbler, rail, clip, strut, latch zones), watertight, overhang 42 mm². The vent hole stays (it also drains water). The dovetail and clip are unchanged. Needs a module reprint.
+  If it still drags the module up: a dovetail retention (detent or magnets). If it rattles: set `pocket_clearance` to 3.

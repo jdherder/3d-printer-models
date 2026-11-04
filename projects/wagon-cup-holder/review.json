@@ -1,6 +1,6 @@
 {
   "page_title": "Wagon Cup Holder",
-  "title": "Wagon cup holder: v8.1, vented cup pocket",
+  "title": "Wagon cup holder: v8.2, roomier cup pocket",
   "subtitle": "Ring on the side rail + a C-grip on the angled strut whose closed wall faces the cup \u00b7 no screw \u00b7 a full cup pushes the grip on tighter \u00b7 shown assembled in its real orientation (rail left to right) \u00b7 millimetres",
   "meshes": [
     {
@@ -86,5 +86,5 @@
   ],
   "scale_note": "Real size, shown assembled in its real orientation: the rail runs left to right, the cup stands upright and hangs off the outside of it. The rail is your 22.3 mm tube; the angled strut is your 13.5 mm square bar, drawn as a straight line at ~59\u00b0 from the tape photos (so it is accurate to roughly a few mm). The gap between the rail and the strut is the least certain number (4 to 7 mm, drawn at 5.5). The tumbler is from retailer listings. The wireframe blocks are the red latch zones (approximate).",
   "notes_title": "What changed, and what to check",
-  "notes": "v8.1: lifting the tumbler out sometimes brought the whole module off the dovetail with it. The pocket is closed at the bottom, so the tumbler's base can suck onto the floor. I added a 10 mm vent hole through the floor to break the suction (and drain rain). Only the cup module changes; the clip is as in v8. To test without a reprint, drill a 10 mm hole through the middle of the floor of your printed module. Please check: (1) does the module still lift off with the cup? (2) the grip test and the full v8 clip, as before (see the v8 notes in the README)."
+  "notes": "v8.2: lifting the tumbler out sometimes brought the whole module with it. You think the tumbler wedges in the pocket, and that fits: the pocket followed the retailer taper with only 1 mm of room per side. The pocket is now 74 mm across at the floor (was 72) and opens up toward the rim (85.4 mm, was 81.7), so a slightly bigger or tilted tumbler can't bind. The cup moves out 1.9 mm and the module is 3.6 mm longer along the rail. The vent hole stays. Only the cup module changes; the clip is as in v8. Please check: (1) does the tumbler lift out cleanly now? (2) is it too loose or rattly? (3) the clip grip test and the full v8 clip, as before (see the README)."
 }

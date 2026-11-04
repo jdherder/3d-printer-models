@@ -66,7 +66,8 @@ class CupHolderParams:
     cup_base_d: float = 70.0        # 2.75 in base
     cup_top_d: float = 89.0         # 3.5 in at the lid, the widest point
     cup_h: float = 165.0            # base to the widest point, sets the taper
-    pocket_clearance: float = 2.0   # on the diameter, at every height
+    pocket_clearance: float = 4.0   # on the diameter, at the floor (v8.2: was 2.0, the tumbler wedged in the taper)
+    pocket_draft: float = 0.02      # extra diameter per mm of height, so the pocket opens up toward the rim and the tumbler can't bind when lifted out
     pocket_depth: float = 84.0      # how far up the cup the pocket holds it. Sets the rim, which is also the top of the pad
     cup_wall: float = 3.2
     floor_t: float = 6.5
@@ -139,7 +140,7 @@ class CupHolderParams:
     def pocket_r(self, depth: float) -> float:
         """Inner radius of the pocket `depth` mm above the floor."""
         taper = (self.cup_top_d - self.cup_base_d) / self.cup_h
-        return (self.cup_base_d + taper * depth + self.pocket_clearance) / 2
+        return (self.cup_base_d + taper * depth + self.pocket_clearance + self.pocket_draft * depth) / 2
 
     def r_in(self, z: float) -> float:
         return self.pocket_r(z - self.floor_y)
