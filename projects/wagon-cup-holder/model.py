@@ -70,6 +70,7 @@ class CupHolderParams:
     pocket_depth: float = 84.0      # how far up the cup the pocket holds it. Sets the rim, which is also the top of the pad
     cup_wall: float = 3.2
     floor_t: float = 6.5
+    vent_d: float = 10.0            # round vent hole through the pocket floor (breaks the suction when the cup is lifted out, and drains rain)
     floor_drop: float = 60.0        # cup base this far below the rail axis
 
     # --- Where the module sits ---
@@ -282,7 +283,9 @@ def build_module(p: CupHolderParams | None = None) -> trimesh.Trimesh:
     y0, y1 = p.dt_x0 - 0.5, p.tongue_tip
     groove = prism_z([(-p.dt_half_width(y0), y0), (p.dt_half_width(y0), y0),
                       (p.dt_half_width(y1), y1), (-p.dt_half_width(y1), y1)], -80.0, p.top_z + 10.0)
-    return boolean_difference(mesh, [groove])
+    vent = trimesh.creation.cylinder(radius=p.vent_d / 2, height=p.floor_t + 4.0, sections=64)
+    vent.apply_translation([0.0, p.cup_axis_y, p.floor_y - p.floor_t / 2])                      # through the floor, on the cup axis
+    return boolean_difference(mesh, [groove, vent])
 
 
 # ---------------------------------------------------------------------------------------------------------

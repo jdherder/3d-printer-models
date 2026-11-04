@@ -21,11 +21,11 @@
       87.7,
       90.5
     ],
-    "faces": 86938,
+    "faces": 87100,
     "watertight": true,
     "winding_consistent": true,
-    "euler_number": 2,
-    "volume_cm3": 144.2,
+    "euler_number": 0,
+    "volume_cm3": 143.7,
     "fits_A1_as_is": true,
     "overhang_area_over_45deg_mm2": 41.9
   },
@@ -104,6 +104,7 @@
     "pocket_depth": 84.0,
     "cup_wall": 3.2,
     "floor_t": 6.5,
+    "vent_d": 10.0,
     "floor_drop": 60.0,
     "inboard_gap": 40.0,
     "safe_window": 120.0,

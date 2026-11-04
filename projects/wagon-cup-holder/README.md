@@ -29,6 +29,7 @@ feel unnatural... it could all just flow together more seamlessly").
 - [x] **v7 built: two-point clip** (ring + leg + strut C-grip, no screw). 0 interference with rail, strut, tumbler, latch zones. The module is unchanged (the printed one still fits)
 - [x] Printed the v7 clip: "worked really well", the grip fit the strut nicely, but it **un-snapped from the strut under a full cup**. v7.1 (deeper lips, thicker walls) **still didn't hold** a full cup
 - [x] **v8 built: the strut grip is flipped** so the closed wall of the C faces the cup and the mouth faces the bar. The cup's pull now presses the strut into a solid wall. Same ring, dovetail and module (printed module still fits)
+- [x] Owner report: lifting the tumbler out sometimes lifts the whole module off the dovetail and it "sticks" to the cup. **Added a 10 mm vent hole through the pocket floor** (module reprint, or drill the printed one)
 - [ ] **Print `wagon-strut-grip-test.stl`** (v8: three C-clips, lips 1.2 / 1.6 / 2.0 mm = 16 / 20 / 24 mm tall), check which goes on by hand and stays on, then print the full v8 clip (with supports)
 - [ ] **Owner: check the arm side** (see "How it works") and that the strut gap looks right (nominal 5.5 mm, could be 4 to 7)
 - [ ] Print the full clip **with supports** (see "Print settings"), try it on the wagon with a full cup, fold the handle
@@ -48,6 +49,7 @@ feel unnatural... it could all just flow together more seamlessly").
 - The cup **module** has the matching groove (0.35 mm clearance per side). It **drops straight down onto the tongue** and rests on the tops of the clip's ears, so **gravity holds it seated**. To remove it, lift it ~28 mm.
 - To fold the wagon: lift the cup off, then pull the clip off the bar and strut in one motion (or leave the cup on and lift both off together).
 - The cup is a **tapered ring** that follows the Yeti's taper, closed at the bottom, open at the top. A slim **stem** sweeps from its inboard side back to the dovetail pad. The rim, the stem and the pad all end in one **flat top plane**.
+- **Vent hole:** a 10 mm hole through the middle of the pocket floor (`vent_d`) lets air in under the tumbler's base when it is lifted out, so it can't suck the module up with it. It also drains rain. Prints fine (vertical hole).
 - **No detent yet.** To lift off, the module has to move up 28 mm; a wagon bump is very unlikely to do that. If it hops in testing, add a click detent or a lanyard.
 
 ### How it's made (v6)
@@ -93,7 +95,7 @@ frame. Take both off to fold; the cup can stay in the clip and come off with it.
 4. **What hit when the old clip blocked folding?** Does anything else foul when the handle folds (e.g. the leg against the latch)?
 5. **Does the strut slope in under the cup?** The cup base is 60 mm below the bar axis; the model checks this against the 59° line with 0 overlap.
 6. Does the owner's tumbler have a handle? Is its base edge rounded? (The ghost tumbler assumes a 3.5 mm base-edge radius.)
-7. Is a click detent wanted for the cup, or is gravity enough?
+7. **Does the module still lift off with the tumbler after the vent hole?** If so the next step is a light retention on the dovetail (a click detent, or two small magnets in the boss and pad), or a roomier pocket (`pocket_clearance` 2 → 3 mm) in case the tumbler wedges in the taper.
 
 ## Pipeline
 
@@ -229,3 +231,6 @@ Needs `scikit-image` (marching cubes), in `requirements.txt`.
   leg plate is gone (it would have blocked the new mouth); instead a **diagonal arm** (16 mm wide, Y 12.9–24 mm) runs from under the ring's outboard ear down and toward the pivot to the grip's up-slope side wall, staying on the ring side of the strut so it never crosses it.
   Install motion: in toward the wagon (strut into the mouth), then down along the strut until the ring clicks onto the bar from above. Checks all pass: clip vs strut/rail/tumbler/latch zones 0, module vs strut 0, module vs clip 0.002 cm³ (contact). Gap sensitivity: a 7 mm gap would need ~1.7° of rotation
   (the outer wall then sits against the strut face instead). Overhang 646 mm² (supports on). Grip test rebuilt (lips 1.2 / 1.6 / 2.0, mouth toward you). Not yet tested on the wagon. Next: owner prints the grip test, then the full clip.
+- **2026-11-04 (vent hole):** Owner: **lifting the cup out sometimes brings the whole cup holder off the dovetail, and it "sticks" to the cup.** Likely cause (not confirmed): the pocket is closed at the bottom, so the tumbler's flat base seals against the floor and suction
+  (plus friction in the taper) lifts the ~80 g module, which is held only by gravity. **Fix: a 10 mm vent hole through the floor on the cup axis** (`vent_d`). Module is still one watertight body (now genus 1), overhang unchanged (41.9 mm²), 0 interference with the tumbler,
+  clip, rail and strut. The dovetail and the clip are unchanged. The module needs a reprint, or **drill a 10 mm hole through the middle of the floor of the printed one to test it first**. If it still lifts the module, next options are a dovetail retention (detent or magnets) or a looser pocket.
