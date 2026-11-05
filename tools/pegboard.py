@@ -50,8 +50,8 @@ DEFAULT_BOARD = BOARDS["white_3_16"]    # the owner's board: what every catalog 
 @dataclass(frozen=True)
 class PegStyle:
     """Peg geometry. Defaults come from the owner's steel hook, with the diameter tuned by test prints."""
-    d: float = 5.9           # peg diameter. The steel wire is 5.53 (caliper), but printed at 5.53 the pegs were a little loose
-                             # in the owner's 6.35 mm holes (test print 2026-11-05). 5.9 leaves ~0.2 mm per side
+    d: float = 6.1           # peg diameter. The steel wire is 5.53 (caliper). Printed at 5.53, then 5.9, the pegs were still loose
+                             # in the owner's ~6.35 mm holes (test prints 2026-11-05). Settle it with the peg gauge (pegboard-fit-test)
     hook_gap: float = 7.3    # clear space from the board's front face to the inside of the hook's rising leg (max board thickness)
     hook_rise: float = 14.0  # the hook leg's top end, above the hole centre
     bend_r: float = 4.5      # centreline radius of the hook's bend
@@ -145,7 +145,7 @@ def lay_on_side(solid, style: PegStyle, flat: float = 0.4, z_peg: float = 0.0):
 # Board meshes and fit checks (trimesh, board frame)
 # --------------------------------------------------------------------------------------------------------------------
 
-FIT_CLEARANCE = 0.2   # mm per side a part must clear the holes by (printed pegs come out a little fat)
+FIT_CLEARANCE = 0.1   # mm per side a part must clear the holes by. Was 0.2, but the owner's printed pegs came out loose, not fat
 
 
 def board_mesh(board: Board, rows=range(-1, 3), cols=range(-1, 2), sections: int = 32,

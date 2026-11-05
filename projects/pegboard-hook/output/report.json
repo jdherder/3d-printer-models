@@ -1,16 +1,16 @@
 {
-  "scale_status": "measured (steel wire caliper 5.53 mm, printed at 5.9; profile from tape-scaled photos, about +-1 mm; S-jog fitted to the board)",
+  "scale_status": "measured (steel wire caliper 5.53 mm, printed thicker per PegStyle.d; profile from tape-scaled photos, about +-1 mm; S-jog 12 deg, as first printed)",
   "print": {
     "extents_mm": [
-      57.4,
-      52.6,
-      5.5
+      57.6,
+      54.2,
+      5.7
     ],
-    "faces": 21064,
+    "faces": 21046,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 2,
-    "volume_cm3": 2.9,
+    "volume_cm3": 3.0,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
@@ -21,14 +21,13 @@
     "hole_d": 6.35,
     "thickness": 3.94,
     "pitch": 25.4,
-    "clearance_checked_per_side": 0.2,
-    "interference_mm3": 0.0
+    "flush_hang_overlap_mm3": 3.03
   },
   "params_mm": {
-    "wire_d": 5.9,
-    "pin_d": 5.9,
-    "bend_r": 3.0,
-    "jog_angle_deg": 0.0,
+    "wire_d": 6.1,
+    "pin_d": 6.1,
+    "bend_r": 3.5,
+    "jog_angle_deg": 12.0,
     "jog_pitch": 25.4,
     "jog_cross_depth": 2.0,
     "jog_back_x": -12.85,
@@ -42,20 +41,20 @@
     "print_flat": 0.4,
     "jog_front": [
       0.0,
-      38.4
+      37.33
     ],
     "jog_back": [
       -12.85,
-      38.4
+      40.06
     ],
     "tip_top": [
       -12.85,
-      50.4
+      52.06
     ],
     "arm_length": 42.0,
     "arm_angle_deg": 12.6,
     "arm_reach_from_board": 44.0,
-    "board_gap_behind_back_leg": 6.9,
-    "pin_protrusion": 6.9
+    "board_gap_behind_back_leg": 6.8,
+    "pin_protrusion": 6.8
   }
 }

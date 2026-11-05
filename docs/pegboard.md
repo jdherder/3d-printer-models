@@ -8,8 +8,8 @@ Each part is its own project, named **`projects/pegboard-<thing>/`**. Add a row 
 
 | Part | What it is | Pegs | Print | Status |
 |---|---|---|---|---|
-| [pegboard-fit-test](../projects/pegboard-fit-test/) | Plate with one hook peg + one pin. **Print first** to check the shared pegs on the real board | shared | PETG, on its side, no supports | v2 (5.9 mm pegs, rounded plate top); reprint to confirm |
-| [pegboard-hook](../projects/pegboard-hook/) | Copy of the owner's steel hook (42 mm arm), printed at 5.9 mm wire. The reference the peg sizes came from. Its S-bend is levelled to pass the owner's holes | its own wire (S-bend) | PETG, on its side, no supports | Printed v4 (worked, a little loose); v5 fatter, reprint |
+| [pegboard-fit-test](../projects/pegboard-fit-test/) | Plate with one hook peg + one pin. **Print first** to check the shared pegs on the real board | shared | PETG, on its side, no supports | v3: 6.1 mm pegs + **peg gauge** (6.0–6.4 mm) to pick the final size |
+| [pegboard-hook](../projects/pegboard-hook/) | Copy of the owner's steel hook (42 mm arm), printed at 6.1 mm wire, with a 12° S-bend (it rocks in easily). The reference the peg sizes came from | its own wire (S-bend) | PETG, on its side, no supports | v6: 12° S-bend restored (v5's level step was hard to get in), 6.1 mm wire |
 
 ### Adding a part
 
@@ -48,7 +48,7 @@ The part's back face sits on x = 0, and its body is built out in +x.
 
 | Field | Default | Meaning |
 |---|---|---|
-| `d` | 5.9 | Peg diameter. The steel wire is 5.53, but printed at that size the pegs were a little loose in 6.35 mm holes. 5.9 leaves ~0.2 mm per side |
+| `d` | 6.1 | Peg diameter. The steel wire is 5.53. Prints at 5.53 and 5.9 were loose in the owner's holes. Pick the final size with the peg gauge |
 | `hook_gap` | 7.3 | Clear space behind the front face for the board. It must exceed the board thickness |
 | `hook_rise` | 14.0 | How high the hook's rising leg reaches above the hole centre |
 | `bend_r` | 4.5 | Centreline radius of the hook's bend |
@@ -59,14 +59,15 @@ The part's back face sits on x = 0, and its body is built out in +x.
 - `mount_plate(style, cols, rows, thickness)`: a back plate with hooks in the top row of holes and pins in the bottom row. Build the part's body on its front face (x = thickness).
 - `style.check(board)`: lists the problems if the pegs won't fit that board.
 
-On the owner's board the default pegs have ~0.2 mm clearance per side in the holes and 3.4 mm of room behind the board.
+Fit checks keep `FIT_CLEARANCE` = 0.1 mm per side. The owner's printed pegs come out loose rather than fat.
 
 **Rocking in:** a part goes on by rocking around its hooks, so anything on the board above the hooks swings into the board.
 `mount_plate` stops the plate just above the hooks and rounds its top back edge (the first fit test, with 8 mm of plate above
 the hook, was harder to put on). Keep a part's body clear of the board above its hook row, or round it the same way.
 
-**Slopes through the hole don't fit:** with 5.9 mm pegs in 6.35 mm holes, a peg has to pass through the board level.
-That's why the hook's S-bend is now a level step.
+**The flush check is strict for sloped wires.** `interference_mm3` assumes the part hangs perfectly flush. Straight pegs like
+`hook_peg` must pass it. A sloped wire like the steel hook's S-bend fails it, yet rocks in fine and goes in more easily than a level
+step (owner's prints, v4 vs v5). For those, report the overlap and trust a test print.
 
 To hang a part, tilt it, push the hook tips up through the holes, then swing the bottom in until the pins drop into place.
 Use at least two holes of vertical span (a hook row above a pin row). For anything heavy or wide, put hooks in two or more columns.
@@ -89,7 +90,8 @@ pb.to_zup(board).export("renders/ref-pegboard.stl")
   So it suits parts whose pegs are all in one column, or parts designed so the peg column sits on the bed.
 - With pegs in more than one column, some pegs won't touch the bed when it lies on its side. Either accept supports
   under those pegs, or make the pegs a separate printed or steel piece.
-- PETG by default. Plastic pegs at 5.9 mm are fine for light and medium loads (tools, cables, small bins).
+- PETG by default. Plastic pegs at ~6 mm are fine for light and medium loads (tools, cables, small bins).
   For heavy loads, add more peg columns or a wider plate rather than bigger pegs. The hole caps the peg size.
 - **First, print `projects/pegboard-fit-test/output/pegboard-fit-test.stl`** (a plate with one hook and one pin) and hang it on
-  the real board. If it's loose or tight, adjust `PegStyle` in one place and every part follows.
+  the real board. If it's loose or tight, print the **peg gauge** (`pegboard-peg-gauge.stl`, labelled pins 6.0–6.4 mm), pick the snuggest pin that
+  still goes in by hand, and set `PegStyle.d` to it. Every part follows.

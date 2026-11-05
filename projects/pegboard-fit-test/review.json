@@ -10,6 +10,12 @@
       "color": "#5b8fd9"
     },
     {
+      "path": "renders/asm-peg-gauge.stl",
+      "label": "Peg gauge: pins 6.0 / 6.1 / 6.2 / 6.3 / 6.4 mm",
+      "style": "solid",
+      "color": "#7aa36a"
+    },
+    {
       "path": "renders/ref-pegboard.stl",
       "label": "Your board: Menards 3/16\" white (6.35 mm holes, 3.94 mm thick)",
       "style": "solid",
@@ -42,7 +48,7 @@
       "param": "pitch"
     }
   ],
-  "scale_note": "Real size. Pegs are 5.9 mm (your steel hook's wire is 5.53; the first print at 5.53 was a little loose). The board uses your measured 1/4\" holes on 1\" centres; its thickness is the listing's 0.155\".",
+  "scale_note": "Real size. Pegs are 6.1 mm (your steel hook's wire is 5.53; prints at 5.53 and 5.9 were loose). The board uses your measured 1/4\" holes on 1\" centres; its thickness is the listing's 0.155\".",
   "notes_title": "What to check",
-  "notes": "v2, after your first print: the pegs go from 5.53 to 5.9 mm (about 0.2 mm per side in your 6.35 mm holes), and the plate now stops just above the hook with its top back edge rounded, so it rocks on like the steel hook instead of the plate catching the board. Check when you reprint: (1) snug now, but still easy to push in? (2) easier to put on? If it's now too tight, the peg size is one number (PegStyle.d in tools/pegboard.py)."
+  "notes": "v3: pegs go from 5.9 to 6.1 mm, and there's a new peg gauge (green): a strip with straight pins at 6.0, 6.1, 6.2, 6.3 and 6.4 mm, each labelled. Its pins are spaced off the 1\" grid so you try each in a hole on its own. Print it with the same filament and settings as your parts, then tell me the snuggest pin that still goes in by hand. That becomes the peg size for every catalog part."
 }

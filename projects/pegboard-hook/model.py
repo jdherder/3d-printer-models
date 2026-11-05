@@ -29,15 +29,17 @@ from build123d import (Axis, Box, BuildLine, BuildPart, BuildSketch, Circle, Cyl
 class HookParams:
     wire_d: float = 5.53              # caliper (owner)
     pin_d: float = 5.53               # looks like the same wire in the photos (~5.5 mm)
-    bend_r: float = 3.0               # centreline bend radius at every corner (tight, like bent steel). 4.5 looked closer to the
-                                      # photo, but its bend at the front of the jog reached into the hole and blocked the fit
+    bend_r: float = 3.5               # centreline bend radius at every corner (tight, like bent steel). Must stay above the
+                                      # wire radius or the inside of the bend folds over itself (6.1 mm wire -> inner radius 0.45)
 
     # The S-jog is defined by what it must do: pass through the hole one pitch above the pin's hole.
     # Its straight part crosses the hole-centre height `jog_cross_depth` behind the board's front face, at `jog_angle_deg`.
     # (As traced, the jog was ~26 deg with its front corner 3.3 mm lower, which can't hang flush on a 1 in grid:
     # the wire's underside met the board face ~3 mm below the hole. The back corner and the top leg still match the photo.)
-    # Level (0 deg) since the owner measured 6.35 mm holes: with the printed 5.9 mm wire, any slope through the hole binds.
-    jog_angle_deg: float = 0.0
+    # 12 deg is the version the owner printed first, and it went in easily. A level (0 deg) step was tried (v5) because the
+    # flush-hang check said a sloped wire binds in 6.35 mm holes, but in the owner's test it was much harder to get in:
+    # the slope guides the hook as it rocks in. Trust the print, not the flush check, for this hook.
+    jog_angle_deg: float = 12.0
     jog_pitch: float = 25.4
     jog_cross_depth: float = 2.0      # ~mid-board for 3/16 in (3.9 mm) hardboard
     jog_back_x: float = -12.85        # behind-board leg centreline (photo)
@@ -100,6 +102,7 @@ def path_points(p: HookParams):
 
 def build_hook(p: HookParams):
     """The hook in the use frame, full round wire (no print flat)."""
+    assert p.bend_r > p.wire_r + 0.2, f"bend_r {p.bend_r} must exceed the wire radius {p.wire_r} (+0.2) or the bends self-intersect"
     pts = path_points(p)
     start_dir = (pts[1] - pts[0]).normalized()
     with BuildPart() as part:

@@ -1,7 +1,7 @@
 {
   "page_title": "Pegboard Hook",
   "title": "Pegboard hook (catalog): steel hook replica",
-  "subtitle": "Bent wire + anti-rotation pin, traced from your photos, printed at 5.9 mm \u00b7 hung on your board (1\" grid) \u00b7 X out from the board, Z up \u00b7 millimetres",
+  "subtitle": "Bent wire + anti-rotation pin, traced from your photos, printed at 6.1 mm \u00b7 hung on your board (1\" grid) \u00b7 X out from the board, Z up \u00b7 millimetres",
   "meshes": [
     {
       "path": "renders/asm-hook.stl",
@@ -49,7 +49,7 @@
       "param": "bend_r"
     }
   ],
-  "scale_note": "Real size. The shape is from your tape photo (about \u00b11 mm), except the S-bend, which is levelled to pass through your board's 6.35 mm holes. The wire is printed at 5.9 mm (your steel hook is 5.53). The board uses your measured 1/4\" holes on 1\" centres; its thickness is the listing's 0.155\".",
+  "scale_note": "Real size. The shape is from your tape photo (about \u00b11 mm), with the S-bend at 12\u00b0 as in your first print. The wire is printed at 6.1 mm (your steel hook is 5.53). The board uses your measured 1/4\" holes on 1\" centres; its thickness is the listing's 0.155\". The model may look like it touches the hole edges: that's a perfectly flush hang, and the real hook rocks in fine.",
   "notes_title": "What changed, and what to check",
-  "notes": "v5: your print of v4 was a little loose, so the wire is now 5.9 mm, about 0.2 mm clear of your 6.35 mm holes on each side. With a fatter wire in the smaller holes, any slope through the board binds, so the S-bend is now a level step. It clears your board with 0.2 mm per side to spare. Check when you reprint: (1) snug now, with no binding going on? (2) are you happy with the S-bend as a step?"
+  "notes": "v6: back to the 12\u00b0 S-bend from your first print (the level step in v5 was much harder to get in; the slope guides the hook as it rocks in), and the wire goes from 5.9 to 6.1 mm because 5.9 was still loose. Bends are a touch rounder (3.5 mm) so the thicker wire stays clean. Check when you reprint: (1) goes in as easily as the first one? (2) snug now? To settle the diameter for good, print the peg gauge in the pegboard-fit-test project."
 }

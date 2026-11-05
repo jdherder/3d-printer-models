@@ -19,24 +19,24 @@ things like keys, cables and small tools. It's also the **reference** for the sh
 - [x] Real measurements recorded (below)
 - [x] Parametric model (`model.py`, build123d), traced from the tape photo. The outline overlays
       the photo within about 1 mm (`renders/photo-overlay.png`)
-- [x] Print-ready STL + STEP: lying on its side, 0.4 mm flat on the bed side. 57.4 × 52.6 × 5.5 mm,
+- [x] Print-ready STL + STEP: lying on its side, 0.4 mm flat on the bed side. 57.6 × 54.2 × 5.7 mm,
       watertight, 0 self-intersections
-- [x] In the catalog. Hangs on the owner's board (Menards 3/16 white hardboard, `pegboard.DEFAULT_BOARD`) with
-      0.2 mm per side to spare, after levelling the S-jog (see Measurements)
+- [x] In the catalog, built for the owner's board (Menards 3/16 white hardboard, `pegboard.DEFAULT_BOARD`)
 - [x] v4 test print: printed well and hung, but a little loose in the holes
-- [ ] Reprint v5 (5.9 mm wire): snug now?
+- [x] v5 print (5.9 mm wire, level step): much harder to get in, and still loose
+- [ ] Reprint v6 (12° jog back, 6.1 mm wire). Pick the final diameter with the peg gauge (`pegboard-fit-test`)
 
 ## Measurements
 
 | Feature | Real (mm) | Source | Notes |
 |---|---|---|---|
-| Wire diameter | **5.53** steel; **printed at 5.9** | caliper; test print | The 5.53 print was a little loose in the 6.35 mm holes. Now the shared peg diameter (`PegStyle.d`) |
+| Wire diameter | **5.53** steel; **printed at 6.1** | caliper; test prints | Printed at 5.53 and at 5.9, it was loose. Follows the shared peg diameter (`PegStyle.d`) |
 | Overall (footprint × height) | 57.2 × 53.9 | tape photo | Photo reads ~57.9 × 53.9 (tip edge to arm end, top to bottom bend) |
 | Arm | 42.0 long, 12.6° up | tape photo | Reaches 43.8 mm out from the board face |
 | Behind-board leg | 12 mm tall, centre 12.85 behind the back leg | tape photo | Leaves 7.3 mm for the board |
-| S-jog | **level (0°)**, crossing the hole 25.4 above the pin | fit to the board | With a 5.9 mm wire in 6.35 mm holes, any slope binds (2° already overlaps). Earlier: 12° for the listed 7.14 mm holes. Traced at ~26° with the front corner 3.3 mm lower. That can't hang flush on a 1 in grid: the wire's underside met the board face ~3 mm below the hole. Now defined by the hole it passes through (`jog_*` in `model.py`). The back corner and top leg still match the photo |
+| S-jog | **12°**, crossing the hole 25.4 above the pin | test prints | The owner's prints are the real check. 12° went in easily. A level step (v5) was much harder, because the slope guides the hook as it rocks in. The flush-hang overlap in `report.json` is information only | Traced at ~26° with the front corner 3.3 mm lower. That can't hang flush on a 1 in grid: the wire's underside met the board face ~3 mm below the hole. Now defined by the hole it passes through (`jog_*` in `model.py`). The back corner and top leg still match the photo |
 | Pin | 13.0 above the bottom corner, sticks out 7.0 | tape photo | |
-| Bend radius | 3.0 (centreline) | fit | 4.5 looked closer to the photo, but its front jog bend reached into the hole |
+| Bend radius | 3.5 (centreline) | fit | Must exceed the wire radius (3.05 at 6.1 mm) or the bends self-intersect. 4.5 looked closer to the photo |
 
 Photo scale: `photo-2026-11-05-tape-vertical.jpg`, tape inch marks 245 px apart (9.65 px/mm). The model
 origin (bottom corner of the wire centreline) is at pixel (750, 1308). Both are in `build.py`, and the
@@ -90,3 +90,7 @@ Parameters are in `HookParams` (`model.py`). Real measurements go in `MEASURED` 
 - **2026-11-05 (v5):** The owner printed v4: it printed well and hung, but was a little loose in the holes. The owner measured the holes at
   ~0.25 in (6.35 mm) on 1 in centres, not the listings' 9/32 in. The printed wire is now 5.9 mm (shared `PegStyle.d`), and the S-jog is
   level, since any slope binds with a fatter wire in smaller holes. It clears with 0.2 mm per side to spare. The S-bend now reads as a step.
+- **2026-11-05 (v6):** The owner printed v5: the level step was much harder to get in than v4's 12° jog, and it was still loose.
+  Back to 12°, and the wire went from 5.9 to 6.1 mm (shared `PegStyle.d`). The bend radius went from 3.0 to 3.5 so the thicker wire
+  doesn't self-intersect, with a guard added. The flush-hang interference check is now information only: it predicted the wrong
+  winner, and the prints are the test. Next: the peg gauge picks the final diameter.
