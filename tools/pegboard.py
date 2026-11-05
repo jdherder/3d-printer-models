@@ -41,16 +41,17 @@ BOARDS = {
     "quarter": Board("1/4 in pegboard (1/4 in holes)", hole_d=6.35, thickness=6.35),
     "eighth": Board("1/8 in pegboard (3/16 in holes)", hole_d=4.76, thickness=3.2),
     # The owner's board (2026-11-05): Menards "3/16 x 4 x 8 White Pegboard Panel", white tempered hardboard.
-    # From retailer listings for this panel (not yet calipered): actual 0.155 in thick, 9/32 in holes on 1 in centres.
-    "white_3_16": Board("3/16 in white hardboard (owner's, Menards; listing values)", hole_d=7.14, thickness=3.94),
+    # Owner measured holes ~0.25 in on 1 in centres (listings had said 9/32 in). Thickness is still the listing's 0.155 in.
+    "white_3_16": Board("3/16 in white hardboard (owner's, Menards)", hole_d=6.35, thickness=3.94),
 }
 DEFAULT_BOARD = BOARDS["white_3_16"]    # the owner's board: what every catalog part is checked against
 
 
 @dataclass(frozen=True)
 class PegStyle:
-    """Peg geometry. Defaults are the owner's steel hook (5.53 mm wire) and suit 1/4 in board."""
-    d: float = 5.53          # peg diameter (steel hook wire, caliper)
+    """Peg geometry. Defaults come from the owner's steel hook, with the diameter tuned by test prints."""
+    d: float = 5.9           # peg diameter. The steel wire is 5.53 (caliper), but printed at 5.53 the pegs were a little loose
+                             # in the owner's 6.35 mm holes (test print 2026-11-05). 5.9 leaves ~0.2 mm per side
     hook_gap: float = 7.3    # clear space from the board's front face to the inside of the hook's rising leg (max board thickness)
     hook_rise: float = 14.0  # the hook leg's top end, above the hole centre
     bend_r: float = 4.5      # centreline radius of the hook's bend
@@ -103,16 +104,26 @@ def pin_peg(style: PegStyle, y: float = 0.0, z: float = 0.0):
 
 
 def mount_plate(style: PegStyle, cols=(0,), rows=(0, 1), thickness: float = 4.0, margin: float = 8.0,
-                z_range: tuple | None = None):
+                z_range: tuple | None = None, top_margin: float | None = None, top_round: bool = True):
     """A back plate on the front face with hooks in the top row of holes and pins in the bottom row.
     cols / rows are hole indices (z = col*PITCH, y = row*PITCH). Build the part's body on its front (x = thickness).
-    z_range overrides the plate's z extent, e.g. to make its edge flush with the pegs for printing on its side."""
-    from build123d import Box, Location
-    y0, y1 = min(rows) * PITCH - margin, max(rows) * PITCH + margin
+    z_range overrides the plate's z extent, e.g. to make its edge flush with the pegs for printing on its side.
+
+    To hang a part you rock it in around the hooks, so whatever sits on the board above the hooks swings into the board.
+    By default the plate stops just above the hook (`top_margin`, default peg radius + 0.5 mm) and its top back edge
+    is rounded (`top_round`) so it can rock in like the steel hook. Keep a part's body clear of the board above
+    the hooks for the same reason."""
+    from build123d import Axis, Box, Location, fillet
+    top = max(rows) * PITCH
+    tm = style.r + 0.5 if top_margin is None else top_margin
+    y0, y1 = min(rows) * PITCH - margin, top + tm
     z0, z1 = z_range or (min(cols) * PITCH - margin, max(cols) * PITCH + margin)
     plate = Box(thickness, y1 - y0, z1 - z0).locate(Location((thickness / 2, (y0 + y1) / 2, (z0 + z1) / 2)))
+    if top_round:
+        edge = min(plate.edges().filter_by(Axis.Z), key=lambda e: (e.center().X, -e.center().Y))
+        plate = fillet(edge, radius=min(thickness, tm) - 0.3)
     for c in cols:
-        plate = plate + hook_peg(style, max(rows) * PITCH, c * PITCH)
+        plate = plate + hook_peg(style, top, c * PITCH)
         if min(rows) != max(rows):
             plate = plate + pin_peg(style, min(rows) * PITCH, c * PITCH)
     return plate

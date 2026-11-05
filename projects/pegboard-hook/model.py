@@ -36,7 +36,8 @@ class HookParams:
     # Its straight part crosses the hole-centre height `jog_cross_depth` behind the board's front face, at `jog_angle_deg`.
     # (As traced, the jog was ~26 deg with its front corner 3.3 mm lower, which can't hang flush on a 1 in grid:
     # the wire's underside met the board face ~3 mm below the hole. The back corner and the top leg still match the photo.)
-    jog_angle_deg: float = 12.0
+    # Level (0 deg) since the owner measured 6.35 mm holes: with the printed 5.9 mm wire, any slope through the hole binds.
+    jog_angle_deg: float = 0.0
     jog_pitch: float = 25.4
     jog_cross_depth: float = 2.0      # ~mid-board for 3/16 in (3.9 mm) hardboard
     jog_back_x: float = -12.85        # behind-board leg centreline (photo)

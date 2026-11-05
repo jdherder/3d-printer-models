@@ -11,7 +11,7 @@
     },
     {
       "path": "renders/ref-pegboard.stl",
-      "label": "Your board: Menards 3/16\" white (7.14 mm holes, 3.94 mm thick)",
+      "label": "Your board: Menards 3/16\" white (6.35 mm holes, 3.94 mm thick)",
       "style": "solid",
       "color": "#b08a5a"
     }
@@ -42,7 +42,7 @@
       "param": "pitch"
     }
   ],
-  "scale_note": "Real size. Peg sizes come from your steel hook (5.53 mm wire). The board is your Menards 3/16\" panel at retailer-listed sizes (9/32\" holes, 0.155\" thick); caliper it to confirm.",
+  "scale_note": "Real size. Pegs are 5.9 mm (your steel hook's wire is 5.53; the first print at 5.53 was a little loose). The board uses your measured 1/4\" holes on 1\" centres; its thickness is the listing's 0.155\".",
   "notes_title": "What to check",
-  "notes": "Print this before any other catalog part (PETG, on its side, no supports, about 15 minutes). Hang it: tilt it, push the hook up through a hole, swing the bottom in so the pin drops into the hole below. Check: (1) does it go on and come off like the steel hook? (2) snug, loose, or tight? On your board the pegs have 0.8 mm per side in the holes, so expect a little play; the pegs can grow to ~6.5 mm if it's sloppy. (3) does the pin seat fully? If anything is off, the peg sizes change in one place (PegStyle in tools/pegboard.py) and every catalog part follows."
+  "notes": "v2, after your first print: the pegs go from 5.53 to 5.9 mm (about 0.2 mm per side in your 6.35 mm holes), and the plate now stops just above the hook with its top back edge rounded, so it rocks on like the steel hook instead of the plate catching the board. Check when you reprint: (1) snug now, but still easy to push in? (2) easier to put on? If it's now too tight, the peg size is one number (PegStyle.d in tools/pegboard.py)."
 }

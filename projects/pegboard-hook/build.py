@@ -37,8 +37,11 @@ PHOTO = HERE / "source" / "photo-2026-11-05-tape-vertical.jpg"
 
 # --- Real measurements (owner) ---------------------------------------------------
 MEASURED = {
-    "wire_d": 5.53,     # caliper, 2026-11-05
+    "wire_d": 5.53,     # caliper, 2026-11-05 (the steel hook)
 }
+# The printed hook is fatter than the steel one: printed at 5.53 it was a little loose in the 6.35 mm holes (owner, 2026-11-05).
+# It matches the shared pegs (pegboard.PegStyle.d).
+PRINT_OVERRIDES = {"wire_d": pb.PegStyle().d, "pin_d": pb.PegStyle().d}
 
 # Photo -> model mapping used to measure the profile (photo-2026-11-05-tape-vertical.jpg, tape inch marks ~245 px apart).
 PHOTO_PX_PER_MM = 9.65
@@ -73,7 +76,7 @@ def photo_overlay(use_mesh, p: HookParams, path):
 def main():
     OUT.mkdir(exist_ok=True)
     RENDERS.mkdir(exist_ok=True)
-    p = HookParams(**MEASURED)
+    p = HookParams(**{**MEASURED, **PRINT_OVERRIDES})
 
     # ---- The steel hook replica --------------------------------------------------------------------------
     hook_use = build_hook(p)
@@ -97,7 +100,7 @@ def main():
     assert fit["interference_mm3"] == 0.0, f"hook comes within {pb.FIT_CLEARANCE} mm of the board: {fit}"
 
     report = {
-        "scale_status": "measured (wire caliper 5.53 mm; profile from tape-scaled photos, about +-1 mm)",
+        "scale_status": "measured (steel wire caliper 5.53 mm, printed at 5.9; profile from tape-scaled photos, about +-1 mm; S-jog fitted to the board)",
         "print": info,
         "print_orientation": "lying on its side, profile flat on the bed; 0.4 mm flat shaved off the bed side",
         "fit_on_board": fit,

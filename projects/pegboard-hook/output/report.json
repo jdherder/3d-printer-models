@@ -1,34 +1,34 @@
 {
-  "scale_status": "measured (wire caliper 5.53 mm; profile from tape-scaled photos, about +-1 mm)",
+  "scale_status": "measured (steel wire caliper 5.53 mm, printed at 5.9; profile from tape-scaled photos, about +-1 mm; S-jog fitted to the board)",
   "print": {
     "extents_mm": [
-      57.2,
-      54.1,
-      5.1
+      57.4,
+      52.6,
+      5.5
     ],
-    "faces": 20838,
+    "faces": 21064,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 2,
-    "volume_cm3": 2.5,
+    "volume_cm3": 2.9,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
   },
   "print_orientation": "lying on its side, profile flat on the bed; 0.4 mm flat shaved off the bed side",
   "fit_on_board": {
-    "board": "3/16 in white hardboard (owner's, Menards; listing values)",
-    "hole_d": 7.14,
+    "board": "3/16 in white hardboard (owner's, Menards)",
+    "hole_d": 6.35,
     "thickness": 3.94,
     "pitch": 25.4,
     "clearance_checked_per_side": 0.2,
     "interference_mm3": 0.0
   },
   "params_mm": {
-    "wire_d": 5.53,
-    "pin_d": 5.53,
+    "wire_d": 5.9,
+    "pin_d": 5.9,
     "bend_r": 3.0,
-    "jog_angle_deg": 12.0,
+    "jog_angle_deg": 0.0,
     "jog_pitch": 25.4,
     "jog_cross_depth": 2.0,
     "jog_back_x": -12.85,
@@ -42,20 +42,20 @@
     "print_flat": 0.4,
     "jog_front": [
       0.0,
-      37.39
+      38.4
     ],
     "jog_back": [
       -12.85,
-      40.12
+      38.4
     ],
     "tip_top": [
       -12.85,
-      52.12
+      50.4
     ],
     "arm_length": 42.0,
     "arm_angle_deg": 12.6,
-    "arm_reach_from_board": 43.8,
-    "board_gap_behind_back_leg": 7.3,
-    "pin_protrusion": 7.0
+    "arm_reach_from_board": 44.0,
+    "board_gap_behind_back_leg": 6.9,
+    "pin_protrusion": 6.9
   }
 }

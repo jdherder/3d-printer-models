@@ -15,6 +15,8 @@ Pegboard parts form a catalog, with shared pegs: see [docs/pegboard.md](docs/peg
 | [pegboard-hook](projects/pegboard-hook/) | v2: steel hook replica + fit-test piece from the shared peg interface; next: print the fit test on the real board | Baseline for custom pegboard parts (`tools/pegboard.py`, [docs](docs/pegboard.md)) |
 | [pegboard-hook](projects/pegboard-hook/) | Print-ready STL + STEP (wire 5.53 mm caliper, profile from photos); next: test print | Pegboard catalog: copy of the steel hook, the reference for the shared pegs |
 | [pegboard-fit-test](projects/pegboard-fit-test/) | Ready to print; next: hang it on the real board, caliper the board | Pegboard catalog: test piece for the shared hook peg + pin (`tools/pegboard.py`) |
+| [pegboard-hook](projects/pegboard-hook/) | v5: printed at 5.9 mm wire after v4 was a little loose; next: reprint | Pegboard catalog: copy of the steel hook, the reference for the shared pegs |
+| [pegboard-fit-test](projects/pegboard-fit-test/) | v2: 5.9 mm pegs, rounded plate top; next: reprint | Pegboard catalog: test piece for the shared hook peg + pin (`tools/pegboard.py`) |
 
 ## Layout
 

@@ -1,7 +1,7 @@
 {
   "page_title": "Pegboard Hook",
   "title": "Pegboard hook (catalog): steel hook replica",
-  "subtitle": "Bent 5.53 mm wire + anti-rotation pin, traced from your photos \u00b7 hung on your board (1\" grid) \u00b7 X out from the board, Z up \u00b7 millimetres",
+  "subtitle": "Bent wire + anti-rotation pin, traced from your photos, printed at 5.9 mm \u00b7 hung on your board (1\" grid) \u00b7 X out from the board, Z up \u00b7 millimetres",
   "meshes": [
     {
       "path": "renders/asm-hook.stl",
@@ -10,14 +10,14 @@
     },
     {
       "path": "renders/ref-pegboard.stl",
-      "label": "Your board: Menards 3/16\" white (7.14 mm holes, 3.94 mm thick)",
+      "label": "Your board: Menards 3/16\" white (6.35 mm holes, 3.94 mm thick)",
       "style": "solid",
       "color": "#b08a5a"
     }
   ],
   "dims": [
     {
-      "label": "Wire diameter (caliper)",
+      "label": "Wire diameter (printed; steel is 5.53)",
       "param": "wire_d"
     },
     {
@@ -49,7 +49,7 @@
       "param": "bend_r"
     }
   ],
-  "scale_note": "Real size. The wire is your caliper reading (5.53 mm). The shape is from your tape photo (about \u00b11 mm), except the S-bend, which is adjusted to pass through your board's holes. The board is your Menards 3/16\" panel at retailer-listed sizes (9/32\" holes, 0.155\" thick).",
+  "scale_note": "Real size. The shape is from your tape photo (about \u00b11 mm), except the S-bend, which is levelled to pass through your board's 6.35 mm holes. The wire is printed at 5.9 mm (your steel hook is 5.53). The board uses your measured 1/4\" holes on 1\" centres; its thickness is the listing's 0.155\".",
   "notes_title": "What changed, and what to check",
-  "notes": "v4: checked against your board (Menards 3/16\" white hardboard). As traced from the photo, the hook couldn't hang flush: the S-bend met the board face about 3 mm below the hole. The S-bend now passes through the hole one inch above the pin at 12\u00b0 (its front corner is 3.3 mm higher than traced, and the bends are tighter), and it clears the hole by 0.2 mm per side. Check: (1) does your steel hook sit flush against the board? If so, the photo was off at that corner and this is right. (2) Does the shape still look like your hook? Prints on its side in PETG, no supports; good for light things."
+  "notes": "v5: your print of v4 was a little loose, so the wire is now 5.9 mm, about 0.2 mm clear of your 6.35 mm holes on each side. With a fatter wire in the smaller holes, any slope through the board binds, so the S-bend is now a level step. It clears your board with 0.2 mm per side to spare. Check when you reprint: (1) snug now, with no binding going on? (2) are you happy with the S-bend as a step?"
 }
