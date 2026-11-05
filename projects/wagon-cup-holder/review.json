@@ -1,0 +1,90 @@
+{
+  "page_title": "Wagon Cup Holder",
+  "title": "Wagon cup holder: v8.3, tighter dovetail",
+  "subtitle": "Ring on the side rail + a C-grip on the angled strut whose closed wall faces the cup \u00b7 no screw \u00b7 a full cup pushes the grip on tighter \u00b7 shown assembled in its real orientation (rail left to right) \u00b7 millimetres",
+  "meshes": [
+    {
+      "path": "renders/asm-module.stl",
+      "label": "Cup module (lifts off)",
+      "style": "solid"
+    },
+    {
+      "path": "renders/asm-clip.stl",
+      "label": "Clip (ring on rail + grip on strut; pops off)",
+      "style": "solid"
+    },
+    {
+      "path": "renders/ref-bar.stl",
+      "label": "Side rail (22.3 mm)",
+      "style": "wire"
+    },
+    {
+      "path": "renders/ref-tumbler.stl",
+      "label": "Yeti 20 oz (retailer dims)",
+      "style": "wire"
+    },
+    {
+      "path": "renders/ref-strut.stl",
+      "label": "Angled strut (13.5 mm square, nominal gap 5.5 mm)",
+      "style": "wire"
+    },
+    {
+      "path": "renders/ref-keepout.stl",
+      "label": "Latch + strut zones (approx., your ~26 mm)",
+      "style": "wire"
+    }
+  ],
+  "dims": [
+    {
+      "label": "Rail diameter",
+      "param": "bar_d"
+    },
+    {
+      "label": "Clip bore",
+      "param": "bore_d"
+    },
+    {
+      "label": "Clip mouth",
+      "param": "mouth_width"
+    },
+    {
+      "label": "Clip length",
+      "param": "clip_len"
+    },
+    {
+      "label": "Dovetail engagement",
+      "param": "dovetail_engagement_mm"
+    },
+    {
+      "label": "Cup axis out from rail",
+      "param": "cup_axis_offset_from_rail"
+    },
+    {
+      "label": "Cup base below rail axis",
+      "param": "cup_base_below_rail_axis"
+    },
+    {
+      "label": "Pocket base dia",
+      "param": "pocket_base_d"
+    },
+    {
+      "label": "Pocket rim dia",
+      "param": "pocket_rim_d"
+    },
+    {
+      "label": "Latch/strut reach (from rail axis)",
+      "param": "latch_strut_reach_from_rail_axis"
+    },
+    {
+      "label": "Web clearance to latch/strut",
+      "param": "web_clearance_to_latch_strut"
+    },
+    {
+      "label": "Module margin to window ends",
+      "param": "module_clearance_to_window_ends_each_side"
+    }
+  ],
+  "scale_note": "Real size, shown assembled in its real orientation: the rail runs left to right, the cup stands upright and hangs off the outside of it. The rail is your 22.3 mm tube; the angled strut is your 13.5 mm square bar, drawn as a straight line at ~59\u00b0 from the tape photos (so it is accurate to roughly a few mm). The gap between the rail and the strut is the least certain number (4 to 7 mm, drawn at 5.5). The tumbler is from retailer listings. The wireframe blocks are the red latch zones (approximate).",
+  "notes_title": "What changed, and what to check",
+  "notes": "v8.3: the dovetail's sliding clearance on the module's groove goes from 0.35 to 0.20 mm per side. The clip is unchanged (so don't reprint it for this), only the module. A tighter fit only helps if the printed parts touch lightly, so there are now three groove test blocks (0.30 / 0.20 / 0.10) to find the tightest one that still slides on by hand. Please check: (1) which test block is tightest and still slides by hand; (2) does the module still ride up with the tumbler now? (3) the pocket (v8.2) and the clip grip test, as before."
+}

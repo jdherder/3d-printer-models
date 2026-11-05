@@ -1,0 +1,205 @@
+{
+  "dimensions_status": "Tube measured by owner (22.3 mm, confirmed on the side rail). Tumbler from retailer figures (owner OK for now).",
+  "clip": {
+    "extents_mm": [
+      81.0,
+      51.7,
+      72.1
+    ],
+    "faces": 54522,
+    "watertight": true,
+    "winding_consistent": true,
+    "euler_number": 2,
+    "volume_cm3": 51.2,
+    "fits_A1_as_is": true,
+    "overhang_area_over_45deg_mm2": 645.6,
+    "supports": "needed under the strut grip and leg: with the ring axis vertical the grip tunnel runs ~31 deg above horizontal, so its ceiling and the leg underside overhang. Use normal (auto) supports, 'support on build plate + model'; the ring, mouth and dovetail print without"
+  },
+  "module": {
+    "extents_mm": [
+      115.7,
+      91.4,
+      90.5
+    ],
+    "faces": 87050,
+    "watertight": true,
+    "winding_consistent": true,
+    "euler_number": 0,
+    "volume_cm3": 148.2,
+    "fits_A1_as_is": true,
+    "overhang_area_over_45deg_mm2": 44.3
+  },
+  "dovetail_test_tongue": {
+    "extents_mm": [
+      60.0,
+      12.0,
+      14.0
+    ],
+    "faces": 28,
+    "watertight": true,
+    "winding_consistent": true,
+    "euler_number": 2,
+    "volume_cm3": 8.2,
+    "fits_A1_as_is": true,
+    "overhang_area_over_45deg_mm2": 0.0
+  },
+  "dovetail_test_groove": {
+    "0.30_mm_per_side": {
+      "extents_mm": [
+        60.0,
+        12.0,
+        14.0
+      ],
+      "faces": 28,
+      "watertight": true,
+      "winding_consistent": true,
+      "euler_number": 2,
+      "volume_cm3": 5.9,
+      "fits_A1_as_is": true,
+      "overhang_area_over_45deg_mm2": 0.0
+    },
+    "0.20_mm_per_side": {
+      "extents_mm": [
+        60.0,
+        12.0,
+        14.0
+      ],
+      "faces": 28,
+      "watertight": true,
+      "winding_consistent": true,
+      "euler_number": 2,
+      "volume_cm3": 6.0,
+      "fits_A1_as_is": true,
+      "overhang_area_over_45deg_mm2": 0.0
+    },
+    "0.10_mm_per_side": {
+      "extents_mm": [
+        60.0,
+        12.0,
+        14.0
+      ],
+      "faces": 28,
+      "watertight": true,
+      "winding_consistent": true,
+      "euler_number": 2,
+      "volume_cm3": 6.1,
+      "fits_A1_as_is": true,
+      "overhang_area_over_45deg_mm2": 0.0
+    }
+  },
+  "strut_grip_test": {
+    "extents_mm": [
+      71.4,
+      19.8,
+      24.0
+    ],
+    "watertight": true,
+    "note": "three C-clips for the 13.5 mm square strut, 0.3 mm clearance; lips 1.2 / 1.6 / 2.0 mm = 16 / 20 / 24 mm tall; print upright"
+  },
+  "checks": {
+    "interference_module_vs_clip_cm3": 0.002,
+    "interference_module_vs_rail_cm3": 0.0,
+    "interference_module_vs_tumbler_cm3": 0.0,
+    "interference_clip_vs_rail_cm3": 0.0,
+    "interference_clip_vs_tumbler_cm3": 0.0,
+    "interference_module_vs_latch_strut_zone_cm3": 0.0,
+    "interference_clip_vs_latch_strut_zone_cm3": 0.0,
+    "interference_clip_vs_strut_cm3": 0.0,
+    "interference_module_vs_strut_cm3": 0.0
+  },
+  "params_mm": {
+    "bar_d": 22.3,
+    "bar_clearance": 0.2,
+    "clip_wall": 2.8,
+    "clip_len": 70.0,
+    "mouth_width": 20.7,
+    "ear_t": 8.0,
+    "bolt_drop": 6.5,
+    "bolt_hole_d": 4.5,
+    "head_cbore_d": 9.6,
+    "head_cbore_depth": 5.0,
+    "nut_af": 7.4,
+    "nut_depth": 5.0,
+    "lead_in": 3.5,
+    "ear_top_y": -4.0,
+    "ear_round": 4.0,
+    "dt_x0": 15.5,
+    "dt_h": 7.0,
+    "dt_w_root": 34.0,
+    "dt_clear": 0.2,
+    "dt_boss_clear": 0.35,
+    "cup_base_d": 70.0,
+    "cup_top_d": 89.0,
+    "cup_h": 165.0,
+    "pocket_clearance": 4.0,
+    "pocket_draft": 0.02,
+    "pocket_depth": 84.0,
+    "cup_wall": 3.2,
+    "floor_t": 6.5,
+    "vent_d": 10.0,
+    "floor_drop": 60.0,
+    "inboard_gap": 40.0,
+    "safe_window": 120.0,
+    "keepout_reach": 26.0,
+    "two_point": true,
+    "strut_size": 13.5,
+    "strut_gap_in": 5.5,
+    "strut_slope": 1.63,
+    "strut_icpt": -7.0,
+    "ring_x_from_pivot": 55.0,
+    "grip_x": 24.0,
+    "grip_len": 22.0,
+    "grip_wall": 3.0,
+    "grip_lip": 1.6,
+    "grip_lead": 1.6,
+    "grip_clearance": 0.3,
+    "leg_w": 16.0,
+    "arm_y_out": 24.0,
+    "leg_round": 2.5,
+    "neck_cheek": 4.0,
+    "stem_half_w": 20.0,
+    "pad_stem_k": 14.0,
+    "pad_round": 3.0,
+    "blend_k": 14.0,
+    "top_round_k": 3.0,
+    "base_chamfer": 3.0,
+    "floor_fillet": 3.0,
+    "voxel": 0.5,
+    "module_faces": 90000,
+    "clip_faces": 70000,
+    "bore_d": 22.5,
+    "snap_spread_each_lip": 0.8,
+    "clamp": "two-point: ring on the bar + a leg to a C-clip on the angled strut. No screw, nut or pockets",
+    "strut_nominal_gap_mm": 5.5,
+    "strut_gap_sensitivity": {
+      "gap_4_mm": {
+        "clip_overlap_mm3": 128.9,
+        "module_overlap_mm3": 0.0,
+        "rotation_to_follow_deg": 1.74
+      },
+      "gap_7_mm": {
+        "clip_overlap_mm3": 397.0,
+        "module_overlap_mm3": 0.0,
+        "rotation_to_follow_deg": 1.74
+      }
+    },
+    "grip_centre_depth_below_bar_axis_mm": 43.5,
+    "arm_y_out_mm": 24.0,
+    "pocket_base_d": 74.0,
+    "pocket_rim_d": 85.35,
+    "pocket_outer_rim_d": 91.75,
+    "cup_axis_offset_from_rail": 85.9,
+    "cup_base_below_rail_axis": 60.0,
+    "top_above_rail_axis": 24.0,
+    "est_cup_torque_on_clip_Nm": 0.84,
+    "tumbler_taper_mm_per_mm_dia": 0.1152,
+    "latch_strut_reach_from_rail_axis": 37.1,
+    "web_clearance_to_latch_strut": 2.9,
+    "module_clearance_to_window_ends_each_side": 14.1,
+    "clip_clearance_to_window_ends_each_side": 25.0,
+    "dovetail_engagement_mm": 28.0,
+    "dovetail_width_tip_mm": 48.0,
+    "clip_extent_below_rail_axis": 24.3,
+    "clip_extent_above_rail_axis": 24.0
+  }
+}
