@@ -2,33 +2,33 @@
   "dimensions_status": "Tube measured by owner (22.3 mm, confirmed on the side rail). Tumbler from retailer figures (owner OK for now).",
   "clip": {
     "extents_mm": [
-      81.0,
-      51.7,
+      110.3,
+      53.2,
       72.1
     ],
-    "faces": 54522,
+    "faces": 55016,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 2,
-    "volume_cm3": 51.2,
+    "volume_cm3": 53.3,
     "fits_A1_as_is": true,
-    "overhang_area_over_45deg_mm2": 645.6,
-    "supports": "needed under the strut grip and leg: with the ring axis vertical the grip tunnel runs ~31 deg above horizontal, so its ceiling and the leg underside overhang. Use normal (auto) supports, 'support on build plate + model'; the ring, mouth and dovetail print without"
+    "overhang_area_over_45deg_mm2": 1076.4,
+    "supports": "needed under the strut grip and leg: with the ring axis vertical the grip tunnel runs ~31 deg above horizontal, so its ceiling and the post's underside overhang. Use normal (auto) supports, 'support on build plate + model'; the ring, mouth and dovetail print without"
   },
   "clip_left": {
     "extents_mm": [
-      81.0,
-      51.7,
+      110.3,
+      53.2,
       72.1
     ],
-    "faces": 54522,
+    "faces": 55016,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 2,
-    "volume_cm3": 51.2,
+    "volume_cm3": 53.3,
     "fits_A1_as_is": true,
-    "overhang_area_over_45deg_mm2": 645.6,
-    "supports": "needed under the strut grip and leg: with the ring axis vertical the grip tunnel runs ~31 deg above horizontal, so its ceiling and the leg underside overhang. Use normal (auto) supports, 'support on build plate + model'; the ring, mouth and dovetail print without"
+    "overhang_area_over_45deg_mm2": 1076.4,
+    "supports": "needed under the strut grip and leg: with the ring axis vertical the grip tunnel runs ~31 deg above horizontal, so its ceiling and the post's underside overhang. Use normal (auto) supports, 'support on build plate + model'; the ring, mouth and dovetail print without"
   },
   "module": {
     "extents_mm": [
@@ -104,12 +104,12 @@
   },
   "strut_grip_test": {
     "extents_mm": [
-      71.4,
-      19.8,
+      71.7,
+      21.4,
       24.0
     ],
     "watertight": true,
-    "note": "three C-clips for the 13.5 mm square strut, 0.3 mm clearance; lips 1.2 / 1.6 / 2.0 mm = 16 / 20 / 24 mm tall; print upright"
+    "note": "three C-clips for the 13.5 mm square strut, 0.4 mm clearance + 1.5 mm slack on the closed-wall side; lips 1.2 / 1.6 / 2.0 mm = 16 / 20 / 24 mm tall; print upright"
   },
   "checks": {
     "interference_module_vs_clip_cm3": 0.002,
@@ -168,13 +168,14 @@
     "strut_gap_in": 5.5,
     "strut_slope": 1.63,
     "strut_icpt": -7.0,
-    "ring_x_from_pivot": 55.0,
+    "ring_x_from_pivot": 73.0,
     "grip_x": 24.0,
     "grip_len": 22.0,
     "grip_wall": 3.0,
-    "grip_lip": 1.6,
+    "grip_lip": 1.2,
     "grip_lead": 1.6,
-    "grip_clearance": 0.3,
+    "grip_clearance": 0.4,
+    "grip_slack_out": 1.5,
     "leg_w": 16.0,
     "arm_y_out": 24.0,
     "leg_round": 2.5,
@@ -195,17 +196,17 @@
     "strut_nominal_gap_mm": 5.5,
     "strut_gap_sensitivity": {
       "gap_4_mm": {
-        "clip_overlap_mm3": 128.9,
+        "clip_overlap_mm3": 57.5,
         "module_overlap_mm3": 0.0,
-        "rotation_to_follow_deg": 1.74
+        "rotation_to_follow_deg": 1.12
       },
       "gap_7_mm": {
-        "clip_overlap_mm3": 397.0,
+        "clip_overlap_mm3": 0.0,
         "module_overlap_mm3": 0.0,
-        "rotation_to_follow_deg": 1.74
+        "rotation_to_follow_deg": 1.12
       }
     },
-    "grip_centre_depth_below_bar_axis_mm": 43.5,
+    "grip_centre_depth_below_bar_axis_mm": 72.9,
     "arm_y_out_mm": 24.0,
     "pocket_base_d": 74.0,
     "pocket_rim_d": 85.35,
