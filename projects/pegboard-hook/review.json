@@ -1,0 +1,51 @@
+{
+  "page_title": "Pegboard Hook",
+  "title": "Pegboard hook: first model from your photos",
+  "subtitle": "Bent 5.53 mm wire + welded anti-rotation pin \u00b7 shown hanging on a 1/4\" pegboard (1\" hole grid) \u00b7 X out from the board, Z up \u00b7 millimetres",
+  "meshes": [
+    {
+      "path": "renders/asm-hook.stl",
+      "label": "Hook (round wire, as the real one)",
+      "style": "solid"
+    },
+    {
+      "path": "renders/ref-pegboard.stl",
+      "label": "1/4\" pegboard (6.35 mm holes, 1\" grid)",
+      "style": "solid",
+      "color": "#b08a5a"
+    }
+  ],
+  "dims": [
+    {
+      "label": "Wire diameter (caliper)",
+      "param": "wire_d"
+    },
+    {
+      "label": "Arm length (along the wire)",
+      "param": "arm_length"
+    },
+    {
+      "label": "Arm reach from board",
+      "param": "arm_reach_from_board"
+    },
+    {
+      "label": "Arm angle above horizontal (deg)",
+      "param": "arm_angle_deg"
+    },
+    {
+      "label": "Pin sticks into board",
+      "param": "pin_protrusion"
+    },
+    {
+      "label": "Room behind the back leg (max board thickness)",
+      "param": "board_gap_behind_back_leg"
+    },
+    {
+      "label": "Bend radius (centreline)",
+      "param": "bend_r"
+    }
+  ],
+  "scale_note": "Real size. The wire is your caliper reading (5.53 mm); every other dimension is measured off your tape photo (1 inch = 245 px), so it is good to roughly \u00b11 mm. The pegboard is a generic 1/4\" board, lined up on the pin.",
+  "notes_title": "What to check",
+  "notes": "First pass: the wire path (top leg, S-jog, back leg, arm) and the pin are traced from your tape photo; the outline overlays the photo within about a millimetre. The printable STL lies on its side with 0.4 mm shaved off the bed side for a flat first layer. Please check: (1) does the shape match the real hook? (2) the S-jog: in this model it clips the edges of a 1/4\" hole slightly, as the real hook's jog seems to in the photo. What is your board's thickness and hole size? (3) Do you want an exact plastic copy (5.5 mm plastic is much weaker than steel), or a beefier printable version, a longer arm, or a different shape?"
+}

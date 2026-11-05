@@ -1,0 +1,55 @@
+{
+  "scale_status": "measured (wire caliper 5.53 mm; profile from tape-scaled photos, about +-1 mm)",
+  "print": {
+    "extents_mm": [
+      57.2,
+      53.9,
+      5.1
+    ],
+    "faces": 18738,
+    "watertight": true,
+    "winding_consistent": true,
+    "euler_number": 2,
+    "volume_cm3": 2.4,
+    "fits_A1_as_is": true,
+    "fits_A1_any_axis_order": true,
+    "self_intersecting_faces": 0
+  },
+  "print_orientation": "lying on its side, profile flat on the bed; 0.4 mm flat shaved off the bed side",
+  "fit_on_quarter_inch_pegboard": {
+    "board_thickness": 6.35,
+    "hole_d": 6.35,
+    "pitch": 25.4,
+    "interference_mm3": 41.86
+  },
+  "params_mm": {
+    "wire_d": 5.53,
+    "pin_d": 5.53,
+    "bend_r": 4.5,
+    "tip_top": [
+      -12.85,
+      52.3
+    ],
+    "jog_back": [
+      -12.85,
+      40.3
+    ],
+    "jog_front": [
+      0.0,
+      34.1
+    ],
+    "arm_end": [
+      41.0,
+      9.2
+    ],
+    "pin_y": 13.0,
+    "pin_tip_x": -9.8,
+    "print_flat": 0.4,
+    "arm_length": 42.0,
+    "arm_angle_deg": 12.6,
+    "arm_reach_from_board": 43.8,
+    "jog_angle_deg": 25.8,
+    "board_gap_behind_back_leg": 7.3,
+    "pin_protrusion": 7.0
+  }
+}
