@@ -112,6 +112,7 @@ in the project README**, so the owner's link stays stable. Then it logs the feed
 
 ## Pegboard parts
 
-Custom pegboard parts use the shared interface in `tools/pegboard.py`: board frame, hook and pin pegs, and fit checks.
-Don't redraw the pegs per project. See `docs/pegboard.md`. The peg sizes come from the owner's steel hook
+Pegboard parts form a catalog: one project per part, named `projects/pegboard-<thing>/`, listed in the catalog table
+in `docs/pegboard.md`. They use the shared interface in `tools/pegboard.py`: board frame, hook and pin pegs, and fit checks.
+Don't redraw the pegs per project. See `docs/pegboard.md` (including "Adding a part"). The peg sizes come from the owner's steel hook
 (`projects/pegboard-hook`).

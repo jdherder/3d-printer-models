@@ -8,13 +8,10 @@ model.py (build123d, parameters from the owner's photos + caliper)
   -> output/report.json               dimensions, checks, parameters
   -> renders/model.png                shaded views + sections
   -> renders/photo-overlay.png        model outline drawn over the owner's photo (the fit check)
-  -> output/pegboard-fit-test.stl/.step   small plate with one hook + one pin from the shared tools/pegboard.py interface
-  -> renders/fit-test.png             its preview
-  -> renders/asm-*.stl, ref-pegboard.stl   hung on a 1/4" pegboard (world Z-up), for the viewer
+  -> renders/asm-hook.stl, ref-pegboard.stl   hung on a 1/4" pegboard (shared board frame, world Z-up), for the viewer
 """
 
 import json
-from dataclasses import asdict
 import sys
 from pathlib import Path
 
@@ -28,7 +25,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 import meshkit as mk  # noqa: E402
 import pegboard as pb  # noqa: E402
 import numpy as np  # noqa: E402
-from build123d import Location, export_step  # noqa: E402
+from build123d import export_step  # noqa: E402
 from matplotlib.collections import LineCollection  # noqa: E402
 from model import HookParams, build_hook, print_pose, use_to_board  # noqa: E402
 from PIL import Image  # noqa: E402
@@ -48,14 +45,6 @@ PHOTO_PX_PER_MM = 9.65
 PHOTO_ORIGIN_PX = (750.0, 1308.0)     # pixel of the model origin (bottom corner of the wire centreline)
 
 BOARD = pb.BOARDS["quarter"]     # nominal; replace with the owner's measured board when known
-STYLE = pb.PegStyle()             # shared peg geometry (its defaults come from this hook)
-FIT_TEST_Z = (-STYLE.r, 10.0)     # fit-test plate: bottom edge flush with the pegs so it prints on its side without supports
-
-
-def fit_test():
-    """Shared-interface test piece: a 4 mm plate with one hook and one pin (1 in apart), built with tools/pegboard.py.
-    Print it before any custom part to check the pegs on the real board."""
-    return pb.mount_plate(STYLE, cols=(0,), rows=(0, 1), thickness=4.0, margin=8.0, z_range=FIT_TEST_Z)
 
 
 def photo_overlay(use_mesh, p: HookParams, path):
@@ -96,43 +85,26 @@ def main():
     assert info["watertight"], "print mesh is not watertight"
     mesh.export(OUT / "pegboard-hook.stl")
 
-    # ---- Fit-test piece from the shared interface (tools/pegboard.py) -------------------------------------
-    assert not STYLE.check(BOARD), STYLE.check(BOARD)
-    coupon = fit_test()
-    coupon_print = pb.lay_on_side(coupon, STYLE)
-    export_step(coupon_print, str(OUT / "pegboard-fit-test.step"))
-    coupon_mesh = mk.cad_to_mesh(coupon_print)
-    coupon_info = mk.report(coupon_mesh)
-    assert coupon_info["watertight"], "fit test is not watertight"
-    coupon_mesh.export(OUT / "pegboard-fit-test.stl")
-
     # ---- Hung on the board (board frame) -------------------------------------------------------------------
     hook_board = mk.cad_to_mesh(use_to_board(hook_use, p))
-    coupon_board = mk.cad_to_mesh(coupon.moved(Location((0, 0, pb.PITCH))))     # next column over, for the viewer
     board = pb.board_mesh(BOARD, rows=range(-1, 3), cols=range(-1, 2))
     pb.to_zup(hook_board).export(RENDERS / "asm-hook.stl")
-    pb.to_zup(coupon_board).export(RENDERS / "asm-fit-test.stl")
     pb.to_zup(board).export(RENDERS / "ref-pegboard.stl")
     fit = {"board": BOARD.name, "hole_d": BOARD.hole_d, "thickness": BOARD.thickness, "pitch": BOARD.pitch,
-           "steel_hook_interference_mm3": pb.interference_mm3(hook_board, board),
-           "fit_test_interference_mm3": pb.interference_mm3(coupon_board, board)}
+           "interference_mm3": pb.interference_mm3(hook_board, board)}
 
     report = {
         "scale_status": "measured (wire caliper 5.53 mm; profile from tape-scaled photos, about +-1 mm)",
         "print": info,
-        "fit_test_print": coupon_info,
-        "print_orientation": "both lie on their side (pegs flat on the bed), 0.4 mm flat shaved off the bed side",
+        "print_orientation": "lying on its side, profile flat on the bed; 0.4 mm flat shaved off the bed side",
         "fit_on_board": fit,
-        "peg_style_mm": asdict(STYLE),
-        "params_mm": {**p.report_params(), "fit_test_plate_thickness": 4.0},
+        "params_mm": p.report_params(),
     }
     (OUT / "report.json").write_text(json.dumps(report, indent=2) + "\n")
-    print(json.dumps({"print": info, "fit_test": coupon_info, "fit": fit, "derived": p.derived()}, indent=2))
+    print(json.dumps({"print": info, "fit": fit, "derived": p.derived()}, indent=2))
 
     render_sheet(mesh, str(RENDERS / "model.png"), title="pegboard-hook: print pose (lying on its side), mm",
                  labels=["printed hook"], sections_y=(0.0,), sections_x=(-20.0, 0.0, 20.0))
-    render_sheet(coupon_mesh, str(RENDERS / "fit-test.png"), title="pegboard fit test: print pose (on its side), mm",
-                 labels=["fit test"], sections_y=(0.0,), sections_x=(-8.0, 0.0))
     photo_overlay(mk.cad_to_mesh(hook_use), p, RENDERS / "photo-overlay.png")
 
 

@@ -1,7 +1,24 @@
 # Custom pegboard parts
 
-Shared tooling: **`tools/pegboard.py`**. Reference part: **`projects/pegboard-hook/`**, the owner's steel hook,
-modelled from photos. The peg defaults come from it, and its build also makes the fit-test piece.
+Shared tooling: **`tools/pegboard.py`**. Every catalog part hangs on the same pegs, defined once there.
+
+## Catalog
+
+Each part is its own project, named **`projects/pegboard-<thing>/`**. Add a row here when you add one.
+
+| Part | What it is | Pegs | Print | Status |
+|---|---|---|---|---|
+| [pegboard-fit-test](../projects/pegboard-fit-test/) | Plate with one hook peg + one pin. **Print first** to check the shared pegs on the real board | shared | PETG, on its side, no supports | Ready to print |
+| [pegboard-hook](../projects/pegboard-hook/) | Copy of the owner's steel hook (5.53 mm wire, 42 mm arm). The reference the peg sizes came from | its own wire (S-bend) | PETG, on its side, no supports | Ready to print |
+
+### Adding a part
+
+1. Copy `projects/_template/` to `projects/pegboard-<thing>/` and get real measurements of whatever it holds.
+2. Build it in the board frame (below): the body on the front of `pb.mount_plate(...)`, or your own body plus
+   `pb.hook_peg` / `pb.pin_peg`. Don't redraw pegs.
+3. In `build.py`: `assert not STYLE.check(BOARD)`, assert `pb.interference_mm3(...) == 0` against `pb.board_mesh(BOARD)`,
+   export the print pose (STEP + STL), and export `pb.to_zup(...)` meshes for the viewer (copy `projects/pegboard-fit-test/`).
+4. Add a row to the catalog table above and the root `README.md`, then run the review (`/model-review pegboard-<thing>`).
 
 ## The standard
 
@@ -60,5 +77,5 @@ pb.to_zup(board).export("renders/ref-pegboard.stl")
   under those pegs, or make the pegs a separate printed or steel piece.
 - PETG by default. Plastic pegs at 5.5 mm are fine for light and medium loads (tools, cables, small bins).
   For heavy loads, add more peg columns or a wider plate rather than bigger pegs. The hole caps the peg size.
-- **First, print `projects/pegboard-hook/output/pegboard-fit-test.stl`** (a plate with one hook and one pin) and hang it on
+- **First, print `projects/pegboard-fit-test/output/pegboard-fit-test.stl`** (a plate with one hook and one pin) and hang it on
   the real board. If it's loose or tight, adjust `PegStyle` in one place and every part follows.

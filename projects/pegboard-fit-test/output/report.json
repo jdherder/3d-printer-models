@@ -1,0 +1,38 @@
+{
+  "scale_status": "real size (shared peg interface, sizes from the owner's steel hook)",
+  "print": {
+    "extents_mm": [
+      16.8,
+      47.4,
+      12.4
+    ],
+    "faces": 7782,
+    "watertight": true,
+    "winding_consistent": true,
+    "euler_number": 2,
+    "volume_cm3": 2.7,
+    "fits_A1_as_is": true,
+    "fits_A1_any_axis_order": true,
+    "self_intersecting_faces": 0
+  },
+  "print_orientation": "on its side, pegs flat on the bed, 0.4 mm flat on the bed side, no supports",
+  "fit_on_board": {
+    "board": "1/4 in pegboard (1/4 in holes)",
+    "hole_d": 6.35,
+    "thickness": 6.35,
+    "pitch": 25.4,
+    "interference_mm3": 0.0
+  },
+  "params_mm": {
+    "d": 5.53,
+    "hook_gap": 7.3,
+    "hook_rise": 14.0,
+    "bend_r": 4.5,
+    "pin_len": 7.0,
+    "embed": 1.0,
+    "plate_thickness": 4.0,
+    "pitch": 25.4,
+    "hole_clearance_per_side": 0.41,
+    "room_behind_board": 0.95
+  }
+}

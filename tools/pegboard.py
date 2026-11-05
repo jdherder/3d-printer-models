@@ -14,7 +14,7 @@ A part's back face sits on x = 0. Its upper pegs are hooks (through the board, t
 straight pins that stop it rotating out. To hang it, tilt the part, push the hook tips up through the holes, then swing the
 bottom in until the pins drop into their holes.
 
-PegStyle defaults are measured from the owner's steel hook (projects/pegboard-hook), which is known to work on their board.
+PegStyle defaults are measured from the owner's steel hook (projects/pegboard-hook), which is known to work on their board. Test them with projects/pegboard-fit-test.
 See docs/pegboard.md.
 """
 
