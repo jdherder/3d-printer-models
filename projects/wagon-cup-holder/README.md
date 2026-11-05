@@ -1,11 +1,13 @@
 # Wagon cup holder
 
-A two-piece cup holder for the **right-hand side rail** of the owner's
+A two-piece cup holder for the side rail of the owner's
 [MAC Sports push/pull wagon](https://macsports.com/products/mac-sports-push-pull-wagon)
 (the push-handle frame, as seen from the pusher). A **clip stays on the rail**, and the **cup module lifts on and
 off it in a couple of seconds**, so it can come off for folding the wagon. It holds a **20 oz Yeti Rambler**
 hanging off the outside of the wagon. The clip has **no screw**: a ring snaps onto the rail and a **second C-grip snaps onto the angled strut**, so the
 clip and the cup come off together when the handle has to fold. The strut grip faces so that **a full cup pushes it on tighter**, not off.
+
+**Right and left:** the right-side clip is `wagon-cup-clip.stl`, the left-side clip is `wagon-cup-clip-left.stl` (its mirror image). The **cup module is the same part for both sides**.
 
 ![the holder](renders/cup-holder.png)
 
@@ -32,10 +34,23 @@ feel unnatural... it could all just flow together more seamlessly").
 - [x] Owner report: lifting the tumbler out sometimes lifts the whole module off the dovetail and it "sticks" to the cup. **Added a 10 mm vent hole through the pocket floor** (module reprint, or drill the printed one)
 - [x] Owner thinks the sticking is the tumbler **wedging in the tapered pocket**, not suction. **v8.2: pocket opened up** (floor clearance 2 → 4 mm on the diameter, plus a draft that adds 0.02 mm per mm of height, so 85.4 mm at the rim). The vent hole stays
 - [x] Owner: make the dovetail a little tighter. **v8.3: dovetail clearance 0.35 → 0.20 mm per side** on the module's groove (the clip is unchanged). Three groove test blocks (0.30 / 0.20 / 0.10) to pick the tightest that still slides by hand
+- [x] **Left side (v9): `wagon-cup-clip-left.stl` built**, the mirror image of the right clip (see "Left-hand side"). Same module for both sides. Not yet printed
 - [ ] **Print `wagon-strut-grip-test.stl`** (v8: three C-clips, lips 1.2 / 1.6 / 2.0 mm = 16 / 20 / 24 mm tall), check which goes on by hand and stays on, then print the full v8 clip (with supports)
 - [ ] **Owner: check the arm side** (see "How it works") and that the strut gap looks right (nominal 5.5 mm, could be 4 to 7)
 - [ ] Print the full clip **with supports** (see "Print settings"), try it on the wagon with a full cup, fold the handle
 - [ ] Ruler reading of the gap from the bar's surface to the strut's inner face (to pin the gap down)
+
+## Left-hand side
+
+The owner wants a cup holder on **either side** of the wagon. The wagon's frame is mirror-symmetric (the owner: the latch and the diagonal strut are the same on both sides), so:
+
+- **Left clip = the right clip mirrored** (`wagon-cup-clip-left.stl`). In the left side's own frame (cup outward, up = up) the strut and its pivot are on the other side of the clip, so the arm and grip go the other way.
+  Viewed from outside the wagon, cup toward you, the **right clip's arm goes to the left and the left clip's arm goes to the right**: the arm always points toward the strut's pivot end of the bar.
+- **The cup module is the same part for both sides.** It is symmetric along the rail (checked: the mirrored module differs from itself by 0.025 % of its volume, which is meshing noise), so no mirrored module is needed.
+- The left clip is printed upright like the right one (ring axis vertical, grip end up), the same supports, the same grip and dovetail. It is mirrored across the ring's vertical axis for printing, which is the same left part turned about a horizontal axis
+  (mirroring it along the rail would have turned it upside down on the bed, and its overhang would not match the right clip's).
+- Checked in the assembled pose on the left with the mirrored strut and latch zones: left clip vs rail, tumbler, strut, latch zones all 0; module vs left clip is the same 0.002 cm³ seat contact; module vs left strut and zones 0. Overhang is identical to the right clip (645.6 mm²).
+- **Assumption to verify:** the left frame really is a mirror of the right (strut hangs from the same end of the bar relative to the push handle, same slope and gap). The owner said to assume so.
 
 ## How it works
 
@@ -103,7 +118,7 @@ frame. Take both off to fold; the cup can stay in the clip and come off with it.
 
 `python projects/wagon-cup-holder/build.py` (~2 min):
 1. `model.py`: `build_module` = tapered cup ring + stem/pad as signed-distance fields, smooth-unioned, hollowed, top plane rounded, meshed with marching cubes (`sdf.py`,
-   0.5 mm cells, decimated), then the dovetail groove cut exactly. `build_clip` = ring + ears + boss + arm + strut-grip envelope as a field, meshed, the dovetail tongue unioned exactly, then the bore,
+   0.5 mm cells, decimated), then the dovetail groove cut exactly. `build_clip` (right side; the left clip is its mirror, `mirror_along_rail`) = ring + ears + boss + arm + strut-grip envelope as a field, meshed, the dovetail tongue unioned exactly, then the bore,
    mouth, strut keep-out and the grip's mouth (facing the bar) cut exactly. Booleans are `manifold3d`. Only the largest body is kept (booleans on coplanar faces leave slivers).
 2. `build.py` exports each piece in its print pose and the test pieces, and models the rail, tumbler, latch zones and the angled strut as ghosts for the fit checks and the viewer; it also runs the strut-gap sensitivity (4 and 7 mm).
 3. Checks, in the assembled (real use) pose: both pieces watertight and one body, overhang area, and the interference of every pair: module/clip (a contact, ≤ 0.01 cm³),
@@ -119,7 +134,8 @@ Needs `scikit-image` (marching cubes), in `requirements.txt`.
   Built from `renders/viewer.html` by `tools/make_viewer.py` using `review.json`. Republish to this URL on every review (see `docs/review.md`)
 - `source/wagon-photo-2026-11-01.jpg`, `source/wagon-photo-2026-11-01-rail-1..6.jpg`, `source/wagon-photo-2026-11-03-strut-*.jpg` (caliper on the strut, top-down; tape beside the strut, front): the owner's photos
 - `model.py`: the two pieces. `sdf.py`: the blend toolkit. `build.py`: pipeline
-- `output/wagon-cup-clip.stl`: the clip that stays on the rail
+- `output/wagon-cup-clip.stl`: the **right-side** clip that stays on the rail
+- `output/wagon-cup-clip-left.stl`: the **left-side** clip (mirror image of the right one). The module is shared
 - `output/wagon-cup-module.stl`: the cup module that lifts on and off
 - `output/wagon-strut-grip-test.stl`: three C-clips for the 13.5 mm square strut (0.2 / 0.4 / 0.6 mm clearance = 16 / 20 / 24 mm tall), print upright
 - `output/wagon-dovetail-test-tongue.stl`, `output/wagon-dovetail-test-groove-0.30.stl` / `-0.20.stl` / `-0.10.stl`: sliding-fit tests (tongue plate + three groove blocks, clearance per side)
@@ -245,3 +261,7 @@ Needs `scikit-image` (marching cubes), in `requirements.txt`.
   held at the old width (new `dt_boss_clear` = 0.35), so **the clip files are byte-identical and only the module needs a reprint**. The pad's front face keeps its 0.35 mm gap to the boss (the 45° flanks do the locating; a first try that shrank that gap too made the pad touch the clip's slightly proud boss,
   6.8 mm³). Checked at full resolution: seat contact 0.002 cm³ (same as before), the module lifts off with no overlap above ~10 mm. **A tighter clearance on a 45° flank only helps if the printed parts actually touch lightly:** at 0.20 a good print may still be loose. So the test set is now one tongue plate + three groove blocks
   at **0.30 / 0.20 / 0.10** (replaces the single groove test). Pick the tightest that slides by hand. If even 0.10 doesn't stop the module riding up, the cup pocket (v8.2) or a detent/magnets are the next steps.
+- **2026-11-05 (v9, left-hand clip):** Owner: the dovetail work "worked great" and asked for a branch on latest main (`wagon-cup-holder-mirror`, from the merge of PR #1) with a **mirrored clip so a cup holder can go on either side**.
+  Added `mirror_along_rail()` in `model.py` and the left clip to `build.py` (`output/wagon-cup-clip-left.stl`, `renders/asm-clip-left.stl`, `renders/ref-strut-left.stl`, `clip_left` in `report.json`). Checked that the module is symmetric along the rail (0.025 % asymmetric volume), so it is shared.
+  First attempt mirrored the clip along the rail in its print frame, which turned it upside down on the bed (overhang 1025.8 mm² instead of 645.6). Fixed by mirroring across the ring's vertical axis for the print pose and along the rail only for the fit checks. Left-side checks in the assembled pose all pass (see "Left-hand side"). The viewer
+  shows the left clip and strut as hidden extras (turn them on to compare). Next: owner prints the left clip (with supports) and tests it on the left frame, and confirms the left frame is a mirror of the right.

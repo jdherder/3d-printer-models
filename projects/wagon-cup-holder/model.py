@@ -465,6 +465,22 @@ def clip_to_U(mesh: trimesh.Trimesh, p: CupHolderParams) -> trimesh.Trimesh:
     return m
 
 
+def mirror_along_rail(mesh: trimesh.Trimesh, p: CupHolderParams | None = None, frame: str = "U") -> trimesh.Trimesh:
+    """The left-hand-side part. The left frame is the mirror image of the right, so in the left side's own frame (outward = +Y, up = +Z) the part
+    is the right one mirrored along the rail (X). The cup module is symmetric along the rail, so it needs no mirror.
+    frame="U": mirror X (use for fit checks in the real-use pose).
+    frame="C": the clip's PRINT frame. Mirroring along the rail there would turn the clip upside down (the rail axis is vertical when printing),
+    so we mirror across a vertical plane instead (x_c). That is the same left part turned about a horizontal axis, and it prints grip-end up like the right one."""
+    m = mesh.copy()
+    if frame == "U":
+        m.vertices = m.vertices * np.array([-1.0, 1.0, 1.0])
+    else:
+        m.vertices = m.vertices * np.array([-1.0, 1.0, 1.0])       # C = (Y, Z, X + L/2): x_c is Y, so this flips the part across the ring's vertical axis
+    m.faces = m.faces[:, ::-1]
+    m.fix_normals()
+    return m
+
+
 def print_pose(mesh: trimesh.Trimesh) -> trimesh.Trimesh:
     """Rest on Z=0, longest footprint axis along X, footprint centred on the XY origin."""
     m = mesh.copy()

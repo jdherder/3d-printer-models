@@ -1,6 +1,6 @@
 {
   "page_title": "Wagon Cup Holder",
-  "title": "Wagon cup holder: v8.3, tighter dovetail",
+  "title": "Wagon cup holder: v9, right and left clips",
   "subtitle": "Ring on the side rail + a C-grip on the angled strut whose closed wall faces the cup \u00b7 no screw \u00b7 a full cup pushes the grip on tighter \u00b7 shown assembled in its real orientation (rail left to right) \u00b7 millimetres",
   "meshes": [
     {
@@ -12,6 +12,12 @@
       "path": "renders/asm-clip.stl",
       "label": "Clip (ring on rail + grip on strut; pops off)",
       "style": "solid"
+    },
+    {
+      "path": "renders/asm-clip-left.stl",
+      "label": "LEFT-side clip (mirror image; shown on the same rail for comparison)",
+      "style": "solid",
+      "visible": false
     },
     {
       "path": "renders/ref-bar.stl",
@@ -27,6 +33,12 @@
       "path": "renders/ref-strut.stl",
       "label": "Angled strut (13.5 mm square, nominal gap 5.5 mm)",
       "style": "wire"
+    },
+    {
+      "path": "renders/ref-strut-left.stl",
+      "label": "Angled strut, left frame",
+      "style": "wire",
+      "visible": false
     },
     {
       "path": "renders/ref-keepout.stl",
@@ -86,5 +98,5 @@
   ],
   "scale_note": "Real size, shown assembled in its real orientation: the rail runs left to right, the cup stands upright and hangs off the outside of it. The rail is your 22.3 mm tube; the angled strut is your 13.5 mm square bar, drawn as a straight line at ~59\u00b0 from the tape photos (so it is accurate to roughly a few mm). The gap between the rail and the strut is the least certain number (4 to 7 mm, drawn at 5.5). The tumbler is from retailer listings. The wireframe blocks are the red latch zones (approximate).",
   "notes_title": "What changed, and what to check",
-  "notes": "v8.3: the dovetail's sliding clearance on the module's groove goes from 0.35 to 0.20 mm per side. The clip is unchanged (so don't reprint it for this), only the module. A tighter fit only helps if the printed parts touch lightly, so there are now three groove test blocks (0.30 / 0.20 / 0.10) to find the tightest one that still slides on by hand. Please check: (1) which test block is tightest and still slides by hand; (2) does the module still ride up with the tumbler now? (3) the pocket (v8.2) and the clip grip test, as before."
+  "notes": "v9: a mirrored clip for the left-hand side, so a cup holder can go on either side of the wagon. The left clip (wagon-cup-clip-left.stl) is the right clip's mirror image: viewed from outside with the cup toward you, the right clip's arm goes to the left and the left clip's arm goes to the right, always toward the strut's pivot end. The cup module is the same part for both sides (it is symmetric). The viewer shows the right clip; turn on 'LEFT-side clip' and 'Angled strut, left frame' to compare (they sit on the same rail, so hide the right clip and strut to see the left one alone). Please check: (1) is the left frame really a mirror of the right (strut from the same end relative to the push handle)? (2) print the left clip with supports and try it on the left frame."
 }
