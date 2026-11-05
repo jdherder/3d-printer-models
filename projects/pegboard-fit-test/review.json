@@ -1,20 +1,48 @@
 {
   "page_title": "Pegboard Fit Test",
   "title": "Pegboard fit test: the shared hook peg + pin",
-  "subtitle": "Built only from tools/pegboard.py, the pegs every catalog part uses · hung on a nominal 1/4\" pegboard (1\" grid) · X out from the board, Z up · mm",
+  "subtitle": "Built only from tools/pegboard.py, the pegs every catalog part uses \u00b7 hung on your board (Menards 3/16\" white, 1\" grid) \u00b7 X out from the board, Z up \u00b7 mm",
   "meshes": [
-    {"path": "renders/asm-fit-test.stl", "label": "Fit test (plate + hook peg + pin)", "style": "solid", "color": "#5b8fd9"},
-    {"path": "renders/ref-pegboard.stl", "label": "1/4\" pegboard (6.35 mm holes, 1\" grid)", "style": "solid", "color": "#b08a5a"}
+    {
+      "path": "renders/asm-fit-test.stl",
+      "label": "Fit test (plate + hook peg + pin)",
+      "style": "solid",
+      "color": "#5b8fd9"
+    },
+    {
+      "path": "renders/ref-pegboard.stl",
+      "label": "Your board: Menards 3/16\" white (7.14 mm holes, 3.94 mm thick)",
+      "style": "solid",
+      "color": "#b08a5a"
+    }
   ],
   "dims": [
-    {"label": "Peg diameter", "param": "d"},
-    {"label": "Hole clearance per side", "param": "hole_clearance_per_side"},
-    {"label": "Room behind the board (hook gap minus board)", "param": "room_behind_board"},
-    {"label": "Hook leg rise above hole centre", "param": "hook_rise"},
-    {"label": "Pin length into board", "param": "pin_len"},
-    {"label": "Hook to pin spacing", "param": "pitch"}
+    {
+      "label": "Peg diameter",
+      "param": "d"
+    },
+    {
+      "label": "Hole clearance per side",
+      "param": "hole_clearance_per_side"
+    },
+    {
+      "label": "Room behind the board (hook gap minus board)",
+      "param": "room_behind_board"
+    },
+    {
+      "label": "Hook leg rise above hole centre",
+      "param": "hook_rise"
+    },
+    {
+      "label": "Pin length into board",
+      "param": "pin_len"
+    },
+    {
+      "label": "Hook to pin spacing",
+      "param": "pitch"
+    }
   ],
-  "scale_note": "Real size. The peg sizes come from the owner's steel hook (5.53 mm wire). The board is a nominal 1/4\" pegboard until the real one is measured.",
+  "scale_note": "Real size. Peg sizes come from your steel hook (5.53 mm wire). The board is your Menards 3/16\" panel at retailer-listed sizes (9/32\" holes, 0.155\" thick); caliper it to confirm.",
   "notes_title": "What to check",
-  "notes": "Print this before any other catalog part (PETG, on its side, no supports, about 15 minutes). Hang it: tilt it, push the hook up through a hole, swing the bottom in so the pin drops into the hole below. Check: (1) does it go on and come off like the steel hook? (2) snug, loose, or tight? (3) does the pin seat fully? If anything is off, the peg sizes change in one place (PegStyle in tools/pegboard.py) and every catalog part follows."
+  "notes": "Print this before any other catalog part (PETG, on its side, no supports, about 15 minutes). Hang it: tilt it, push the hook up through a hole, swing the bottom in so the pin drops into the hole below. Check: (1) does it go on and come off like the steel hook? (2) snug, loose, or tight? On your board the pegs have 0.8 mm per side in the holes, so expect a little play; the pegs can grow to ~6.5 mm if it's sloppy. (3) does the pin seat fully? If anything is off, the peg sizes change in one place (PegStyle in tools/pegboard.py) and every catalog part follows."
 }

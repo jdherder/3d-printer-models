@@ -21,7 +21,8 @@ things like keys, cables and small tools. It's also the **reference** for the sh
       the photo within about 1 mm (`renders/photo-overlay.png`)
 - [x] Print-ready STL + STEP: lying on its side, 0.4 mm flat on the bed side. 57.2 × 53.9 × 5.1 mm,
       watertight, 0 self-intersections
-- [x] In the catalog. Checked hung on the shared board model (`tools/pegboard.py`)
+- [x] In the catalog. Hangs on the owner's board (Menards 3/16 white hardboard, `pegboard.DEFAULT_BOARD`) with
+      0.2 mm per side to spare, after flattening the S-jog (see Measurements)
 - [ ] Test print on the real board (after `pegboard-fit-test` confirms the board)
 
 ## Measurements
@@ -32,9 +33,9 @@ things like keys, cables and small tools. It's also the **reference** for the sh
 | Overall (footprint × height) | 57.2 × 53.9 | tape photo | Photo reads ~57.9 × 53.9 (tip edge to arm end, top to bottom bend) |
 | Arm | 42.0 long, 12.6° up | tape photo | Reaches 43.8 mm out from the board face |
 | Behind-board leg | 12 mm tall, centre 12.85 behind the back leg | tape photo | Leaves 7.3 mm for the board |
-| S-jog | ~26° slope | tape photo | Least certain part (it's curved) |
+| S-jog | **12°**, crossing the hole 25.4 above the pin | fit to the board | Traced at ~26° with the front corner 3.3 mm lower. That can't hang flush on a 1 in grid: the wire's underside met the board face ~3 mm below the hole. Now defined by the hole it passes through (`jog_*` in `model.py`). The back corner and top leg still match the photo |
 | Pin | 13.0 above the bottom corner, sticks out 7.0 | tape photo | |
-| Bend radius | 4.5 (centreline) | estimated | One radius for every bend |
+| Bend radius | 3.0 (centreline) | fit | 4.5 looked closer to the photo, but its front jog bend reached into the hole |
 
 Photo scale: `photo-2026-11-05-tape-vertical.jpg`, tape inch marks 245 px apart (9.65 px/mm). The model
 origin (bottom corner of the wire centreline) is at pixel (750, 1308). Both are in `build.py`, and the
@@ -49,11 +50,10 @@ overlay render uses them. Positions are good to about ±1 mm.
 
 ## Open questions
 
-- **Board thickness and hole size.** On a nominal 1/4" board (6.35 mm holes, 6.35 mm thick), the
-  model's S-jog clips the hole edges slightly (~42 mm³ overlap in the check). The real hook's
-  jog seems to as well in the photo. Real boards often have bigger holes or are thinner. The shared
-  `hook_peg` avoids this, because it goes straight through the hole (no slope). A caliper reading of the hole and board would settle it.
-- The pin's ~1 in (24 mm in the photo) spacing from the jog: does the real hook sit tight or a little loose?
+- **Does the real hook hang flush** (back leg flat against the board)? If so, the photo is off at the jog's front corner and
+  the adjusted model is closer to the truth. A caliper reading of the gap between the top of the pin and the underside of the
+  jog, measured at the back leg, would settle it.
+- This hook only fits thin boards like the owner's. On a 1/4 in board (6.35 mm holes and thickness) the jog clips the holes.
 
 ## Pipeline
 
@@ -82,3 +82,7 @@ Parameters are in `HookParams` (`model.py`). Real measurements go in `MEASURED` 
   Added the fit-test piece (0 interference on a nominal 1/4" board). Next: the owner prints the fit test and calipers the board.
 - **2026-11-05 (v3):** The owner wants the hook kept as a part in the growing catalog. Moved the fit test to its own project
   (`pegboard-fit-test`), so this project is just the hook. Added a catalog table to `docs/pegboard.md`.
+- **2026-11-05 (v4):** The owner's board is a Menards 3/16 in white hardboard panel (listing values: 9/32 in holes, 0.155 in thick),
+  now `pegboard.DEFAULT_BOARD`. The traced hook didn't fit it (28 mm³ overlap, and tilting or moving the pin alone couldn't fix it).
+  The jog is now defined by the hole it passes through (12°, front corner 3.3 mm higher than traced) and the bend radius is 3.0. It now
+  clears with 0.2 mm per side to spare. Shared fit checks now use `FIT_CLEARANCE` = 0.2 mm.

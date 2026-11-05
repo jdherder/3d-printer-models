@@ -9,7 +9,7 @@ Each part is its own project, named **`projects/pegboard-<thing>/`**. Add a row 
 | Part | What it is | Pegs | Print | Status |
 |---|---|---|---|---|
 | [pegboard-fit-test](../projects/pegboard-fit-test/) | Plate with one hook peg + one pin. **Print first** to check the shared pegs on the real board | shared | PETG, on its side, no supports | Ready to print |
-| [pegboard-hook](../projects/pegboard-hook/) | Copy of the owner's steel hook (5.53 mm wire, 42 mm arm). The reference the peg sizes came from | its own wire (S-bend) | PETG, on its side, no supports | Ready to print |
+| [pegboard-hook](../projects/pegboard-hook/) | Copy of the owner's steel hook (5.53 mm wire, 42 mm arm). The reference the peg sizes came from. Its S-bend is adjusted to hang on the owner's board | its own wire (S-bend) | PETG, on its side, no supports | Ready to print |
 
 ### Adding a part
 
@@ -22,13 +22,17 @@ Each part is its own project, named **`projects/pegboard-<thing>/`**. Add a row 
 
 ## The standard
 
-| | 1/4 in board (`BOARDS["quarter"]`) | 1/8 in board (`BOARDS["eighth"]`) |
-|---|---|---|
-| Hole grid | 1 in (25.4 mm) square | 1 in (25.4 mm) square |
-| Hole diameter | 1/4 in (6.35 mm) nominal | 3/16 in (4.76 mm) |
-| Thickness | ~6.35 mm (real boards are often 5–6 mm) | ~3.2 mm |
+| | **Owner's board** (`BOARDS["white_3_16"]`, the default) | 1/4 in board (`BOARDS["quarter"]`) | 1/8 in board (`BOARDS["eighth"]`) |
+|---|---|---|---|
+| Product | Menards 3/16 × 4 × 8 white pegboard panel (tempered hardboard) | generic | generic |
+| Hole grid | 1 in (25.4 mm) | 1 in | 1 in |
+| Hole diameter | **9/32 in (7.14 mm)** from listings | 1/4 in (6.35 mm) | 3/16 in (4.76 mm) |
+| Thickness | **0.155 in (3.94 mm)** actual, from listings | ~6.35 mm | ~3.2 mm |
 
-These are nominal values, and real boards vary. Once the owner calipers their board, add it to `BOARDS` and make it the default.
+`pb.DEFAULT_BOARD` is the owner's board, so check every catalog part against it. Its values come from retailer listings
+for that panel, not from calipers yet. Update `BOARDS["white_3_16"]` once it's measured, then rebuild the catalog.
+
+Fit checks use `board_mesh(..., clearance=pb.FIT_CLEARANCE)` (0.2 mm per side), so "0 interference" leaves real margin.
 
 ## Board frame
 
@@ -54,6 +58,8 @@ The part's back face sits on x = 0, and its body is built out in +x.
 - `mount_plate(style, cols, rows, thickness)`: a back plate with hooks in the top row of holes and pins in the bottom row. Build the part's body on its front face (x = thickness).
 - `style.check(board)`: lists the problems if the pegs won't fit that board.
 
+On the owner's board the default pegs have 0.8 mm clearance per side in the holes and 3.4 mm of room behind the board, so they're on the loose side. The bigger holes leave room for **thicker, stronger plastic pegs** (up to ~6.5 mm) if the fit test feels sloppy.
+
 To hang a part, tilt it, push the hook tips up through the holes, then swing the bottom in until the pins drop into place.
 Use at least two holes of vertical span (a hook row above a pin row). For anything heavy or wide, put hooks in two or more columns.
 
@@ -61,8 +67,8 @@ Use at least two holes of vertical span (a hook row above a pin row). For anythi
 
 ```python
 import meshkit as mk, pegboard as pb
-board = pb.board_mesh(pb.BOARDS["quarter"], rows=range(-1, 3), cols=range(-1, 2))
-assert pb.interference_mm3(mk.cad_to_mesh(part), board) == 0      # the part fits as hung
+board = pb.board_mesh(pb.DEFAULT_BOARD, rows=range(-1, 3), cols=range(-1, 2), clearance=pb.FIT_CLEARANCE)
+assert pb.interference_mm3(mk.cad_to_mesh(part), board) == 0      # fits as hung, with 0.2 mm per side to spare
 pb.to_zup(mk.cad_to_mesh(part)).export("renders/asm-part.stl")    # for the review viewer
 pb.to_zup(board).export("renders/ref-pegboard.stl")
 ```

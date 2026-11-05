@@ -8,8 +8,8 @@ The origin is the sharp corner where the back leg meets the arm (the intersectio
 
 The wire path, from the top tip down (all centreline points, mm):
   tip_top   top end of the short leg that goes through the board and rises behind it
-  jog_back  corner behind the board, where that leg turns into the sloped jog
-  jog_front corner in front of the board, where the jog turns down into the back leg
+  jog_back  corner behind the board, where that leg turns into the sloped jog     (derived: see the jog_* fields)
+  jog_front corner in front of the board, where the jog turns down into the back leg  (derived)
   corner    bottom of the back leg, where the arm starts
   arm_end   free end of the arm
 All corners use one bend radius. The pin is a separate straight stub, welded to the back leg and pointing into the board
@@ -29,11 +29,18 @@ from build123d import (Axis, Box, BuildLine, BuildPart, BuildSketch, Circle, Cyl
 class HookParams:
     wire_d: float = 5.53              # caliper (owner)
     pin_d: float = 5.53               # looks like the same wire in the photos (~5.5 mm)
-    bend_r: float = 4.5               # centreline bend radius at every corner (inner radius ~1.7 mm)
+    bend_r: float = 3.0               # centreline bend radius at every corner (tight, like bent steel). 4.5 looked closer to the
+                                      # photo, but its bend at the front of the jog reached into the hole and blocked the fit
 
-    tip_top: tuple = (-12.85, 52.3)   # top end of the behind-board leg
-    jog_back: tuple = (-12.85, 40.3)  # behind-board corner (jog slopes ~26 deg down toward the front)
-    jog_front: tuple = (0.0, 34.1)    # front corner, top of the back leg
+    # The S-jog is defined by what it must do: pass through the hole one pitch above the pin's hole.
+    # Its straight part crosses the hole-centre height `jog_cross_depth` behind the board's front face, at `jog_angle_deg`.
+    # (As traced, the jog was ~26 deg with its front corner 3.3 mm lower, which can't hang flush on a 1 in grid:
+    # the wire's underside met the board face ~3 mm below the hole. The back corner and the top leg still match the photo.)
+    jog_angle_deg: float = 12.0
+    jog_pitch: float = 25.4
+    jog_cross_depth: float = 2.0      # ~mid-board for 3/16 in (3.9 mm) hardboard
+    jog_back_x: float = -12.85        # behind-board leg centreline (photo)
+    tip_rise: float = 12.0            # top of the behind-board leg above the back corner (photo: 52.3 - 40.3)
     arm_end: tuple = (41.0, 9.2)      # arm rises ~13 deg above horizontal
 
     pin_y: float = 13.0               # pin axis height above the bottom corner
@@ -44,6 +51,23 @@ class HookParams:
     @property
     def wire_r(self):
         return self.wire_d / 2
+
+    def _jog_y(self, x):
+        import math
+        x0, y0 = -(self.wire_r + self.jog_cross_depth), self.pin_y + self.jog_pitch
+        return y0 + (x0 - x) * math.tan(math.radians(self.jog_angle_deg))
+
+    @property
+    def jog_front(self):
+        return (0.0, self._jog_y(0.0))
+
+    @property
+    def jog_back(self):
+        return (self.jog_back_x, self._jog_y(self.jog_back_x))
+
+    @property
+    def tip_top(self):
+        return (self.jog_back_x, self.jog_back[1] + self.tip_rise)
 
     def derived(self) -> dict:
         """Numbers worth showing the owner (mm / deg)."""
@@ -62,6 +86,8 @@ class HookParams:
 
     def report_params(self) -> dict:
         d = {k: v for k, v in asdict(self).items()}
+        d.update(jog_front=[round(v, 2) for v in self.jog_front], jog_back=[round(v, 2) for v in self.jog_back],
+                 tip_top=[round(v, 2) for v in self.tip_top])
         d.update(self.derived())
         return d
 

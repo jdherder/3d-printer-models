@@ -25,7 +25,7 @@ from render import render_sheet  # noqa: E402
 OUT = HERE / "output"
 RENDERS = HERE / "renders"
 
-BOARD = pb.BOARDS["quarter"]       # nominal; switch to the owner's measured board when known
+BOARD = pb.DEFAULT_BOARD          # the owner's board (tools/pegboard.py)
 STYLE = pb.PegStyle()
 PLATE_T = 4.0
 PLATE_Z = (-STYLE.r, 10.0)         # bottom edge flush with the pegs so it prints on its side without supports
@@ -50,8 +50,8 @@ def main():
 
     hung = mk.cad_to_mesh(part)
     board = pb.board_mesh(BOARD, rows=range(-1, 3), cols=range(-1, 2))
-    clash = pb.interference_mm3(hung, board)
-    assert clash == 0.0, f"fit test overlaps the board by {clash} mm^3"
+    clash = pb.interference_mm3(hung, pb.board_mesh(BOARD, rows=range(-1, 3), cols=range(-1, 2), clearance=pb.FIT_CLEARANCE))
+    assert clash == 0.0, f"fit test comes within {pb.FIT_CLEARANCE} mm of the board ({clash} mm^3)"
     pb.to_zup(hung).export(RENDERS / "asm-fit-test.stl")
     pb.to_zup(board).export(RENDERS / "ref-pegboard.stl")
 
@@ -60,7 +60,8 @@ def main():
         "print": info,
         "print_orientation": "on its side, pegs flat on the bed, 0.4 mm flat on the bed side, no supports",
         "fit_on_board": {"board": BOARD.name, "hole_d": BOARD.hole_d, "thickness": BOARD.thickness,
-                         "pitch": BOARD.pitch, "interference_mm3": clash},
+                         "pitch": BOARD.pitch, "clearance_checked_per_side": pb.FIT_CLEARANCE,
+                         "interference_mm3": clash},
         "params_mm": {**asdict(STYLE), "plate_thickness": PLATE_T, "pitch": pb.PITCH,
                       "hole_clearance_per_side": round((BOARD.hole_d - STYLE.d) / 2, 2),
                       "room_behind_board": round(STYLE.hook_gap - BOARD.thickness, 2)},

@@ -1,9 +1,9 @@
 """Pegboard interface: the board standard and the pegs that hold a part on it. Use this for any custom pegboard part.
 
     import pegboard as pb
-    style, board = pb.PegStyle(), pb.BOARDS["quarter"]
+    style, board = pb.PegStyle(), pb.DEFAULT_BOARD
     part = my_body + pb.hook_peg(style, y=pb.PITCH) + pb.pin_peg(style)     # build123d solids
-    clash = pb.interference_mm3(meshkit.cad_to_mesh(part), pb.board_mesh(board))
+    clash = pb.interference_mm3(meshkit.cad_to_mesh(part), pb.board_mesh(board, clearance=pb.FIT_CLEARANCE))   # want 0
 
 BOARD FRAME (every function here works in it; build parts in it too):
   x = out of the board. The board's front face is the plane x = 0, and the board fills -thickness <= x <= 0.
@@ -40,7 +40,11 @@ BOARDS = {
     # Nominal US hardboard pegboard. Real boards vary (holes 6.0-7.1 mm, 5-6.35 mm thick). Measure yours and add it here.
     "quarter": Board("1/4 in pegboard (1/4 in holes)", hole_d=6.35, thickness=6.35),
     "eighth": Board("1/8 in pegboard (3/16 in holes)", hole_d=4.76, thickness=3.2),
+    # The owner's board (2026-11-05): Menards "3/16 x 4 x 8 White Pegboard Panel", white tempered hardboard.
+    # From retailer listings for this panel (not yet calipered): actual 0.155 in thick, 9/32 in holes on 1 in centres.
+    "white_3_16": Board("3/16 in white hardboard (owner's, Menards; listing values)", hole_d=7.14, thickness=3.94),
 }
+DEFAULT_BOARD = BOARDS["white_3_16"]    # the owner's board: what every catalog part is checked against
 
 
 @dataclass(frozen=True)
@@ -130,8 +134,13 @@ def lay_on_side(solid, style: PegStyle, flat: float = 0.4, z_peg: float = 0.0):
 # Board meshes and fit checks (trimesh, board frame)
 # --------------------------------------------------------------------------------------------------------------------
 
-def board_mesh(board: Board, rows=range(-1, 3), cols=range(-1, 2), sections: int = 32) -> trimesh.Trimesh:
-    """A patch of pegboard covering the given hole rows / cols, for fit checks and viewers."""
+FIT_CLEARANCE = 0.2   # mm per side a part must clear the holes by (printed pegs come out a little fat)
+
+
+def board_mesh(board: Board, rows=range(-1, 3), cols=range(-1, 2), sections: int = 32,
+               clearance: float = 0.0) -> trimesh.Trimesh:
+    """A patch of pegboard covering the given hole rows / cols, for fit checks and viewers.
+    clearance > 0 shrinks the holes by that much per side, so a zero-interference check leaves that margin."""
     rows, cols = list(rows), list(cols)
     p = board.pitch
     h, w = len(rows) * p, len(cols) * p
@@ -141,7 +150,7 @@ def board_mesh(board: Board, rows=range(-1, 3), cols=range(-1, 2), sections: int
     holes = []
     for j in rows:
         for i in cols:
-            c = trimesh.creation.cylinder(radius=board.hole_d / 2, height=board.thickness + 2, sections=sections)
+            c = trimesh.creation.cylinder(radius=board.hole_d / 2 - clearance, height=board.thickness + 2, sections=sections)
             c.apply_transform(trimesh.transformations.rotation_matrix(np.pi / 2, [0, 1, 0]))
             c.apply_translation([-board.thickness / 2, j * p, i * p])
             holes.append(c)

@@ -17,10 +17,11 @@
   },
   "print_orientation": "on its side, pegs flat on the bed, 0.4 mm flat on the bed side, no supports",
   "fit_on_board": {
-    "board": "1/4 in pegboard (1/4 in holes)",
-    "hole_d": 6.35,
-    "thickness": 6.35,
+    "board": "3/16 in white hardboard (owner's, Menards; listing values)",
+    "hole_d": 7.14,
+    "thickness": 3.94,
     "pitch": 25.4,
+    "clearance_checked_per_side": 0.2,
     "interference_mm3": 0.0
   },
   "params_mm": {
@@ -32,7 +33,7 @@
     "embed": 1.0,
     "plate_thickness": 4.0,
     "pitch": 25.4,
-    "hole_clearance_per_side": 0.41,
-    "room_behind_board": 0.95
+    "hole_clearance_per_side": 0.8,
+    "room_behind_board": 3.36
   }
 }

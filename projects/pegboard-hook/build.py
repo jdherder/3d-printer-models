@@ -44,7 +44,7 @@ MEASURED = {
 PHOTO_PX_PER_MM = 9.65
 PHOTO_ORIGIN_PX = (750.0, 1308.0)     # pixel of the model origin (bottom corner of the wire centreline)
 
-BOARD = pb.BOARDS["quarter"]     # nominal; replace with the owner's measured board when known
+BOARD = pb.DEFAULT_BOARD          # the owner's board (tools/pegboard.py)
 
 
 def photo_overlay(use_mesh, p: HookParams, path):
@@ -91,7 +91,10 @@ def main():
     pb.to_zup(hook_board).export(RENDERS / "asm-hook.stl")
     pb.to_zup(board).export(RENDERS / "ref-pegboard.stl")
     fit = {"board": BOARD.name, "hole_d": BOARD.hole_d, "thickness": BOARD.thickness, "pitch": BOARD.pitch,
-           "interference_mm3": pb.interference_mm3(hook_board, board)}
+           "clearance_checked_per_side": pb.FIT_CLEARANCE,
+           "interference_mm3": pb.interference_mm3(
+               hook_board, pb.board_mesh(BOARD, rows=range(-1, 3), cols=range(-1, 2), clearance=pb.FIT_CLEARANCE))}
+    assert fit["interference_mm3"] == 0.0, f"hook comes within {pb.FIT_CLEARANCE} mm of the board: {fit}"
 
     report = {
         "scale_status": "measured (wire caliper 5.53 mm; profile from tape-scaled photos, about +-1 mm)",

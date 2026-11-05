@@ -3,42 +3,36 @@
   "print": {
     "extents_mm": [
       57.2,
-      53.9,
+      54.1,
       5.1
     ],
-    "faces": 18738,
+    "faces": 20838,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 2,
-    "volume_cm3": 2.4,
+    "volume_cm3": 2.5,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
   },
   "print_orientation": "lying on its side, profile flat on the bed; 0.4 mm flat shaved off the bed side",
   "fit_on_board": {
-    "board": "1/4 in pegboard (1/4 in holes)",
-    "hole_d": 6.35,
-    "thickness": 6.35,
+    "board": "3/16 in white hardboard (owner's, Menards; listing values)",
+    "hole_d": 7.14,
+    "thickness": 3.94,
     "pitch": 25.4,
-    "interference_mm3": 41.86
+    "clearance_checked_per_side": 0.2,
+    "interference_mm3": 0.0
   },
   "params_mm": {
     "wire_d": 5.53,
     "pin_d": 5.53,
-    "bend_r": 4.5,
-    "tip_top": [
-      -12.85,
-      52.3
-    ],
-    "jog_back": [
-      -12.85,
-      40.3
-    ],
-    "jog_front": [
-      0.0,
-      34.1
-    ],
+    "bend_r": 3.0,
+    "jog_angle_deg": 12.0,
+    "jog_pitch": 25.4,
+    "jog_cross_depth": 2.0,
+    "jog_back_x": -12.85,
+    "tip_rise": 12.0,
     "arm_end": [
       41.0,
       9.2
@@ -46,10 +40,21 @@
     "pin_y": 13.0,
     "pin_tip_x": -9.8,
     "print_flat": 0.4,
+    "jog_front": [
+      0.0,
+      37.39
+    ],
+    "jog_back": [
+      -12.85,
+      40.12
+    ],
+    "tip_top": [
+      -12.85,
+      52.12
+    ],
     "arm_length": 42.0,
     "arm_angle_deg": 12.6,
     "arm_reach_from_board": 43.8,
-    "jog_angle_deg": 25.8,
     "board_gap_behind_back_leg": 7.3,
     "pin_protrusion": 7.0
   }

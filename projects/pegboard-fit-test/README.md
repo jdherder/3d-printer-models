@@ -13,21 +13,23 @@ Confirm on the real board that the shared pegs go on and come off cleanly and si
 
 ## Status
 
-- [x] Built from the shared interface. 47.4 × 16.8 × 12.4 mm, watertight, 0 self-intersections,
-      0 mm³ overlap with a nominal 1/4" board
+- [x] Built from the shared interface. 47.4 × 16.8 × 12.4 mm, watertight, 0 self-intersections
+- [x] Checked against the owner's board (Menards 3/16 white hardboard, listing values: 7.14 mm holes, 3.94 mm thick):
+      clears it with 0.2 mm per side to spare
 - [ ] Owner prints it (PETG) and hangs it on the real board: snug, loose, or tight?
-- [ ] Caliper the real board (hole diameter, thickness), then add it to `pegboard.BOARDS` and make it the default
+- [ ] Caliper the real board (hole diameter, thickness) and correct `BOARDS["white_3_16"]` if it differs
 
 ## Measurements
 
 The pegs come from the steel hook (`projects/pegboard-hook`): 5.53 mm diameter, 7.3 mm clear behind the front face,
-leg rising 14 mm above the hole centre, 4.5 mm bend radius, 7 mm pin. On a nominal 1/4" board (6.35 mm holes, 6.35 mm thick)
-that's 0.41 mm clearance per side in the hole and 0.95 mm of room behind the board.
+leg rising 14 mm above the hole centre, 4.5 mm bend radius, 7 mm pin. On the owner's board that's 0.8 mm clearance per
+side in the hole and 3.4 mm of room behind the board, so expect it to be a little loose. If it's sloppy, the pegs can grow to ~6.5 mm.
 
-| Feature | Real (mm) | Notes |
+| Feature | Value (mm) | Source |
 |---|---|---|
-| Board hole diameter | ? | Owner to caliper. The nominal is 6.35 |
-| Board thickness | ? | Owner to caliper. The nominal is 6.35 |
+| Board | Menards "3/16 x 4 x 8 White Pegboard Panel" | owner, 2026-11-05 |
+| Hole diameter | 7.14 (9/32 in) | retailer listings for this panel; caliper to confirm |
+| Thickness | 3.94 (0.155 in) | retailer listings; caliper to confirm |
 
 ## Print settings
 
@@ -48,3 +50,5 @@ with the pegs, lays it on its side (`pegboard.lay_on_side`), exports the STEP an
 ## Log
 
 - **2026-11-05:** Split out of `pegboard-hook` into its own project, as the check for the shared pegboard interface.
+- **2026-11-05:** The owner's board is a Menards 3/16 in white hardboard panel. Added it as `pegboard.DEFAULT_BOARD`
+  (listing values 7.14 mm holes, 3.94 mm thick), and fit checks now leave 0.2 mm per side. The fit test clears it.
