@@ -15,6 +15,21 @@
     "overhang_area_over_45deg_mm2": 645.6,
     "supports": "needed under the strut grip and leg: with the ring axis vertical the grip tunnel runs ~31 deg above horizontal, so its ceiling and the leg underside overhang. Use normal (auto) supports, 'support on build plate + model'; the ring, mouth and dovetail print without"
   },
+  "clip_left": {
+    "extents_mm": [
+      81.0,
+      51.7,
+      72.1
+    ],
+    "faces": 54522,
+    "watertight": true,
+    "winding_consistent": true,
+    "euler_number": 2,
+    "volume_cm3": 51.2,
+    "fits_A1_as_is": true,
+    "overhang_area_over_45deg_mm2": 645.6,
+    "supports": "needed under the strut grip and leg: with the ring axis vertical the grip tunnel runs ~31 deg above horizontal, so its ceiling and the leg underside overhang. Use normal (auto) supports, 'support on build plate + model'; the ring, mouth and dovetail print without"
+  },
   "module": {
     "extents_mm": [
       115.7,
@@ -105,7 +120,14 @@
     "interference_module_vs_latch_strut_zone_cm3": 0.0,
     "interference_clip_vs_latch_strut_zone_cm3": 0.0,
     "interference_clip_vs_strut_cm3": 0.0,
-    "interference_module_vs_strut_cm3": 0.0
+    "interference_module_vs_strut_cm3": 0.0,
+    "interference_module_vs_clip_left_cm3": 0.002,
+    "interference_clip_left_vs_rail_cm3": 0.0,
+    "interference_clip_left_vs_tumbler_cm3": 0.0,
+    "interference_clip_left_vs_latch_strut_zone_cm3": 0.0,
+    "interference_module_vs_latch_strut_zone_left_cm3": 0.0,
+    "interference_clip_left_vs_strut_left_cm3": 0.0,
+    "interference_module_vs_strut_left_cm3": 0.0
   },
   "params_mm": {
     "bar_d": 22.3,

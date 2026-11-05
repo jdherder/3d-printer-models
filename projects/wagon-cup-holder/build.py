@@ -28,7 +28,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import trimesh  # noqa: E402
 from matplotlib.collections import LineCollection  # noqa: E402
-from model import (CupHolderParams, build_clip, build_module, clip_to_U, print_pose, prism_z, strut_frame,  # noqa: E402
+from model import (CupHolderParams, mirror_along_rail, build_clip, build_module, clip_to_U, print_pose, prism_z, strut_frame,  # noqa: E402
                    strut_ghost, boolean_difference)
 from render import rasterize, section_segments  # noqa: E402
 from sdf import decimate  # noqa: E402
@@ -179,6 +179,12 @@ def main():
     clip_info["supports"] = ("needed under the strut grip and leg: with the ring axis vertical the grip tunnel runs ~31 deg above horizontal, "
                              "so its ceiling and the leg underside overhang. Use normal (auto) supports, 'support on build plate + model'; "
                              "the ring, mouth and dovetail print without")
+    # Left-hand side: the mirror image of the right clip (the module is symmetric along the rail, so it is shared).
+    clip_C_left = mirror_along_rail(clip_C, p, frame="C")
+    clip_U_left = mirror_along_rail(clip_U)                      # the real-use pose of the left clip, for the fit checks
+    _, clip_left_info = export_print("wagon-cup-clip-left", clip_C_left)
+    clip_left_info["supports"] = clip_info["supports"]
+    assert abs(clip_left_info["volume_cm3"] - clip_info["volume_cm3"]) < 0.05, "left clip is not the mirror of the right one"
     tongue_t, groove_ts = dovetail_tests(p)
     _, tongue_info = export_print("wagon-dovetail-test-tongue", tongue_t)
     groove_info = {}
@@ -210,6 +216,19 @@ def main():
         limit = 0.01 if "module_vs_clip" in k else 0.002
         assert v < limit, f"{k} = {v} cm3: parts collide"
 
+    # The same checks for the left side: the mirrored clip, strut and latch zones against the SAME module (unmirrored), rail and tumbler.
+    strut_L, keepout_L = mirror_along_rail(strut), mirror_along_rail(keepout)
+    pairs_L = {
+        "module_vs_clip_left": (module_U, clip_U_left), "clip_left_vs_rail": (clip_U_left, rail), "clip_left_vs_tumbler": (clip_U_left, cup),
+        "clip_left_vs_latch_strut_zone": (clip_U_left, keepout_L), "module_vs_latch_strut_zone_left": (module_U, keepout_L),
+        "clip_left_vs_strut_left": (clip_U_left, strut_L), "module_vs_strut_left": (module_U, strut_L),
+    }
+    checks_L = {f"interference_{k}_cm3": round(interference_cm3(a, b), 4) for k, (a, b) in pairs_L.items()}
+    for k, v in checks_L.items():
+        limit = 0.01 if "module_vs_clip" in k else 0.002
+        assert v < limit, f"{k} = {v} cm3: parts collide on the left side"
+    checks.update(checks_L)
+
     # How far the strut's position can differ from my estimate before the clip must rotate on the bar (informational, not a pass/fail):
     gap_sensitivity = {}
     for gap in (4.0, 7.0):
@@ -219,9 +238,10 @@ def main():
                                               "rotation_to_follow_deg": round(float(np.degrees(np.arctan(abs(gap - p.strut_gap_in) / np.hypot(*strut_frame(p)[0][1:])))), 2)}
 
     # viewer meshes: light copies (the viewer limits meshes to 65k vertices)
-    for name, m, faces in (("asm-module", module_U, 36000), ("asm-clip", clip_U, 26000)):
+    for name, m, faces in (("asm-module", module_U, 36000), ("asm-clip", clip_U, 26000), ("asm-clip-left", clip_U_left, 26000)):
         decimate(m, faces).export(RENDERS / f"{name}.stl")
     strut_view.export(RENDERS / "ref-strut.stl")
+    mirror_along_rail(strut_view).export(RENDERS / "ref-strut-left.stl")
     rail.export(RENDERS / "ref-bar.stl")
     cup.export(RENDERS / "ref-tumbler.stl")
     keepout.export(RENDERS / "ref-keepout.stl")
@@ -256,7 +276,7 @@ def main():
     })
     report = {
         "dimensions_status": "Tube measured by owner (22.3 mm, confirmed on the side rail). Tumbler from retailer figures (owner OK for now).",
-        "clip": clip_info, "module": module_info,
+        "clip": clip_info, "clip_left": clip_left_info, "module": module_info,
         "dovetail_test_tongue": tongue_info, "dovetail_test_groove": groove_info, "strut_grip_test": grip_info,
         "checks": checks, "params_mm": params,
     }
