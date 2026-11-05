@@ -47,6 +47,7 @@ tools/                  shared Python tooling (import from project build scripts
   render.py             headless PNG previews + cross-sections (no GPU)
   inspect_mesh.py       CLI report for any mesh
   make_viewer.py        interactive 3D review page (viewer_template.html) from review.json
+  pegboard.py           pegboard standard + shared hook/pin pegs for custom pegboard parts (docs/pegboard.md)
 projects/
   _template/            copy this to start a new project
   <name>/
@@ -108,3 +109,9 @@ in the project README**, so the owner's link stays stable. Then it logs the feed
   and apply the real measurements in `build.py`.
 - Scans can't see hidden faces (undersides, slot interiors). Ask about them.
 - Keep a short dated **Log** at the bottom of each project README.
+
+## Pegboard parts
+
+Custom pegboard parts use the shared interface in `tools/pegboard.py`: board frame, hook and pin pegs, and fit checks.
+Don't redraw the pegs per project. See `docs/pegboard.md`. The peg sizes come from the owner's steel hook
+(`projects/pegboard-hook`).

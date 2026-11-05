@@ -10,13 +10,14 @@ Autodesk Fusion, and reproducible Python cleanup pipelines.
 | [gate-footing](projects/gate-footing/) | Real size (100 mm), print-ready STEP + STL; next: test print | Plastic foot that holds up a metal gate |
 | [wagon-cup-holder](projects/wagon-cup-holder/) | v9: right and left clips (mirror images) + one shared cup module; snap-on ring + strut grip, no screws; next: print and test the left clip | Side-rail cup holder for a 20 oz Yeti on a MAC wagon, quick on/off for folding |
 | [pegboard-hook](projects/pegboard-hook/) | v1 from photos (wire 5.53 mm caliper), print-ready STL + STEP; next: owner review | Steel pegboard hook (bent wire + anti-rotation pin), modelled for printing |
+| [pegboard-hook](projects/pegboard-hook/) | v2: steel hook replica + fit-test piece from the shared peg interface; next: print the fit test on the real board | Baseline for custom pegboard parts (`tools/pegboard.py`, [docs](docs/pegboard.md)) |
 
 ## Layout
 
 - `projects/<name>/` has one folder per model: `source/` (raw), `build.py`,
   `output/` (print-ready), `renders/` (previews), and a `README.md` with status and notes
 - `tools/` holds shared mesh tooling (`meshkit.py`, `render.py`, `inspect_mesh.py`)
-- `docs/` holds workflow notes for the [A1](docs/bambu-a1.md), [Fusion](docs/fusion.md),
+- `docs/` holds workflow notes for the [A1](docs/bambu-a1.md), [Fusion](docs/fusion.md), [pegboard parts](docs/pegboard.md),
   [Polycam scanning](docs/scanning-polycam.md), and the [model review process](docs/review.md)
 - `CLAUDE.md` is guidance for AI agents working in this repo
 

@@ -88,6 +88,11 @@ def build_hook(p: HookParams):
     return part.part
 
 
+def use_to_board(solid, p: HookParams):
+    """Use frame -> the shared board frame (tools/pegboard.py): front face at x = 0, the pin's hole centre at the origin."""
+    return solid.moved(Location((p.wire_r, -p.pin_y, 0)))
+
+
 def print_pose(solid, p: HookParams):
     """Lay the hook on its side for printing: profile in XY, shave `print_flat` off the bottom, rest it on Z = 0,
     centre the footprint on the origin. The use frame's x/y become the bed's X/Y (X is the longer footprint axis)."""

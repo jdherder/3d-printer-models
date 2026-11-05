@@ -1,12 +1,18 @@
 {
   "page_title": "Pegboard Hook",
-  "title": "Pegboard hook: first model from your photos",
-  "subtitle": "Bent 5.53 mm wire + welded anti-rotation pin \u00b7 shown hanging on a 1/4\" pegboard (1\" hole grid) \u00b7 X out from the board, Z up \u00b7 millimetres",
+  "title": "Pegboard hook: baseline for custom pegboard parts",
+  "subtitle": "Steel hook replica + a fit-test piece built from the shared peg interface (tools/pegboard.py) \u00b7 hung on a 1/4\" pegboard (1\" grid) \u00b7 X out from the board, Z up \u00b7 mm",
   "meshes": [
     {
       "path": "renders/asm-hook.stl",
-      "label": "Hook (round wire, as the real one)",
+      "label": "Steel hook replica (from your photos)",
       "style": "solid"
+    },
+    {
+      "path": "renders/asm-fit-test.stl",
+      "label": "Fit test: plate + shared hook peg + pin",
+      "style": "solid",
+      "color": "#5b8fd9"
     },
     {
       "path": "renders/ref-pegboard.stl",
@@ -46,6 +52,6 @@
     }
   ],
   "scale_note": "Real size. The wire is your caliper reading (5.53 mm); every other dimension is measured off your tape photo (1 inch = 245 px), so it is good to roughly \u00b11 mm. The pegboard is a generic 1/4\" board, lined up on the pin.",
-  "notes_title": "What to check",
-  "notes": "First pass: the wire path (top leg, S-jog, back leg, arm) and the pin are traced from your tape photo; the outline overlays the photo within about a millimetre. The printable STL lies on its side with 0.4 mm shaved off the bed side for a flat first layer. Please check: (1) does the shape match the real hook? (2) the S-jog: in this model it clips the edges of a 1/4\" hole slightly, as the real hook's jog seems to in the photo. What is your board's thickness and hole size? (3) Do you want an exact plastic copy (5.5 mm plastic is much weaker than steel), or a beefier printable version, a longer arm, or a different shape?"
+  "notes_title": "What changed, and what to check",
+  "notes": "v2: the board interface is now shared tooling (tools/pegboard.py) for future custom parts: the 1\" grid, board specs, and a hook peg + anti-rotation pin whose sizes come from your steel hook (5.53 mm pegs, 7.3 mm room behind the board, leg rising 14 mm above the hole). The blue piece is a small fit test built only from that interface: a plate with one hook and one pin. It prints on its side with no supports in about 15 minutes. Please print it in PETG and check: (1) does it hang on your board like the steel hook (tilt in, swing down, pin drops in)? (2) is it snug or loose? (3) if you can, caliper your board's hole and thickness so I can add it as the default board."
 }

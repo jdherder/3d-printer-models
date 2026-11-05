@@ -15,12 +15,37 @@
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
   },
-  "print_orientation": "lying on its side, profile flat on the bed; 0.4 mm flat shaved off the bed side",
-  "fit_on_quarter_inch_pegboard": {
-    "board_thickness": 6.35,
+  "fit_test_print": {
+    "extents_mm": [
+      16.8,
+      47.4,
+      12.4
+    ],
+    "faces": 7782,
+    "watertight": true,
+    "winding_consistent": true,
+    "euler_number": 2,
+    "volume_cm3": 2.7,
+    "fits_A1_as_is": true,
+    "fits_A1_any_axis_order": true,
+    "self_intersecting_faces": 0
+  },
+  "print_orientation": "both lie on their side (pegs flat on the bed), 0.4 mm flat shaved off the bed side",
+  "fit_on_board": {
+    "board": "1/4 in pegboard (1/4 in holes)",
     "hole_d": 6.35,
+    "thickness": 6.35,
     "pitch": 25.4,
-    "interference_mm3": 41.86
+    "steel_hook_interference_mm3": 41.86,
+    "fit_test_interference_mm3": 0.0
+  },
+  "peg_style_mm": {
+    "d": 5.53,
+    "hook_gap": 7.3,
+    "hook_rise": 14.0,
+    "bend_r": 4.5,
+    "pin_len": 7.0,
+    "embed": 1.0
   },
   "params_mm": {
     "wire_d": 5.53,
@@ -50,6 +75,7 @@
     "arm_reach_from_board": 43.8,
     "jog_angle_deg": 25.8,
     "board_gap_behind_back_leg": 7.3,
-    "pin_protrusion": 7.0
+    "pin_protrusion": 7.0,
+    "fit_test_plate_thickness": 4.0
   }
 }
