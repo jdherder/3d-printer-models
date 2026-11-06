@@ -6,7 +6,8 @@ Built only from the shared interface in tools/pegboard.py, so it tests exactly t
   -> output/pegboard-fit-test.step / .stl   4 mm plate, one hook peg + one pin 1 in apart, print pose (on its side)
   -> output/report.json                     checks, peg style, board fit
   -> renders/fit-test.png                   views + sections
-  -> output/pegboard-peg-gauge.step / .stl  strip of straight pins 6.0-6.4 mm, labelled, to pick PegStyle.d
+  -> output/pegboard-peg-gauge.stl          strip of straight pins 6.0-6.4 mm, labelled, to pick PegStyle.d
+                                            (STL only: a one-off test piece, and the engraved labels make its STEP ~24k lines)
   -> renders/peg-gauge.png
   -> renders/asm-fit-test.stl, ref-pegboard.stl   hung on the board (world Z-up), for the viewer
 """
@@ -99,7 +100,7 @@ def main():
     gauge_board = build_gauge()
     pb.to_zup(mk.cad_to_mesh(gauge_board.moved(Location((0, 0, 2.3 * pb.PITCH))))).export(RENDERS / "asm-peg-gauge.stl")  # beside the board
     gauge = pb.lay_on_side(gauge_board, STYLE)
-    export_step(gauge, str(OUT / "pegboard-peg-gauge.step"))
+    (OUT / "pegboard-peg-gauge.step").unlink(missing_ok=True)       # no STEP for the gauge (see docstring)
     gauge_mesh = mk.cad_to_mesh(gauge)
     gauge_info = mk.report(gauge_mesh)
     assert gauge_info["watertight"], "peg gauge is not watertight"

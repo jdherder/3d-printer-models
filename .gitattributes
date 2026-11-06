@@ -1,0 +1,4 @@
+# Generated outputs (see CLAUDE.md): collapsed in GitHub diffs and left out of language stats.
+*.step linguist-generated=true
+*.stl  linguist-generated=true
+**/renders/viewer.html linguist-generated=true

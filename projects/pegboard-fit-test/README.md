@@ -51,7 +51,8 @@ with the pegs, lays it on its side (`pegboard.lay_on_side`), exports the STEP an
 
 - `output/pegboard-fit-test.stl`: print this
 - `output/pegboard-fit-test.step`: editable solid for Fusion
-- `output/pegboard-peg-gauge.stl` / `.step`: peg gauge (print on its side, no supports, ~20 min)
+- `output/pegboard-peg-gauge.stl`: peg gauge (print on its side, no supports, ~20 min). STL only, because the engraved labels
+  made its STEP ~24k lines and it's a one-off test piece
 - `output/report.json`: checks, peg style, board fit
 - **Viewer artifact:** https://claude.ai/artifact/UwaRj3ht4BSYQHvKqeFPXS (publish updates to this URL)
 
