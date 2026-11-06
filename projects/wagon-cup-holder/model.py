@@ -86,13 +86,14 @@ class CupHolderParams:
     strut_gap_in: float = 5.5       # bar's outer surface to the strut's inner face. Photos gave 4 and 7: nominal. The ring can rotate to absorb a few mm
     strut_slope: float = 1.63       # depth below the bar axis grows by this much per mm along the bar, away from the pivot screw (~59 degrees)
     strut_icpt: float = -7.0        # depth below the bar axis = strut_slope * x + strut_icpt, x measured from the strut's pivot screw
-    ring_x_from_pivot: float = 55.0 # ring centre, measured from the pivot screw: puts the ring at the strut end of the clear stretch
-    grip_x: float = 24.0            # the grip is this far from the ring centre, toward the pivot. The strut is shallow there (~45 mm below the bar)
+    ring_x_from_pivot: float = 73.0 # ring centre, measured from the pivot screw: the middle of the clear stretch (13 to 133 mm from the screw). v9.1: was 55, so the grip sat only ~43 mm below the bar
+    grip_x: float = 24.0            # the grip is this far from the ring centre, toward the pivot. With the ring at 73 the grip is ~73 mm below the bar axis
     grip_len: float = 22.0          # length of the grip along the strut
     grip_wall: float = 3.0
-    grip_lip: float = 1.6           # the lips overlap the strut's outer face by this much (snap)
+    grip_lip: float = 1.2           # the lips overlap the strut's outer face by this much (snap)
     grip_lead: float = 1.6          # lead-in at the mouth
-    grip_clearance: float = 0.3     # total clearance round the strut (0.2 per side). The middle test clip. Set from the strut-grip test
+    grip_clearance: float = 0.4     # total clearance round the strut (0.2 per side). v9.1: back to 0.4 (the v7 clip at 0.4 fit nicely)
+    grip_slack_out: float = 1.5     # extra room on the cup side of the strut (the closed wall). The cup's load presses the strut onto that wall anyway, so the slack costs nothing and absorbs a strut that is further out than modelled
     leg_w: float = 16.0             # width of the arm along the strut
     arm_y_out: float = 24.0         # outer edge of the arm, from the rail axis (outward)
     leg_round: float = 2.5
@@ -313,11 +314,12 @@ def _T(R, origin):
     return T
 
 
-def strut_ghost(p: CupHolderParams, gap: float | None = None, margin: float = 0.0, t0: float = -130.0, t1: float = 130.0) -> trimesh.Trimesh:
+def strut_ghost(p: CupHolderParams, gap: float | None = None, margin: float = 0.0, t0: float = -130.0, t1: float = 130.0, slack_out: float = 0.0) -> trimesh.Trimesh:
     """The strut as a solid, in the U frame, from t0 to t1 mm along its axis measured from the grip (negative = toward the pivot).
-    `margin` grows it on every side (used as the keep-out)."""
+    `margin` grows it on every side (used as the keep-out); `slack_out` adds extra room on the outboard (cup) side only."""
     origin, R = strut_frame(p, gap=gap)
-    m = trimesh.creation.box(extents=[p.strut_size + 2 * margin, p.strut_size + 2 * margin, t1 - t0])
+    m = trimesh.creation.box(extents=[p.strut_size + 2 * margin + slack_out, p.strut_size + 2 * margin, t1 - t0])
+    m.apply_translation([slack_out / 2, 0.0, 0.0])                       # the slack is on the outboard (+x) side only
     m.apply_transform(_T(R, origin + R[:, 2] * (t0 + t1) / 2))
     return m
 
@@ -361,7 +363,7 @@ def build_clip(p: CupHolderParams | None = None, length: float | None = None, do
         g_origin, g_R = strut_frame(p)
         g_h = (p.strut_size + p.grip_clearance) / 2 + p.grip_wall            # half size of the grip's outer envelope
         y_low = g_origin[2] - 16.0
-        x_high = max(x_out, p.strut_yc + g_h) + 3.0
+        x_high = max(x_out, p.strut_yc + g_h + p.grip_slack_out) + 3.0
     else:
         y_low, x_high = ear_bot - 3.0, x_out + 3.0
     grid = sdf.Grid(lo=(-x_out - 3.0, min(ear_bot - 3.0, y_low), -3.0),
@@ -391,20 +393,24 @@ def build_clip(p: CupHolderParams | None = None, length: float | None = None, do
     body = sdf.smin(ring, ears, 4.0)
     body = sdf.smax(body, np.abs(Z - zc) - L / 2, 0.8)       # smooth unions bulge where shapes share a plane: cut the ends flat
     if two_point:
-        # Arm: a rounded block that runs from the grip's up-slope side wall (the strut's upper face) up to the ears' underside. It lies on the
-        # ring side of the strut, so it never crosses the strut itself. Coordinates are in the strut frame (xg = outward, yg = in-plane normal, zg = along).
-        dxu, dyu, dzu = (Z - zc) - g_origin[0], X - g_origin[1], Y - g_origin[2]                       # U-frame offsets from the grip centre
+        # Post: a rounded vertical block (in the use pose) from under the ears down to the grip's up-slope side wall. It stands above the strut's upper
+        # face, so it never crosses the strut itself (anything that would is cut away exactly afterwards). Written in C-frame grid coordinates:
+        # x_c = Y_u, y_c = Z_u, z_c = X_u + L/2.
+        ey = g_R[:, 1]                                                                             # in-plane normal of the strut (points toward the pivot and down)
+        wall_pt = g_origin - ey * (g_h - 1.5)                                                      # middle of the up-slope side wall
+        x_p = wall_pt[0] - 2.0                                                                     # post centre along the rail (U), a little toward the ring
+        z_bot, z_top = wall_pt[2] - 3.0, ear_bot + 4.0
+        y_a0, y_a1 = w + p.lead_in + 0.5, p.arm_y_out                                              # Y range of the post (clears the ring mouth's lead-in)
+        post = sdf.sd_round_box(X, Y, Z, ((y_a0 + y_a1) / 2, (z_bot + z_top) / 2, zc + x_p),
+                                ((y_a1 - y_a0) / 2, (z_top - z_bot) / 2, p.leg_w / 2), p.leg_round)
+        # Grip: the C's outer envelope, a rounded box in the strut's own frame. Its cavity and mouth are cut exactly afterwards.
+        dxu, dyu, dzu = (Z - zc) - g_origin[0], X - g_origin[1], Y - g_origin[2]                   # U-frame offsets from the grip centre
         xg = dyu
         yg = g_R[0, 1] * dxu + g_R[2, 1] * dzu
         zg = g_R[0, 2] * dxu + g_R[2, 2] * dzu
-        ey_z = g_R[2, 1]                                                                           # vertical part of the in-plane normal (negative: ey points down)
-        arm_far = (ear_bot + 4.0 - g_origin[2]) / (-ey_z) - g_h if ey_z < 0 else 30.0                # how far past the grip's side wall, along -ey, to reach just inside the ears
-        y_a0, y_a1 = w + p.lead_in + 0.5, p.arm_y_out                                              # Y range of the arm (clears the ring mouth's lead-in)
-        arm = sdf.sd_round_box(xg, yg, zg, ((y_a0 + y_a1) / 2 - p.strut_yc, -(2 * g_h + arm_far - 2.0) / 2, 0.0),
-                               ((y_a1 - y_a0) / 2, (arm_far + 2.0) / 2, p.leg_w / 2), p.leg_round)
-        # Grip: the C's outer envelope, a rounded box in the strut's own frame. Its cavity and mouth are cut exactly afterwards.
-        envelope = sdf.sd_round_box(xg, yg, zg, (0.0, 0.0, 0.0), (g_h, g_h, p.grip_len / 2), 3.0)
-        body = sdf.smin(sdf.smin(body, arm, 5.0), envelope, 5.0)
+        sl = p.grip_slack_out
+        envelope = sdf.sd_round_box(xg, yg, zg, (sl / 2, 0.0, 0.0), (g_h + sl / 2, g_h, p.grip_len / 2), 3.0)
+        body = sdf.smin(sdf.smin(body, post, 5.0), envelope, 5.0)
     mesh = sdf.to_mesh(body, grid, target_faces=p.clip_faces)
 
     parts = [mesh]
@@ -428,7 +434,7 @@ def build_clip(p: CupHolderParams | None = None, length: float | None = None, do
         # The strut cuts a channel through anything that would touch it (the ears near the strut-side end, the grip's cavity),
         # and the grip's mouth opens the C toward the outside. All in the strut's own frame, then moved into C.
         T_UC = _U_to_C(p, L)
-        keep = strut_ghost(p, margin=p.grip_clearance / 2)
+        keep = strut_ghost(p, margin=p.grip_clearance / 2, slack_out=p.grip_slack_out)
         keep.apply_transform(T_UC)
         mouth = grip_mouth_cutter(p)
         mouth.apply_transform(T_UC @ _T(g_R, g_origin))

@@ -34,9 +34,10 @@ feel unnatural... it could all just flow together more seamlessly").
 - [x] Owner report: lifting the tumbler out sometimes lifts the whole module off the dovetail and it "sticks" to the cup. **Added a 10 mm vent hole through the pocket floor** (module reprint, or drill the printed one)
 - [x] Owner thinks the sticking is the tumbler **wedging in the tapered pocket**, not suction. **v8.2: pocket opened up** (floor clearance 2 → 4 mm on the diameter, plus a draft that adds 0.02 mm per mm of height, so 85.4 mm at the rim). The vent hole stays
 - [x] Owner: make the dovetail a little tighter. **v8.3: dovetail clearance 0.35 → 0.20 mm per side** on the module's groove (the clip is unchanged). Three groove test blocks (0.30 / 0.20 / 0.10) to pick the tightest that still slides by hand
+- [x] Owner printed the left clip: "mostly worked", but the strut grip was **so tight that it snapped trying to fit it** (expect the right one to be the same). **v9.1 (both clips): ring moved to the middle of the clear stretch, grip ~73 mm below the bar on a long post, plus more slack** (see the 2026-11-05 log entry). Both clips need a reprint; the module does not
 - [x] **Left side (v9): `wagon-cup-clip-left.stl` built**, the mirror image of the right clip (see "Left-hand side"). Same module for both sides. Not yet printed
 - [ ] **Print `wagon-strut-grip-test.stl`** (v8: three C-clips, lips 1.2 / 1.6 / 2.0 mm = 16 / 20 / 24 mm tall), check which goes on by hand and stays on, then print the full v8 clip (with supports)
-- [ ] **Owner: check the arm side** (see "How it works") and that the strut gap looks right (nominal 5.5 mm, could be 4 to 7)
+- [ ] **Owner: check the post side** (see "How it works") and that the strut gap looks right (nominal 5.5 mm, could be 4 to 7)
 - [ ] Print the full clip **with supports** (see "Print settings"), try it on the wagon with a full cup, fold the handle
 - [ ] Ruler reading of the gap from the bar's surface to the strut's inner face (to pin the gap down)
 
@@ -44,8 +45,8 @@ feel unnatural... it could all just flow together more seamlessly").
 
 The owner wants a cup holder on **either side** of the wagon. The wagon's frame is mirror-symmetric (the owner: the latch and the diagonal strut are the same on both sides), so:
 
-- **Left clip = the right clip mirrored** (`wagon-cup-clip-left.stl`). In the left side's own frame (cup outward, up = up) the strut and its pivot are on the other side of the clip, so the arm and grip go the other way.
-  Viewed from outside the wagon, cup toward you, the **right clip's arm goes to the left and the left clip's arm goes to the right**: the arm always points toward the strut's pivot end of the bar.
+- **Left clip = the right clip mirrored** (`wagon-cup-clip-left.stl`). In the left side's own frame (cup outward, up = up) the strut and its pivot are on the other side of the clip, so the post and grip go the other way.
+  Viewed from outside the wagon, cup toward you, the **right clip's post and grip are to the left of the ring and the left clip's are to the right**: the grip always goes toward the strut's pivot end of the bar.
 - **The cup module is the same part for both sides.** It is symmetric along the rail (checked: the mirrored module differs from itself by 0.025 % of its volume, which is meshing noise), so no mirrored module is needed.
 - The left clip is printed upright like the right one (ring axis vertical, grip end up), the same supports, the same grip and dovetail. It is mirrored across the ring's vertical axis for printing, which is the same left part turned about a horizontal axis
   (mirroring it along the rail would have turned it upside down on the bed, and its overhang would not match the right clip's).
@@ -54,14 +55,14 @@ The owner wants a cup holder on **either side** of the wagon. The wagon's frame 
 
 ## How it works
 
-- The **clip** has two grips. A **ring** (22.5 mm bore, 2.8 mm wall, 70 mm long) snaps onto the right-hand side rail at the **strut end** of the clear stretch. A diagonal **arm** runs down
-  from under the ring's outboard ear to a **C-shaped grip** (13.8 mm square tunnel, 22 mm long, 3 mm walls, 1.6 mm lips, with a lead-in) that snaps onto the **angled strut** about 45 mm below the bar. No screw, nut or tool.
+- The **clip** has two grips. A **ring** (22.5 mm bore, 2.8 mm wall, 70 mm long) snaps onto the right-hand side rail at the **strut end** of the clear stretch. A vertical **post** runs down
+  from under the ring's outboard ear to a **C-shaped grip** (13.9 mm square tunnel + 1.5 mm of slack on the cup side, 22 mm long, 3 mm walls, 1.2 mm lips, with a lead-in) that snaps onto the **angled strut** about 45 mm below the bar. No screw, nut or tool.
 - **Why the C faces the way it does (v8):** the cup (~1 kg, 84 mm out) twists the clip about the bar, so the strut grip (~43 mm below the bar) is pushed toward the cup with about 1.9 × the cup's weight (~19 N, 2–3× in bumps).
   In v7 / v7.1 the C's mouth faced the cup, so that load tried to push the strut out through the mouth and the lips let go. In **v8 the closed wall faces the cup and the mouth faces the bar**: the load presses the strut into a solid 3 mm wall.
   The lips now only keep the clip on when the cup isn't pulling (empty clip, bumps that swing the cup back). The strut grip also stops the clip sliding along the bar (the strut slopes). The ring can rotate about 2° to absorb ±1.5 mm of strut-gap error.
-- **Putting it on (untested, tell me how it feels):** 1) hold the clip above the bar, a little out from the strut, ring mouth (it faces down) above the bar; 2) push it **in toward the wagon** so the strut snaps into the grip through its bar-side mouth;
+- **Putting it on (untested, tell me how it feels; the right clip with the cup toward you; mirror this for the left):** 1) hold the clip above the bar, a little out from the strut, ring mouth (it faces down) above the bar; 2) push it **in toward the wagon** so the strut snaps into the grip through its bar-side mouth;
   3) **slide it down along the strut** until the ring clicks onto the bar from above. To take it off: lift it up along the strut until the ring clears the bar, then pull it out. The weight of the cup never pulls it off.
-- **Arm orientation (check before you print):** viewed from outside the wagon, cup toward you, the **strut end is on your LEFT**. A short diagonal **arm** runs from under the ring's outboard ear, down and to the left, to the grip on the strut's upper side. The ring sits on the bar at the left end of the clear stretch.
+- **Post orientation (check before you print):** viewed from outside the wagon, cup toward you, the **strut end is on your LEFT**. A long vertical **post** (v9.1) runs from under the ring's outboard ear down to the grip on the strut's upper side, about **73 mm below the bar axis**. The ring sits in the **middle of the clear stretch**, so the post hangs from just left of the ring's centre.
 - On the clip's outboard side is the vertical **dovetail tongue** (34 mm wide at the root, 48 mm at the tip, 7 mm tall, 28 mm of vertical engagement). It is unchanged, so other attachments can be made for it.
 - The cup **module** has the matching groove (**0.20 mm clearance per side** since v8.3; was 0.35). It **drops straight down onto the tongue** and rests on the tops of the clip's ears, so **gravity holds it seated**. To remove it, lift it ~28 mm.
 - To fold the wagon: lift the cup off, then pull the clip off the bar and strut in one motion (or leave the cup on and lift both off together).
@@ -87,7 +88,7 @@ frame. Take both off to fold; the cup can stay in the clip and come off with it.
 - **Snap geometry:** the mouth is 20.7 mm wide against the 22.3 mm tube, so each arm spreads ~0.8 mm (≈1% strain, fine for PETG). The owner's test
   print fit well.
 - **Printing:** the **module prints upright** (base chamfered at exactly 45°, the stem's underside is a self-supporting ≥45° sweep, the dovetail groove is a vertical channel).
-  The **clip prints with its ring axis vertical** (layers run around the ring, so the arms flex along the layers). The module overhang area is 41.9 mm². **The clip is ~646 mm² (v8) and needs supports:** in this pose the strut grip's tunnel
+  The **clip prints with its ring axis vertical** (layers run around the ring, so the arms flex along the layers). The module overhang area is 41.9 mm². **The clip is ~1076 mm² (v9.1) and needs supports:** in this pose the post lies sideways and the strut grip's tunnel
   runs ~31° above horizontal, so its ceiling overhangs (mostly 20–35° from flat, at 45–61 mm above the bed). The ring, mouth and dovetail print clean.
 - **Material:** PETG (outdoor, sun, flexing clip). PLA creeps and softens in a hot car or in the sun, and ASA/ABS warp on the open-frame A1.
 - **History:** v1 cup on top of the bar; v2 hung off the side rail; v3 split into clip + module (quick release); v3.1 moved the cup out to clear the strut; v4 shaped bracket instead of a slab; v5 printed M8 bolt and nut (snapped);
@@ -118,7 +119,7 @@ frame. Take both off to fold; the cup can stay in the clip and come off with it.
 
 `python projects/wagon-cup-holder/build.py` (~2 min):
 1. `model.py`: `build_module` = tapered cup ring + stem/pad as signed-distance fields, smooth-unioned, hollowed, top plane rounded, meshed with marching cubes (`sdf.py`,
-   0.5 mm cells, decimated), then the dovetail groove cut exactly. `build_clip` (right side; the left clip is its mirror, `mirror_along_rail`) = ring + ears + boss + arm + strut-grip envelope as a field, meshed, the dovetail tongue unioned exactly, then the bore,
+   0.5 mm cells, decimated), then the dovetail groove cut exactly. `build_clip` (right side; the left clip is its mirror, `mirror_along_rail`) = ring + ears + boss + post + strut-grip envelope as a field, meshed, the dovetail tongue unioned exactly, then the bore,
    mouth, strut keep-out and the grip's mouth (facing the bar) cut exactly. Booleans are `manifold3d`. Only the largest body is kept (booleans on coplanar faces leave slivers).
 2. `build.py` exports each piece in its print pose and the test pieces, and models the rail, tumbler, latch zones and the angled strut as ghosts for the fit checks and the viewer; it also runs the strut-gap sensitivity (4 and 7 mm).
 3. Checks, in the assembled (real use) pose: both pieces watertight and one body, overhang area, and the interference of every pair: module/clip (a contact, ≤ 0.01 cm³),
@@ -265,3 +266,9 @@ Needs `scikit-image` (marching cubes), in `requirements.txt`.
   Added `mirror_along_rail()` in `model.py` and the left clip to `build.py` (`output/wagon-cup-clip-left.stl`, `renders/asm-clip-left.stl`, `renders/ref-strut-left.stl`, `clip_left` in `report.json`). Checked that the module is symmetric along the rail (0.025 % asymmetric volume), so it is shared.
   First attempt mirrored the clip along the rail in its print frame, which turned it upside down on the bed (overhang 1025.8 mm² instead of 645.6). Fixed by mirroring across the ring's vertical axis for the print pose and along the rail only for the fit checks. Left-side checks in the assembled pose all pass (see "Left-hand side"). The viewer
   shows the left clip and strut as hidden extras (turn them on to compare). Next: owner prints the left clip (with supports) and tests it on the left frame, and confirms the left frame is a mirror of the right.
+- **2026-11-05 (v9.1, longer reach to the strut):** Owner printed the left clip: **"mostly worked"**, but the strut grip was **so tight they snapped it off trying to fit it**, and the right clip will probably be the same. They proposed **moving the big (dovetail) clip further in on its bar and attaching the angle clip further down the strut, with a longer link between them.**
+  Found while doing it: with the ring at 55 mm from the pivot screw the grip sat only ~43 mm below the bar, and the ring was 18 mm off the middle of the clear stretch (the latch/strut zones in the checks are centred on the ring, so they only matched the real frame when the ring is in the middle). **Changes (both clips; the module is unchanged):**
+  `ring_x_from_pivot` 55 → **73** (centre of the clear stretch, 13 to 133 mm from the screw): the grip, still 24 mm from the ring's centre toward the pivot, is now **~73 mm below the bar axis** (was 43.5). The diagonal arm can't reach that far (it runs at 31.5° and would leave the ring), so the link is now a **vertical post**
+  (16 mm wide, Y 12.9–24 mm) from under the ears down to the grip's up-slope side wall. Because I don't know why it was tight, I also took stress out of the grip: **1.5 mm of slack on the cup side** (`grip_slack_out`; the cup's load presses the strut onto that wall anyway, so it costs nothing, and it absorbs a strut up to 1.5 mm further out than modelled: a 7 mm gap now overlaps 0 mm³, was 397),
+  **clearance back to 0.4 mm** (the v7 clip at 0.4 fit nicely), **lips 1.6 → 1.2 mm** (about a quarter less snap strain; they only keep the clip on when the cup isn't pulling). All 16 interference checks pass (right and left): clip vs strut/rail/tumbler/latch zones 0, module vs clip 0.002 cm³ seat contact. Gap 4 mm (strut closer to the bar) still overlaps 57 mm³ (needs ~1.1° of rotation or a little flex).
+  Print: the clip is now 110 × 53 × 72 mm in its print pose (fits the A1), **overhang ~1076 mm² (post and grip lie sideways, so supports are needed under them)**. Grip test rebuilt with the same slack and clearance. Not yet tested on the wagon. Next: owner prints the grip test (or goes straight to the clip), tries the right and left clips, and says which part felt tight (the grip going onto the strut, the ring onto the bar) if it still does.
