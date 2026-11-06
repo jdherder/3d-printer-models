@@ -1,0 +1,55 @@
+{
+  "page_title": "Pegboard Hook",
+  "title": "Pegboard hook (catalog): steel hook replica",
+  "subtitle": "Bent wire + anti-rotation pin, traced from your photos, printed at 6.1 mm \u00b7 hung on your board (1\" grid) \u00b7 X out from the board, Z up \u00b7 millimetres",
+  "meshes": [
+    {
+      "path": "renders/asm-hook.stl",
+      "label": "Pegboard hook",
+      "style": "solid"
+    },
+    {
+      "path": "renders/ref-pegboard.stl",
+      "label": "Your board: Menards 3/16\" white (6.35 mm holes, 3.94 mm thick)",
+      "style": "solid",
+      "color": "#b08a5a"
+    }
+  ],
+  "dims": [
+    {
+      "label": "Wire diameter (printed; steel is 5.53)",
+      "param": "wire_d"
+    },
+    {
+      "label": "Arm length (along the wire)",
+      "param": "arm_length"
+    },
+    {
+      "label": "Arm reach from board",
+      "param": "arm_reach_from_board"
+    },
+    {
+      "label": "Arm angle above horizontal (deg)",
+      "param": "arm_angle_deg"
+    },
+    {
+      "label": "Pin sticks into board",
+      "param": "pin_protrusion"
+    },
+    {
+      "label": "S-jog angle (deg)",
+      "param": "jog_angle_deg"
+    },
+    {
+      "label": "Room behind the back leg (max board thickness)",
+      "param": "board_gap_behind_back_leg"
+    },
+    {
+      "label": "Bend radius (centreline)",
+      "param": "bend_r"
+    }
+  ],
+  "scale_note": "Real size. The shape is from your tape photo (about \u00b11 mm), with the S-bend at 12\u00b0 as in your first print. The wire is printed at 6.1 mm (your steel hook is 5.53). The board uses your measured 1/4\" holes on 1\" centres; its thickness is the listing's 0.155\". The model may look like it touches the hole edges: that's a perfectly flush hang, and the real hook rocks in fine.",
+  "notes_title": "What changed, and what to check",
+  "notes": "v6: back to the 12\u00b0 S-bend from your first print (the level step in v5 was much harder to get in; the slope guides the hook as it rocks in), and the wire goes from 5.9 to 6.1 mm because 5.9 was still loose. Bends are a touch rounder (3.5 mm) so the thicker wire stays clean. Check when you reprint: (1) goes in as easily as the first one? (2) snug now? To settle the diameter for good, print the peg gauge in the pegboard-fit-test project."
+}

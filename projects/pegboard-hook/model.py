@@ -1,0 +1,135 @@
+"""Parametric model of a 1/4" pegboard hook: a bent round wire with a welded anti-rotation pin.
+
+Coordinates while modelling ("use frame", as the hook hangs on the board, seen from the side):
+  x = out from the board (the board's front face is at x = -wire_r, the hook's back leg sits against it)
+  y = up
+  z = across the hook (the wire's centreline lies in z = 0)
+The origin is the sharp corner where the back leg meets the arm (the intersection of their centrelines).
+
+The wire path, from the top tip down (all centreline points, mm):
+  tip_top   top end of the short leg that goes through the board and rises behind it
+  jog_back  corner behind the board, where that leg turns into the sloped jog     (derived: see the jog_* fields)
+  jog_front corner in front of the board, where the jog turns down into the back leg  (derived)
+  corner    bottom of the back leg, where the arm starts
+  arm_end   free end of the arm
+All corners use one bend radius. The pin is a separate straight stub, welded to the back leg and pointing into the board
+(it sits in the hole one pitch below the jog and stops the hook rotating out).
+
+Values come from the owner's photos (2026-11-05, tape scale ~9.65 px/mm) and one caliper reading (wire 5.53 mm),
+so positions are good to roughly +-1 mm. See the project README.
+"""
+
+from dataclasses import asdict, dataclass
+
+from build123d import (Axis, Box, BuildLine, BuildPart, BuildSketch, Circle, Cylinder, FilletPolyline, Location, Mode,
+                       Plane, Vector, sweep)
+
+
+@dataclass
+class HookParams:
+    wire_d: float = 5.53              # caliper (owner)
+    pin_d: float = 5.53               # looks like the same wire in the photos (~5.5 mm)
+    bend_r: float = 3.5               # centreline bend radius at every corner (tight, like bent steel). Must stay above the
+                                      # wire radius or the inside of the bend folds over itself (6.1 mm wire -> inner radius 0.45)
+
+    # The S-jog is defined by what it must do: pass through the hole one pitch above the pin's hole.
+    # Its straight part crosses the hole-centre height `jog_cross_depth` behind the board's front face, at `jog_angle_deg`.
+    # (As traced, the jog was ~26 deg with its front corner 3.3 mm lower, which can't hang flush on a 1 in grid:
+    # the wire's underside met the board face ~3 mm below the hole. The back corner and the top leg still match the photo.)
+    # 12 deg is the version the owner printed first, and it went in easily. A level (0 deg) step was tried (v5) because the
+    # flush-hang check said a sloped wire binds in 6.35 mm holes, but in the owner's test it was much harder to get in:
+    # the slope guides the hook as it rocks in. Trust the print, not the flush check, for this hook.
+    jog_angle_deg: float = 12.0
+    jog_pitch: float = 25.4
+    jog_cross_depth: float = 2.0      # ~mid-board for 3/16 in (3.9 mm) hardboard
+    jog_back_x: float = -12.85        # behind-board leg centreline (photo)
+    tip_rise: float = 12.0            # top of the behind-board leg above the back corner (photo: 52.3 - 40.3)
+    arm_end: tuple = (41.0, 9.2)      # arm rises ~13 deg above horizontal
+
+    pin_y: float = 13.0               # pin axis height above the bottom corner
+    pin_tip_x: float = -9.8           # pin sticks ~7 mm into the board past the back leg's surface
+
+    print_flat: float = 0.4           # mm shaved off the bed side so a round wire has a flat first layer (3.1 mm wide)
+
+    @property
+    def wire_r(self):
+        return self.wire_d / 2
+
+    def _jog_y(self, x):
+        import math
+        x0, y0 = -(self.wire_r + self.jog_cross_depth), self.pin_y + self.jog_pitch
+        return y0 + (x0 - x) * math.tan(math.radians(self.jog_angle_deg))
+
+    @property
+    def jog_front(self):
+        return (0.0, self._jog_y(0.0))
+
+    @property
+    def jog_back(self):
+        return (self.jog_back_x, self._jog_y(self.jog_back_x))
+
+    @property
+    def tip_top(self):
+        return (self.jog_back_x, self.jog_back[1] + self.tip_rise)
+
+    def derived(self) -> dict:
+        """Numbers worth showing the owner (mm / deg)."""
+        import math
+        ax, ay = self.arm_end
+        jx0, jy0 = self.jog_back
+        jx1, jy1 = self.jog_front
+        return {
+            "arm_length": round(math.hypot(ax, ay), 1),
+            "arm_angle_deg": round(math.degrees(math.atan2(ay, ax)), 1),
+            "arm_reach_from_board": round(ax + self.wire_r, 1),
+            "jog_angle_deg": round(math.degrees(math.atan2(jy0 - jy1, jx1 - jx0)), 1),
+            "board_gap_behind_back_leg": round(-jx0 - 2 * self.wire_r, 1),   # max board thickness the hook accepts
+            "pin_protrusion": round(-self.pin_tip_x - self.wire_r, 1),
+        }
+
+    def report_params(self) -> dict:
+        d = {k: v for k, v in asdict(self).items()}
+        d.update(jog_front=[round(v, 2) for v in self.jog_front], jog_back=[round(v, 2) for v in self.jog_back],
+                 tip_top=[round(v, 2) for v in self.tip_top])
+        d.update(self.derived())
+        return d
+
+
+def path_points(p: HookParams):
+    return [Vector(*p.tip_top, 0), Vector(*p.jog_back, 0), Vector(*p.jog_front, 0), Vector(0, 0, 0),
+            Vector(*p.arm_end, 0)]
+
+
+def build_hook(p: HookParams):
+    """The hook in the use frame, full round wire (no print flat)."""
+    assert p.bend_r > p.wire_r + 0.2, f"bend_r {p.bend_r} must exceed the wire radius {p.wire_r} (+0.2) or the bends self-intersect"
+    pts = path_points(p)
+    start_dir = (pts[1] - pts[0]).normalized()
+    with BuildPart() as part:
+        with BuildLine() as path:
+            FilletPolyline(*pts, radius=p.bend_r)
+        with BuildSketch(Plane(origin=pts[0], z_dir=start_dir)):
+            Circle(p.wire_r)
+        sweep(path=path.wires()[0])
+        pin_len = -p.pin_tip_x
+        with BuildPart(mode=Mode.ADD):
+            with BuildPart(Location((-pin_len / 2, p.pin_y, 0))):
+                Cylinder(p.pin_d / 2, pin_len, rotation=(0, 90, 0))
+    return part.part
+
+
+def use_to_board(solid, p: HookParams):
+    """Use frame -> the shared board frame (tools/pegboard.py): front face at x = 0, the pin's hole centre at the origin."""
+    return solid.moved(Location((p.wire_r, -p.pin_y, 0)))
+
+
+def print_pose(solid, p: HookParams):
+    """Lay the hook on its side for printing: profile in XY, shave `print_flat` off the bottom, rest it on Z = 0,
+    centre the footprint on the origin. The use frame's x/y become the bed's X/Y (X is the longer footprint axis)."""
+    r = p.wire_r
+    if p.print_flat > 0:
+        big = 400.0
+        cutter = Box(big, big, big).locate(Location((0, 0, -r + p.print_flat - big / 2)))
+        solid = solid - cutter
+    bb = solid.bounding_box()
+    return solid.moved(Location((-(bb.min.X + bb.max.X) / 2, -(bb.min.Y + bb.max.Y) / 2, -bb.min.Z)))
