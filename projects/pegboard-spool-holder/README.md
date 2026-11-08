@@ -8,7 +8,7 @@ board, like a paper-towel holder. Catalog part: see `docs/pegboard.md`.
 
 ## Goal
 
-A spool holder that hangs on the shared pegs, takes any normal 1 kg spool, and is strong enough to carry it full.
+A spool holder that hangs on the shared pegs (two hooks + two pins), takes any normal 1 kg spool, and is strong enough to carry it full.
 
 ## Status
 
@@ -17,6 +17,10 @@ A spool holder that hangs on the shared pegs, takes any normal 1 kg spool, and i
       106 × 73 × 22 mm print, watertight, 0 self-intersections, clears the board (0.1 mm per side)
 - [x] Spool checks: arm + lip pass through a 50 mm bore; spools up to 82 mm wide fit; the reference 200 × 68 mm spool
       (53 mm bore) clears the arm and board
+- [x] v2 (owner: "multiple hooks"): **two hooks side by side** in one row (1 in apart) + two pins 2 in below. Side by side,
+      not stacked: two hooks share one rocking axis, so they go in together (stacked hooks would swing on different arcs and bind).
+      The arm widened to 31.5 mm to span both columns, so it stays on the bed and centred under the load; arm height 26 → 22 mm.
+      106 × 73 × 31 mm print, watertight, clears the board; arm + lip still pass a 50 mm bore
 - [ ] Owner review: where it hangs behind the A1, filament path, fixed arm vs spinning hub (Open questions)
 - [ ] Test print and hang with a full spool
 
@@ -29,14 +33,15 @@ A spool holder that hangs on the shared pegs, takes any normal 1 kg spool, and i
 | Widest spool | 82 | `ARM_REACH` |
 | Board | Menards 3/16 in white, 6.35 holes, 1 in grid | `pegboard.DEFAULT_BOARD` |
 
-Where a 200 mm spool ends up, relative to the hook's hole: centre 31 below, bottom 131 below, top 69 above;
+Where a 200 mm spool ends up, relative to the hook holes: centre 29 below, bottom 129 below, top 71 above;
 centre 40 out from the board, front face 74 out. The arm tip is 93 mm out from the board.
 
 ## Print settings
 
-PETG (it carries ~1.2 kg all the time, and PLA creeps). On its side as exported: the pegs and the arm lie flat on the bed,
-so the layers run along both. No supports (the bed-side chamfer is a 45° overhang). 4 walls, 20–30 % gyroid.
-About 55 cm³, so roughly 70 g of filament.
+PETG (it carries ~1.2 kg all the time, and PLA creeps). On its side as exported, so the layers run along the pegs and the arm.
+One column of pegs and the arm lie on the bed; the other column's hook and pin are 25 mm up and **need supports**
+(tree, on build plate only; the arm's bed-side chamfer is 45° and needs none). 4 walls, 20–30 % gyroid.
+About 70 cm³ solid, roughly 60–70 g at that infill.
 
 ## Open questions
 
@@ -50,10 +55,10 @@ About 55 cm³, so roughly 70 g of filament.
 
 ## Pipeline
 
-`build.py` builds `pegboard.mount_plate(PegStyle(), cols=(0,), rows=(0, 2), thickness=5)` with its bed-side edge flush
+`build.py` builds `pegboard.mount_plate(PegStyle(), cols=(0, 1), rows=(0, 2), thickness=5)` with its bed-side edge flush
 with the pegs, adds the arm and lip, lays it on its side (`pegboard.lay_on_side`), exports the STEP and STL, and asserts:
 zero overlap with the board, the arm + lip pass through a 50 mm bore, and the reference spool clears the arm and board.
-Parameters at the top of `build.py` (`ARM_*`, `LIP_*`, `ROWS`, `SPOOL`).
+Parameters at the top of `build.py` (`ARM_*`, `LIP_*`, `ROWS`, `COLS`, `SPOOL`).
 
 ## Files
 
@@ -66,3 +71,5 @@ Parameters at the top of `build.py` (`ARM_*`, `LIP_*`, `ROWS`, `SPOOL`).
 
 - **2026-11-08:** v1. The owner wants the A1's active spool on the pegboard behind the printer, held sideways. One peg column
   (hook + pin 2 in apart) so it prints on its side with every peg on the bed; a fixed arm with a chamfered top and an end lip.
+- **2026-11-08 (v2):** Owner wanted multiple hooks. Now two hook columns 1 in apart (same row, so they rock in together) + two
+  pins. Arm spans both columns (31.5 mm wide, 22 mm tall). Costs supports under the second column's pegs when printed on its side.

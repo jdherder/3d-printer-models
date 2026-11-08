@@ -13,7 +13,7 @@ Pegboard parts form a catalog, with shared pegs: see [docs/pegboard.md](docs/peg
 | [wagon-cup-holder](projects/wagon-cup-holder/) | v9: right and left clips (mirror images) + one shared cup module; snap-on ring + strut grip, no screws; next: print and test the left clip | Side-rail cup holder for a 20 oz Yeti on a MAC wagon, quick on/off for folding |
 | [pegboard-hook](projects/pegboard-hook/) | v6: 12° S-bend back (it went in easily), 6.1 mm wire; next: reprint | Pegboard catalog: copy of the steel hook, the reference for the shared pegs |
 | [pegboard-fit-test](projects/pegboard-fit-test/) | v3: 6.1 mm pegs + peg gauge (6.0–6.4 mm); next: print the gauge, pick the size | Pegboard catalog: test piece for the shared hook peg + pin (`tools/pegboard.py`) |
-| [pegboard-spool-holder](projects/pegboard-spool-holder/) | v1: one-column hook + pin, 82 mm arm with end lip; next: owner review, test print | Pegboard catalog: holds the A1's active spool on the board behind the printer |
+| [pegboard-spool-holder](projects/pegboard-spool-holder/) | v2: two hooks side by side + two pins, 82 mm arm with end lip; next: owner review, test print | Pegboard catalog: holds the A1's active spool on the board behind the printer |
 
 ## Layout
 

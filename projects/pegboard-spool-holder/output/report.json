@@ -4,18 +4,18 @@
     "extents_mm": [
       106.4,
       72.8,
-      21.6
+      31.1
     ],
-    "faces": 8436,
+    "faces": 17796,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 2,
-    "volume_cm3": 55.1,
+    "volume_cm3": 70.1,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
   },
-  "print_orientation": "on its side, pegs and arm flat on the bed, 0.4 mm flat on the bed side, no supports",
+  "print_orientation": "on its side, column 0 pegs and the arm flat on the bed (0.4 mm flat); supports under column 1 pegs only",
   "fit_on_board": {
     "board": "3/16 in white hardboard (owner's, Menards)",
     "hole_d": 6.35,
@@ -23,7 +23,7 @@
     "pitch": 25.4,
     "clearance_checked_per_side": 0.1,
     "interference_mm3": 0.0,
-    "holes_used": "one column: hook in a hole, pin 2 holes (2 in) below"
+    "holes_used": "two adjacent columns: 2 hooks side by side, 2 pins 2 holes (2 in) below"
   },
   "spool_fit": {
     "reference_spool": {
@@ -34,10 +34,10 @@
     "min_bore_mm": 50.0,
     "max_spool_width_mm": 82.0,
     "arm_plus_lip_passes_min_bore": true,
-    "spool_centre_below_hook_hole_mm": 30.8,
+    "spool_centre_below_hook_hole_mm": 29.4,
     "spool_centre_out_from_board_mm": 39.5,
-    "spool_bottom_below_hook_hole_mm": 130.8,
-    "spool_top_above_hook_hole_mm": 69.2,
+    "spool_bottom_below_hook_hole_mm": 129.4,
+    "spool_top_above_hook_hole_mm": 70.6,
     "spool_front_from_board_mm": 73.5
   },
   "params_mm": {
@@ -50,9 +50,10 @@
     "plate_thickness": 5.0,
     "pitch": 25.4,
     "hook_to_pin": 50.8,
-    "arm_width": 22.0,
-    "arm_height": 26.0,
-    "arm_flat_top": 10.0,
+    "hook_spacing": 25.4,
+    "arm_width": 31.5,
+    "arm_height": 22.0,
+    "arm_flat_top": 19.5,
     "arm_reach": 82.0,
     "lip_height": 8.0,
     "lip_thickness": 6.0,

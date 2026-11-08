@@ -9,9 +9,10 @@ out of the board, with the spool's face parallel to the board (like a paper-towe
   -> renders/spool-holder.png                   views + sections
   -> renders/asm-*.stl, ref-*.stl               hung on the board with a 1 kg spool on it (world Z-up), for the viewer
 
-Board frame (tools/pegboard.py): x out of the board, y up, z across. One column of pegs (a hook two holes above a pin)
-so the part prints on its side with every peg on the bed: the layers then run along the pegs AND along the arm,
-which is the strong way for both.
+Board frame (tools/pegboard.py): x out of the board, y up, z across. Two columns of pegs, 1 in apart: two hooks side by
+side in one row (they share the rocking axis, so both go in together) and two pins 2 holes below. It prints on its side,
+so the layers run along the pegs and the arm (the strong way for both). Column 0's pegs and the arm sit on the bed; column 1's
+pegs are 25.4 mm up and need supports under them (slicer: tree supports, on build plate only).
 """
 
 import json
@@ -34,14 +35,17 @@ RENDERS = HERE / "renders"
 BOARD = pb.DEFAULT_BOARD
 STYLE = pb.PegStyle()
 
-# Mount: hook in hole row 2, pin in row 0 (2 in apart, a long lever against the spool's pull-out moment).
+# Mount: hooks in hole row 2, pins in row 0 (2 in apart, a long lever against the spool's pull-out moment),
+# in two adjacent columns (two hooks share the load and stop the part twisting).
 ROWS = (0, 2)
+COLS = (0, 1)
 PLATE_T = 5.0
 PLATE_MARGIN = 8.0            # plate below the pin
 
-# Arm (the spool's hub rides on its top). Width is across the board (z), which is the print height.
-ARM_W = 22.0                  # z
-ARM_H = 26.0                  # y (deep for stiffness; the spool only touches the top)
+# Arm (the spool's hub rides on its top). Width is across the board (z), which is the print height. It spans both peg
+# columns so it rests on the bed and sits centred between the hooks.
+ARM_W = (max(COLS) - min(COLS)) * pb.PITCH + 2 * pb.PegStyle().r    # z, 31.5
+ARM_H = 22.0                  # y (deep for stiffness; the spool only touches the top)
 ARM_TOP = 46.0                # y of the arm's top, just under the hook row (50.8)
 ARM_REACH = 82.0              # usable length in front of the plate (spools up to ~80 mm wide)
 ARM_CHAMFER = 6.0             # 45 deg on both top edges (the bed-side one prints as a 45 deg overhang, no support)
@@ -59,7 +63,7 @@ Z0 = -STYLE.r                 # part's bed-side face, flush with the pegs' under
 
 def build():
     from build123d import fillet
-    plate = pb.mount_plate(STYLE, cols=(0,), rows=ROWS, thickness=PLATE_T, margin=PLATE_MARGIN, z_range=(Z0, Z0 + ARM_W))
+    plate = pb.mount_plate(STYLE, cols=COLS, rows=ROWS, thickness=PLATE_T, margin=PLATE_MARGIN, z_range=(Z0, Z0 + ARM_W))
     z_mid = Z0 + ARM_W / 2
     x0, x1 = PLATE_T, PLATE_T + ARM_REACH + LIP_T
     arm = Box(x1 - x0 + 1, ARM_H, ARM_W).locate(Location(((x0 - 1 + x1) / 2, ARM_TOP - ARM_H / 2, z_mid)))
@@ -134,10 +138,10 @@ def main():
     report = {
         "scale_status": "real size (shared peg interface; spool sizes from common 1 kg spools)",
         "print": info,
-        "print_orientation": "on its side, pegs and arm flat on the bed, 0.4 mm flat on the bed side, no supports",
+        "print_orientation": "on its side, column 0 pegs and the arm flat on the bed (0.4 mm flat); supports under column 1 pegs only",
         "fit_on_board": {"board": BOARD.name, "hole_d": BOARD.hole_d, "thickness": BOARD.thickness,
                          "pitch": BOARD.pitch, "clearance_checked_per_side": pb.FIT_CLEARANCE,
-                         "interference_mm3": clash, "holes_used": "one column: hook in a hole, pin 2 holes (2 in) below"},
+                         "interference_mm3": clash, "holes_used": "two adjacent columns: 2 hooks side by side, 2 pins 2 holes (2 in) below"},
         "spool_fit": {"reference_spool": SPOOL, "min_bore_mm": MIN_BORE, "max_spool_width_mm": MAX_WIDTH,
                       "arm_plus_lip_passes_min_bore": passes,
                       "spool_centre_below_hook_hole_mm": round(peg_top_y - spool_y, 1),
@@ -145,7 +149,7 @@ def main():
                       "spool_bottom_below_hook_hole_mm": round(peg_top_y - spool_y + SPOOL["od"] / 2, 1),
                       "spool_top_above_hook_hole_mm": round(spool_y + SPOOL["od"] / 2 - peg_top_y, 1),
                       "spool_front_from_board_mm": round(PLATE_T + 0.5 + SPOOL["width"], 1)},
-        "params_mm": {**asdict(STYLE), "plate_thickness": PLATE_T, "pitch": pb.PITCH, "hook_to_pin": (max(ROWS) - min(ROWS)) * pb.PITCH,
+        "params_mm": {**asdict(STYLE), "plate_thickness": PLATE_T, "pitch": pb.PITCH, "hook_to_pin": (max(ROWS) - min(ROWS)) * pb.PITCH, "hook_spacing": (max(COLS) - min(COLS)) * pb.PITCH,
                       "arm_width": ARM_W, "arm_height": ARM_H, "arm_flat_top": flat, "arm_reach": ARM_REACH,
                       "lip_height": LIP_H, "lip_thickness": LIP_T,
                       "arm_tip_from_board": PLATE_T + ARM_REACH + LIP_T,
