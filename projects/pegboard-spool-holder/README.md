@@ -8,7 +8,7 @@ board, like a paper-towel holder. Catalog part: see `docs/pegboard.md`.
 
 ## Goal
 
-A spool holder that hangs on the shared pegs (two hooks + two pins), takes any normal 1 kg spool, and is strong enough to carry it full.
+A spool holder that hangs on the shared pegs (two hooks + four pins), takes any normal 1 kg spool, and is strong enough to carry it full.
 
 ## Status
 
@@ -21,6 +21,9 @@ A spool holder that hangs on the shared pegs (two hooks + two pins), takes any n
       not stacked: two hooks share one rocking axis, so they go in together (stacked hooks would swing on different arcs and bind).
       The arm widened to 31.5 mm to span both columns, so it stays on the bed and centred under the load; arm height 26 → 22 mm.
       106 × 73 × 31 mm print, watertight, clears the board; arm + lip still pass a 50 mm bore
+- [x] v3 (owner: taller span + more pins): hooks now in row 3, **3 in above the bottom pins** (was 2 in: a 50 % longer lever
+      against pull-out), plus a **second pin row** 2 in below the hooks. 6 holes total (2 hooks + 4 pins). Arm stays just under
+      the hooks. 106 × 98 × 31 mm print, watertight, clears the board
 - [ ] Owner review: where it hangs behind the A1, filament path, fixed arm vs spinning hub (Open questions)
 - [ ] Test print and hang with a full spool
 
@@ -39,9 +42,9 @@ centre 40 out from the board, front face 74 out. The arm tip is 93 mm out from t
 ## Print settings
 
 PETG (it carries ~1.2 kg all the time, and PLA creeps). On its side as exported, so the layers run along the pegs and the arm.
-One column of pegs and the arm lie on the bed; the other column's hook and pin are 25 mm up and **need supports**
+One column of pegs and the arm lie on the bed; the other column's hook and 2 pins are 25 mm up and **need supports**
 (tree, on build plate only; the arm's bed-side chamfer is 45° and needs none). 4 walls, 20–30 % gyroid.
-About 70 cm³ solid, roughly 60–70 g at that infill.
+About 75 cm³ solid, roughly 65–75 g at that infill.
 
 ## Open questions
 
@@ -55,10 +58,10 @@ About 70 cm³ solid, roughly 60–70 g at that infill.
 
 ## Pipeline
 
-`build.py` builds `pegboard.mount_plate(PegStyle(), cols=(0, 1), rows=(0, 2), thickness=5)` with its bed-side edge flush
+`build.py` builds `pegboard.mount_plate(PegStyle(), cols=(0, 1), rows=(0, 3), thickness=5)` plus a row of `pin_peg`s at row 1 with its bed-side edge flush
 with the pegs, adds the arm and lip, lays it on its side (`pegboard.lay_on_side`), exports the STEP and STL, and asserts:
 zero overlap with the board, the arm + lip pass through a 50 mm bore, and the reference spool clears the arm and board.
-Parameters at the top of `build.py` (`ARM_*`, `LIP_*`, `ROWS`, `COLS`, `SPOOL`).
+Parameters at the top of `build.py` (`ARM_*`, `LIP_*`, `ROWS`, `EXTRA_PIN_ROWS`, `COLS`, `SPOOL`).
 
 ## Files
 
@@ -73,3 +76,6 @@ Parameters at the top of `build.py` (`ARM_*`, `LIP_*`, `ROWS`, `COLS`, `SPOOL`).
   (hook + pin 2 in apart) so it prints on its side with every peg on the bed; a fixed arm with a chamfered top and an end lip.
 - **2026-11-08 (v2):** Owner wanted multiple hooks. Now two hook columns 1 in apart (same row, so they rock in together) + two
   pins. Arm spans both columns (31.5 mm wide, 22 mm tall). Costs supports under the second column's pegs when printed on its side.
+- **2026-11-08 (v3):** Owner asked whether hooks 3 in apart would be stronger. Answer: little gain (the load is centred, so each
+  hook carries half either way, and pull-out depends on the vertical span), with taller supports and a T-shaped plate. Did the
+  alternatives instead: hook-to-bottom-pin span 2 → 3 in, and a second pin row (row 1). Hooks stay 1 in apart.

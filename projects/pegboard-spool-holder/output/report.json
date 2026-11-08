@@ -3,14 +3,14 @@
   "print": {
     "extents_mm": [
       106.4,
-      72.8,
+      98.2,
       31.1
     ],
-    "faces": 17796,
+    "faces": 18726,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 2,
-    "volume_cm3": 70.1,
+    "volume_cm3": 74.5,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
@@ -23,7 +23,7 @@
     "pitch": 25.4,
     "clearance_checked_per_side": 0.1,
     "interference_mm3": 0.0,
-    "holes_used": "two adjacent columns: 2 hooks side by side, 2 pins 2 holes (2 in) below"
+    "holes_used": "two adjacent columns: 2 hooks side by side, 4 pins 2 and 3 holes (2 and 3 in) below"
   },
   "spool_fit": {
     "reference_spool": {
@@ -49,8 +49,12 @@
     "embed": 1.0,
     "plate_thickness": 5.0,
     "pitch": 25.4,
-    "hook_to_pin": 50.8,
+    "hook_to_pin": 76.19999999999999,
     "hook_spacing": 25.4,
+    "pin_rows_below_hooks": [
+      3,
+      2
+    ],
     "arm_width": 31.5,
     "arm_height": 22.0,
     "arm_flat_top": 19.5,

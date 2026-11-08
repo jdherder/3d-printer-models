@@ -1,11 +1,11 @@
 {
   "page_title": "Pegboard Spool Holder",
   "title": "Pegboard spool holder: the A1's active spool, on the board",
-  "subtitle": "One arm straight out of the board, spool face parallel to the board \u00b7 2 shared hook pegs + 2 pins (tools/pegboard.py) \u00b7 your Menards 3/16\" board \u00b7 X out from the board, Z up \u00b7 mm",
+  "subtitle": "One arm straight out of the board, spool face parallel to the board \u00b7 2 shared hook pegs + 4 pins (tools/pegboard.py) \u00b7 your Menards 3/16\" board \u00b7 X out from the board, Z up \u00b7 mm",
   "meshes": [
     {
       "path": "renders/asm-spool-holder.stl",
-      "label": "Spool holder (2 hooks side by side, 2 pins 2\" below, arm, end lip)",
+      "label": "Spool holder (2 hooks side by side, 4 pins 2\" and 3\" below, arm, end lip)",
       "style": "solid",
       "color": "#5b8fd9"
     },
@@ -40,7 +40,7 @@
       "param": "arm_width"
     },
     {
-      "label": "Hook to pin",
+      "label": "Hook to bottom pin",
       "param": "hook_to_pin"
     },
     {
@@ -54,5 +54,5 @@
   ],
   "scale_note": "Real size. Pegs are the shared 6.1 mm hooks + pins. The spool is a typical 1 kg spool (200 mm across, 68 mm wide, 53 mm bore); the arm and lip pass through bores down to 50 mm and hold spools up to 82 mm wide.",
   "notes_title": "What to check",
-  "notes": "v2: two hooks side by side in the same row (1\" apart), with two pins 2 holes (2\") below them, so four holes take the load and the part can't twist. Both hooks share the same rocking axis, so it still goes on like one hook: tilt it, push both hook tips up through the holes, swing the bottom in. The arm is now 31.5 mm wide so it spans both columns and sits centred between the hooks. Printing: on its side, as before, but only one column of pegs can touch the bed. The other column's pegs are 25 mm up and need supports (tree, on build plate only). Still to check: (1) which holes behind the A1 (the bed slides toward the board, and the spool stands 74 mm out); (2) whether the filament reaches the A1's PTFE tube; (3) fixed arm OK, or a spinning hub on 608 bearings?"
+  "notes": "v3: taller span and more pins. The hooks are now 3 holes (3\") above the bottom pins instead of 2, a 50% longer lever against the spool pulling the part off the board. There's a second pair of pins 2 holes below the hooks, so 6 holes now take the load (2 hooks + 4 pins). The arm stays just under the hooks, so the spool hangs at the same height relative to the hook holes. It still hangs by rocking in: tilt it, push both hook tips up through the holes, swing the bottom in until all 4 pins drop in. Printing: on its side; one column of pegs is on the bed, and the other column (1 hook + 2 pins) needs tree supports. Still to check: (1) which holes behind the A1 (the spool stands 74 mm out from the board, so it must clear the bed's travel); (2) whether the filament reaches the A1's PTFE tube; (3) fixed arm OK, or a spinning hub on 608 bearings?"
 }
