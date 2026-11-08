@@ -24,6 +24,9 @@ A spool holder that hangs on the shared pegs (two hooks + four pins), takes any 
 - [x] v3 (owner: taller span + more pins): hooks now in row 3, **3 in above the bottom pins** (was 2 in: a 50 % longer lever
       against pull-out), plus a **second pin row** 2 in below the hooks. 6 holes total (2 hooks + 4 pins). Arm stays just under
       the hooks. 106 × 98 × 31 mm print, watertight, clears the board
+- [x] v4 (owner: round the top): the arm's top is a **16 mm radius crown** instead of a flat between two chamfers. The spool's
+      hole used to rest on the two flat/chamfer corners; now it rides on one smooth line along the top. The arc spans ±45° and
+      blends into 45° chamfers, so the bed side still prints without support
 - [ ] Owner review: where it hangs behind the A1, filament path, fixed arm vs spinning hub (Open questions)
 - [ ] Test print and hang with a full spool
 
@@ -43,7 +46,7 @@ centre 40 out from the board, front face 74 out. The arm tip is 93 mm out from t
 
 PETG (it carries ~1.2 kg all the time, and PLA creeps). On its side as exported, so the layers run along the pegs and the arm.
 One column of pegs and the arm lie on the bed; the other column's hook and 2 pins are 25 mm up and **need supports**
-(tree, on build plate only; the arm's bed-side chamfer is 45° and needs none). 4 walls, 20–30 % gyroid.
+(tree, on build plate only; the arm's rounded top meets 45° chamfers, so its bed side needs none). 4 walls, 20–30 % gyroid.
 About 75 cm³ solid, roughly 65–75 g at that infill.
 
 ## Open questions
@@ -52,7 +55,7 @@ About 75 cm³ solid, roughly 65–75 g at that infill.
   spool must sit above or beside the bed's travel. Which hole should the hook go in?
 - **Filament path:** does the filament reach the A1's PTFE tube / runout sensor from there, or should I add a tube guide
   or clip?
-- **Drag:** v1 is a fixed arm (the spool's bore turns on the flat top, PETG on plastic). If the drag is too much, v2 could add
+- **Drag:** the arm is fixed (the spool's bore turns on the rounded top, PETG on plastic). If the drag is too much, a later version could add
   a spinning hub on two 608 bearings.
 - Measure the real spools (Overture, etc.): outside diameter, width and bore.
 
@@ -61,7 +64,7 @@ About 75 cm³ solid, roughly 65–75 g at that infill.
 `build.py` builds `pegboard.mount_plate(PegStyle(), cols=(0, 1), rows=(0, 3), thickness=5)` plus a row of `pin_peg`s at row 1 with its bed-side edge flush
 with the pegs, adds the arm and lip, lays it on its side (`pegboard.lay_on_side`), exports the STEP and STL, and asserts:
 zero overlap with the board, the arm + lip pass through a 50 mm bore, and the reference spool clears the arm and board.
-Parameters at the top of `build.py` (`ARM_*`, `LIP_*`, `ROWS`, `EXTRA_PIN_ROWS`, `COLS`, `SPOOL`).
+Parameters at the top of `build.py` (`ARM_*`, `CROWN_R`, `LIP_*`, `ROWS`, `EXTRA_PIN_ROWS`, `COLS`, `SPOOL`).
 
 ## Files
 
@@ -79,3 +82,5 @@ Parameters at the top of `build.py` (`ARM_*`, `LIP_*`, `ROWS`, `EXTRA_PIN_ROWS`,
 - **2026-11-08 (v3):** Owner asked whether hooks 3 in apart would be stronger. Answer: little gain (the load is centred, so each
   hook carries half either way, and pull-out depends on the vertical span), with taller supports and a T-shaped plate. Did the
   alternatives instead: hook-to-bottom-pin span 2 → 3 in, and a second pin row (row 1). Hooks stay 1 in apart.
+- **2026-11-08 (v4):** Owner asked to round the top. Arm top is now a 16 mm crown (tighter than any spool bore) blending into
+  45° chamfers, built as an extruded profile (`arm_section`). The lip uses the same profile, 8 mm taller.

@@ -4,7 +4,7 @@
 
 Holds the A1's active spool "sideways" on the pegboard behind the printer: the spool hangs on a straight arm that sticks
 out of the board, with the spool's face parallel to the board (like a paper-towel holder), instead of on the printer.
-  -> output/pegboard-spool-holder.step / .stl   print pose (on its side, pegs + arm flat on the bed, no supports)
+  -> output/pegboard-spool-holder.step / .stl   print pose (on its side; supports only under the 2nd peg column)
   -> output/report.json                         checks, params, board fit, spool fit
   -> renders/spool-holder.png                   views + sections
   -> renders/asm-*.stl, ref-*.stl               hung on the board with a 1 kg spool on it (world Z-up), for the viewer
@@ -50,7 +50,9 @@ ARM_W = (max(COLS) - min(COLS)) * pb.PITCH + 2 * pb.PegStyle().r    # z, 31.5
 ARM_H = 22.0                  # y (deep for stiffness; the spool only touches the top)
 ARM_TOP = max(ROWS) * pb.PITCH - 4.8    # y of the arm's top, just under the hook row
 ARM_REACH = 82.0              # usable length in front of the plate (spools up to ~80 mm wide)
-ARM_CHAMFER = 6.0             # 45 deg on both top edges (the bed-side one prints as a 45 deg overhang, no support)
+CROWN_R = 16.0                # rounded top: an arc tighter than any spool bore (>= 25 mm radius), so the spool rides on
+                              # one smooth line along the top. It spans +-45 deg and blends into 45 deg chamfers down
+                              # the sides, so the bed side still prints as a 45 deg overhang with no support
 LIP_H = 8.0                   # end stop rising above the arm top, keeps the spool from walking off
 LIP_T = 6.0                   # lip thickness along the arm
 ROOT_FILLET = 4.0             # where the arm meets the plate
@@ -63,23 +65,41 @@ MAX_WIDTH = ARM_REACH         # widest spool that fits between the plate and the
 Z0 = -STYLE.r                 # part's bed-side face, flush with the pegs' underside (prints on its side, no supports)
 
 
+def arm_profile_pts(top):
+    """Key points (y, z) of the arm's cross-section top: side, chamfer/arc tangent point, crown, mirrored."""
+    import math
+    zc, hw = Z0 + ARM_W / 2, ARM_W / 2
+    a = CROWN_R * math.sin(math.pi / 4)                     # arc half-chord at the +-45 deg tangent points
+    y_t = top - CROWN_R * (1 - math.cos(math.pi / 4))       # y of the tangent points
+    y_s = y_t - (hw - a)                                    # where the 45 deg chamfer meets the side
+    return zc, a, y_t, y_s
+
+
+def arm_section(top, height, xa, xb):
+    """The arm's cross-section (crowned top, 45 deg chamfers, flat sides and bottom) extruded along x from xa to xb."""
+    from build123d import BuildLine, BuildPart, BuildSketch, Plane, Polyline, ThreePointArc, extrude, make_face
+    zc, a, y_t, y_s = arm_profile_pts(top)
+    yb, z1 = top - height, Z0 + ARM_W
+    with BuildPart() as bp:
+        with BuildSketch(Plane.YZ.offset(xa)):              # sketch local (u, v) = world (y, z)
+            with BuildLine():
+                Polyline((y_t, zc + a), (y_s, z1), (yb, z1), (yb, Z0), (y_s, Z0), (y_t, zc - a))
+                ThreePointArc((y_t, zc - a), (top, zc), (y_t, zc + a))
+            make_face()
+        extrude(amount=xb - xa)
+    return bp.part
+
+
 def build():
     from build123d import fillet
     plate = pb.mount_plate(STYLE, cols=COLS, rows=ROWS, thickness=PLATE_T, margin=PLATE_MARGIN, z_range=(Z0, Z0 + ARM_W))
     for row in EXTRA_PIN_ROWS:
         for col in COLS:
             plate = plate + pb.pin_peg(STYLE, row * pb.PITCH, col * pb.PITCH)
-    z_mid = Z0 + ARM_W / 2
     x0, x1 = PLATE_T, PLATE_T + ARM_REACH + LIP_T
-    arm = Box(x1 - x0 + 1, ARM_H, ARM_W).locate(Location(((x0 - 1 + x1) / 2, ARM_TOP - ARM_H / 2, z_mid)))
-    lip = Box(LIP_T, ARM_H + LIP_H, ARM_W).locate(Location((x1 - LIP_T / 2, ARM_TOP + LIP_H / 2 - ARM_H / 2, z_mid)))
+    arm = arm_section(ARM_TOP, ARM_H, x0 - 1, x1)
+    lip = arm_section(ARM_TOP + LIP_H, ARM_H + LIP_H, x1 - LIP_T, x1)
     body = arm + lip
-    from build123d import chamfer
-    # 45 deg chamfers along the top edges of the arm and lip (the spool rides on the flat between them)
-    top_edges = [e for e in body.edges().filter_by(Axis.X) if e.center().Y > ARM_TOP - 0.1]
-    body = chamfer(top_edges, ARM_CHAMFER)
-    lip_top = [e for e in body.edges().filter_by(Axis.Z) if e.center().Y > ARM_TOP + LIP_H - 0.1]
-    body = fillet(lip_top, 2.0)
     part = plate + body
     root = [e for e in part.edges().filter_by(Axis.Z)
             if abs(e.center().X - PLATE_T) < 0.01 and abs(e.center().Y - (ARM_TOP - ARM_H)) < 0.01]
@@ -91,8 +111,7 @@ def build():
 def spool_ref(spool):
     """A plain spool (two flanges + hub tube) resting on the arm, against the plate, in the board frame."""
     bore_r, od_r, w = spool["bore"] / 2, spool["od"] / 2, spool["width"]
-    flat = ARM_W - 2 * ARM_CHAMFER
-    yc = ARM_TOP - (bore_r ** 2 - (flat / 2) ** 2) ** 0.5     # bore resting on the arm's flat top
+    yc = ARM_TOP - bore_r                                     # bore resting on the crown's top line
     zc = Z0 + ARM_W / 2
     parts = []
     for x, t, ro in ((PLATE_T + 0.5, 3.0, od_r), (PLATE_T + 0.5 + w - 3.0, 3.0, od_r), (PLATE_T + 0.5, w, bore_r + 8)):
@@ -126,7 +145,6 @@ def main():
 
     # Spool checks: the arm + lip (cross-section) must pass through the smallest bore, and the reference spool must clear
     # the arm (resting on it) and the board.
-    flat = ARM_W - 2 * ARM_CHAMFER
     xsec_h = ARM_H + LIP_H
     passes = (ARM_W ** 2 + xsec_h ** 2) ** 0.5 < MIN_BORE        # lip's bounding box diagonal, conservative
     assert passes, "arm + lip won't pass through a 50 mm spool bore"
@@ -156,7 +174,7 @@ def main():
                       "spool_front_from_board_mm": round(PLATE_T + 0.5 + SPOOL["width"], 1)},
         "params_mm": {**asdict(STYLE), "plate_thickness": PLATE_T, "pitch": pb.PITCH, "hook_to_pin": (max(ROWS) - min(ROWS)) * pb.PITCH, "hook_spacing": (max(COLS) - min(COLS)) * pb.PITCH,
                       "pin_rows_below_hooks": [max(ROWS) - r for r in sorted((min(ROWS), *EXTRA_PIN_ROWS))],
-                      "arm_width": ARM_W, "arm_height": ARM_H, "arm_flat_top": flat, "arm_reach": ARM_REACH,
+                      "arm_width": ARM_W, "arm_height": ARM_H, "arm_crown_radius": CROWN_R, "arm_reach": ARM_REACH,
                       "lip_height": LIP_H, "lip_thickness": LIP_T,
                       "arm_tip_from_board": PLATE_T + ARM_REACH + LIP_T,
                       "hole_clearance_per_side": round((BOARD.hole_d - STYLE.d) / 2, 2),

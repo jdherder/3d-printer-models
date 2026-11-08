@@ -36,7 +36,11 @@
       "param": "lip_height"
     },
     {
-      "label": "Arm width / flat top",
+      "label": "Rounded top radius",
+      "param": "arm_crown_radius"
+    },
+    {
+      "label": "Arm width (across the board)",
       "param": "arm_width"
     },
     {
@@ -54,5 +58,5 @@
   ],
   "scale_note": "Real size. Pegs are the shared 6.1 mm hooks + pins. The spool is a typical 1 kg spool (200 mm across, 68 mm wide, 53 mm bore); the arm and lip pass through bores down to 50 mm and hold spools up to 82 mm wide.",
   "notes_title": "What to check",
-  "notes": "v3: taller span and more pins. The hooks are now 3 holes (3\") above the bottom pins instead of 2, a 50% longer lever against the spool pulling the part off the board. There's a second pair of pins 2 holes below the hooks, so 6 holes now take the load (2 hooks + 4 pins). The arm stays just under the hooks, so the spool hangs at the same height relative to the hook holes. It still hangs by rocking in: tilt it, push both hook tips up through the holes, swing the bottom in until all 4 pins drop in. Printing: on its side; one column of pegs is on the bed, and the other column (1 hook + 2 pins) needs tree supports. Still to check: (1) which holes behind the A1 (the spool stands 74 mm out from the board, so it must clear the bed's travel); (2) whether the filament reaches the A1's PTFE tube; (3) fixed arm OK, or a spinning hub on 608 bearings?"
+  "notes": "v4: the arm's top is now rounded (16 mm radius) instead of a flat with two chamfered corners. The spool's hole (25+ mm radius) rests on one smooth line along the top, so nothing sharp rubs the hub and the spool turns more evenly. The arc blends into 45\u00b0 chamfers down the sides, so the bed side still prints without support. Strength is unchanged. Same as v3 otherwise: 2 hooks side by side, 4 pins 2\" and 3\" below; prints on its side with tree supports under the second peg column. Still to check: (1) which holes behind the A1 (the spool stands 74 mm out from the board, so it must clear the bed's travel); (2) whether the filament reaches the A1's PTFE tube."
 }

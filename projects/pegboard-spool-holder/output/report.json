@@ -6,11 +6,11 @@
       98.2,
       31.1
     ],
-    "faces": 18726,
+    "faces": 18694,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 2,
-    "volume_cm3": 74.5,
+    "volume_cm3": 69.5,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
@@ -34,10 +34,10 @@
     "min_bore_mm": 50.0,
     "max_spool_width_mm": 82.0,
     "arm_plus_lip_passes_min_bore": true,
-    "spool_centre_below_hook_hole_mm": 29.4,
+    "spool_centre_below_hook_hole_mm": 31.3,
     "spool_centre_out_from_board_mm": 39.5,
-    "spool_bottom_below_hook_hole_mm": 129.4,
-    "spool_top_above_hook_hole_mm": 70.6,
+    "spool_bottom_below_hook_hole_mm": 131.3,
+    "spool_top_above_hook_hole_mm": 68.7,
     "spool_front_from_board_mm": 73.5
   },
   "params_mm": {
@@ -57,7 +57,7 @@
     ],
     "arm_width": 31.5,
     "arm_height": 22.0,
-    "arm_flat_top": 19.5,
+    "arm_crown_radius": 16.0,
     "arm_reach": 82.0,
     "lip_height": 8.0,
     "lip_thickness": 6.0,
