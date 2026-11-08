@@ -1,0 +1,21 @@
+{
+  "page_title": "Pegboard Spool Holder",
+  "title": "Pegboard spool holder: the A1's active spool, on the board",
+  "subtitle": "One arm straight out of the board, spool face parallel to the board · shared hook peg + pin (tools/pegboard.py) · your Menards 3/16\" board · X out from the board, Z up · mm",
+  "meshes": [
+    {"path": "renders/asm-spool-holder.stl", "label": "Spool holder (hook + pin 2\" apart, arm, end lip)", "style": "solid", "color": "#5b8fd9"},
+    {"path": "renders/ref-spool.stl", "label": "Reference 1 kg spool: 200 OD × 68 wide, 53 bore", "style": "wire", "color": "#e0a030"},
+    {"path": "renders/ref-pegboard.stl", "label": "Your board: Menards 3/16\" white (6.35 mm holes, 3.94 mm thick)", "style": "solid", "color": "#b08a5a"}
+  ],
+  "dims": [
+    {"label": "Arm reach (widest spool)", "param": "arm_reach"},
+    {"label": "Arm tip from board", "param": "arm_tip_from_board"},
+    {"label": "End lip above arm top", "param": "lip_height"},
+    {"label": "Arm width / flat top", "param": "arm_width"},
+    {"label": "Hook to pin", "param": "hook_to_pin"},
+    {"label": "Peg diameter", "param": "d"}
+  ],
+  "scale_note": "Real size. Pegs are the shared 6.1 mm hook + pin. The spool is a typical 1 kg spool (200 mm across, 68 mm wide, 53 mm bore); the arm and lip pass through bores down to 50 mm and hold spools up to 82 mm wide.",
+  "notes_title": "What to check",
+  "notes": "v1. Hang it from one column of holes: the hook goes in a hole, the pin 2 holes (2\") below. The spool sits on the arm with its face parallel to the board and turns on the arm's flat top; the lip at the end stops it walking off. With a 200 mm spool, the spool's centre is 31 mm below the hook's hole, its bottom 131 mm below it, and it stands 74 mm out from the board. Check: (1) Where behind the A1 will it hang? The bed slides toward the board, so the spool must sit above or beside the bed's travel. (2) Does the filament reach the A1's PTFE tube / runout sensor from there? (3) Is a plain fixed arm OK, or do you want a spinning hub (e.g. on 608 bearings) for less drag?"
+}

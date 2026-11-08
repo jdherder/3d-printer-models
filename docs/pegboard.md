@@ -10,6 +10,7 @@ Each part is its own project, named **`projects/pegboard-<thing>/`**. Add a row 
 |---|---|---|---|---|
 | [pegboard-fit-test](../projects/pegboard-fit-test/) | Plate with one hook peg + one pin. **Print first** to check the shared pegs on the real board | shared | PETG, on its side, no supports | v3: 6.1 mm pegs + **peg gauge** (6.0–6.4 mm) to pick the final size |
 | [pegboard-hook](../projects/pegboard-hook/) | Copy of the owner's steel hook (42 mm arm), printed at 6.1 mm wire, with a 12° S-bend (it rocks in easily). The reference the peg sizes came from | its own wire (S-bend) | PETG, on its side, no supports | v6: 12° S-bend restored (v5's level step was hard to get in), 6.1 mm wire |
+| [pegboard-spool-holder](../projects/pegboard-spool-holder/) | Arm straight out of the board that holds the A1's active 1 kg spool (face parallel to the board), with an end lip. Bores ≥ 50 mm, spools up to 82 mm wide | shared (hook + pin 2 in below) | PETG, on its side, no supports | v1: next, owner review (where it hangs vs the A1's bed travel) |
 
 ### Adding a part
 
