@@ -47,7 +47,8 @@ PHOTO = HERE / "source" / "photo-2026-11-09-wall-bats.jpg"
 ORNAMENT_SIZE_MM = 50.0    # wing tip to wing tip, wings level (owner, 2026-11-09)
 THICKNESS = 2.0            # black base, the whole outline (10 layers at 0.2, all one colour)
 HAT_LAYER = 0.6            # red hat on top of the base (3 layers: thick enough that the black doesn't darken the red)
-TRIM_LAYER = 0.6           # white brim + pom-pom on top of the base before texture (3 layers: opaque white, flush with the red)
+TRIM_LAYER = 1.0           # white brim + pom-pom on top of the base: 0.4 above the red (owner: white slightly raised), before texture
+TRIM_ROUND = 0.35          # rounded top edge of the white (quarter-round). Its edge starts at 2.65, just above the red top (2.6)
 POM_MIN_D = 4.0            # pom-pom, at least this big (the paper one would be ~3.3 at 50 mm): room for the hole + wall
 # Hanging: the smallest reliable hole through the pom-pom (owner, 2026-11-09, after trying a ring on top and a hole in
 # the wing, which hung tilted). The pom-pom sits nearly straight above the balance point, so it hangs almost wings-level.
@@ -56,7 +57,7 @@ POM_WALL_MIN = 1.2         # pom-pom plastic left around the hole (3 perimeters)
 MIN_FEATURE = 1.2          # wing-claw spikes thinner than this get dropped (3 perimeters)
 # Fuzzy white trim (owner, 2026-11-09): a soft random texture on TOP of the brim and pom-pom, outlines kept smooth
 # (a bumpy-edge version looked exaggerated). Only the white rises above the red, so it adds no colour swaps.
-TEXTURE_HEIGHT = 0.4       # tufts rise up to this much above the flat white (2 layers at 0.2; finer with smaller layers)
+TEXTURE_HEIGHT = 0.3       # tufts rise up to this much above the white top; faded out over the rounded edge
 TEXTURE_SIZE = 0.5         # typical tuft size in the plane (about a nozzle width or two)
 TEXTURE_COVER = 0.45       # noise level where tufts start: about half the white surface is raised
 TEXTURE_SEED = 7           # fixed, so every build makes the same texture
@@ -180,28 +181,44 @@ def texture_field(poly, seed):
     return RegularGridInterpolator((xs, ys), n, bounds_error=False, fill_value=0.0)
 
 
-def textured_trim(poly):
-    """White layer: flat TRIM_LAYER on the base, with its top displaced up by the texture (watertight)."""
-    flat = to_manifold(extrude(poly, TRIM_LAYER).apply_translation([0, 0, THICKNESS]))
+def trim_height(poly, xy):
+    """Top of the white at each xy: a quarter-round TRIM_ROUND edge up to the raised top, plus the texture, which fades in
+    just inside the round so the soft edge stays clean."""
+    import shapely
     top = THICKNESS + TRIM_LAYER
-    field = texture_field(poly, TEXTURE_SEED)
+    d = shapely.distance(shapely.points(xy), poly.boundary)       # to the outline and the hanging hole
+    r = TRIM_ROUND
+    dd = np.minimum(d, r)
+    h = top - r + np.sqrt(np.maximum(r * r - (r - dd) ** 2, 0.0))
+    fade = np.clip((d - r * 0.5) / (r * 1.5), 0, 1)
+    fade = fade * fade * (3 - 2 * fade)
+    return h + TEXTURE_HEIGHT * fade * texture_field(poly, TEXTURE_SEED)(xy)
+
+
+def textured_trim(poly):
+    """White layer, raised, with a rounded top edge and a textured top (watertight). Every vertex's height above the base
+    is scaled to the local top height, so the walls shrink to meet the round and nothing folds over."""
+    # Measure the edge distance from exactly the outline the walls are built on (extrude() simplifies by 0.01 mm; even
+    # that offset makes wall vertices disagree on the steep round and the wall folds over itself).
+    poly = unary_union([g.simplify(0.01) for g in getattr(poly, "geoms", [poly])])
+    flat = to_manifold(extrude(poly, TRIM_LAYER).apply_translation([0, 0, THICKNESS]))
 
     def lift(v):
         v = np.array(v, dtype=np.float64)
-        on_top = v[:, 2] > top - 1e-4
-        v[on_top, 2] += TEXTURE_HEIGHT * field(v[on_top, :2])
+        h = trim_height(poly, v[:, :2])
+        v[:, 2] = THICKNESS + (v[:, 2] - THICKNESS) / TRIM_LAYER * (h - THICKNESS)
         return v
 
-    mesh = from_manifold(flat.refine_to_length(0.1).warp_batch(lift))
+    mesh = from_manifold(flat.refine_to_length(0.08).warp_batch(lift))
     assert mesh.is_watertight
     return mesh
 
 
 def texture_render(s, path):
-    """Close-up of the hat, lit from top-left: the white texture as modelled, and stepped to 0.2 / 0.1 mm layers."""
+    """Close-up of the hat, lit from top-left: the raised white (rounded edge + texture) as modelled, and stepped to
+    0.2 / 0.1 mm layers."""
     from matplotlib.colors import LightSource
     from shapely import contains_xy
-    f = texture_field(s["trim"], TEXTURE_SEED)
     hx, hy = s["hole_centre"]
     x0, x1, y0, y1 = hx - 4, hx + 8, hy - 10, hy + 3
     X, Y = np.meshgrid(np.arange(x0, x1, 0.03), np.arange(y0, y1, 0.03))
@@ -209,17 +226,18 @@ def texture_render(s, path):
     base[contains_xy(unary_union([s["bat"], s["cone"], s["trim"]]), X, Y)] = [0.16, 0.16, 0.16]
     base[contains_xy(s["hat"], X, Y)] = [0.78, 0.2, 0.24]
     white = contains_xy(s["trim"], X, Y)
-    h = TEXTURE_HEIGHT * f(np.c_[X.ravel(), Y.ravel()]).reshape(X.shape)
+    h = np.full(X.shape, THICKNESS + HAT_LAYER)
+    h[white] = trim_height(s["trim"], np.c_[X[white], Y[white]])
     ls = LightSource(azdeg=315, altdeg=40)
     fig, axes = plt.subplots(1, 3, figsize=(20, 7.5))
     for ax, layer in zip(axes, (None, 0.2, 0.1)):
         hq = h if layer is None else np.floor(h / layer + 0.5) * layer
-        shade = ls.shade(hq, cmap=plt.cm.gray, vert_exag=8, blend_mode="soft", vmin=-0.6, vmax=0.45)[..., :3]
+        shade = ls.shade(hq, cmap=plt.cm.gray, vert_exag=8, blend_mode="soft", vmin=2.0, vmax=3.4)[..., :3]
         im = base.copy()
         im[white] = 0.55 + 0.45 * shade[white]
         ax.imshow(im, origin="lower", extent=(x0, x1, y0, y1))
         ax.set_title("as modelled (mm)" if layer is None else f"printed at {layer} mm layers (approx.)")
-    fig.suptitle("santa-bat-ornament: white trim texture, close-up", fontsize=15)
+    fig.suptitle("santa-bat-ornament: raised white trim (rounded edge + texture), close-up", fontsize=15)
     fig.savefig(path, dpi=60, bbox_inches="tight")
     plt.close(fig)
 
@@ -322,10 +340,9 @@ def main():
         m.export(OUT / f"santa-bat-ornament-{name}.stl")
 
     # Single-colour print: everything merged into one solid.
-    # Merge with the whole hat cone (it overlaps the white), not the multi-colour hat part, which only just touches the
-    # fur bumps: overlapping solids union cleanly, touching ones leave knife-edge contacts.
-    cone = extrude(s["cone"], HAT_LAYER).apply_translation([0, 0, THICKNESS])
-    merged = from_manifold(to_manifold(bat) + to_manifold(cone) + to_manifold(trim))
+    # Merge with the red part (it meets the white along a shared vertical wall). The whole hat cone would graze the white's
+    # rounded edge exactly at the red's top height and leave slivers.
+    merged = from_manifold(to_manifold(bat) + to_manifold(hat) + to_manifold(trim))
     merged.fix_normals()
     info = mk.report(merged)
     assert info["watertight"] and info["self_intersecting_faces"] == 0, info
@@ -359,6 +376,7 @@ def main():
         "thickness": THICKNESS,
         "thickness_at_hat": THICKNESS + HAT_LAYER,
         "thickness_at_trim": THICKNESS + TRIM_LAYER,
+        "trim_edge_round": TRIM_ROUND,
         "thickness_at_trim_tufts": THICKNESS + TRIM_LAYER + TEXTURE_HEIGHT,
         "hang_hole_d": HANG_HOLE_D,
         "hang_hole_wall": round(s["hole_wall"], 2),

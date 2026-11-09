@@ -4,9 +4,9 @@
     "extents_mm": [
       49.1,
       32.6,
-      3.0
+      3.3
     ],
-    "faces": 17950,
+    "faces": 33742,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 0,
@@ -21,7 +21,7 @@
       -2.8,
       6.9
     ],
-    "rotated_from_photo_deg": 13.3
+    "rotated_from_photo_deg": 13.2
   },
   "params_mm": {
     "ornament_size": 50.0,
@@ -29,8 +29,9 @@
     "height": 32.6,
     "thickness": 2.0,
     "thickness_at_hat": 2.6,
-    "thickness_at_trim": 2.6,
-    "thickness_at_trim_tufts": 3.0,
+    "thickness_at_trim": 3.0,
+    "trim_edge_round": 0.35,
+    "thickness_at_trim_tufts": 3.3,
     "hang_hole_d": 1.2,
     "hang_hole_wall": 1.4,
     "pom_pom_d": 4.0,

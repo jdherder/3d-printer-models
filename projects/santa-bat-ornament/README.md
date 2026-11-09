@@ -23,7 +23,8 @@ Santa hat. Owner's picks: **50 mm across, three colours** (AMS lite: black, red,
 - [x] v6: owner went back to a hole through the pom-pom, "as small as possible": 1.2 mm
 - [x] v7: fuzzy white trim, a bumpy cloud-like edge on the brim + pom-pom (`fuzz()` in `build.py`)
 - [x] v8: the bumpy edge looked exaggerated. Now smooth outlines, with a soft random texture on top of the white instead (`textured_trim()`)
-- [ ] Owner review of v8
+- [x] v9: white raised 0.4 above the red, with soft rounded top edges (`trim_height()`); texture fades out before the edge
+- [ ] Owner review of v9
 - [ ] Test print
 
 ## Measurements
@@ -33,9 +34,10 @@ No real measurements: the size is the owner's choice (`ORNAMENT_SIZE_MM = 50`, w
 | Feature | Value (mm) | Notes |
 |---|---|---|
 | Overall (as it hangs) | 49.1 × 32.6 | Hangs within 1° of wings-level |
-| Thickness | 2.0 black base; 2.6 at the red hat; 2.6–3.0 at the brim + pom-pom | Red 0.6 (3 layers) so the black doesn't darken it; white 0.6 flat + 0.4 texture |
+| Thickness | 2.0 black base; 2.6 at the red hat; 3.0 at the brim + pom-pom (3.3 at the tufts) | Red 0.6 (3 layers) so the black doesn't darken it. White 1.0, raised 0.4 above the red, + texture |
+| White edge | quarter-round, r 0.35 | `TRIM_ROUND`. Starts at 2.65 (just above the red top; starting exactly at 2.6 left edge-on-edge contacts in the merged mesh). Also rounds the hanging hole's top edge |
 | Pom-pom | 4.0 dia | True scale would be ~3.3. Leaves 1.4 mm around the hole |
-| White texture (brim + pom-pom) | tufts ~0.5 across, up to 0.4 high, ~half the surface | `TEXTURE_*`. Seeded noise on the top face only; white is 0.6 flat (flush with the red) + tufts, so 2.6–3.0 total. Outlines stay smooth |
+| White texture (brim + pom-pom) | tufts ~0.5 across, up to 0.3 high, ~half the surface | `TEXTURE_*`. Seeded noise on the top only, faded to zero over the rounded edge so the edge stays clean |
 | Hanging hole | 1.2 dia, through the pom-pom | The smallest that stays open with a 0.4 nozzle (prints ~1.0). Earlier tries: 3.2 mm through the pom-pom (v1), a ring on top (v2–v4), a 1.8 mm hole in the wing (v5, which hung tilted ~43°) |
 | Smallest feature | 1.2 | Wing-claw spikes thinner than this are dropped. At 50 mm that's nearly all of them |
 | Thinnest colour region | ≥ 0.4 | No unprintable colour slivers |
@@ -52,7 +54,7 @@ straight-on photo of the paper bat (or one with a ruler beside it) would settle 
   and set the filament for each part: bat (base) black, hat red, trim white. Layers 1–10 are all black; the colour
   changes are only in layers 11–14 (~5 swaps), so the prime tower is short and the purge waste small. Several on one plate
   share those swaps.
-- **Texture:** at 0.2 mm layers the tufts print as 1–2 small steps. For finer fur, add a height range modifier from 2.0 mm to the top at 0.08–0.1 mm layers (costs a few minutes; no extra colour changes, since only white prints up there).
+- **Texture:** at 0.2 mm layers the tufts print as 1–2 small steps. For a smoother rounded edge and finer fur, add a height range modifier from 2.0 mm to the top at 0.08–0.1 mm layers (costs a few minutes; no extra colour changes, since only white prints up there).
 - **White:** matte white PLA makes the fur look softer. For real fuzz, brush on white glue and sprinkle white flocking powder.
 - **One colour:** `output/santa-bat-ornament.stl`. The raised hat shows as relief; paint it if you like.
 - Thread fishing line, sewing thread, or fine wire through the pom-pom (the hole prints ~1 mm; a needle opens it if it's tight). The renders show it as it hangs.
@@ -72,8 +74,9 @@ straight-on photo of the paper bat (or one with a ruler beside it) would settle 
    and scales to `ORNAMENT_SIZE_MM`.
 4. Drops sub-`MIN_FEATURE` spikes, sizes the pom-pom, and splits the outline into bat, hat, and trim regions. Cuts the `HANG_HOLE_D` hole through
    the pom-pom centre (base + white layer), then turns everything so the balance point (volume-weighted) hangs straight below it.
-5. Extrudes the black base (whole outline) to `THICKNESS`, then the hat (`HAT_LAYER`) and trim (`TRIM_LAYER`) on top of it. The trim's top face is
-   refined and lifted by a seeded noise field (`textured_trim()`). Merges them into a
+5. Extrudes the black base (whole outline) to `THICKNESS`, then the hat (`HAT_LAYER`) and trim (`TRIM_LAYER`) on top of it. The trim is refined and each
+   vertex is lifted to `trim_height()`: a quarter-round edge up to the raised top, plus the seeded noise texture (`textured_trim()`).
+   Edge distances are measured from the exact extruded outline, otherwise the steep round folds the side walls. Merges them into a
    single-colour STL (manifold3d), and writes the 3MF, SVG, report, and renders.
 
 ## Files
@@ -101,3 +104,4 @@ straight-on photo of the paper bat (or one with a ruler beside it) would settle 
 - **2026-11-09:** v6. The owner went back to a hole through the pom-pom, "as small as possible": 1.2 mm (the smallest that reliably stays open), 1.4 mm wall in the 4 mm pom-pom. Hangs within 1° of wings-level. Watertight, 0 self-intersections, Euler 0.
 - **2026-11-09:** v7. The owner asked for fuzzy-looking white parts. Discussed options (model edge, textured top, Bambu fuzzy skin, flocking); the owner picked a bumpy fur edge in the model. Brim + pom-pom get random round bumps (~1 mm pitch, 0.4–0.6 mm). Pom-pom 4.4 mm. Red cusps under 0.4 mm dropped. Base and merged STL now use the full hat shape so they stay clean (Euler 0, watertight, 0 self-intersections).
 - **2026-11-09:** v8. The owner found the bumpy edge exaggerated and wanted texture instead. Reverted the edge (smooth outlines, pom-pom 4.0, hat no longer trimmed). The white top face now has seeded noise tufts (~0.5 mm, up to 0.4 high, ~half covered) on a 0.6 flat layer. Suggest 0.1 mm layers for the top 1 mm. Watertight, 0 self-intersections, Euler 0.
+- **2026-11-09:** v9. The owner asked for the white raised above the rest, with soft, rounded edges. White is now 1.0 thick (0.4 above the red), with a 0.35 quarter-round top edge, and texture 0.3 faded out over the round. Fixed two mesh issues on the way (wall folds from a 0.01 mm outline mismatch; edge-on-edge contact at the red top). Watertight, 0 self-intersections, Euler 0.
