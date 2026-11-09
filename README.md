@@ -15,6 +15,7 @@ Pegboard parts form a catalog, with shared pegs: see [docs/pegboard.md](docs/peg
 | [pegboard-fit-test](projects/pegboard-fit-test/) | v3: 6.1 mm pegs + peg gauge (6.0–6.4 mm); next: print the gauge, pick the size | Pegboard catalog: test piece for the shared hook peg + pin (`tools/pegboard.py`) |
 | [santa-bat-ornament](projects/santa-bat-ornament/) | v10: 50 mm wingspan, black base + red/white layered on top, raised white trim with rounded edges, 1.2 mm hole through the pom-pom; next: test print | Flat hanging ornament: the paper wall bat in a Santa hat |
 | [pegboard-spool-holder](projects/pegboard-spool-holder/) | v4: two hooks side by side + four pins (3 in span), 82 mm rounded-top arm with end lip; next: owner review, test print | Pegboard catalog: holds the A1's active spool on the board behind the printer |
+| [pegboard-bambu-sign](projects/pegboard-bambu-sign/) | v1.1: 250 × 120 mm, full logo raised 1.2 mm (one colour change), 2 peg hangers + keyhole slots; next: owner review, test print | Pegboard catalog: Bambu Lab logo sign that hangs flush on the board |
 
 ## Layout
 

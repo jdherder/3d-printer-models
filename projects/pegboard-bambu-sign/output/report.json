@@ -1,0 +1,108 @@
+{
+  "scale_status": "real size (shared peg interface; sign size is the owner's choice, default 250 x 120 mm, as big as the A1 bed allows)",
+  "print": {
+    "extents_mm": [
+      250.0,
+      120.0,
+      10.7
+    ],
+    "faces": 3144,
+    "watertight": true,
+    "winding_consistent": true,
+    "euler_number": 2,
+    "volume_cm3": 284.1,
+    "fits_A1_as_is": true,
+    "fits_A1_any_axis_order": true,
+    "self_intersecting_faces": 0
+  },
+  "print_orientation": "sign face up, back on the bed, no supports (pockets open to the bed; chamber roofs are ~12 mm bridges)",
+  "colour": {
+    "swaps": 1,
+    "swap_at_mm": 9.5,
+    "logo_layers_at_0.2": 6
+  },
+  "hanger_print": {
+    "extents_mm": [
+      20.9,
+      47.4,
+      10.6
+    ],
+    "faces": 8034,
+    "watertight": true,
+    "winding_consistent": true,
+    "euler_number": 2,
+    "volume_cm3": 2.4,
+    "fits_A1_as_is": true,
+    "fits_A1_any_axis_order": true,
+    "self_intersecting_faces": 0
+  },
+  "hanger_print_orientation": "on its side, pegs flat on the bed (0.4 mm flat), no supports. Print 2",
+  "fit_on_board": {
+    "board": "3/16 in white hardboard (owner's, Menards)",
+    "hole_d": 6.35,
+    "thickness": 3.94,
+    "pitch": 25.4,
+    "clearance_checked_per_side": 0.1,
+    "hanger_interference_mm3": 0.0,
+    "holes_used": "2 hangers, 8 holes apart: hook + pin 1 in below each",
+    "sign_top_above_hook_hole_mm": 11.9,
+    "sign_bottom_below_hook_hole_mm": 108.2,
+    "sign_past_outer_hanger_columns_mm": 25.9
+  },
+  "slide_on_check": {
+    "drop_mm": 13.6,
+    "interference_while_sliding_mm3": {
+      "0.0": 0.0,
+      "1.7": 0.0,
+      "3.4": 0.0,
+      "5.1": 0.0,
+      "6.8": 0.0,
+      "8.5": 0.0,
+      "10.2": 0.0,
+      "11.9": 0.0,
+      "13.6": 0.0
+    },
+    "interference_pushing_on_mm3": {
+      "9.5": 0.0,
+      "4.8": 0.0,
+      "2.0": 0.0,
+      "0.5": 0.0
+    },
+    "pull_off_blocked_mm3": 105.18
+  },
+  "params_mm": {
+    "d": 6.1,
+    "hook_gap": 7.3,
+    "hook_rise": 14.0,
+    "bend_r": 4.5,
+    "pin_len": 7.0,
+    "embed": 1.0,
+    "pitch": 25.4,
+    "sign_width": 250.0,
+    "sign_height": 120.0,
+    "sign_thickness": 9.5,
+    "total_thickness": 10.7,
+    "corner_radius": 10.0,
+    "front_chamfer": 1.0,
+    "logo_width": 220.0,
+    "logo_height": 64.1,
+    "logo_stroke": 5.5,
+    "logo_smallest_gap": 3.5,
+    "logo_raise": 1.2,
+    "hanger_spacing": 203.2,
+    "hook_to_pin": 25.4,
+    "drop": 13.6,
+    "hanger_plate_t": 3.0,
+    "stud_neck": [
+      5.0,
+      10.0
+    ],
+    "stud_head": [
+      11.0,
+      12.0,
+      2.0
+    ],
+    "slot_clearance": 0.3,
+    "hole_clearance_per_side": 0.12
+  }
+}
