@@ -49,9 +49,13 @@ DEFAULT_BOARD = BOARDS["white_3_16"]    # the owner's board: what every catalog 
 
 @dataclass(frozen=True)
 class PegStyle:
-    """Peg geometry. Defaults come from the owner's steel hook, with the diameter tuned by test prints."""
-    d: float = 6.1           # peg diameter. The steel wire is 5.53 (caliper). Printed at 5.53, then 5.9, the pegs were still loose
+    """Peg geometry. Defaults come from the owner's steel hook, with the diameters tuned by test prints and pb.rock_in."""
+    d: float = 6.1           # pin diameter. The steel wire is 5.53 (caliper). Printed at 5.53, then 5.9, the pegs were still loose
                              # in the owner's ~6.35 mm holes (test prints 2026-11-05). Settle it with the peg gauge (pegboard-fit-test)
+    hook_d: float = 5.7      # hook diameter. Thinner than the pin so the sloped hook can rock in (rock_in: a 6.1 mm hook jams,
+                             # level or sloped; 5.7 at 12 deg passes, with 6.1 pins). The hook's play doesn't matter: weight seats it
+    hook_slope: float = 12.0 # the through-board part rises toward the back, like the steel hook's S-jog (v4 went in easily,
+                             # v5's level step was much harder). The slope guides the hook as it rocks in
     hook_gap: float = 7.3    # clear space from the board's front face to the inside of the hook's rising leg (max board thickness)
     hook_rise: float = 14.0  # the hook leg's top end, above the hole centre
     bend_r: float = 4.5      # centreline radius of the hook's bend
@@ -63,15 +67,20 @@ class PegStyle:
         return self.d / 2
 
     @property
+    def hook_r(self):
+        return self.hook_d / 2
+
+    @property
     def leg_x(self):
         """x of the hook's rising-leg centreline."""
-        return -(self.hook_gap + self.r)
+        return -(self.hook_gap + self.hook_r)
 
     def check(self, board: Board) -> list[str]:
         """Problems with this style on a board ([] if none)."""
         msgs = []
-        if self.d >= board.hole_d:
-            msgs.append(f"peg {self.d} mm does not fit {board.hole_d} mm holes")
+        for name, d in (("pin", self.d), ("hook", self.hook_d)):
+            if d >= board.hole_d:
+                msgs.append(f"{name} {d} mm does not fit {board.hole_d} mm holes")
         if self.hook_gap < board.thickness:
             msgs.append(f"hook gap {self.hook_gap} mm is less than the board thickness {board.thickness} mm")
         if self.leg_x + self.bend_r > -board.thickness + 1.0:
@@ -83,10 +92,12 @@ class PegStyle:
 # Pegs (build123d solids, board frame)
 # --------------------------------------------------------------------------------------------------------------------
 
-def hook_peg(style: PegStyle, y: float = 0.0, z: float = 0.0, slope_deg: float = 0.0, cross_depth: float = 2.0):
+def hook_peg(style: PegStyle, y: float = 0.0, z: float = 0.0, slope_deg: float | None = None, cross_depth: float = 2.0):
     """Upper peg for the hole centred at (0, y, z): back through the board, a bend, then a leg rising behind it.
-    slope_deg > 0 tilts the through-board part up toward the back (like the steel hook's S-jog), crossing the hole's centre
-    `cross_depth` behind the front face. The slope guides the hook as it rocks in; a level peg (0) can jam (see rock_in)."""
+    The through-board part rises toward the back at slope_deg (default style.hook_slope, like the steel hook's S-jog),
+    crossing the hole's centre `cross_depth` behind the front face. The slope guides the hook as it rocks in; a level
+    peg (0) can jam (see rock_in)."""
+    slope_deg = style.hook_slope if slope_deg is None else slope_deg
     import math
     from build123d import BuildLine, BuildPart, BuildSketch, Circle, FilletPolyline, Plane, Vector, sweep
     t = math.tan(math.radians(slope_deg))
@@ -97,7 +108,7 @@ def hook_peg(style: PegStyle, y: float = 0.0, z: float = 0.0, slope_deg: float =
         with BuildLine() as path:
             FilletPolyline(*pts, radius=style.bend_r)
         with BuildSketch(Plane(origin=pts[0], z_dir=(pts[1] - pts[0]).normalized())):
-            Circle(style.r)
+            Circle(style.hook_r)
         sweep(path=path.wires()[0])
     return part.part
 
@@ -110,8 +121,7 @@ def pin_peg(style: PegStyle, y: float = 0.0, z: float = 0.0):
 
 
 def mount_plate(style: PegStyle, cols=(0,), rows=(0, 1), thickness: float = 4.0, margin: float = 8.0,
-                z_range: tuple | None = None, top_margin: float | None = None, top_round: bool = True,
-                hook_slope_deg: float = 0.0):
+                z_range: tuple | None = None, top_margin: float | None = None, top_round: bool = True):
     """A back plate on the front face with hooks in the top row of holes and pins in the bottom row.
     cols / rows are hole indices (z = col*PITCH, y = row*PITCH). Build the part's body on its front (x = thickness).
     z_range overrides the plate's z extent, e.g. to make its edge flush with the pegs for printing on its side.
@@ -122,7 +132,7 @@ def mount_plate(style: PegStyle, cols=(0,), rows=(0, 1), thickness: float = 4.0,
     the hooks for the same reason."""
     from build123d import Axis, Box, Location, fillet
     top = max(rows) * PITCH
-    tm = style.r + 0.5 if top_margin is None else top_margin
+    tm = style.hook_r + 0.5 if top_margin is None else top_margin
     y0, y1 = min(rows) * PITCH - margin, top + tm
     z0, z1 = z_range or (min(cols) * PITCH - margin, max(cols) * PITCH + margin)
     plate = Box(thickness, y1 - y0, z1 - z0).locate(Location((thickness / 2, (y0 + y1) / 2, (z0 + z1) / 2)))
@@ -130,7 +140,7 @@ def mount_plate(style: PegStyle, cols=(0,), rows=(0, 1), thickness: float = 4.0,
         edge = min(plate.edges().filter_by(Axis.Z), key=lambda e: (e.center().X, -e.center().Y))
         plate = fillet(edge, radius=min(thickness, tm) - 0.3)
     for c in cols:
-        plate = plate + hook_peg(style, top, c * PITCH, slope_deg=hook_slope_deg)
+        plate = plate + hook_peg(style, top, c * PITCH)
         if min(rows) != max(rows):
             plate = plate + pin_peg(style, min(rows) * PITCH, c * PITCH)
     return plate

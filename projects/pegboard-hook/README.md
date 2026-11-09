@@ -24,13 +24,14 @@ things like keys, cables and small tools. It's also the **reference** for the sh
 - [x] In the catalog, built for the owner's board (Menards 3/16 white hardboard, `pegboard.DEFAULT_BOARD`)
 - [x] v4 test print: printed well and hung, but a little loose in the holes
 - [x] v5 print (5.9 mm wire, level step): much harder to get in, and still loose
-- [ ] Reprint v6 (12° jog back, 6.1 mm wire). Pick the final diameter with the peg gauge (`pegboard-fit-test`)
+- [x] v7 (2026-11-09): wire back to 5.53 mm (v6's 6.1 can't rock in, per `pb.rock_in`), pin 6.1 mm
+- [ ] Reprint v7 (5.53 mm wire, 12° jog, 6.1 mm pin)
 
 ## Measurements
 
 | Feature | Real (mm) | Source | Notes |
 |---|---|---|---|
-| Wire diameter | **5.53** steel; **printed at 6.1** | caliper; test prints | Printed at 5.53 and at 5.9, it was loose. Follows the shared peg diameter (`PegStyle.d`) |
+| Wire diameter | **5.53** steel; **printed at 5.53** (v7) | caliper; test prints; `pb.rock_in` | 5.53 (v4) went in easily but was a little loose; 5.9 level (v5) was hard; 6.1 (v6) can't pass the hole on this S-jog. The pin takes the shared 6.1 (`PegStyle.d`) |
 | Overall (footprint × height) | 57.2 × 53.9 | tape photo | Photo reads ~57.9 × 53.9 (tip edge to arm end, top to bottom bend) |
 | Arm | 42.0 long, 12.6° up | tape photo | Reaches 43.8 mm out from the board face |
 | Behind-board leg | 12 mm tall, centre 12.85 behind the back leg | tape photo | Leaves 7.3 mm for the board |
@@ -94,3 +95,6 @@ Parameters are in `HookParams` (`model.py`). Real measurements go in `MEASURED` 
   Back to 12°, and the wire went from 5.9 to 6.1 mm (shared `PegStyle.d`). The bend radius went from 3.0 to 3.5 so the thicker wire
   doesn't self-intersect, with a guard added. The flush-hang interference check is now information only: it predicted the wrong
   winner, and the prints are the test. Next: the peg gauge picks the final diameter.
+- **2026-11-09:** v7. The new rock-in check (`pb.rock_in`, calibrated on v4 vs v5) says the 6.1 mm wire (v6) can't pass the hole
+  on this S-jog, and 5.7 jams too. Back to the steel hook's 5.53 mm wire (v4, which went in easily). The pin takes the shared
+  6.1 mm pin size, to take up the looseness. The build asserts the rock-in check.

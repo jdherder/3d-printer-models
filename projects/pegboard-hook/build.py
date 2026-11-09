@@ -39,9 +39,10 @@ PHOTO = HERE / "source" / "photo-2026-11-05-tape-vertical.jpg"
 MEASURED = {
     "wire_d": 5.53,     # caliper, 2026-11-05 (the steel hook)
 }
-# The printed hook is fatter than the steel one: printed at 5.53, and then 5.9, it was still loose in the holes (owner, 2026-11-05).
-# It matches the shared pegs (pegboard.PegStyle.d).
-PRINT_OVERRIDES = {"wire_d": pb.PegStyle().d, "pin_d": pb.PegStyle().d}
+# Printed at 5.53 (v4) it went in easily but was a little loose; 5.9 with a level step (v5) was hard to get in.
+# pb.rock_in (calibrated on those two prints) shows a 6.1 mm wire (v6) can't pass the hole on this S-jog, and 5.7 jams.
+# So the wire stays the steel hook's 5.53, and the pin takes the snug shared pin diameter (pegboard.PegStyle.d).
+PRINT_OVERRIDES = {"wire_d": 5.53, "pin_d": pb.PegStyle().d}
 
 # Photo -> model mapping used to measure the profile (photo-2026-11-05-tape-vertical.jpg, tape inch marks ~245 px apart).
 PHOTO_PX_PER_MM = 9.65
@@ -96,7 +97,9 @@ def main():
     fit = {"board": BOARD.name, "hole_d": BOARD.hole_d, "thickness": BOARD.thickness, "pitch": BOARD.pitch,
            # Information only, not a pass/fail: this is the overlap if the hook hung perfectly flush. The sloped jog relies on
            # rocking in and the hole's give, like the steel hook. The owner's prints are the real check (see README).
-           "flush_hang_overlap_mm3": pb.interference_mm3(hook_board, board)}
+           "flush_hang_overlap_mm3": pb.interference_mm3(hook_board, board),
+           "rock_in": {**pb.rock_in(hook_board, BOARD, hook_y=pb.PITCH), "give_mm": pb.ROCK_IN_GIVE}}
+    assert fit["rock_in"]["ok"], f"hook won't rock onto the board: {fit['rock_in']}"
 
     report = {
         "scale_status": "measured (steel wire caliper 5.53 mm, printed thicker per PegStyle.d; profile from tape-scaled photos, about +-1 mm; S-jog 12 deg, as first printed)",

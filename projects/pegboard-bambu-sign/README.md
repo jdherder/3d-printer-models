@@ -19,7 +19,7 @@ from the pegboard holes (no screws, no tape). It should sit flat and flush, and 
 - [x] Hangers: 2 × (shared hook + pin + T-stud), 8 holes apart. Checked: clear of the board (0.1 mm per side), the sign
       slides on without hitting them, and pulling it straight off is blocked
 - [x] v1.2: owner doubted the pegs could get into the holes. A rock-in simulation (`pb.rock_in`, calibrated on the owner's
-      hook prints) agreed: the level 6.1 mm hook jams. The hangers now have a **5.7 mm hook sloped 12°** (like the steel hook
+      hook prints) agreed: the level 6.1 mm hook jams. The hangers now have a **5.7 mm hook sloped 12°** (since made the shared `PegStyle` default, with 6.1 mm pins) (like the steel hook
       that went in easily) and pass. The build asserts it
 - [ ] Owner review: size, colours, anything else on the plate (Open questions)
 - [ ] Test print and hang
@@ -53,7 +53,7 @@ No real measurements needed: the size is the owner's choice and the pegs are the
 | Logo changes from the SVG | B's upper counter shrunk 0.25; the B's accent nudged 0.5 off the B | In the SVG both touch at a single point, which makes a non-manifold mesh and a zero-width wall |
 | Hanger spacing | 203.2 (8 holes) | `HANGER_COLS` |
 | Hanger | 47 × 21 × 11, 3 mm plate | hook + pin 1 in apart, T-stud: neck 5 × 10, head 11 × 12 × 2 |
-| Hanger pegs | 5.7 dia; hook sloped 12° | Thinner than the shared 6.1 and sloped, so they rock in (`STYLE`, `HOOK_SLOPE`). A little play is fine: the sign's weight seats the hooks and the pins stop them turning |
+| Hanger pegs | shared: 5.7 hook sloped 12°, 6.1 pin | `PegStyle` defaults (they rock in, per `pb.rock_in`). The hook's play is fine: the sign's weight seats it and the pins stop it turning |
 | Slide-down | 13.6 | `DROP` |
 | Sign/hanger clearance | 0.3 per side | `C` |
 

@@ -27,11 +27,11 @@
       47.4,
       10.6
     ],
-    "faces": 7236,
+    "faces": 7630,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 2,
-    "volume_cm3": 2.2,
+    "volume_cm3": 2.3,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
@@ -47,13 +47,13 @@
     "hanger_rock_in": {
       "ok": true,
       "max_tilt_deg": 94.0,
-      "states": 3288,
+      "states": 3296,
       "give_mm": 0.3
     },
     "holes_used": "2 hangers, 8 holes apart: hook + pin 1 in below each",
     "sign_top_above_hook_hole_mm": 11.6,
     "sign_bottom_below_hook_hole_mm": 108.3,
-    "sign_past_outer_hanger_columns_mm": 26.1
+    "sign_past_outer_hanger_columns_mm": 25.9
   },
   "slide_on_check": {
     "drop_mm": 13.6,
@@ -77,7 +77,9 @@
     "pull_off_blocked_mm3": 105.18
   },
   "params_mm": {
-    "d": 5.7,
+    "d": 6.1,
+    "hook_d": 5.7,
+    "hook_slope": 12.0,
     "hook_gap": 7.3,
     "hook_rise": 14.0,
     "bend_r": 4.5,
@@ -95,7 +97,6 @@
     "logo_stroke": 5.5,
     "logo_smallest_gap": 3.5,
     "logo_raise": 1.2,
-    "hook_slope_deg": 12.0,
     "hanger_spacing": 203.2,
     "hook_to_pin": 25.4,
     "drop": 13.6,
@@ -110,6 +111,6 @@
       2.0
     ],
     "slot_clearance": 0.3,
-    "hole_clearance_per_side": 0.32
+    "hole_clearance_per_side": 0.12
   }
 }

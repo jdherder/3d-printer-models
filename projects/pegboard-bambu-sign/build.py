@@ -44,12 +44,7 @@ RENDERS = HERE / "renders"
 LOGO_SVG = HERE / "source" / "bambulab-logo-2026-11-09.svg"   # Wikimedia Commons "File:BambuLab logo.svg"
 
 BOARD = pb.DEFAULT_BOARD
-# The hangers' pegs: thinner than the shared 6.1 mm, with the hook sloped 12 deg like the steel hook's S-jog (v4, which went in
-# easily). The rock-in check (pb.rock_in) shows a level 6.1 mm hook jams like the v5 test print did, and at 6.1 mm a slope
-# steep enough to guide it doesn't fit the hole. A little play is fine here: the sign's weight seats the hooks and the pins
-# stop them turning.
-STYLE = pb.PegStyle(d=5.7)
-HOOK_SLOPE = 12.0
+STYLE = pb.PegStyle()          # shared pegs: 6.1 mm pins, 5.7 mm hooks sloped 12 deg (they rock in: pb.rock_in)
 C = 0.3                       # sliding clearance per side between sign and hanger
 
 # ---- Hangers (one per column; hook in row 1, pin in row 0) ------------------------------------------------------------
@@ -61,7 +56,7 @@ PLATE_MARGIN = 8.0            # plate below the pin
 Z_LO = -STYLE.r               # hanger's bed-side face
 ZC = Z_LO + PLATE_W / 2       # stud centre across (z), relative to the hanger's peg column
 Y0 = PIN_ROW * pb.PITCH - PLATE_MARGIN
-Y1 = HOOK_ROW * pb.PITCH + STYLE.r + 0.5          # mount_plate's default top margin
+Y1 = HOOK_ROW * pb.PITCH + STYLE.hook_r + 0.5          # mount_plate's default top margin
 STUD_Y = (HOOK_ROW + PIN_ROW) / 2 * pb.PITCH      # stud centre height, between the hook and the pin
 NECK_W, NECK_H = 5.0, 10.0    # stud neck (z across, y up)
 HEAD_W, HEAD_H = PLATE_W, 12.0
@@ -170,7 +165,7 @@ def hanger(col=0):
     """Mount plate (shared hook + pin) with a T-stud on the front. All in the board frame, for the hanger in column `col`."""
     z = col * pb.PITCH
     plate = pb.mount_plate(STYLE, cols=(col,), rows=(PIN_ROW, HOOK_ROW), thickness=PLATE_T, margin=PLATE_MARGIN,
-                           z_range=(z + Z_LO, z + Z_LO + PLATE_W), hook_slope_deg=HOOK_SLOPE)
+                           z_range=(z + Z_LO, z + Z_LO + PLATE_W))
     zc = z + ZC
     neck = box(PLATE_T - 0.5, NECK_X1, STUD_Y - NECK_H / 2, STUD_Y + NECK_H / 2, zc - NECK_W / 2, zc + NECK_W / 2)
     head = box(NECK_X1, NECK_X1 + HEAD_T, STUD_Y - HEAD_H / 2, STUD_Y + HEAD_H / 2, zc - HEAD_W / 2, zc + HEAD_W / 2)
@@ -349,7 +344,7 @@ def main():
                       "sign_thickness": round(SIGN_T, 2), "total_thickness": round(SIGN_T + LOGO_RAISE, 2),
                       "corner_radius": CORNER_R, "front_chamfer": FRONT_CHAMFER,
                       "logo_width": LOGO_W, "logo_height": logo_h, "logo_stroke": logo_stroke, "logo_smallest_gap": logo_gap, "logo_raise": LOGO_RAISE,
-                      "hook_slope_deg": HOOK_SLOPE, "hanger_spacing": (max(HANGER_COLS) - min(HANGER_COLS)) * pb.PITCH,
+                      "hanger_spacing": (max(HANGER_COLS) - min(HANGER_COLS)) * pb.PITCH,
                       "hook_to_pin": (HOOK_ROW - PIN_ROW) * pb.PITCH, "drop": DROP,
                       "hanger_plate_t": PLATE_T, "stud_neck": [NECK_W, NECK_H], "stud_head": [HEAD_W, HEAD_H, HEAD_T],
                       "slot_clearance": C,
