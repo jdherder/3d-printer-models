@@ -44,19 +44,19 @@
       "param": "thickness_at_hat"
     },
     {
-      "label": "Thickness at brim + pom-pom",
-      "param": "thickness_at_trim"
-    },
-    {
       "label": "Pom-pom diameter",
       "param": "pom_pom_d"
     },
     {
       "label": "Hanging hole (through the pom-pom)",
       "param": "hang_hole_d"
+    },
+    {
+      "label": "Top of the white tufts",
+      "param": "thickness_at_trim_tufts"
     }
   ],
   "scale_note": "Real size: 50 mm wing tip to wing tip (your pick). The photo looks along the wall, so the bat appeared squashed sideways; it's stretched 1.23\u00d7 to undo that (estimated from the round pom-pom).",
-  "notes_title": "v7: what changed, what to check",
-  "notes": "v7: fuzzy white trim. The brim and pom-pom now have a cloud-like edge of small round bumps (about 1 mm apart, standing out 0.4\u20130.6 mm, uneven on purpose), like cartoon fur. It's in the model itself, so it prints that way with no slicer settings. Zoom in on the hat to see it. The pom-pom grew slightly (4.4 mm) to keep 1.2 mm of plastic around the 1.2 mm hole. Where the fur meets the red, the tiny gaps between bumps show the black base, like a fine outline. Matte white PLA will make it look softer still."
+  "notes_title": "v8: what changed, what to check",
+  "notes": "v8: the bumpy edge is gone; outlines are smooth again. Instead the top of the white brim and pom-pom has a soft random texture: small tufts about 0.5 mm across, rising up to 0.4 mm, covering about half the surface. Zoom in on the hat and orbit to catch the light. Only the white rises above the red, so there are no extra colour changes. For a finer texture, print the top 1 mm at 0.1 mm layers (Bambu Studio: height range modifier from 2.0 mm up). The pom-pom is back to 4 mm with 1.4 mm around the 1.2 mm hole."
 }

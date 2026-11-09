@@ -47,18 +47,19 @@ PHOTO = HERE / "source" / "photo-2026-11-09-wall-bats.jpg"
 ORNAMENT_SIZE_MM = 50.0    # wing tip to wing tip, wings level (owner, 2026-11-09)
 THICKNESS = 2.0            # black base, the whole outline (10 layers at 0.2, all one colour)
 HAT_LAYER = 0.6            # red hat on top of the base (3 layers: thick enough that the black doesn't darken the red)
-TRIM_LAYER = 0.8           # white brim + pom-pom on top of the base (4 layers: opaque white, and 0.2 proud of the red, like fur)
-POM_MIN_D = 4.4            # pom-pom, at least this big (the paper one would be ~3.3 at 50 mm): room for the hole + wall + fuzz
+TRIM_LAYER = 0.6           # white brim + pom-pom on top of the base before texture (3 layers: opaque white, flush with the red)
+POM_MIN_D = 4.0            # pom-pom, at least this big (the paper one would be ~3.3 at 50 mm): room for the hole + wall
 # Hanging: the smallest reliable hole through the pom-pom (owner, 2026-11-09, after trying a ring on top and a hole in
 # the wing, which hung tilted). The pom-pom sits nearly straight above the balance point, so it hangs almost wings-level.
 HANG_HOLE_D = 1.2          # smallest that stays open with a 0.4 nozzle (prints ~1.0); fishing line / thread / fine wire
 POM_WALL_MIN = 1.2         # pom-pom plastic left around the hole (3 perimeters)
 MIN_FEATURE = 1.2          # wing-claw spikes thinner than this get dropped (3 perimeters)
-# Fuzzy white trim (owner, 2026-11-09): the brim and pom-pom get a cloud-like edge of small round bumps, like cartoon fur.
-FUZZ_DEPTH = 0.4           # bumps stand out from a core inset this far; valleys reach the core
-FUZZ_PITCH = 1.0           # bump spacing along the edge (about 2 nozzle widths, so the slicer keeps them)
-FUZZ_R = (0.42, 0.58)      # random bump radius range: uneven bumps read as fur rather than a gear
-FUZZ_SEED = 7              # fixed, so every build makes the same fur
+# Fuzzy white trim (owner, 2026-11-09): a soft random texture on TOP of the brim and pom-pom, outlines kept smooth
+# (a bumpy-edge version looked exaggerated). Only the white rises above the red, so it adds no colour swaps.
+TEXTURE_HEIGHT = 0.4       # tufts rise up to this much above the flat white (2 layers at 0.2; finer with smaller layers)
+TEXTURE_SIZE = 0.5         # typical tuft size in the plane (about a nozzle width or two)
+TEXTURE_COVER = 0.45       # noise level where tufts start: about half the white surface is raised
+TEXTURE_SEED = 7           # fixed, so every build makes the same texture
 
 # --- Photo -> flat geometry ------------------------------------------------------------------------------------------
 CROP = (1220, 400, 1700, 900)      # x0, y0, x1, y1 around the Santa-hat bat
@@ -142,10 +143,8 @@ def build_shapes():
     pom_r = max(POM_MIN_D / 2, np.sqrt(pom.area / np.pi))
     pom = pc.buffer(pom_r, 96)
 
-    trim = unary_union([fuzz(brim, FUZZ_SEED), fuzz(pom, FUZZ_SEED + 1)])
-    # Red cusps between the fur bumps are thinner than the nozzle: drop them (the black base shows there, like an outline).
-    hat = cone.difference(trim).buffer(-0.2, join_style="round").buffer(0.2, join_style="round")
-    hat = max(getattr(hat, "geoms", [hat]), key=lambda g: g.area)
+    trim = unary_union([brim, pom])
+    hat = cone.difference(trim)
     bat = bat.difference(unary_union([cone, brim, pom]))
     # Fill any pinholes where the hand-traced hat meets the traced bat.
     outline = unary_union([bat, hat, trim])
@@ -167,18 +166,62 @@ def build_shapes():
                                     if Polygon(g.exterior).contains(hole_c))))
 
 
-def fuzz(poly, seed):
-    """Cloud-like fur edge: a core inset by FUZZ_DEPTH, plus round bumps of random size centred along the core's edge."""
+def texture_field(poly, seed):
+    """Smooth random 0..1 height field over the polygon: blurred noise, so tufts are ~TEXTURE_SIZE across."""
+    from scipy.interpolate import RegularGridInterpolator
+    step = 0.1
+    minx, miny, maxx, maxy = poly.bounds
+    xs = np.arange(minx - 1, maxx + 1, step)
+    ys = np.arange(miny - 1, maxy + 1, step)
     rng = np.random.default_rng(seed)
-    core = poly.buffer(-FUZZ_DEPTH, join_style="round")
-    ring = core.exterior
-    n = max(6, int(round(ring.length / FUZZ_PITCH)))
-    start = rng.uniform(0, 1)
-    bumps = []
-    for i in range(n):
-        d = ((i + start + rng.uniform(-0.15, 0.15)) / n) % 1.0 * ring.length
-        bumps.append(ring.interpolate(d).buffer(rng.uniform(*FUZZ_R), 24))
-    return unary_union([core, *bumps])
+    n = ndimage.gaussian_filter(rng.standard_normal((len(xs), len(ys))), TEXTURE_SIZE / step / 2.5)
+    n = (n - n.min()) / (n.max() - n.min())
+    n = np.clip((n - TEXTURE_COVER) / 0.25, 0, 1)   # flat valleys, rounded tufts
+    return RegularGridInterpolator((xs, ys), n, bounds_error=False, fill_value=0.0)
+
+
+def textured_trim(poly):
+    """White layer: flat TRIM_LAYER on the base, with its top displaced up by the texture (watertight)."""
+    flat = to_manifold(extrude(poly, TRIM_LAYER).apply_translation([0, 0, THICKNESS]))
+    top = THICKNESS + TRIM_LAYER
+    field = texture_field(poly, TEXTURE_SEED)
+
+    def lift(v):
+        v = np.array(v, dtype=np.float64)
+        on_top = v[:, 2] > top - 1e-4
+        v[on_top, 2] += TEXTURE_HEIGHT * field(v[on_top, :2])
+        return v
+
+    mesh = from_manifold(flat.refine_to_length(0.1).warp_batch(lift))
+    assert mesh.is_watertight
+    return mesh
+
+
+def texture_render(s, path):
+    """Close-up of the hat, lit from top-left: the white texture as modelled, and stepped to 0.2 / 0.1 mm layers."""
+    from matplotlib.colors import LightSource
+    from shapely import contains_xy
+    f = texture_field(s["trim"], TEXTURE_SEED)
+    hx, hy = s["hole_centre"]
+    x0, x1, y0, y1 = hx - 4, hx + 8, hy - 10, hy + 3
+    X, Y = np.meshgrid(np.arange(x0, x1, 0.03), np.arange(y0, y1, 0.03))
+    base = np.ones(X.shape + (3,)) * [0.93, 0.95, 1.0]
+    base[contains_xy(unary_union([s["bat"], s["cone"], s["trim"]]), X, Y)] = [0.16, 0.16, 0.16]
+    base[contains_xy(s["hat"], X, Y)] = [0.78, 0.2, 0.24]
+    white = contains_xy(s["trim"], X, Y)
+    h = TEXTURE_HEIGHT * f(np.c_[X.ravel(), Y.ravel()]).reshape(X.shape)
+    ls = LightSource(azdeg=315, altdeg=40)
+    fig, axes = plt.subplots(1, 3, figsize=(20, 7.5))
+    for ax, layer in zip(axes, (None, 0.2, 0.1)):
+        hq = h if layer is None else np.floor(h / layer + 0.5) * layer
+        shade = ls.shade(hq, cmap=plt.cm.gray, vert_exag=8, blend_mode="soft", vmin=-0.6, vmax=0.45)[..., :3]
+        im = base.copy()
+        im[white] = 0.55 + 0.45 * shade[white]
+        ax.imshow(im, origin="lower", extent=(x0, x1, y0, y1))
+        ax.set_title("as modelled (mm)" if layer is None else f"printed at {layer} mm layers (approx.)")
+    fig.suptitle("santa-bat-ornament: white trim texture, close-up", fontsize=15)
+    fig.savefig(path, dpi=60, bbox_inches="tight")
+    plt.close(fig)
 
 
 def mass_centroid(bat, hat, trim):
@@ -273,7 +316,7 @@ def main():
     outline = unary_union([s["bat"], s["cone"], s["trim"]]).buffer(0.01).buffer(-0.01)   # cone, not hat: no pinholes at the fur cusps
     bat = extrude(outline, THICKNESS)
     hat = extrude(s["hat"], HAT_LAYER).apply_translation([0, 0, THICKNESS])
-    trim = extrude(s["trim"], TRIM_LAYER).apply_translation([0, 0, THICKNESS])
+    trim = textured_trim(s["trim"])
     for name, m in (("bat", bat), ("hat", hat), ("trim", trim)):
         assert m.is_watertight, f"{name} body not watertight"
         m.export(OUT / f"santa-bat-ornament-{name}.stl")
@@ -316,6 +359,7 @@ def main():
         "thickness": THICKNESS,
         "thickness_at_hat": THICKNESS + HAT_LAYER,
         "thickness_at_trim": THICKNESS + TRIM_LAYER,
+        "thickness_at_trim_tufts": THICKNESS + TRIM_LAYER + TEXTURE_HEIGHT,
         "hang_hole_d": HANG_HOLE_D,
         "hang_hole_wall": round(s["hole_wall"], 2),
         "pom_pom_d": round(2 * s["pom_r"], 1),
@@ -336,6 +380,7 @@ def main():
 
     photo_overlay(RENDERS / "photo-trace.png")
     flat_render(s, RENDERS / "layout.png")
+    texture_render(s, RENDERS / "texture.png")
     from render import render_sheet
     render_sheet(merged, str(RENDERS / "model.png"), title="santa-bat-ornament: print pose (flat), mm",
                  labels=["ornament"], sections_y=(0.0, hole_y), sections_x=(0.0, hole_x))
