@@ -55,9 +55,10 @@ POM_MIN_D = 4.0            # pom-pom, at least this big (the paper one would be 
 HANG_HOLE_D = 1.2          # smallest that stays open with a 0.4 nozzle (prints ~1.0); fishing line / thread / fine wire
 POM_WALL_MIN = 1.2         # pom-pom plastic left around the hole (3 perimeters)
 MIN_FEATURE = 1.2          # wing-claw spikes thinner than this get dropped (3 perimeters)
-# Fuzzy white trim (owner, 2026-11-09): a soft random texture on TOP of the brim and pom-pom, outlines kept smooth
-# (a bumpy-edge version looked exaggerated). Only the white rises above the red, so it adds no colour swaps.
-TEXTURE_HEIGHT = 0.3       # tufts rise up to this much above the white top; faded out over the rounded edge
+# Optional texture on top of the white (off). Tried 2026-11-09: 0.5 mm tufts sliced into worm-like gap-fill scraps
+# (narrower than a 0.4 mm line), so the owner went with the plain raised, rounded white. If revisited, tufts need to be
+# >= ~1.2 mm across to print as real bumps.
+TEXTURE_HEIGHT = 0.0       # tufts rise up to this much above the white top; faded out over the rounded edge
 TEXTURE_SIZE = 0.5         # typical tuft size in the plane (about a nozzle width or two)
 TEXTURE_COVER = 0.45       # noise level where tufts start: about half the white surface is raised
 TEXTURE_SEED = 7           # fixed, so every build makes the same texture
@@ -192,6 +193,8 @@ def trim_height(poly, xy):
     h = top - r + np.sqrt(np.maximum(r * r - (r - dd) ** 2, 0.0))
     fade = np.clip((d - r * 0.5) / (r * 1.5), 0, 1)
     fade = fade * fade * (3 - 2 * fade)
+    if TEXTURE_HEIGHT == 0:
+        return h
     return h + TEXTURE_HEIGHT * fade * texture_field(poly, TEXTURE_SEED)(xy)
 
 
@@ -237,7 +240,7 @@ def texture_render(s, path):
         im[white] = 0.55 + 0.45 * shade[white]
         ax.imshow(im, origin="lower", extent=(x0, x1, y0, y1))
         ax.set_title("as modelled (mm)" if layer is None else f"printed at {layer} mm layers (approx.)")
-    fig.suptitle("santa-bat-ornament: raised white trim (rounded edge + texture), close-up", fontsize=15)
+    fig.suptitle("santa-bat-ornament: raised white trim (rounded edge), close-up", fontsize=15)
     fig.savefig(path, dpi=60, bbox_inches="tight")
     plt.close(fig)
 
@@ -377,7 +380,6 @@ def main():
         "thickness_at_hat": THICKNESS + HAT_LAYER,
         "thickness_at_trim": THICKNESS + TRIM_LAYER,
         "trim_edge_round": TRIM_ROUND,
-        "thickness_at_trim_tufts": THICKNESS + TRIM_LAYER + TEXTURE_HEIGHT,
         "hang_hole_d": HANG_HOLE_D,
         "hang_hole_wall": round(s["hole_wall"], 2),
         "pom_pom_d": round(2 * s["pom_r"], 1),
