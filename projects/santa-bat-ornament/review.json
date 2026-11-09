@@ -1,7 +1,7 @@
 {
   "page_title": "Santa Bat Ornament",
   "title": "Santa-hat bat ornament",
-  "subtitle": "Traced from your wall photo \u00b7 50 mm wingspan \u00b7 black base with the red hat and white trim on top \u00b7 hangs from a tiny hole in the wing, shown as it hangs \u00b7 millimetres",
+  "subtitle": "Traced from your wall photo \u00b7 50 mm wingspan \u00b7 black base with the red hat and white trim on top \u00b7 hangs from a tiny hole in the pom-pom, shown as it hangs \u00b7 millimetres",
   "meshes": [
     {
       "path": "renders/view-bat.stl",
@@ -52,11 +52,11 @@
       "param": "pom_pom_d"
     },
     {
-      "label": "Hanging hole (in the black wing)",
+      "label": "Hanging hole (through the pom-pom)",
       "param": "hang_hole_d"
     }
   ],
-  "scale_note": "Real size: 50 mm wing tip to wing tip (your pick). It hangs tilted, so its overall box is 29 \u00d7 52 mm. The photo looks along the wall, so the bat appeared squashed sideways; it's stretched 1.23\u00d7 to undo that (estimated from the round pom-pom).",
-  "notes_title": "v5: what changed, what to check",
-  "notes": "v5: no ring. The ornament hangs from a tiny 1.8 mm hole in the black upper wing, black on black so it nearly disappears. The hat sits right over the balance point, so a hole in the black can't hang level: the bat hangs tilted about 43\u00b0, diving (your pick over a hole in the brim or a glued thread). The view shows it as it really hangs. The pom-pom is a solid 4 mm white ball again. Everything else is as in v4: a black 2 mm base with the red and white layered on top (~5 colour swaps). Check: the diving angle, and that 1.8 mm takes your thread or hook (fishing line or a thin wire hook works best)."
+  "scale_note": "Real size: 50 mm wing tip to wing tip (your pick). The photo looks along the wall, so the bat appeared squashed sideways; it's stretched 1.23\u00d7 to undo that (estimated from the round pom-pom).",
+  "notes_title": "v6: what changed, what to check",
+  "notes": "v6: back to a hole through the pom-pom, as small as reliably prints: 1.2 mm (it'll come out about 1 mm), with 1.4 mm of pom-pom around it. It hangs almost wings-level again. Thread it with fishing line, sewing thread, or fine wire; if the hole closes up a little, a needle or pin opens it. Everything else as before: a black 2 mm base with the red and white layered on top (~5 colour swaps)."
 }

@@ -1,7 +1,7 @@
 # Santa-hat bat ornament
 
 A flat, hanging Christmas ornament: the paper bat wearing a Santa hat from the owner's wall of
-Halloween bats, made printable. It's 50 mm wing tip to wing tip: a 2 mm black bat with the red hat and white trim layered on top (like the paper one). It hangs, tilted as if diving, from a tiny hole in the black wing.
+Halloween bats, made printable. It's 50 mm wing tip to wing tip: a 2 mm black bat with the red hat and white trim layered on top (like the paper one). It hangs from a tiny hole through the pom-pom.
 
 ![colour layout](renders/layout.png)
 
@@ -20,7 +20,8 @@ Santa hat. Owner's picks: **50 mm across, three colours** (AMS lite: black, red,
 - [x] v3: owner picked 50 mm and three colours. 2.4 mm thick, pom-pom and loop resized for the small scale
 - [x] v4: owner chose less waste. Black base + colour layers on top, so all AMS swaps are in the top 4 layers
 - [x] v5: owner still unsure about the ring. Now a tiny 1.8 mm hole in the black wing. It can't hang level (see Measurements); the owner chose the tilt
-- [ ] Owner review of v5
+- [x] v6: owner went back to a hole through the pom-pom, "as small as possible": 1.2 mm
+- [ ] Owner review of v6
 - [ ] Test print
 
 ## Measurements
@@ -29,10 +30,10 @@ No real measurements: the size is the owner's choice (`ORNAMENT_SIZE_MM = 50`, w
 
 | Feature | Value (mm) | Notes |
 |---|---|---|
-| Overall (as it hangs) | 28.6 × 52.4 | Hangs tilted ~43° from wings-level |
+| Overall (as it hangs) | 49.1 × 32.6 | Hangs within 1° of wings-level |
 | Thickness | 2.0 black base; 2.6 at the red hat; 2.8 at the brim + pom-pom | Red 0.6 (3 layers) so the black doesn't darken it; white 0.8 (4 layers), 0.2 proud of the red like fur |
-| Pom-pom | 4.0 dia, solid | True scale would be ~3.3 |
-| Hanging hole | 1.8 dia, in the black upper wing | 1.2 mm of plastic to the edge, 0.6 clear of the colour layers. Takes thread, fishing line, or a thin wire hook. The balance point sits under the hat brim, with no black above it, so a black-only hole can't hang level. The least-tilt spot (here) gives ~43°. A hole through the white brim would hang level; the owner chose the tilt |
+| Pom-pom | 4.0 dia | True scale would be ~3.3. Leaves a 1.4 mm wall around the hole |
+| Hanging hole | 1.2 dia, through the pom-pom | The smallest that stays open with a 0.4 nozzle (prints ~1.0). Earlier tries: 3.2 mm through the pom-pom (v1), a ring on top (v2–v4), a 1.8 mm hole in the wing (v5, which hung tilted ~43°) |
 | Smallest feature | 1.2 | Wing-claw spikes thinner than this are dropped. At 50 mm that's nearly all of them |
 | Thinnest colour region | ≥ 0.4 | No unprintable colour slivers |
 | Colour swaps | ~5 | Only in layers 11–14. Black layers 1–10 print in one go |
@@ -49,11 +50,11 @@ straight-on photo of the paper bat (or one with a ruler beside it) would settle 
   changes are only in layers 11–14 (~5 swaps), so the prime tower is short and the purge waste small. Several on one plate
   share those swaps.
 - **One colour:** `output/santa-bat-ornament.stl`. The raised hat shows as relief; paint it if you like.
-- Thread fishing line, thread, or a thin wire hook through the hole. The renders show it as it hangs.
+- Thread fishing line, sewing thread, or fine wire through the pom-pom (the hole prints ~1 mm; a needle opens it if it's tight). The renders show it as it hangs.
 
 ## Open questions
 
-- Is the diving angle OK once printed? (Fallback: a hole through the white brim, which hangs level.)
+- Does the 1.2 mm hole stay open in print? If it closes, ream it with a needle, or go to 1.4 mm.
 - Does the bat look right, especially its width after the perspective stretch?
 
 ## Pipeline
@@ -64,8 +65,8 @@ straight-on photo of the paper bat (or one with a ruler beside it) would settle 
    close to the wall colour to threshold.
 3. Flips to Y-up, applies the perspective stretch, rotates so the centroid hangs straight below the pom-pom,
    and scales to `ORNAMENT_SIZE_MM`.
-4. Drops sub-`MIN_FEATURE` spikes, sizes the pom-pom, and splits the outline into bat, hat, and trim regions. Finds the hanging-hole spot in the black that
-   needs the least tilt (`find_hang_point`), then turns everything so the balance point (volume-weighted) hangs straight below it.
+4. Drops sub-`MIN_FEATURE` spikes, sizes the pom-pom, and splits the outline into bat, hat, and trim regions. Cuts the `HANG_HOLE_D` hole through
+   the pom-pom centre (base + white layer), then turns everything so the balance point (volume-weighted) hangs straight below it.
 5. Extrudes the black base (whole outline) to `THICKNESS`, then the hat (`HAT_LAYER`) and trim (`TRIM_LAYER`) on top of it. Merges them into a
    single-colour STL (manifold3d), and writes the 3MF, SVG, report, and renders.
 
@@ -91,3 +92,4 @@ straight-on photo of the paper bat (or one with a ruler beside it) would settle 
 - **2026-11-09:** v3. Owner: 50 mm, three colours. Thickness 3 → 2.4 mm (fur 0.4 proud) to stay in proportion and cut colour swaps. Pom-pom 4.5 mm, loop 4 mm with a 2 mm hole (smallest that still takes a hook). All colour regions ≥ 0.4 mm wide. Watertight, 0 self-intersections.
 - **2026-11-09:** v4. The owner wants less waste. Colours no longer go through the full thickness (~25 AMS swaps). Now it's a black 2 mm base (whole outline + loop) with a red hat 0.6 mm and white trim 0.8 mm layered on top: ~5 swaps, all in layers 11–14. The back is plain black. Watertight, 0 self-intersections.
 - **2026-11-09:** v5. The owner was still unsure about the ring. Offered a tiny hole in the black, but the balance point sits under the hat brim, so a black-only hole can't hang level (least tilt ~43°, on the upper wing). Showed options (wing hole tilted / brim hole level / glued thread); the owner chose the wing hole. 1.8 mm hole, the pom-pom back to a solid 4 mm, size now defined as a 50 mm wingspan. Watertight, 0 self-intersections, Euler 0.
+- **2026-11-09:** v6. The owner went back to a hole through the pom-pom, "as small as possible": 1.2 mm (the smallest that reliably stays open), 1.4 mm wall in the 4 mm pom-pom. Hangs within 1° of wings-level. Watertight, 0 self-intersections, Euler 0.
