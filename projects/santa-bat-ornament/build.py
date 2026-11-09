@@ -7,7 +7,7 @@ source/photo-2026-11-09-wall-bats.jpg (the paper bats on the owner's wall)
   -> Santa hat: hand-traced polygons in photo pixels (the hat's white paper is too close to the wall colour to threshold)
   -> perspective fix (the photo looks along the wall, so the bat is squashed sideways), scale to ORNAMENT_SIZE_MM
   -> layered like the paper craft, to keep AMS colour swaps (and purge waste) to the last few layers:
-       a plain black base (whole outline, incl. the hanging loop), with a thin red hat and a slightly thicker white
+       a plain black base (whole outline, with a small hanging hole), with a thin red hat and a slightly thicker white
        brim + pom-pom (fur) printed on top of it. The back is a plain black silhouette.
   -> output/santa-bat-ornament.stl            single-colour print (all bodies merged)
   -> output/santa-bat-ornament-multicolor.3mf one object, three parts (assign filaments per part with the AMS lite)
@@ -44,16 +44,17 @@ RENDERS = HERE / "renders"
 PHOTO = HERE / "source" / "photo-2026-11-09-wall-bats.jpg"
 
 # --- Design parameters (mm) ------------------------------------------------------------------------------------------
-ORNAMENT_SIZE_MM = 50.0    # longest side of the finished ornament (hanging pose). Owner's pick (2026-11-09)
+ORNAMENT_SIZE_MM = 50.0    # wing tip to wing tip, wings level (owner, 2026-11-09). It hangs tilted, so its bounding box differs
 THICKNESS = 2.0            # black base, the whole outline (10 layers at 0.2, all one colour)
 HAT_LAYER = 0.6            # red hat on top of the base (3 layers: thick enough that the black doesn't darken the red)
 TRIM_LAYER = 0.8           # white brim + pom-pom on top of the base (4 layers: opaque white, and 0.2 proud of the red, like fur)
-POM_MIN_D = 4.5            # solid pom-pom, at least this big (the paper one would be ~3.3 at 50 mm: too small for the loop)
-# Hanging loop: a slim black ring standing on top of the pom-pom (like a glass ornament's cap), 3 mm deep.
-# Black and smaller than the pom-pom so it reads as a hanger, not a second ball.
-LOOP_HOLE_D = 2.0          # thread / thin ribbon / wire ornament hook
-LOOP_WALL = 1.0            # ring width in the plane (2 perimeters + gap fill); fine for a ~2 g ornament
-LOOP_SINK = 0.8            # how far the ring overlaps down into the pom-pom
+POM_MIN_D = 4.0            # solid pom-pom, at least this big (the paper one would be ~3.3 at 50 mm)
+# Hanging: a small hole through the black only (black on black, so it nearly disappears). The owner tried a hole through the
+# pom-pom and a ring on top and liked neither. No black sits above the balance point (the hat does), so the hole is on the
+# upper wing and the bat hangs tilted, diving (owner chose this over a hole in the brim or a glued thread, 2026-11-09).
+HANG_HOLE_D = 1.8          # thread / fishing line / thin wire hook
+HOLE_WALL = 1.2            # black left between the hole and the outline (3 perimeters)
+HOLE_TO_COLOUR = 0.6       # gap between the hole and the red/white layers
 MIN_FEATURE = 1.2          # wing-claw spikes thinner than this get dropped (3 perimeters)
 
 # --- Photo -> flat geometry ------------------------------------------------------------------------------------------
@@ -133,29 +134,58 @@ def build_shapes():
     bat = bat.buffer(-r, join_style="round").buffer(r * 2, join_style="round").buffer(-r, join_style="round")
     bat = max(getattr(bat, "geoms", [bat]), key=lambda g: g.area)
 
-    # Solid pom-pom, at least POM_MIN_D, with the hanging loop on top (straight above its centre, so it still hangs level).
+    # Solid pom-pom (a little bigger than the paper one so the white prints cleanly).
     pc = pom.centroid
     pom_r = max(POM_MIN_D / 2, np.sqrt(pom.area / np.pi))
     pom = pc.buffer(pom_r, 96)
-    ring_r = LOOP_HOLE_D / 2 + LOOP_WALL
-    lc = Point(pc.x, pc.y + pom_r + ring_r - LOOP_SINK)
-    hole = lc.buffer(LOOP_HOLE_D / 2, 64)
-    loop = lc.buffer(ring_r, 96).difference(hole)
 
-    trim = unary_union([brim, pom]).difference(hole)
-    hat = cone.difference(trim).difference(hole)
+    trim = unary_union([brim, pom])
+    hat = cone.difference(trim)
     bat = bat.difference(unary_union([cone, brim, pom]))
-    # Fill any pinholes where the hand-traced hat meets the traced bat (only the hanging hole stays open).
+    # Fill any pinholes where the hand-traced hat meets the traced bat.
     outline = unary_union([bat, hat, trim])
-    gaps = Polygon(outline.exterior).difference(outline).difference(hole.buffer(0.05))
-    bat = unary_union([bat, gaps.buffer(0.02)]).difference(unary_union([hat, trim, hole]))
+    gaps = Polygon(outline.exterior).difference(outline)
+    bat = unary_union([bat, gaps.buffer(0.02)]).difference(unary_union([hat, trim]))
     bat = max(getattr(bat, "geoms", [bat]), key=lambda g: g.area)
-    loop = loop.difference(trim)
-    loop_clear = float(loop.distance(bat))
-    bat = unary_union([bat, loop])    # black, with the bat
-    return dict(bat=bat, hat=hat, trim=trim, hole=hole, rot_deg=rot, px_to_mm=k,
-                pom_r=pom_r, pom_centre=(pc.x, pc.y), hole_centre=(lc.x, lc.y),
-                loop_clear_of_bat=loop_clear)
+
+    # Hanging hole: through the black only, where the least tilt is needed; then turn the whole ornament so the
+    # balance point hangs exactly below it (so the renders show how it really hangs).
+    hole_c = find_hang_point(bat, hat, trim)
+    c = mass_centroid(bat, hat, trim)
+    turn = -90.0 - np.degrees(np.arctan2(c.y - hole_c.y, c.x - hole_c.x))
+    bat, hat, trim = [affinity.rotate(g, turn, origin=hole_c) for g in (bat, hat, trim)]
+    hole = hole_c.buffer(HANG_HOLE_D / 2, 64)
+    bat = bat.difference(hole)
+    colour = unary_union([hat, trim])
+    return dict(bat=bat, hat=hat, trim=trim, hole=hole, rot_deg=rot + turn, px_to_mm=k,
+                pom_r=pom_r, hole_centre=(hole_c.x, hole_c.y),
+                hole_wall=float(hole.exterior.distance(Polygon(unary_union([bat, hat, trim]).exterior).exterior)),
+                hole_to_colour=float(hole.distance(colour)))
+
+
+def mass_centroid(bat, hat, trim):
+    """Balance point: base (whole outline) plus the thin colour layers on top, weighted by volume."""
+    parts = [(unary_union([bat, hat, trim]), THICKNESS), (hat, HAT_LAYER), (trim, TRIM_LAYER)]
+    w = sum(g.area * t for g, t in parts)
+    x = sum(g.centroid.x * g.area * t for g, t in parts) / w
+    y = sum(g.centroid.y * g.area * t for g, t in parts) / w
+    return Point(x, y)
+
+
+def find_hang_point(bat, hat, trim):
+    """Spot in the black that needs the least tilt to hang (balance point straight below), with HOLE_WALL of plastic
+    to the outline and HOLE_TO_COLOUR clear of the red/white layers. The balance point sits right under the hat brim, so
+    the nearest room is on the upper wing's inner edge: it hangs ~40 deg steeper than the 'wings level' pose (owner's pick)."""
+    r = HANG_HOLE_D / 2
+    outline = unary_union([bat, hat, trim])
+    allowed = outline.buffer(-(r + HOLE_WALL)).difference(unary_union([hat, trim]).buffer(r + HOLE_TO_COLOUR))
+    c = mass_centroid(bat, hat, trim)
+    minx, miny, maxx, maxy = allowed.bounds
+    xs, ys = np.meshgrid(np.arange(minx, maxx, 0.1), np.arange(max(miny, c.y + 1.5), maxy, 0.1))
+    pts = [Point(x, y) for x, y in zip(xs.ravel(), ys.ravel())]
+    pts = [p for p in pts if allowed.contains(p)]
+    assert pts, "no room for a hanging hole"
+    return min(pts, key=lambda p: abs(np.arctan2(p.x - c.x, p.y - c.y)))
 
 
 def extrude(poly, h):
@@ -273,7 +303,7 @@ def main():
         v.export(RENDERS / f"view-{name}.stl")
 
     hole_x, hole_y = s["hole_centre"]
-    assert s["loop_clear_of_bat"] > 0.6, "hanging loop touches the wing"
+    assert s["hole_wall"] >= HOLE_WALL - 0.05 and s["hole_to_colour"] >= HOLE_TO_COLOUR - 0.05, s
     params = {
         "ornament_size": ORNAMENT_SIZE_MM,
         "width": round(float(merged.extents[0]), 1),
@@ -281,8 +311,8 @@ def main():
         "thickness": THICKNESS,
         "thickness_at_hat": THICKNESS + HAT_LAYER,
         "thickness_at_trim": THICKNESS + TRIM_LAYER,
-        "hang_hole_d": LOOP_HOLE_D,
-        "loop_outer_d": LOOP_HOLE_D + 2 * LOOP_WALL,
+        "hang_hole_d": HANG_HOLE_D,
+        "hang_hole_wall": round(s["hole_wall"], 2),
         "pom_pom_d": round(2 * s["pom_r"], 1),
         "min_feature": MIN_FEATURE,
         "perspective_x_stretch": PERSPECTIVE_X_STRETCH,
@@ -292,7 +322,7 @@ def main():
                         f"{ORNAMENT_SIZE_MM:g} mm (shape traced from a photo; sideways squash corrected by estimate)",
         "print": info,
         "print_orientation": "flat on the bed, back face down (no supports)",
-        "hanging": {"loop_hole_centre_mm": [round(hole_x, 1), round(hole_y, 1)],
+        "hanging": {"hole_centre_mm": [round(hole_x, 1), round(hole_y, 1)],
                     "rotated_from_photo_deg": round(float(s["rot_deg"]), 1)},
         "params_mm": params,
     }

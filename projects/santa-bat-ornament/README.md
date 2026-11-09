@@ -1,7 +1,7 @@
 # Santa-hat bat ornament
 
 A flat, hanging Christmas ornament: the paper bat wearing a Santa hat from the owner's wall of
-Halloween bats, made printable. It's 50 mm across: a 2 mm black bat with the red hat and white trim layered on top (like the paper one), and hangs from a small black loop on top of the pom-pom.
+Halloween bats, made printable. It's 50 mm wing tip to wing tip: a 2 mm black bat with the red hat and white trim layered on top (like the paper one). It hangs, tilted as if diving, from a tiny hole in the black wing.
 
 ![colour layout](renders/layout.png)
 
@@ -19,19 +19,20 @@ Santa hat. Owner's picks: **50 mm across, three colours** (AMS lite: black, red,
 - [x] v2: owner didn't like the hole through the pom-pom. The pom-pom is solid again, with a slim black hanging loop on top
 - [x] v3: owner picked 50 mm and three colours. 2.4 mm thick, pom-pom and loop resized for the small scale
 - [x] v4: owner chose less waste. Black base + colour layers on top, so all AMS swaps are in the top 4 layers
-- [ ] Owner review of v4
+- [x] v5: owner still unsure about the ring. Now a tiny 1.8 mm hole in the black wing. It can't hang level (see Measurements); the owner chose the tilt
+- [ ] Owner review of v5
 - [ ] Test print
 
 ## Measurements
 
-No real measurements: the size is the owner's choice (`ORNAMENT_SIZE_MM = 50`, the longest side as it hangs).
+No real measurements: the size is the owner's choice (`ORNAMENT_SIZE_MM = 50`, wing tip to wing tip with the wings level).
 
 | Feature | Value (mm) | Notes |
 |---|---|---|
-| Overall (as it hangs) | 49.3 × 32.4 | |
+| Overall (as it hangs) | 28.6 × 52.4 | Hangs tilted ~43° from wings-level |
 | Thickness | 2.0 black base; 2.6 at the red hat; 2.8 at the brim + pom-pom | Red 0.6 (3 layers) so the black doesn't darken it; white 0.8 (4 layers), 0.2 proud of the red like fur |
-| Pom-pom | 4.5 dia, solid | True scale would be ~3.3. Enlarged to carry the loop |
-| Hanging loop | 4.0 outside, 2.0 hole, 1.0 wall | Black, straight above the pom-pom, joined across ~2.5 mm. Takes thread, thin ribbon, or a wire hook |
+| Pom-pom | 4.0 dia, solid | True scale would be ~3.3 |
+| Hanging hole | 1.8 dia, in the black upper wing | 1.2 mm of plastic to the edge, 0.6 clear of the colour layers. Takes thread, fishing line, or a thin wire hook. The balance point sits under the hat brim, with no black above it, so a black-only hole can't hang level. The least-tilt spot (here) gives ~43°. A hole through the white brim would hang level; the owner chose the tilt |
 | Smallest feature | 1.2 | Wing-claw spikes thinner than this are dropped. At 50 mm that's nearly all of them |
 | Thinnest colour region | ≥ 0.4 | No unprintable colour slivers |
 | Colour swaps | ~5 | Only in layers 11–14. Black layers 1–10 print in one go |
@@ -44,15 +45,15 @@ straight-on photo of the paper bat (or one with a ruler beside it) would settle 
 
 - **PLA** (indoor, decorative). Flat on the bed, black face down, no supports. 0.2 mm layers (14 at the trim).
 - **AMS lite:** open `output/santa-bat-ornament-multicolor.3mf` (if Bambu Studio asks, load it as one object with multiple parts)
-  and set the filament for each part: bat (base + loop) black, hat red, trim white. Layers 1–10 are all black; the colour
+  and set the filament for each part: bat (base) black, hat red, trim white. Layers 1–10 are all black; the colour
   changes are only in layers 11–14 (~5 swaps), so the prime tower is short and the purge waste small. Several on one plate
   share those swaps.
 - **One colour:** `output/santa-bat-ornament.stl`. The raised hat shows as relief; paint it if you like.
-- Thread thin ribbon, thread, or an ornament hook through the loop. The ornament is rotated so it hangs level from it.
+- Thread fishing line, thread, or a thin wire hook through the hole. The renders show it as it hangs.
 
 ## Open questions
 
-- Is a 2 mm loop hole big enough for what it'll hang from?
+- Is the diving angle OK once printed? (Fallback: a hole through the white brim, which hangs level.)
 - Does the bat look right, especially its width after the perspective stretch?
 
 ## Pipeline
@@ -63,14 +64,15 @@ straight-on photo of the paper bat (or one with a ruler beside it) would settle 
    close to the wall colour to threshold.
 3. Flips to Y-up, applies the perspective stretch, rotates so the centroid hangs straight below the pom-pom,
    and scales to `ORNAMENT_SIZE_MM`.
-4. Drops sub-`MIN_FEATURE` spikes, sizes the pom-pom, adds the hanging loop above it (`LOOP_*`, part of the black bat body), and splits the outline into bat, hat, and trim regions.
+4. Drops sub-`MIN_FEATURE` spikes, sizes the pom-pom, and splits the outline into bat, hat, and trim regions. Finds the hanging-hole spot in the black that
+   needs the least tilt (`find_hang_point`), then turns everything so the balance point (volume-weighted) hangs straight below it.
 5. Extrudes the black base (whole outline) to `THICKNESS`, then the hat (`HAT_LAYER`) and trim (`TRIM_LAYER`) on top of it. Merges them into a
    single-colour STL (manifold3d), and writes the 3MF, SVG, report, and renders.
 
 ## Files
 
 - `output/santa-bat-ornament.stl`: single-colour print
-- `output/santa-bat-ornament-multicolor.3mf`: one object, three parts (bat + loop / hat / trim) for the AMS lite
+- `output/santa-bat-ornament-multicolor.3mf`: one object, three parts (bat / hat / trim) for the AMS lite
 - `output/santa-bat-ornament-{bat,hat,trim}.stl`: the colour bodies on their own
 - `output/santa-bat-ornament-outline.svg`: coloured outline at 1:1 mm (Fusion import, cutting more paper bats)
 - `output/report.json`: checks + parameters
@@ -88,3 +90,4 @@ straight-on photo of the paper bat (or one with a ruler beside it) would settle 
 - **2026-11-09:** v2. The owner wasn't keen on the hole through the pom-pom. Now the pom-pom is a solid 7 mm ball, with a slim black loop on top (5 mm across, 2.6 mm hole), like a glass ornament's cap. A same-size white loop looked like a snowman, so it's smaller and black. Watertight, 0 self-intersections, Euler 0 (the loop's hole).
 - **2026-11-09:** v3. Owner: 50 mm, three colours. Thickness 3 → 2.4 mm (fur 0.4 proud) to stay in proportion and cut colour swaps. Pom-pom 4.5 mm, loop 4 mm with a 2 mm hole (smallest that still takes a hook). All colour regions ≥ 0.4 mm wide. Watertight, 0 self-intersections.
 - **2026-11-09:** v4. The owner wants less waste. Colours no longer go through the full thickness (~25 AMS swaps). Now it's a black 2 mm base (whole outline + loop) with a red hat 0.6 mm and white trim 0.8 mm layered on top: ~5 swaps, all in layers 11–14. The back is plain black. Watertight, 0 self-intersections.
+- **2026-11-09:** v5. The owner was still unsure about the ring. Offered a tiny hole in the black, but the balance point sits under the hat brim, so a black-only hole can't hang level (least tilt ~43°, on the upper wing). Showed options (wing hole tilted / brim hole level / glued thread); the owner chose the wing hole. 1.8 mm hole, the pom-pom back to a solid 4 mm, size now defined as a 50 mm wingspan. Watertight, 0 self-intersections, Euler 0.

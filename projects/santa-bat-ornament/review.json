@@ -1,7 +1,7 @@
 {
   "page_title": "Santa Bat Ornament",
   "title": "Santa-hat bat ornament",
-  "subtitle": "Traced from your wall photo \u00b7 50 mm across \u00b7 black base with the red hat and white trim layered on top \u00b7 shown standing as it hangs \u00b7 millimetres",
+  "subtitle": "Traced from your wall photo \u00b7 50 mm wingspan \u00b7 black base with the red hat and white trim on top \u00b7 hangs from a tiny hole in the wing, shown as it hangs \u00b7 millimetres",
   "meshes": [
     {
       "path": "renders/view-bat.stl",
@@ -24,7 +24,7 @@
   ],
   "dims": [
     {
-      "label": "Longest side (as it hangs)",
+      "label": "Wingspan (tip to tip, wings level)",
       "param": "ornament_size"
     },
     {
@@ -52,15 +52,11 @@
       "param": "pom_pom_d"
     },
     {
-      "label": "Hanging loop hole",
+      "label": "Hanging hole (in the black wing)",
       "param": "hang_hole_d"
-    },
-    {
-      "label": "Hanging loop outside",
-      "param": "loop_outer_d"
     }
   ],
-  "scale_note": "Real size: 50 mm across (your pick). The photo looks along the wall, so the bat appeared squashed sideways; it's stretched 1.23\u00d7 to undo that (estimated from the round pom-pom).",
-  "notes_title": "v4: what changed, what to check",
-  "notes": "v4, built for less waste: the bat is a plain black 2 mm base (including the loop). The red hat (0.6 mm) and white brim + pom-pom (0.8 mm) are thin layers printed on top, like the paper hat glued on. All the colour changes happen in the top 4 layers, about 5 swaps instead of ~25. The back is now a plain black bat. Check: the raised hat look, and whether the 2 mm loop hole suits your hook or thread."
+  "scale_note": "Real size: 50 mm wing tip to wing tip (your pick). It hangs tilted, so its overall box is 29 \u00d7 52 mm. The photo looks along the wall, so the bat appeared squashed sideways; it's stretched 1.23\u00d7 to undo that (estimated from the round pom-pom).",
+  "notes_title": "v5: what changed, what to check",
+  "notes": "v5: no ring. The ornament hangs from a tiny 1.8 mm hole in the black upper wing, black on black so it nearly disappears. The hat sits right over the balance point, so a hole in the black can't hang level: the bat hangs tilted about 43\u00b0, diving (your pick over a hole in the brim or a glued thread). The view shows it as it really hangs. The pom-pom is a solid 4 mm white ball again. Everything else is as in v4: a black 2 mm base with the red and white layered on top (~5 colour swaps). Check: the diving angle, and that 1.8 mm takes your thread or hook (fishing line or a thin wire hook works best)."
 }
