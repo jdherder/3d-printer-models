@@ -57,6 +57,6 @@
     }
   ],
   "scale_note": "Real size: 50 mm wing tip to wing tip (your pick). The photo looks along the wall, so the bat appeared squashed sideways; it's stretched 1.23\u00d7 to undo that (estimated from the round pom-pom).",
-  "notes_title": "v6: what changed, what to check",
-  "notes": "v6: back to a hole through the pom-pom, as small as reliably prints: 1.2 mm (it'll come out about 1 mm), with 1.4 mm of pom-pom around it. It hangs almost wings-level again. Thread it with fishing line, sewing thread, or fine wire; if the hole closes up a little, a needle or pin opens it. Everything else as before: a black 2 mm base with the red and white layered on top (~5 colour swaps)."
+  "notes_title": "v7: what changed, what to check",
+  "notes": "v7: fuzzy white trim. The brim and pom-pom now have a cloud-like edge of small round bumps (about 1 mm apart, standing out 0.4\u20130.6 mm, uneven on purpose), like cartoon fur. It's in the model itself, so it prints that way with no slicer settings. Zoom in on the hat to see it. The pom-pom grew slightly (4.4 mm) to keep 1.2 mm of plastic around the 1.2 mm hole. Where the fur meets the red, the tiny gaps between bumps show the black base, like a fine outline. Matte white PLA will make it look softer still."
 }

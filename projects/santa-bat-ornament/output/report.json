@@ -6,7 +6,7 @@
       32.6,
       2.8
     ],
-    "faces": 2446,
+    "faces": 4300,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 0,
@@ -21,7 +21,7 @@
       -2.8,
       6.9
     ],
-    "rotated_from_photo_deg": 13.2
+    "rotated_from_photo_deg": 13.3
   },
   "params_mm": {
     "ornament_size": 50.0,
@@ -31,8 +31,8 @@
     "thickness_at_hat": 2.6,
     "thickness_at_trim": 2.8,
     "hang_hole_d": 1.2,
-    "hang_hole_wall": 1.4,
-    "pom_pom_d": 4.0,
+    "hang_hole_wall": 1.2,
+    "pom_pom_d": 4.4,
     "min_feature": 1.2,
     "perspective_x_stretch": 1.23
   }

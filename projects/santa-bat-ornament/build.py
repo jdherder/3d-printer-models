@@ -48,12 +48,17 @@ ORNAMENT_SIZE_MM = 50.0    # wing tip to wing tip, wings level (owner, 2026-11-0
 THICKNESS = 2.0            # black base, the whole outline (10 layers at 0.2, all one colour)
 HAT_LAYER = 0.6            # red hat on top of the base (3 layers: thick enough that the black doesn't darken the red)
 TRIM_LAYER = 0.8           # white brim + pom-pom on top of the base (4 layers: opaque white, and 0.2 proud of the red, like fur)
-POM_MIN_D = 4.0            # pom-pom, at least this big (the paper one would be ~3.3 at 50 mm): room for the hole + wall
+POM_MIN_D = 4.4            # pom-pom, at least this big (the paper one would be ~3.3 at 50 mm): room for the hole + wall + fuzz
 # Hanging: the smallest reliable hole through the pom-pom (owner, 2026-11-09, after trying a ring on top and a hole in
 # the wing, which hung tilted). The pom-pom sits nearly straight above the balance point, so it hangs almost wings-level.
 HANG_HOLE_D = 1.2          # smallest that stays open with a 0.4 nozzle (prints ~1.0); fishing line / thread / fine wire
 POM_WALL_MIN = 1.2         # pom-pom plastic left around the hole (3 perimeters)
 MIN_FEATURE = 1.2          # wing-claw spikes thinner than this get dropped (3 perimeters)
+# Fuzzy white trim (owner, 2026-11-09): the brim and pom-pom get a cloud-like edge of small round bumps, like cartoon fur.
+FUZZ_DEPTH = 0.4           # bumps stand out from a core inset this far; valleys reach the core
+FUZZ_PITCH = 1.0           # bump spacing along the edge (about 2 nozzle widths, so the slicer keeps them)
+FUZZ_R = (0.42, 0.58)      # random bump radius range: uneven bumps read as fur rather than a gear
+FUZZ_SEED = 7              # fixed, so every build makes the same fur
 
 # --- Photo -> flat geometry ------------------------------------------------------------------------------------------
 CROP = (1220, 400, 1700, 900)      # x0, y0, x1, y1 around the Santa-hat bat
@@ -137,8 +142,10 @@ def build_shapes():
     pom_r = max(POM_MIN_D / 2, np.sqrt(pom.area / np.pi))
     pom = pc.buffer(pom_r, 96)
 
-    trim = unary_union([brim, pom])
-    hat = cone.difference(trim)
+    trim = unary_union([fuzz(brim, FUZZ_SEED), fuzz(pom, FUZZ_SEED + 1)])
+    # Red cusps between the fur bumps are thinner than the nozzle: drop them (the black base shows there, like an outline).
+    hat = cone.difference(trim).buffer(-0.2, join_style="round").buffer(0.2, join_style="round")
+    hat = max(getattr(hat, "geoms", [hat]), key=lambda g: g.area)
     bat = bat.difference(unary_union([cone, brim, pom]))
     # Fill any pinholes where the hand-traced hat meets the traced bat.
     outline = unary_union([bat, hat, trim])
@@ -151,12 +158,27 @@ def build_shapes():
     hole_c = pc
     c = mass_centroid(bat, hat, trim)
     turn = -90.0 - np.degrees(np.arctan2(c.y - hole_c.y, c.x - hole_c.x))
-    bat, hat, trim = [affinity.rotate(g, turn, origin=hole_c) for g in (bat, hat, trim)]
+    bat, hat, trim, cone = [affinity.rotate(g, turn, origin=hole_c) for g in (bat, hat, trim, cone)]
     hole = hole_c.buffer(HANG_HOLE_D / 2, 64)
     bat, trim = bat.difference(hole), trim.difference(hole)
-    return dict(bat=bat, hat=hat, trim=trim, hole=hole, rot_deg=rot + turn, px_to_mm=k,
+    return dict(bat=bat, hat=hat, trim=trim, hole=hole, cone=cone.difference(hole), rot_deg=rot + turn, px_to_mm=k,
                 pom_r=pom_r, hole_centre=(hole_c.x, hole_c.y), hang_turn_deg=turn,
-                hole_wall=float(pom_r - HANG_HOLE_D / 2))
+                hole_wall=float(min(hole.exterior.distance(g.exterior) for g in getattr(trim, "geoms", [trim])
+                                    if Polygon(g.exterior).contains(hole_c))))
+
+
+def fuzz(poly, seed):
+    """Cloud-like fur edge: a core inset by FUZZ_DEPTH, plus round bumps of random size centred along the core's edge."""
+    rng = np.random.default_rng(seed)
+    core = poly.buffer(-FUZZ_DEPTH, join_style="round")
+    ring = core.exterior
+    n = max(6, int(round(ring.length / FUZZ_PITCH)))
+    start = rng.uniform(0, 1)
+    bumps = []
+    for i in range(n):
+        d = ((i + start + rng.uniform(-0.15, 0.15)) / n) % 1.0 * ring.length
+        bumps.append(ring.interpolate(d).buffer(rng.uniform(*FUZZ_R), 24))
+    return unary_union([core, *bumps])
 
 
 def mass_centroid(bat, hat, trim):
@@ -248,7 +270,7 @@ def main():
     RENDERS.mkdir(exist_ok=True)
     s = build_shapes()
 
-    outline = unary_union([s["bat"], s["hat"], s["trim"]]).buffer(0.01).buffer(-0.01)
+    outline = unary_union([s["bat"], s["cone"], s["trim"]]).buffer(0.01).buffer(-0.01)   # cone, not hat: no pinholes at the fur cusps
     bat = extrude(outline, THICKNESS)
     hat = extrude(s["hat"], HAT_LAYER).apply_translation([0, 0, THICKNESS])
     trim = extrude(s["trim"], TRIM_LAYER).apply_translation([0, 0, THICKNESS])
@@ -257,7 +279,10 @@ def main():
         m.export(OUT / f"santa-bat-ornament-{name}.stl")
 
     # Single-colour print: everything merged into one solid.
-    merged = from_manifold(to_manifold(bat) + to_manifold(hat) + to_manifold(trim))
+    # Merge with the whole hat cone (it overlaps the white), not the multi-colour hat part, which only just touches the
+    # fur bumps: overlapping solids union cleanly, touching ones leave knife-edge contacts.
+    cone = extrude(s["cone"], HAT_LAYER).apply_translation([0, 0, THICKNESS])
+    merged = from_manifold(to_manifold(bat) + to_manifold(cone) + to_manifold(trim))
     merged.fix_normals()
     info = mk.report(merged)
     assert info["watertight"] and info["self_intersecting_faces"] == 0, info
@@ -283,7 +308,7 @@ def main():
         v.export(RENDERS / f"view-{name}.stl")
 
     hole_x, hole_y = s["hole_centre"]
-    assert s["hole_wall"] >= POM_WALL_MIN, s
+    assert s["hole_wall"] >= POM_WALL_MIN - 0.01, s
     params = {
         "ornament_size": ORNAMENT_SIZE_MM,
         "width": round(float(merged.extents[0]), 1),
