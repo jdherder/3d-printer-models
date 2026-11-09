@@ -43,15 +43,15 @@ RENDERS = HERE / "renders"
 PHOTO = HERE / "source" / "photo-2026-11-09-wall-bats.jpg"
 
 # --- Design parameters (mm) ------------------------------------------------------------------------------------------
-ORNAMENT_SIZE_MM = 100.0   # longest side of the finished ornament (hanging pose). No real size yet: the owner's call
-THICKNESS = 3.0            # bat + hat body
-TRIM_PROUD = 0.6           # white brim and pom-pom stand this much above the front face (fur)
-POM_MIN_D = 7.0            # solid pom-pom, at least this big (the paper one is ~6.5 at this scale)
+ORNAMENT_SIZE_MM = 50.0    # longest side of the finished ornament (hanging pose). Owner's pick (2026-11-09)
+THICKNESS = 2.4            # bat + hat body (12 layers at 0.2; 3 mm looked chunky at 50 mm and meant more colour swaps)
+TRIM_PROUD = 0.4           # white brim and pom-pom stand this much above the front face (fur), 2 layers
+POM_MIN_D = 4.5            # solid pom-pom, at least this big (the paper one would be ~3.3 at 50 mm: too small for the loop)
 # Hanging loop: a slim black ring standing on top of the pom-pom (like a glass ornament's cap), 3 mm deep.
 # Black and smaller than the pom-pom so it reads as a hanger, not a second ball.
-LOOP_HOLE_D = 2.6          # ribbon / thread / ornament hook
-LOOP_WALL = 1.2            # ring width in the plane (3 perimeters); 3 mm deep through the thickness, so ~3.6 mm2 of section
-LOOP_SINK = 1.0            # how far the ring overlaps down into the pom-pom
+LOOP_HOLE_D = 2.0          # thread / thin ribbon / wire ornament hook
+LOOP_WALL = 1.0            # ring width in the plane (2 perimeters + gap fill); fine for a ~2 g ornament
+LOOP_SINK = 0.8            # how far the ring overlaps down into the pom-pom
 MIN_FEATURE = 1.2          # wing-claw spikes thinner than this get dropped (3 perimeters)
 
 # --- Photo -> flat geometry ------------------------------------------------------------------------------------------
@@ -270,7 +270,7 @@ def main():
         v.export(RENDERS / f"view-{name}.stl")
 
     hole_x, hole_y = s["hole_centre"]
-    assert s["loop_clear_of_bat"] > 1.0, "hanging loop touches the wing"
+    assert s["loop_clear_of_bat"] > 0.6, "hanging loop touches the wing"
     params = {
         "ornament_size": ORNAMENT_SIZE_MM,
         "width": round(float(merged.extents[0]), 1),

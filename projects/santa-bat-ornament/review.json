@@ -1,7 +1,7 @@
 {
   "page_title": "Santa Bat Ornament",
   "title": "Santa-hat bat ornament",
-  "subtitle": "Traced from your wall photo \u00b7 3 mm thick, hangs from a small black loop on top of the pom-pom \u00b7 shown standing as it hangs \u00b7 millimetres",
+  "subtitle": "Traced from your wall photo \u00b7 50 mm across, 2.4 mm thick, 3 colours \u00b7 hangs from a small black loop \u00b7 shown standing as it hangs \u00b7 millimetres",
   "meshes": [
     {
       "path": "renders/view-bat.stl",
@@ -56,7 +56,7 @@
       "param": "loop_outer_d"
     }
   ],
-  "scale_note": "The size is a design choice: 100 mm across. The paper bats have no measured size. Tell me a size you'd like and I'll rescale it. The photo looks along the wall, so the bat appeared squashed sideways; it's stretched 1.23\u00d7 to undo that (estimated from the round pom-pom).",
-  "notes_title": "v2: what changed, what to check",
-  "notes": "v2: no more hole through the pom-pom. It's a solid white ball again (7 mm), and the ornament hangs from a slim black loop on top of it (5 mm across, 2.6 mm hole), like the cap on a glass ornament. The loop sits straight above the pom-pom, so it still hangs level. Everything else is the same as v1: bat traced from your photo, hat drawn by hand, colours all the way through, brim + pom-pom 0.6 mm proud. Check: (1) do you like the loop? (2) is 100 mm the right size? (3) one colour or AMS multi-colour? (4) does the bat look as wide as your paper ones?"
+  "scale_note": "Real size: 50 mm across (your pick). The photo looks along the wall, so the bat appeared squashed sideways; it's stretched 1.23\u00d7 to undo that (estimated from the round pom-pom).",
+  "notes_title": "v3: what changed, what to check",
+  "notes": "v3: 50 mm across, printed in three colours. To keep it in proportion it's 2.4 mm thick, with the brim and pom-pom 0.4 mm proud. The pom-pom (4.5 mm) and loop (4 mm across, 2 mm hole) are a little larger than true scale so the loop still takes thread or a wire hook. At this size the tiny wing-claw spikes smooth out (they'd be under 1.2 mm). Check: the hat and pom-pom size against the bat, and whether 2 mm is a big enough hole for what you'll hang it with."
 }
