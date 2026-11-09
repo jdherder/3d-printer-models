@@ -6,7 +6,7 @@
       65.2,
       3.6
     ],
-    "faces": 3880,
+    "faces": 3530,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 0,
@@ -17,9 +17,9 @@
   },
   "print_orientation": "flat on the bed, back face down (no supports)",
   "hanging": {
-    "hole_centre_mm": [
+    "loop_hole_centre_mm": [
       -5.6,
-      13.7
+      18.7
     ],
     "rotated_from_photo_deg": 13.6
   },
@@ -29,8 +29,9 @@
     "height": 65.2,
     "thickness": 3.0,
     "thickness_at_trim": 3.6,
-    "hang_hole_d": 3.2,
-    "pom_pom_d": 9.0,
+    "hang_hole_d": 2.6,
+    "loop_outer_d": 5.0,
+    "pom_pom_d": 7.0,
     "min_feature": 1.2,
     "perspective_x_stretch": 1.23
   }

@@ -46,8 +46,12 @@ PHOTO = HERE / "source" / "photo-2026-11-09-wall-bats.jpg"
 ORNAMENT_SIZE_MM = 100.0   # longest side of the finished ornament (hanging pose). No real size yet: the owner's call
 THICKNESS = 3.0            # bat + hat body
 TRIM_PROUD = 0.6           # white brim and pom-pom stand this much above the front face (fur)
-HANG_HOLE_D = 3.2          # through the pom-pom, for ribbon / ornament hook
-POM_MIN_D = 9.0            # pom-pom enlarged to at least this so the hole keeps a 2.9 mm wall
+POM_MIN_D = 7.0            # solid pom-pom, at least this big (the paper one is ~6.5 at this scale)
+# Hanging loop: a slim black ring standing on top of the pom-pom (like a glass ornament's cap), 3 mm deep.
+# Black and smaller than the pom-pom so it reads as a hanger, not a second ball.
+LOOP_HOLE_D = 2.6          # ribbon / thread / ornament hook
+LOOP_WALL = 1.2            # ring width in the plane (3 perimeters); 3 mm deep through the thickness, so ~3.6 mm2 of section
+LOOP_SINK = 1.0            # how far the ring overlaps down into the pom-pom
 MIN_FEATURE = 1.2          # wing-claw spikes thinner than this get dropped (3 perimeters)
 
 # --- Photo -> flat geometry ------------------------------------------------------------------------------------------
@@ -127,11 +131,14 @@ def build_shapes():
     bat = bat.buffer(-r, join_style="round").buffer(r * 2, join_style="round").buffer(-r, join_style="round")
     bat = max(getattr(bat, "geoms", [bat]), key=lambda g: g.area)
 
-    # Pom-pom: at least POM_MIN_D, with the hanging hole through it.
+    # Solid pom-pom, at least POM_MIN_D, with the hanging loop on top (straight above its centre, so it still hangs level).
     pc = pom.centroid
     pom_r = max(POM_MIN_D / 2, np.sqrt(pom.area / np.pi))
     pom = pc.buffer(pom_r, 96)
-    hole = pc.buffer(HANG_HOLE_D / 2, 64)
+    ring_r = LOOP_HOLE_D / 2 + LOOP_WALL
+    lc = Point(pc.x, pc.y + pom_r + ring_r - LOOP_SINK)
+    hole = lc.buffer(LOOP_HOLE_D / 2, 64)
+    loop = lc.buffer(ring_r, 96).difference(hole)
 
     trim = unary_union([brim, pom]).difference(hole)
     hat = cone.difference(trim).difference(hole)
@@ -141,8 +148,12 @@ def build_shapes():
     gaps = Polygon(outline.exterior).difference(outline).difference(hole.buffer(0.05))
     bat = unary_union([bat, gaps.buffer(0.02)]).difference(unary_union([hat, trim, hole]))
     bat = max(getattr(bat, "geoms", [bat]), key=lambda g: g.area)
+    loop = loop.difference(trim)
+    loop_clear = float(loop.distance(bat))
+    bat = unary_union([bat, loop])    # black, with the bat
     return dict(bat=bat, hat=hat, trim=trim, hole=hole, rot_deg=rot, px_to_mm=k,
-                pom_r=pom_r, pom_centre=(pc.x, pc.y))
+                pom_r=pom_r, pom_centre=(pc.x, pc.y), hole_centre=(lc.x, lc.y),
+                loop_clear_of_bat=loop_clear)
 
 
 def extrude(poly, h):
@@ -258,14 +269,16 @@ def main():
         v.apply_translation([0, 0, lift])
         v.export(RENDERS / f"view-{name}.stl")
 
-    hole_x, hole_y = s["pom_centre"]
+    hole_x, hole_y = s["hole_centre"]
+    assert s["loop_clear_of_bat"] > 1.0, "hanging loop touches the wing"
     params = {
         "ornament_size": ORNAMENT_SIZE_MM,
         "width": round(float(merged.extents[0]), 1),
         "height": round(float(merged.extents[1]), 1),
         "thickness": THICKNESS,
         "thickness_at_trim": THICKNESS + TRIM_PROUD,
-        "hang_hole_d": HANG_HOLE_D,
+        "hang_hole_d": LOOP_HOLE_D,
+        "loop_outer_d": LOOP_HOLE_D + 2 * LOOP_WALL,
         "pom_pom_d": round(2 * s["pom_r"], 1),
         "min_feature": MIN_FEATURE,
         "perspective_x_stretch": PERSPECTIVE_X_STRETCH,
@@ -275,7 +288,7 @@ def main():
                         f"{ORNAMENT_SIZE_MM:g} mm (shape traced from a photo; sideways squash corrected by estimate)",
         "print": info,
         "print_orientation": "flat on the bed, back face down (no supports)",
-        "hanging": {"hole_centre_mm": [round(hole_x, 1), round(hole_y, 1)],
+        "hanging": {"loop_hole_centre_mm": [round(hole_x, 1), round(hole_y, 1)],
                     "rotated_from_photo_deg": round(float(s["rot_deg"]), 1)},
         "params_mm": params,
     }

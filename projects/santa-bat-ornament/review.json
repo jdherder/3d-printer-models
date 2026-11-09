@@ -1,22 +1,62 @@
 {
   "page_title": "Santa Bat Ornament",
   "title": "Santa-hat bat ornament",
-  "subtitle": "Traced from your wall photo · 3 mm thick, hung from a hole in the pom-pom · shown standing as it hangs · millimetres",
+  "subtitle": "Traced from your wall photo \u00b7 3 mm thick, hangs from a small black loop on top of the pom-pom \u00b7 shown standing as it hangs \u00b7 millimetres",
   "meshes": [
-    {"path": "renders/view-bat.stl", "label": "Bat (black)", "style": "solid", "color": "#2b2b2e"},
-    {"path": "renders/view-hat.stl", "label": "Hat (red)", "style": "solid", "color": "#c8323c"},
-    {"path": "renders/view-trim.stl", "label": "Brim + pom-pom (white)", "style": "solid", "color": "#f2f2f2"}
+    {
+      "path": "renders/view-bat.stl",
+      "label": "Bat (black)",
+      "style": "solid",
+      "color": "#2b2b2e"
+    },
+    {
+      "path": "renders/view-hat.stl",
+      "label": "Hat (red)",
+      "style": "solid",
+      "color": "#c8323c"
+    },
+    {
+      "path": "renders/view-trim.stl",
+      "label": "Brim + pom-pom (white)",
+      "style": "solid",
+      "color": "#f2f2f2"
+    }
   ],
   "dims": [
-    {"label": "Longest side (as it hangs)", "param": "ornament_size"},
-    {"label": "Width", "param": "width"},
-    {"label": "Height", "param": "height"},
-    {"label": "Thickness", "param": "thickness"},
-    {"label": "Thickness at brim + pom-pom", "param": "thickness_at_trim"},
-    {"label": "Hanging hole", "param": "hang_hole_d"},
-    {"label": "Pom-pom diameter", "param": "pom_pom_d"}
+    {
+      "label": "Longest side (as it hangs)",
+      "param": "ornament_size"
+    },
+    {
+      "label": "Width",
+      "param": "width"
+    },
+    {
+      "label": "Height",
+      "param": "height"
+    },
+    {
+      "label": "Thickness",
+      "param": "thickness"
+    },
+    {
+      "label": "Thickness at brim + pom-pom",
+      "param": "thickness_at_trim"
+    },
+    {
+      "label": "Pom-pom diameter",
+      "param": "pom_pom_d"
+    },
+    {
+      "label": "Hanging loop hole",
+      "param": "hang_hole_d"
+    },
+    {
+      "label": "Hanging loop outside",
+      "param": "loop_outer_d"
+    }
   ],
-  "scale_note": "The size is a design choice: 100 mm across. The paper bats have no measured size. Tell me a size you'd like and I'll rescale it. The photo looks along the wall, so the bat appeared squashed sideways; it's stretched 1.23× to undo that (estimated from the round pom-pom).",
-  "notes_title": "First draft: what to check",
-  "notes": "Bat outline traced from your photo; the hat is drawn by hand over it. Each colour goes all the way through, so the hat also shows on the back (mirrored). The brim and pom-pom stand 0.6 mm proud, like fur, so a single-colour print still shows the hat. The pom-pom is a bit bigger than the paper one (9 mm) so it can take a 3.2 mm hole for a ribbon or ornament hook. The ornament is rotated so it hangs level from that hole. Wing-claw spikes thinner than 1.2 mm were dropped because they won't print. Check: (1) does the bat shape match the paper ones (wider or narrower)? (2) is 100 mm the right size? (3) one colour or AMS multi-colour?"
+  "scale_note": "The size is a design choice: 100 mm across. The paper bats have no measured size. Tell me a size you'd like and I'll rescale it. The photo looks along the wall, so the bat appeared squashed sideways; it's stretched 1.23\u00d7 to undo that (estimated from the round pom-pom).",
+  "notes_title": "v2: what changed, what to check",
+  "notes": "v2: no more hole through the pom-pom. It's a solid white ball again (7 mm), and the ornament hangs from a slim black loop on top of it (5 mm across, 2.6 mm hole), like the cap on a glass ornament. The loop sits straight above the pom-pom, so it still hangs level. Everything else is the same as v1: bat traced from your photo, hat drawn by hand, colours all the way through, brim + pom-pom 0.6 mm proud. Check: (1) do you like the loop? (2) is 100 mm the right size? (3) one colour or AMS multi-colour? (4) does the bat look as wide as your paper ones?"
 }

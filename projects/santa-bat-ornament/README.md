@@ -1,7 +1,7 @@
 # Santa-hat bat ornament
 
 A flat, hanging Christmas ornament: the paper bat wearing a Santa hat from the owner's wall of
-Halloween bats, made printable. It's 3 mm thick and hangs from a hole in the pom-pom.
+Halloween bats, made printable. It's 3 mm thick and hangs from a small black loop on top of the pom-pom.
 
 ![colour layout](renders/layout.png)
 
@@ -16,6 +16,7 @@ Santa hat. Size is free (no real part to match). It prints in one colour or, wit
 - [x] Bat outline traced from the photo; hat drawn by hand over it (`renders/photo-trace.png`)
 - [x] v1: 99.6 × 65.2 mm, 3 mm thick (3.6 mm at the brim and pom-pom), 3.2 mm hanging hole. Watertight, 0 self-intersections,
       Euler 0 (one through-hole, as intended)
+- [x] v2: owner didn't like the hole through the pom-pom. The pom-pom is solid again, with a slim black hanging loop on top
 - [ ] Owner review: shape, size, colours
 - [ ] Test print
 
@@ -28,7 +29,8 @@ If the owner wants it to match the paper bats, measure one paper bat's wingspan 
 |---|---|---|
 | Overall (as it hangs) | 99.6 × 65.2 | |
 | Thickness | 3.0, and 3.6 at the brim + pom-pom | The white "fur" stands 0.6 mm proud |
-| Pom-pom | 9.0 dia, 3.2 hole | Enlarged from ~6.5 so the hole keeps a 2.9 mm wall. It joins the hat along ~9 mm |
+| Pom-pom | 7.0 dia, solid | The paper one is ~6.5 at this scale |
+| Hanging loop | 5.0 outside, 2.6 hole, 1.2 wall, 3 deep | Black, straight above the pom-pom. It joins the pom-pom across ~3.2 mm (×3 mm thick) |
 | Smallest feature | 1.2 | Wing-claw spikes thinner than this were dropped |
 
 **Perspective:** the photo looks along the wall from the left, so the bat is squashed sideways. The pom-pom (a
@@ -42,7 +44,7 @@ straight-on photo of the paper bat (or one with a ruler beside it) would settle 
 - **AMS lite:** open `output/santa-bat-ornament-multicolor.3mf` (if Bambu Studio asks, load it as one object with
   multiple parts) and set the filament for each part: bat black, hat red, trim white. Every colour goes through the
   full thickness, so the back shows the hat too (mirrored).
-- Thread ribbon or an ornament hook through the pom-pom. The ornament is rotated so it hangs level from that hole.
+- Thread thin ribbon, thread, or an ornament hook through the loop. The ornament is rotated so it hangs level from it.
 
 ## Open questions
 
@@ -59,13 +61,13 @@ straight-on photo of the paper bat (or one with a ruler beside it) would settle 
    close to the wall colour to threshold.
 3. Flips to Y-up, applies the perspective stretch, rotates so the centroid hangs straight below the pom-pom,
    and scales to `ORNAMENT_SIZE_MM`.
-4. Drops sub-`MIN_FEATURE` spikes, enlarges the pom-pom, cuts the hole, and splits the outline into bat, hat, and trim regions.
+4. Drops sub-`MIN_FEATURE` spikes, sizes the pom-pom, adds the hanging loop above it (`LOOP_*`, part of the black bat body), and splits the outline into bat, hat, and trim regions.
 5. Extrudes each colour, merges them into a single-colour STL (manifold3d), writes the 3MF, SVG, report, and renders.
 
 ## Files
 
 - `output/santa-bat-ornament.stl`: single-colour print
-- `output/santa-bat-ornament-multicolor.3mf`: one object, three parts (bat / hat / trim) for the AMS lite
+- `output/santa-bat-ornament-multicolor.3mf`: one object, three parts (bat + loop / hat / trim) for the AMS lite
 - `output/santa-bat-ornament-{bat,hat,trim}.stl`: the colour bodies on their own
 - `output/santa-bat-ornament-outline.svg`: coloured outline at 1:1 mm (Fusion import, cutting more paper bats)
 - `output/report.json`: checks + parameters
@@ -80,3 +82,4 @@ straight-on photo of the paper bat (or one with a ruler beside it) would settle 
 - **2026-11-09:** Owner: the hat was in the wrong place in the 3D viewer. That was a viewer-only bug: each colour body was lifted
   to the floor separately, so the hat and trim dropped below where they belong. Fixed with one shared offset. The print files were
   unaffected (the layout and STL were already right).
+- **2026-11-09:** v2. The owner wasn't keen on the hole through the pom-pom. Now the pom-pom is a solid 7 mm ball, with a slim black loop on top (5 mm across, 2.6 mm hole), like a glass ornament's cap. A same-size white loop looked like a snowman, so it's smaller and black. Watertight, 0 self-intersections, Euler 0 (the loop's hole).
