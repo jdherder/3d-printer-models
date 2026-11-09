@@ -77,3 +77,6 @@ straight-on photo of the paper bat (or one with a ruler beside it) would settle 
 - **2026-11-09:** Project started from the owner's wall photo. Traced the bat, drew the hat by hand, and corrected the sideways squash
   (1.23×, estimated). v1: 100 mm, 3 mm thick, a hanging hole through an enlarged pom-pom, three colour bodies + a merged
   single-colour STL. Waiting on the owner for size, colour plan, and shape feedback.
+- **2026-11-09:** Owner: the hat was in the wrong place in the 3D viewer. That was a viewer-only bug: each colour body was lifted
+  to the floor separately, so the hat and trim dropped below where they belong. Fixed with one shared offset. The print files were
+  unaffected (the layout and STL were already right).

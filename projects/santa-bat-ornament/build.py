@@ -249,11 +249,13 @@ def main():
 
     # Viewer copies (Z-up, standing as it hangs: drawing X stays X, drawing Y becomes Z).
     stand = trimesh.transformations.rotation_matrix(np.pi / 2, [1, 0, 0])
+    # One shared lift for all three bodies (lifting each by its own lowest point moved the hat off the bat).
+    lift = -float(merged.bounds[0, 1])
     for name, m in (("bat", bat), ("hat", hat), ("trim", trim)):
         v = m.copy()
         v.apply_translation([0, 0, -THICKNESS / 2])
         v.apply_transform(stand)
-        v.apply_translation([0, 0, -v.bounds[0, 2]])
+        v.apply_translation([0, 0, lift])
         v.export(RENDERS / f"view-{name}.stl")
 
     hole_x, hole_y = s["pom_centre"]
