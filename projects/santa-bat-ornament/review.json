@@ -44,19 +44,23 @@
       "param": "thickness_at_hat"
     },
     {
-      "label": "Thickness at brim + pom-pom",
-      "param": "thickness_at_trim"
-    },
-    {
       "label": "Pom-pom diameter",
       "param": "pom_pom_d"
     },
     {
       "label": "Hanging hole (through the pom-pom)",
       "param": "hang_hole_d"
+    },
+    {
+      "label": "Top of the white",
+      "param": "thickness_at_trim"
+    },
+    {
+      "label": "White edge rounding radius",
+      "param": "trim_edge_round"
     }
   ],
   "scale_note": "Real size: 50 mm wing tip to wing tip (your pick). The photo looks along the wall, so the bat appeared squashed sideways; it's stretched 1.23\u00d7 to undo that (estimated from the round pom-pom).",
-  "notes_title": "v6: what changed, what to check",
-  "notes": "v6: back to a hole through the pom-pom, as small as reliably prints: 1.2 mm (it'll come out about 1 mm), with 1.4 mm of pom-pom around it. It hangs almost wings-level again. Thread it with fishing line, sewing thread, or fine wire; if the hole closes up a little, a needle or pin opens it. Everything else as before: a black 2 mm base with the red and white layered on top (~5 colour swaps)."
+  "notes_title": "v10: what changed, what to check",
+  "notes": "v10: texture removed. In the slicer the tiny tufts turned into worm-like scraps, so the white is now smooth: raised 0.4 mm above the red hat, with soft rounded top edges (0.35 mm radius). Use matte white PLA for a softer look. Optional: 0.1 mm layers from 2.0 mm up for a smoother rounded edge."
 }
