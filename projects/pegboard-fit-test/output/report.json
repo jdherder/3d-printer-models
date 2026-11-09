@@ -2,30 +2,38 @@
   "scale_status": "real size (shared peg interface; sizes from the owner's steel hook, diameter from test prints)",
   "print": {
     "extents_mm": [
-      17.4,
+      17.0,
       47.4,
       12.7
     ],
-    "faces": 7988,
+    "faces": 7552,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 2,
-    "volume_cm3": 2.7,
+    "volume_cm3": 2.6,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
   },
-  "print_orientation": "on its side, pegs flat on the bed, 0.4 mm flat on the bed side, no supports",
+  "print_orientation": "on its side, pegs flat on the bed, 0.4 mm flat on the bed side (the thinner sloped hook gets a narrower flat), no supports",
   "fit_on_board": {
     "board": "3/16 in white hardboard (owner's, Menards)",
     "hole_d": 6.35,
     "thickness": 3.94,
     "pitch": 25.4,
     "clearance_checked_per_side": 0.1,
-    "interference_mm3": 0.0
+    "flush_overlap_mm3_info_only": 1.17,
+    "rock_in": {
+      "ok": true,
+      "max_tilt_deg": 94.0,
+      "states": 3290,
+      "give_mm": 0.3
+    }
   },
   "params_mm": {
     "d": 6.1,
+    "hook_d": 5.7,
+    "hook_slope": 12.0,
     "hook_gap": 7.3,
     "hook_rise": 14.0,
     "bend_r": 4.5,

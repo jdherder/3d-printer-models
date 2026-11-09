@@ -75,18 +75,20 @@ def main():
 
     hung = mk.cad_to_mesh(part)
     board = pb.board_mesh(BOARD, rows=range(-1, 3), cols=range(-1, 2))
+    # The sloped hook overlaps a little in the strict flush check (like the steel hook): information only.
     clash = pb.interference_mm3(hung, pb.board_mesh(BOARD, rows=range(-1, 3), cols=range(-1, 2), clearance=pb.FIT_CLEARANCE))
-    assert clash == 0.0, f"fit test comes within {pb.FIT_CLEARANCE} mm of the board ({clash} mm^3)"
+    rock = pb.rock_in(hung, BOARD, hook_y=pb.PITCH)
+    assert rock["ok"], f"fit test won't rock onto the board: {rock}"
     pb.to_zup(hung).export(RENDERS / "asm-fit-test.stl")
     pb.to_zup(board).export(RENDERS / "ref-pegboard.stl")
 
     report = {
         "scale_status": "real size (shared peg interface; sizes from the owner's steel hook, diameter from test prints)",
         "print": info,
-        "print_orientation": "on its side, pegs flat on the bed, 0.4 mm flat on the bed side, no supports",
+        "print_orientation": "on its side, pegs flat on the bed, 0.4 mm flat on the bed side (the thinner sloped hook gets a narrower flat), no supports",
         "fit_on_board": {"board": BOARD.name, "hole_d": BOARD.hole_d, "thickness": BOARD.thickness,
                          "pitch": BOARD.pitch, "clearance_checked_per_side": pb.FIT_CLEARANCE,
-                         "interference_mm3": clash},
+                         "flush_overlap_mm3_info_only": clash, "rock_in": {**rock, "give_mm": pb.ROCK_IN_GIVE}},
         "params_mm": {**asdict(STYLE), "plate_thickness": PLATE_T, "pitch": pb.PITCH,
                       "hole_clearance_per_side": round((BOARD.hole_d - STYLE.d) / 2, 2),
                       "room_behind_board": round(STYLE.hook_gap - BOARD.thickness, 2)},

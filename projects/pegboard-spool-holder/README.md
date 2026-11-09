@@ -27,6 +27,7 @@ A spool holder that hangs on the shared pegs (two hooks + four pins), takes any 
 - [x] v4 (owner: round the top): the arm's top is a **16 mm radius crown** instead of a flat between two chamfers. The spool's
       hole used to rest on the two flat/chamfer corners; now it rides on one smooth line along the top. The arc spans ±45° and
       blends into 45° chamfers, so the bed side still prints without support
+- [x] v5 (2026-11-09): both hooks are now the shared 5.7 mm hook sloped 12°, so it rocks in (`pb.rock_in`); pins stay 6.1
 - [ ] Owner review: where it hangs behind the A1, filament path, fixed arm vs spinning hub (Open questions)
 - [ ] Test print and hang with a full spool
 
@@ -84,3 +85,6 @@ Parameters at the top of `build.py` (`ARM_*`, `CROWN_R`, `LIP_*`, `ROWS`, `EXTRA
   alternatives instead: hook-to-bottom-pin span 2 → 3 in, and a second pin row (row 1). Hooks stay 1 in apart.
 - **2026-11-08 (v4):** Owner asked to round the top. Arm top is now a 16 mm crown (tighter than any spool bore) blending into
   45° chamfers, built as an extruded profile (`arm_section`). The lip uses the same profile, 8 mm taller.
+- **2026-11-09:** v5: the owner noticed the sign's level hooks might not go into the holes. A new rock-in check
+  (`pb.rock_in`, calibrated on the owner's v4/v5 hook prints) showed the shared level 6.1 mm hook jams. The shared `PegStyle` now
+  has a 5.7 mm hook sloped 12° and keeps 6.1 mm pins; both hooks follow. The build asserts the rock-in check (the flush overlap is now info only).

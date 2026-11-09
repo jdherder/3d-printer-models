@@ -8,9 +8,10 @@ Each part is its own project, named **`projects/pegboard-<thing>/`**. Add a row 
 
 | Part | What it is | Pegs | Print | Status |
 |---|---|---|---|---|
-| [pegboard-fit-test](../projects/pegboard-fit-test/) | Plate with one hook peg + one pin. **Print first** to check the shared pegs on the real board | shared | PETG, on its side, no supports | v3: 6.1 mm pegs + **peg gauge** (6.0–6.4 mm) to pick the final size |
-| [pegboard-hook](../projects/pegboard-hook/) | Copy of the owner's steel hook (42 mm arm), printed at 6.1 mm wire, with a 12° S-bend (it rocks in easily). The reference the peg sizes came from | its own wire (S-bend) | PETG, on its side, no supports | v6: 12° S-bend restored (v5's level step was hard to get in), 6.1 mm wire |
-| [pegboard-spool-holder](../projects/pegboard-spool-holder/) | Arm straight out of the board that holds the A1's active 1 kg spool (face parallel to the board), with an end lip. Bores ≥ 50 mm, spools up to 82 mm wide | shared: 2 hooks side by side + 4 pins 2 and 3 in below | PETG, on its side, supports under the 2nd peg column | v4: two hooks, 3 in span, 4 pins, rounded arm top; next, owner review (where it hangs vs the A1's bed travel) |
+| [pegboard-fit-test](../projects/pegboard-fit-test/) | Plate with one hook peg + one pin. **Print first** to check the shared pegs on the real board | shared | PETG, on its side, no supports | v4: 12° sloped 5.7 mm hook + 6.1 mm pin (rock-in checked) + **peg gauge** (pins 6.0–6.4 mm) to pick the pin size |
+| [pegboard-hook](../projects/pegboard-hook/) | Copy of the owner's steel hook (42 mm arm), printed at the steel wire's 5.53 mm, with a 12° S-bend (it rocks in easily) and a 6.1 mm pin. The reference the peg sizes came from | its own wire (S-bend) + shared pin size | PETG, on its side, no supports | v7: back to 5.53 mm wire (6.1 can't rock in), 6.1 mm pin; rock-in checked |
+| [pegboard-spool-holder](../projects/pegboard-spool-holder/) | Arm straight out of the board that holds the A1's active 1 kg spool (face parallel to the board), with an end lip. Bores ≥ 50 mm, spools up to 82 mm wide | shared: 2 hooks side by side + 4 pins 2 and 3 in below | PETG, on its side, supports under the 2nd peg column | v5: sloped 5.7 mm hooks (rock-in checked); next, owner review (where it hangs vs the A1's bed travel) |
+| [pegboard-bambu-sign](../projects/pegboard-bambu-sign/) | 250 × 120 mm sign, flush on the board, Bambu Lab logo + text raised in a 2nd colour. Hangs on 2 small hangers via hidden keyhole slots (slide down 14 mm) | shared: 2 hangers, 8 holes apart, hook + pin each | Sign PLA face up, 1 colour change; hangers on their side ×2 | v1.2: sloped hooks so the hangers rock in; next, owner review |
 
 ### Adding a part
 
@@ -49,13 +50,15 @@ The part's back face sits on x = 0, and its body is built out in +x.
 
 | Field | Default | Meaning |
 |---|---|---|
-| `d` | 6.1 | Peg diameter. The steel wire is 5.53. Prints at 5.53 and 5.9 were loose in the owner's holes. Pick the final size with the peg gauge |
+| `d` | 6.1 | **Pin** diameter. The steel wire is 5.53. Prints at 5.53 and 5.9 were loose in the owner's holes. Pick the final size with the peg gauge |
+| `hook_d` | 5.7 | **Hook** diameter. Thinner than the pin so the sloped hook rocks in (`rock_in`); a 6.1 mm hook jams, level or sloped. Its play doesn't matter: the load seats it |
+| `hook_slope` | 12 | The hook's through-board part rises toward the back at this angle, like the steel hook's S-jog. It guides the hook as it rocks in |
 | `hook_gap` | 7.3 | Clear space behind the front face for the board. It must exceed the board thickness |
 | `hook_rise` | 14.0 | How high the hook's rising leg reaches above the hole centre |
 | `bend_r` | 4.5 | Centreline radius of the hook's bend |
 | `pin_len` | 7.0 | How far the anti-rotation pin reaches past the front face |
 
-- `hook_peg(style, y, z)`: an upper peg that goes straight through the board, bends, and rises behind it. It carries the load.
+- `hook_peg(style, y, z)`: an upper peg that goes back through the board (rising at `hook_slope`), bends, and rises behind it. It carries the load.
 - `pin_peg(style, y, z)`: a lower straight pin. It stops the part rotating or lifting out.
 - `mount_plate(style, cols, rows, thickness)`: a back plate with hooks in the top row of holes and pins in the bottom row. Build the part's body on its front face (x = thickness).
 - `style.check(board)`: lists the problems if the pegs won't fit that board.
@@ -69,6 +72,18 @@ the hook, was harder to put on). Keep a part's body clear of the board above its
 **The flush check is strict for sloped wires.** `interference_mm3` assumes the part hangs perfectly flush. Straight pegs like
 `hook_peg` must pass it. A sloped wire like the steel hook's S-bend fails it, yet rocks in fine and goes in more easily than a level
 step (owner's prints, v4 vs v5). For those, report the overlap and trust a test print.
+
+**Rock-in check (`pb.rock_in`).** It simulates taking the hung part off (tilt the bottom out about the hook row, slide in x/y)
+with the holes `ROCK_IN_GIVE` = 0.3 mm larger than nominal, for the hardboard's give. That value is calibrated on the owner's
+`pegboard-hook` prints: it passes v4 (5.53 mm, 12° S-jog, went in easily) and fails v5 (5.9 mm level step, much harder).
+Every catalog part's build asserts it. Findings (2026-11-09):
+- A **level 6.1 mm hook jams**. Its straight part sits in a 3.94 mm-long hole with ~0.1 mm clearance, so it can only tilt ~3°.
+  The fit test and spool holder had this hook until v4/v5. If those prints were hard to put on, that's why.
+- At 6.1 mm, a slope steep enough to guide the hook doesn't fit through the hole (or 5.9 mm). **5.7 mm with a 12° slope passes**,
+  and so does 5.53 at 8–12°. The pins don't need to shrink: 6.1 mm pins pass with the 5.7 mm sloped hook.
+  So `PegStyle` now has a thinner sloped hook (`hook_d`, `hook_slope`) and a snug pin (`d`).
+- The steel-hook copy's own S-jog needs 5.53 mm (5.7 jams there).
+- A sloped hook overlaps a little in the strict flush check. Report that as information and assert `rock_in` instead.
 
 To hang a part, tilt it, push the hook tips up through the holes, then swing the bottom in until the pins drop into place.
 Use at least two holes of vertical span (a hook row above a pin row). For anything heavy or wide, put hooks in two or more columns.
@@ -95,4 +110,5 @@ pb.to_zup(board).export("renders/ref-pegboard.stl")
   For heavy loads, add more peg columns or a wider plate rather than bigger pegs. The hole caps the peg size.
 - **First, print `projects/pegboard-fit-test/output/pegboard-fit-test.stl`** (a plate with one hook and one pin) and hang it on
   the real board. If it's loose or tight, print the **peg gauge** (`pegboard-peg-gauge.stl`, labelled pins 6.0–6.4 mm), pick the snuggest pin that
-  still goes in by hand, and set `PegStyle.d` to it. Every part follows.
+  still goes in by hand, and set `PegStyle.d` to it. Every part's pins follow. The hook stays thinner (`hook_d`); after changing
+  sizes, rebuild and let `rock_in` confirm the hooks still go in.

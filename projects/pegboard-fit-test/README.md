@@ -21,13 +21,14 @@ Confirm on the real board that the shared pegs go on and come off cleanly and si
 - [x] v2 printed: easier to put on with the rounded plate top; the 5.9 mm pegs still loose
 - [x] v3: pegs 6.1 mm, plus a **peg gauge** (`output/pegboard-peg-gauge.stl`): a strip of straight pins at 6.0 / 6.1 / 6.2 / 6.3 / 6.4 mm,
       each labelled, spaced off-grid so each pin is tried in a hole on its own
+- [x] v4 (2026-11-09): hook is now 5.7 mm and sloped 12° (it rocks in, per `pb.rock_in`); pin stays 6.1. The gauge picks the pin
 - [ ] Owner tries the gauge: which is the snuggest pin that still goes in by hand? That becomes `PegStyle.d`
 - [ ] Caliper the board thickness (still the listing's 3.94 mm)
 
 ## Measurements
 
 The pegs come from the steel hook (`projects/pegboard-hook`): 7.3 mm clear behind the front face, leg rising 14 mm above the
-hole centre, 4.5 mm bend radius, 7 mm pin. The diameter is 6.1 mm, up from the steel wire's 5.53, after prints at 5.53 and 5.9 were both loose. The gauge will settle it.
+hole centre, 4.5 mm bend radius, 7 mm pin. The pin is 6.1 mm, up from the steel wire's 5.53, after prints at 5.53 and 5.9 were both loose; the gauge will settle it. Since v4 the hook is 5.7 mm and sloped 12° so it rocks in (`pb.rock_in`).
 Fit checks keep 0.1 mm per side (`FIT_CLEARANCE`). The owner's prints come out loose, not fat.
 
 | Feature | Value (mm) | Source |
@@ -66,3 +67,6 @@ with the pegs, lays it on its side (`pegboard.lay_on_side`), exports the STEP an
   from 5.53 to 5.9 mm. `mount_plate` now stops just above the hook and rounds the plate's top back edge.
 - **2026-11-05 (v3):** The owner printed v2: easier to put on, but the 5.9 mm pegs were still loose. Pegs went to 6.1 mm,
   `FIT_CLEARANCE` went from 0.2 to 0.1 mm, and the peg gauge (6.0–6.4 mm) was added to find the right diameter in one print.
+- **2026-11-09:** v4: the owner noticed the sign's level hooks might not go into the holes. A new rock-in check
+  (`pb.rock_in`, calibrated on the owner's v4/v5 hook prints) showed the shared level 6.1 mm hook jams. The shared `PegStyle` now
+  has a 5.7 mm hook sloped 12° and keeps 6.1 mm pins; this plate now tests that hook. The peg gauge still picks the pin size (`PegStyle.d`). The build asserts the rock-in check (the flush overlap is now info only).

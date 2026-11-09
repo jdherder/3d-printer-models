@@ -49,9 +49,13 @@ DEFAULT_BOARD = BOARDS["white_3_16"]    # the owner's board: what every catalog 
 
 @dataclass(frozen=True)
 class PegStyle:
-    """Peg geometry. Defaults come from the owner's steel hook, with the diameter tuned by test prints."""
-    d: float = 6.1           # peg diameter. The steel wire is 5.53 (caliper). Printed at 5.53, then 5.9, the pegs were still loose
+    """Peg geometry. Defaults come from the owner's steel hook, with the diameters tuned by test prints and pb.rock_in."""
+    d: float = 6.1           # pin diameter. The steel wire is 5.53 (caliper). Printed at 5.53, then 5.9, the pegs were still loose
                              # in the owner's ~6.35 mm holes (test prints 2026-11-05). Settle it with the peg gauge (pegboard-fit-test)
+    hook_d: float = 5.7      # hook diameter. Thinner than the pin so the sloped hook can rock in (rock_in: a 6.1 mm hook jams,
+                             # level or sloped; 5.7 at 12 deg passes, with 6.1 pins). The hook's play doesn't matter: weight seats it
+    hook_slope: float = 12.0 # the through-board part rises toward the back, like the steel hook's S-jog (v4 went in easily,
+                             # v5's level step was much harder). The slope guides the hook as it rocks in
     hook_gap: float = 7.3    # clear space from the board's front face to the inside of the hook's rising leg (max board thickness)
     hook_rise: float = 14.0  # the hook leg's top end, above the hole centre
     bend_r: float = 4.5      # centreline radius of the hook's bend
@@ -63,15 +67,20 @@ class PegStyle:
         return self.d / 2
 
     @property
+    def hook_r(self):
+        return self.hook_d / 2
+
+    @property
     def leg_x(self):
         """x of the hook's rising-leg centreline."""
-        return -(self.hook_gap + self.r)
+        return -(self.hook_gap + self.hook_r)
 
     def check(self, board: Board) -> list[str]:
         """Problems with this style on a board ([] if none)."""
         msgs = []
-        if self.d >= board.hole_d:
-            msgs.append(f"peg {self.d} mm does not fit {board.hole_d} mm holes")
+        for name, d in (("pin", self.d), ("hook", self.hook_d)):
+            if d >= board.hole_d:
+                msgs.append(f"{name} {d} mm does not fit {board.hole_d} mm holes")
         if self.hook_gap < board.thickness:
             msgs.append(f"hook gap {self.hook_gap} mm is less than the board thickness {board.thickness} mm")
         if self.leg_x + self.bend_r > -board.thickness + 1.0:
@@ -83,15 +92,23 @@ class PegStyle:
 # Pegs (build123d solids, board frame)
 # --------------------------------------------------------------------------------------------------------------------
 
-def hook_peg(style: PegStyle, y: float = 0.0, z: float = 0.0):
-    """Upper peg for the hole centred at (0, y, z): straight back through the board, a bend, then a leg rising behind it."""
+def hook_peg(style: PegStyle, y: float = 0.0, z: float = 0.0, slope_deg: float | None = None, cross_depth: float = 2.0):
+    """Upper peg for the hole centred at (0, y, z): back through the board, a bend, then a leg rising behind it.
+    The through-board part rises toward the back at slope_deg (default style.hook_slope, like the steel hook's S-jog),
+    crossing the hole's centre `cross_depth` behind the front face. The slope guides the hook as it rocks in; a level
+    peg (0) can jam (see rock_in)."""
+    slope_deg = style.hook_slope if slope_deg is None else slope_deg
+    import math
     from build123d import BuildLine, BuildPart, BuildSketch, Circle, FilletPolyline, Plane, Vector, sweep
-    pts = [Vector(style.embed, y, z), Vector(style.leg_x, y, z), Vector(style.leg_x, y + style.hook_rise, z)]
+    t = math.tan(math.radians(slope_deg))
+    y_at = lambda x: y + (-cross_depth - x) * t     # noqa: E731
+    pts = [Vector(style.embed, y_at(style.embed), z), Vector(style.leg_x, y_at(style.leg_x), z),
+           Vector(style.leg_x, y + style.hook_rise, z)]
     with BuildPart() as part:
         with BuildLine() as path:
             FilletPolyline(*pts, radius=style.bend_r)
-        with BuildSketch(Plane(origin=pts[0], z_dir=(-1, 0, 0))):
-            Circle(style.r)
+        with BuildSketch(Plane(origin=pts[0], z_dir=(pts[1] - pts[0]).normalized())):
+            Circle(style.hook_r)
         sweep(path=path.wires()[0])
     return part.part
 
@@ -115,7 +132,7 @@ def mount_plate(style: PegStyle, cols=(0,), rows=(0, 1), thickness: float = 4.0,
     the hooks for the same reason."""
     from build123d import Axis, Box, Location, fillet
     top = max(rows) * PITCH
-    tm = style.r + 0.5 if top_margin is None else top_margin
+    tm = style.hook_r + 0.5 if top_margin is None else top_margin
     y0, y1 = min(rows) * PITCH - margin, top + tm
     z0, z1 = z_range or (min(cols) * PITCH - margin, max(cols) * PITCH + margin)
     plate = Box(thickness, y1 - y0, z1 - z0).locate(Location((thickness / 2, (y0 + y1) / 2, (z0 + z1) / 2)))
@@ -172,6 +189,69 @@ def interference_mm3(part: trimesh.Trimesh, board: trimesh.Trimesh) -> float:
     """Volume where a hung part overlaps the board (0 = it fits as placed)."""
     inter = part.intersection(board, engine="manifold")
     return round(float(abs(inter.volume)), 2) if len(inter.faces) else 0.0
+
+
+# --------------------------------------------------------------------------------------------------------------------
+# Rock-in check: can the part actually be put on the board?
+# --------------------------------------------------------------------------------------------------------------------
+
+ROCK_IN_GIVE = 0.3   # mm the hole may "give" (hardboard edge, print tolerance). Calibrated on the owner's prints of
+                     # projects/pegboard-hook: with 0.3 the sim passes v4 (5.53 mm, 12 deg S-jog: went in easily) and
+                     # fails v5 (5.9 mm, level step: much harder to get in). With 0.15 it fails both
+
+
+def _board_hit(pts, board, give, margin=0.03):
+    """(hits the board, entirely in front of it) for points in the board frame."""
+    x, y, z = pts.T
+    inslab = (x > -board.thickness + margin + give) & (x < -margin - give)     # touching a face is fine
+    if not inslab.any():
+        return False, bool((x > 0.5).all())
+    yi, zi = y[inslab], z[inslab]
+    hy, hz = np.round(yi / board.pitch) * board.pitch, np.round(zi / board.pitch) * board.pitch
+    inhole = (yi - hy) ** 2 + (zi - hz) ** 2 < (board.hole_d / 2 - margin + give) ** 2
+    return bool((~inhole).any()), False
+
+
+def rock_in(part: trimesh.Trimesh, board: Board = DEFAULT_BOARD, hook_y: float = PITCH, give: float = ROCK_IN_GIVE,
+            dtheta_deg: float = 0.5, step: float = 0.1, max_states: int = 60000, seed: int = 0) -> dict:
+    """Search for a way to take the hung part off the board (= put it on, in reverse): tilt the bottom out about the hook
+    row (y = hook_y) while sliding in x / y, until it's entirely in front of the board. Rigid parts, holes `give` mm larger.
+    Returns {"ok", "max_tilt_deg", "states"}. The strict flush check (interference_mm3) can't tell a hook that rocks in
+    from one that jams; this can (see ROCK_IN_GIVE)."""
+    import heapq
+    pts, _ = trimesh.sample.sample_surface_even(part, 150000, seed=seed)
+    pts = np.vstack([pts, part.vertices]) - [0, hook_y, 0]
+
+    def pose(k, i, j):
+        th = np.radians(k * dtheta_deg)
+        c, s = np.cos(th), np.sin(th)
+        x = pts[:, 0] * c - pts[:, 1] * s + i * step
+        y = pts[:, 0] * s + pts[:, 1] * c + hook_y + j * step
+        return np.c_[x, y, pts[:, 2]]
+
+    if _board_hit(pose(0, 0, 0), board, give)[0]:
+        return {"ok": False, "why": "overlaps the board when hung", "states": 1}
+    start = (0, 0, 0)
+    seen, parent, heap = {start}, {start: None}, [(0.0, start)]
+    moves = [(a, b, c) for a in (-1, 0, 1) for b in (-1, 0, 1) for c in (-1, 0, 1) if (a, b, c) != (0, 0, 0)]
+    while heap and len(seen) < max_states:
+        _, cur = heapq.heappop(heap)
+        for m in moves:
+            n = (cur[0] + m[0], cur[1] + m[1], cur[2] + m[2])
+            if n in seen or n[0] < 0 or n[0] * dtheta_deg > 120:
+                continue
+            seen.add(n)
+            hit, free = _board_hit(pose(*n), board, give)
+            if hit:
+                continue
+            parent[n] = cur
+            if free:
+                path = [n]
+                while parent[path[-1]] is not None:
+                    path.append(parent[path[-1]])
+                return {"ok": True, "max_tilt_deg": max(q[0] for q in path) * dtheta_deg, "states": len(seen)}
+            heapq.heappush(heap, (-(n[0] * dtheta_deg * 0.5 + n[1] * step), n))
+    return {"ok": False, "why": "jams: no way found to tilt it on", "states": len(seen)}
 
 
 def to_zup(mesh: trimesh.Trimesh) -> trimesh.Trimesh:
