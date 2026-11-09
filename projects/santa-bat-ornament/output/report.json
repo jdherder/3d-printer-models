@@ -1,0 +1,39 @@
+{
+  "scale_status": "designer's choice, not measured: scaled so the longest side is 50 mm (shape traced from a photo; sideways squash corrected by estimate)",
+  "print": {
+    "extents_mm": [
+      49.1,
+      32.6,
+      2.8
+    ],
+    "faces": 2446,
+    "watertight": true,
+    "winding_consistent": true,
+    "euler_number": 0,
+    "volume_cm3": 1.4,
+    "fits_A1_as_is": true,
+    "fits_A1_any_axis_order": true,
+    "self_intersecting_faces": 0
+  },
+  "print_orientation": "flat on the bed, back face down (no supports)",
+  "hanging": {
+    "hole_centre_mm": [
+      -2.8,
+      6.9
+    ],
+    "rotated_from_photo_deg": 13.2
+  },
+  "params_mm": {
+    "ornament_size": 50.0,
+    "width": 49.1,
+    "height": 32.6,
+    "thickness": 2.0,
+    "thickness_at_hat": 2.6,
+    "thickness_at_trim": 2.8,
+    "hang_hole_d": 1.2,
+    "hang_hole_wall": 1.4,
+    "pom_pom_d": 4.0,
+    "min_feature": 1.2,
+    "perspective_x_stretch": 1.23
+  }
+}
