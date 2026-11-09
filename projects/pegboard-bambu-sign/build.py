@@ -44,7 +44,12 @@ RENDERS = HERE / "renders"
 LOGO_SVG = HERE / "source" / "bambulab-logo-2026-11-09.svg"   # Wikimedia Commons "File:BambuLab logo.svg"
 
 BOARD = pb.DEFAULT_BOARD
-STYLE = pb.PegStyle()
+# The hangers' pegs: thinner than the shared 6.1 mm, with the hook sloped 12 deg like the steel hook's S-jog (v4, which went in
+# easily). The rock-in check (pb.rock_in) shows a level 6.1 mm hook jams like the v5 test print did, and at 6.1 mm a slope
+# steep enough to guide it doesn't fit the hole. A little play is fine here: the sign's weight seats the hooks and the pins
+# stop them turning.
+STYLE = pb.PegStyle(d=5.7)
+HOOK_SLOPE = 12.0
 C = 0.3                       # sliding clearance per side between sign and hanger
 
 # ---- Hangers (one per column; hook in row 1, pin in row 0) ------------------------------------------------------------
@@ -165,7 +170,7 @@ def hanger(col=0):
     """Mount plate (shared hook + pin) with a T-stud on the front. All in the board frame, for the hanger in column `col`."""
     z = col * pb.PITCH
     plate = pb.mount_plate(STYLE, cols=(col,), rows=(PIN_ROW, HOOK_ROW), thickness=PLATE_T, margin=PLATE_MARGIN,
-                           z_range=(z + Z_LO, z + Z_LO + PLATE_W))
+                           z_range=(z + Z_LO, z + Z_LO + PLATE_W), hook_slope_deg=HOOK_SLOPE)
     zc = z + ZC
     neck = box(PLATE_T - 0.5, NECK_X1, STUD_Y - NECK_H / 2, STUD_Y + NECK_H / 2, zc - NECK_W / 2, zc + NECK_W / 2)
     head = box(NECK_X1, NECK_X1 + HEAD_T, STUD_Y - HEAD_H / 2, STUD_Y + HEAD_H / 2, zc - HEAD_W / 2, zc + HEAD_W / 2)
@@ -286,8 +291,11 @@ def main():
     rows = range(PIN_ROW - 1, HOOK_ROW + 2)
     cols = range(min(HANGER_COLS) - 1, max(HANGER_COLS) + 2)
     board_fit = pb.board_mesh(BOARD, rows=rows, cols=cols, clearance=pb.FIT_CLEARANCE)
+    # A sloped hook overlaps a little in the strict flush check (like the steel hook); that's information only.
+    # The real test is whether it rocks on: pb.rock_in, calibrated on the owner's hook prints.
     clash = sum(pb.interference_mm3(mk.cad_to_mesh(hanger(c)), board_fit) for c in HANGER_COLS)
-    assert clash == 0.0, f"hangers come within {pb.FIT_CLEARANCE} mm of the board ({clash} mm^3)"
+    rock = pb.rock_in(mk.cad_to_mesh(h_board), BOARD, hook_y=HOOK_ROW * pb.PITCH)
+    assert rock["ok"], f"hanger won't rock onto the board: {rock}"
 
     sign_hung = mk.cad_to_mesh(base + logo)
     # Slide-on: the sign goes flat onto the board DROP mm high, then slides down. Check the pose at each step.
@@ -326,10 +334,11 @@ def main():
         "print_orientation": "sign face up, back on the bed, no supports (pockets open to the bed; chamber roofs are ~12 mm bridges)",
         "colour": {"swaps": 1, "swap_at_mm": round(SIGN_T, 2), "logo_layers_at_0.2": round(LOGO_RAISE / 0.2)},
         "hanger_print": h_info,
-        "hanger_print_orientation": "on its side, pegs flat on the bed (0.4 mm flat), no supports. Print 2",
+        "hanger_print_orientation": "on its side, pegs flat on the bed (0.4 mm flat at the pin; the sloped hook sits ~0.6 mm higher at its front), no supports. Print 2",
         "fit_on_board": {"board": BOARD.name, "hole_d": BOARD.hole_d, "thickness": BOARD.thickness,
                          "pitch": BOARD.pitch, "clearance_checked_per_side": pb.FIT_CLEARANCE,
-                         "hanger_interference_mm3": clash,
+                         "hanger_flush_overlap_mm3_info_only": clash,
+                         "hanger_rock_in": {**rock, "give_mm": pb.ROCK_IN_GIVE},
                          "holes_used": f"2 hangers, {max(HANGER_COLS) - min(HANGER_COLS)} holes apart: hook + pin 1 in below each",
                          "sign_top_above_hook_hole_mm": round(SIGN_Y_TOP - hook_y, 1),
                          "sign_bottom_below_hook_hole_mm": round(hook_y - (SIGN_Y_TOP - SIGN_H), 1),
@@ -340,7 +349,7 @@ def main():
                       "sign_thickness": round(SIGN_T, 2), "total_thickness": round(SIGN_T + LOGO_RAISE, 2),
                       "corner_radius": CORNER_R, "front_chamfer": FRONT_CHAMFER,
                       "logo_width": LOGO_W, "logo_height": logo_h, "logo_stroke": logo_stroke, "logo_smallest_gap": logo_gap, "logo_raise": LOGO_RAISE,
-                      "hanger_spacing": (max(HANGER_COLS) - min(HANGER_COLS)) * pb.PITCH,
+                      "hook_slope_deg": HOOK_SLOPE, "hanger_spacing": (max(HANGER_COLS) - min(HANGER_COLS)) * pb.PITCH,
                       "hook_to_pin": (HOOK_ROW - PIN_ROW) * pb.PITCH, "drop": DROP,
                       "hanger_plate_t": PLATE_T, "stud_neck": [NECK_W, NECK_H], "stud_head": [HEAD_W, HEAD_H, HEAD_T],
                       "slot_clearance": C,

@@ -18,6 +18,9 @@ from the pegboard holes (no screws, no tape). It should sit flat and flush, and 
       Now the full logo, 220 × 64 mm, on a **250 × 120 × 9.5 mm** sign. Watertight, 0 self-intersections, Euler 2
 - [x] Hangers: 2 × (shared hook + pin + T-stud), 8 holes apart. Checked: clear of the board (0.1 mm per side), the sign
       slides on without hitting them, and pulling it straight off is blocked
+- [x] v1.2: owner doubted the pegs could get into the holes. A rock-in simulation (`pb.rock_in`, calibrated on the owner's
+      hook prints) agreed: the level 6.1 mm hook jams. The hangers now have a **5.7 mm hook sloped 12°** (like the steel hook
+      that went in easily) and pass. The build asserts it
 - [ ] Owner review: size, colours, anything else on the plate (Open questions)
 - [ ] Test print and hang
 
@@ -27,7 +30,8 @@ Pegs printed straight out of the back of a face-up sign would stand up off the b
 sign on its side would spread the colour change over every layer. So the pegs are on two small **hangers**, and the sign
 hooks onto them, like a keyhole-slot picture frame:
 
-1. Hang both hangers on the board, in the same row, **8 holes apart** (hook in the upper hole, pin in the hole below).
+1. Hang both hangers on the board, in the same row, **8 holes apart**: tilt one, push the hook tip up through the upper hole,
+   and swing it down until the pin drops into the hole below. Nothing is above them yet, so they rock in on their own.
 2. Hold the sign flat on the board ~14 mm higher than where it ends up, so the openings in its back line up with the
    hangers' studs. Push it flat against the board.
 3. Slide it down 13.6 mm. The studs' heads move up behind ledges inside the sign, and the sign rests on the studs' necks.
@@ -49,6 +53,7 @@ No real measurements needed: the size is the owner's choice and the pegs are the
 | Logo changes from the SVG | B's upper counter shrunk 0.25; the B's accent nudged 0.5 off the B | In the SVG both touch at a single point, which makes a non-manifold mesh and a zero-width wall |
 | Hanger spacing | 203.2 (8 holes) | `HANGER_COLS` |
 | Hanger | 47 × 21 × 11, 3 mm plate | hook + pin 1 in apart, T-stud: neck 5 × 10, head 11 × 12 × 2 |
+| Hanger pegs | 5.7 dia; hook sloped 12° | Thinner than the shared 6.1 and sloped, so they rock in (`STYLE`, `HOOK_SLOPE`). A little play is fine: the sign's weight seats the hooks and the pins stop them turning |
 | Slide-down | 13.6 | `DROP` |
 | Sign/hanger clearance | 0.3 per side | `C` |
 
@@ -79,7 +84,7 @@ along the pegs), no supports. PETG preferred (the pegs carry the sign); PLA work
 2. Builds the sign plate (rounded corners, front chamfer) in the board frame, flush on the board, and cuts the two hanger
    pockets, the keyhole slots and the chambers the stud heads slide into.
 3. Builds the hanger: `pegboard.mount_plate` (one hook + one pin) plus the T-stud, then `pegboard.lay_on_side`.
-4. Asserts: hangers clear the board; the sign slides down onto the studs (9 steps) and pushes on (4 steps) with zero
+4. Asserts: the hangers rock onto the board (`pb.rock_in`; their flush overlap is reported, not asserted); the sign slides down onto the studs (9 steps) and pushes on (4 steps) with zero
    overlap; it can't be pulled straight off once hung; it doesn't overlap the board.
 5. Writes the 3MF (two parts), STEP + STL (merged), the per-colour STLs, the hanger STEP + STL, `report.json`, renders,
    and the viewer meshes.
@@ -98,5 +103,10 @@ along the pegs), no supports. PETG preferred (the pegs carry the sign); PLA work
 - **2026-11-09:** v1. Owner wants a sign that hangs flat on the pegboard, Bambu Lab logo raised in a second colour, hung
   from the board's holes. Chose separate peg hangers + keyhole slots so the sign prints face up with one colour change
   and the pegs print the strong way. First cut used the mark alone on a 150 mm square.
+- **2026-11-09 (v1.2):** Owner wasn't sure the pegs had room to go into the holes, and suggested moving the hooks up so they
+  stick out of the top of the sign. The hangers already go on before the sign, so nothing is above them; the real problem
+  was the hook's shape. A new rock-in simulation (`pb.rock_in`, calibrated on the owner's v4/v5 hook prints) showed the
+  level 6.1 mm hook jams. Now 5.7 mm with a 12° slope, which passes. The same check fails the fit test and spool holder
+  (flagged in `docs/pegboard.md`).
 - **2026-11-09 (v1.1):** Owner wanted the "Bambu Lab" text too and the sign as big as the 256 mm bed allows. Now the full
   logo, 220 mm wide, on a 250 × 120 mm sign; hangers 8 holes apart.

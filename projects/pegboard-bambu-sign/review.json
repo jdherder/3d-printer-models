@@ -5,7 +5,7 @@
   "meshes": [
     {"path": "renders/asm-sign.stl", "label": "Sign (base colour, black)", "style": "solid", "color": "#2b2b2e"},
     {"path": "renders/asm-logo.stl", "label": "Logo + text (raised, green)", "style": "solid", "color": "#00ae42"},
-    {"path": "renders/asm-hangers.stl", "label": "2 hangers (hook + pin + T-stud), hidden in pockets behind the sign", "style": "solid", "color": "#5b8fd9"},
+    {"path": "renders/asm-hangers.stl", "label": "2 hangers (12\u00b0 sloped hook + pin + T-stud), hidden in pockets behind the sign", "style": "solid", "color": "#5b8fd9"},
     {"path": "renders/ref-pegboard.stl", "label": "Your board: Menards 3/16\" white (6.35 mm holes, 3.94 mm thick)", "style": "solid", "color": "#b08a5a"}
   ],
   "dims": [
@@ -20,5 +20,5 @@
   ],
   "scale_note": "Real size. 250 mm is as wide as the A1's 256 mm bed allows (3 mm spare each side). Pegs are the shared 6.1 mm hook + pin.",
   "notes_title": "What to check",
-  "notes": "v1. Toggle the sign off to see the two hangers behind it. How it goes up: hang the 2 hangers on the board first (8 holes apart, same row), then hold the sign flat against the board about 14 mm high so the slots on its back line up with the hangers' studs, push it flat, and slide it down: the studs' heads catch behind ledges inside the sign, so it can't come off the front, and it sits flush on the board. Printing: the sign prints face up with no supports and only ONE colour change (black plate, then green for the top 1.2 mm), so the AMS wastes almost nothing. The hangers print on their side (print 2). Check: (1) size and proportions; (2) colours (black + green, or something else); (3) whether you'd like a border or anything else on the plate."
+  "notes": "v1.2: the hangers' hooks are now 5.7 mm and sloped 12\u00b0 (like your steel-hook copy v4, which went in easily). A rock-in simulation showed the level 6.1 mm hook would jam, the way v5 did. Toggle the sign off to see the two hangers behind it. How it goes up: hang the 2 hangers on the board first (8 holes apart, same row), then hold the sign flat against the board about 14 mm high so the slots on its back line up with the hangers' studs, push it flat, and slide it down: the studs' heads catch behind ledges inside the sign, so it can't come off the front, and it sits flush on the board. Printing: the sign prints face up with no supports and only ONE colour change (black plate, then green for the top 1.2 mm), so the AMS wastes almost nothing. The hangers print on their side (print 2). Check: (1) size and proportions; (2) colours (black + green, or something else); (3) whether you'd like a border or anything else on the plate."
 }

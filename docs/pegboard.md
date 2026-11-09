@@ -11,7 +11,7 @@ Each part is its own project, named **`projects/pegboard-<thing>/`**. Add a row 
 | [pegboard-fit-test](../projects/pegboard-fit-test/) | Plate with one hook peg + one pin. **Print first** to check the shared pegs on the real board | shared | PETG, on its side, no supports | v3: 6.1 mm pegs + **peg gauge** (6.0–6.4 mm) to pick the final size |
 | [pegboard-hook](../projects/pegboard-hook/) | Copy of the owner's steel hook (42 mm arm), printed at 6.1 mm wire, with a 12° S-bend (it rocks in easily). The reference the peg sizes came from | its own wire (S-bend) | PETG, on its side, no supports | v6: 12° S-bend restored (v5's level step was hard to get in), 6.1 mm wire |
 | [pegboard-spool-holder](../projects/pegboard-spool-holder/) | Arm straight out of the board that holds the A1's active 1 kg spool (face parallel to the board), with an end lip. Bores ≥ 50 mm, spools up to 82 mm wide | shared: 2 hooks side by side + 4 pins 2 and 3 in below | PETG, on its side, supports under the 2nd peg column | v4: two hooks, 3 in span, 4 pins, rounded arm top; next, owner review (where it hangs vs the A1's bed travel) |
-| [pegboard-bambu-sign](../projects/pegboard-bambu-sign/) | 250 × 120 mm sign, flush on the board, Bambu Lab logo + text raised in a 2nd colour. Hangs on 2 small hangers via hidden keyhole slots (slide down 14 mm) | shared: 2 hangers (hook + pin each), 8 holes apart | Sign PLA face up, 1 colour change; hangers on their side ×2 | v1.1: full logo, as big as the bed allows; next, owner review |
+| [pegboard-bambu-sign](../projects/pegboard-bambu-sign/) | 250 × 120 mm sign, flush on the board, Bambu Lab logo + text raised in a 2nd colour. Hangs on 2 small hangers via hidden keyhole slots (slide down 14 mm) | 2 hangers, 8 holes apart: **5.7 mm, 12° sloped hook** (`hook_slope_deg`) + pin. Passes `rock_in` | Sign PLA face up, 1 colour change; hangers on their side ×2 | v1.2: sloped hooks so the hangers rock in; next, owner review |
 
 ### Adding a part
 
@@ -56,7 +56,7 @@ The part's back face sits on x = 0, and its body is built out in +x.
 | `bend_r` | 4.5 | Centreline radius of the hook's bend |
 | `pin_len` | 7.0 | How far the anti-rotation pin reaches past the front face |
 
-- `hook_peg(style, y, z)`: an upper peg that goes straight through the board, bends, and rises behind it. It carries the load.
+- `hook_peg(style, y, z, slope_deg=0)`: an upper peg that goes straight through the board, bends, and rises behind it. It carries the load.
 - `pin_peg(style, y, z)`: a lower straight pin. It stops the part rotating or lifting out.
 - `mount_plate(style, cols, rows, thickness)`: a back plate with hooks in the top row of holes and pins in the bottom row. Build the part's body on its front face (x = thickness).
 - `style.check(board)`: lists the problems if the pegs won't fit that board.
@@ -70,6 +70,16 @@ the hook, was harder to put on). Keep a part's body clear of the board above its
 **The flush check is strict for sloped wires.** `interference_mm3` assumes the part hangs perfectly flush. Straight pegs like
 `hook_peg` must pass it. A sloped wire like the steel hook's S-bend fails it, yet rocks in fine and goes in more easily than a level
 step (owner's prints, v4 vs v5). For those, report the overlap and trust a test print.
+
+**Rock-in check (`pb.rock_in`).** It simulates taking the hung part off (tilt the bottom out about the hook row, slide in x/y)
+with the holes `ROCK_IN_GIVE` = 0.3 mm larger than nominal, for the hardboard's give. That value is calibrated on the owner's
+`pegboard-hook` prints: it passes v4 (5.53 mm, 12° S-jog, went in easily) and fails v5 (5.9 mm level step, much harder).
+Findings (2026-11-09):
+- A **level 6.1 mm hook jams**. Its straight part sits in a 3.94 mm-long hole with ~0.1 mm clearance, so it can only tilt ~3°.
+  **`pegboard-fit-test` and `pegboard-spool-holder` fail the check** (not changed yet). If they're hard to put on, that's why.
+- At 6.1 mm, a slope steep enough to guide the hook doesn't fit through the hole. **5.7 mm with a 12° slope passes**
+  (`hook_peg(..., slope_deg=12)`, `mount_plate(..., hook_slope_deg=12)`), and so does 5.53 at 8–12°.
+- A sloped hook overlaps a little in the strict flush check. Report that as information and assert `rock_in` instead.
 
 To hang a part, tilt it, push the hook tips up through the holes, then swing the bottom in until the pins drop into place.
 Use at least two holes of vertical span (a hook row above a pin row). For anything heavy or wide, put hooks in two or more columns.
