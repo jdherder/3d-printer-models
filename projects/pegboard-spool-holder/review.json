@@ -1,0 +1,62 @@
+{
+  "page_title": "Pegboard Spool Holder",
+  "title": "Pegboard spool holder: the A1's active spool, on the board",
+  "subtitle": "One arm straight out of the board, spool face parallel to the board \u00b7 2 shared hook pegs + 4 pins (tools/pegboard.py) \u00b7 your Menards 3/16\" board \u00b7 X out from the board, Z up \u00b7 mm",
+  "meshes": [
+    {
+      "path": "renders/asm-spool-holder.stl",
+      "label": "Spool holder (2 hooks side by side, 4 pins 2\" and 3\" below, arm, end lip)",
+      "style": "solid",
+      "color": "#5b8fd9"
+    },
+    {
+      "path": "renders/ref-spool.stl",
+      "label": "Reference 1 kg spool: 200 OD \u00d7 68 wide, 53 bore",
+      "style": "wire",
+      "color": "#e0a030"
+    },
+    {
+      "path": "renders/ref-pegboard.stl",
+      "label": "Your board: Menards 3/16\" white (6.35 mm holes, 3.94 mm thick)",
+      "style": "solid",
+      "color": "#b08a5a"
+    }
+  ],
+  "dims": [
+    {
+      "label": "Arm reach (widest spool)",
+      "param": "arm_reach"
+    },
+    {
+      "label": "Arm tip from board",
+      "param": "arm_tip_from_board"
+    },
+    {
+      "label": "End lip above arm top",
+      "param": "lip_height"
+    },
+    {
+      "label": "Rounded top radius",
+      "param": "arm_crown_radius"
+    },
+    {
+      "label": "Arm width (across the board)",
+      "param": "arm_width"
+    },
+    {
+      "label": "Hook to bottom pin",
+      "param": "hook_to_pin"
+    },
+    {
+      "label": "Hook to hook (side by side)",
+      "param": "hook_spacing"
+    },
+    {
+      "label": "Peg diameter",
+      "param": "d"
+    }
+  ],
+  "scale_note": "Real size. Pegs are the shared 6.1 mm hooks + pins. The spool is a typical 1 kg spool (200 mm across, 68 mm wide, 53 mm bore); the arm and lip pass through bores down to 50 mm and hold spools up to 82 mm wide.",
+  "notes_title": "What to check",
+  "notes": "v4: the arm's top is now rounded (16 mm radius) instead of a flat with two chamfered corners. The spool's hole (25+ mm radius) rests on one smooth line along the top, so nothing sharp rubs the hub and the spool turns more evenly. The arc blends into 45\u00b0 chamfers down the sides, so the bed side still prints without support. Strength is unchanged. Same as v3 otherwise: 2 hooks side by side, 4 pins 2\" and 3\" below; prints on its side with tree supports under the second peg column. Still to check: (1) which holes behind the A1 (the spool stands 74 mm out from the board, so it must clear the bed's travel); (2) whether the filament reaches the A1's PTFE tube."
+}
