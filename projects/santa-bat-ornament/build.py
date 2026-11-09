@@ -6,8 +6,9 @@ source/photo-2026-11-09-wall-bats.jpg (the paper bats on the owner's wall)
   -> bat silhouette: dark pixels around the Santa-hat bat, cleaned and traced
   -> Santa hat: hand-traced polygons in photo pixels (the hat's white paper is too close to the wall colour to threshold)
   -> perspective fix (the photo looks along the wall, so the bat is squashed sideways), scale to ORNAMENT_SIZE_MM
-  -> three flat colour bodies that sit side by side, each the full thickness, so the hat shows on both faces:
-       black bat, red hat, white brim + pom-pom (the white stands a little proud, like fur)
+  -> layered like the paper craft, to keep AMS colour swaps (and purge waste) to the last few layers:
+       a plain black base (whole outline, incl. the hanging loop), with a thin red hat and a slightly thicker white
+       brim + pom-pom (fur) printed on top of it. The back is a plain black silhouette.
   -> output/santa-bat-ornament.stl            single-colour print (all bodies merged)
   -> output/santa-bat-ornament-multicolor.3mf one object, three parts (assign filaments per part with the AMS lite)
   -> output/santa-bat-ornament-{bat,hat,trim}.stl   the colour bodies on their own
@@ -44,8 +45,9 @@ PHOTO = HERE / "source" / "photo-2026-11-09-wall-bats.jpg"
 
 # --- Design parameters (mm) ------------------------------------------------------------------------------------------
 ORNAMENT_SIZE_MM = 50.0    # longest side of the finished ornament (hanging pose). Owner's pick (2026-11-09)
-THICKNESS = 2.4            # bat + hat body (12 layers at 0.2; 3 mm looked chunky at 50 mm and meant more colour swaps)
-TRIM_PROUD = 0.4           # white brim and pom-pom stand this much above the front face (fur), 2 layers
+THICKNESS = 2.0            # black base, the whole outline (10 layers at 0.2, all one colour)
+HAT_LAYER = 0.6            # red hat on top of the base (3 layers: thick enough that the black doesn't darken the red)
+TRIM_LAYER = 0.8           # white brim + pom-pom on top of the base (4 layers: opaque white, and 0.2 proud of the red, like fur)
 POM_MIN_D = 4.5            # solid pom-pom, at least this big (the paper one would be ~3.3 at 50 mm: too small for the loop)
 # Hanging loop: a slim black ring standing on top of the pom-pom (like a glass ornament's cap), 3 mm deep.
 # Black and smaller than the pom-pom so it reads as a hanger, not a second ball.
@@ -214,17 +216,18 @@ def photo_overlay(path):
 def flat_render(shapes, path):
     fig, axes = plt.subplots(1, 2, figsize=(16, 8.5))
     for ax, back in zip(axes, (False, True)):
-        for k, c in (("bat", "#2a2a2a"), ("hat", "#c8323c"), ("trim", "#f4f4f4")):
+        for k, c in ((("bat", "#2a2a2a"), ("hat", "#2a2a2a"), ("trim", "#2a2a2a")) if back else
+                     (("bat", "#2a2a2a"), ("hat", "#c8323c"), ("trim", "#f4f4f4"))):
             for g in getattr(shapes[k], "geoms", [shapes[k]]):
                 for ring, fc in [(g.exterior, c), *[(i, "white") for i in g.interiors]]:
                     xy = np.asarray(ring.coords)
                     if back:
                         xy = xy * [-1, 1]
-                    ax.add_patch(MplPolygon(xy, fc=fc, ec="#555", lw=0.6))
+                    ax.add_patch(MplPolygon(xy, fc=fc, ec="#2a2a2a" if back else "#555", lw=0.6))
         ax.autoscale()
         ax.set_aspect("equal")
         ax.grid(True, alpha=0.3)
-        ax.set_title("back (mirror)" if back else "front, as it hangs (mm)")
+        ax.set_title("back (mirror): plain black" if back else "front, as it hangs (mm)")
     fig.suptitle("santa-bat-ornament: colour layout", fontsize=15)
     fig.savefig(path, dpi=70, bbox_inches="tight")
     plt.close(fig)
@@ -235,16 +238,16 @@ def main():
     RENDERS.mkdir(exist_ok=True)
     s = build_shapes()
 
-    bat = extrude(s["bat"], THICKNESS)
-    hat = extrude(s["hat"], THICKNESS)
-    trim = extrude(s["trim"], THICKNESS + TRIM_PROUD)
+    outline = unary_union([s["bat"], s["hat"], s["trim"]]).buffer(0.01).buffer(-0.01)
+    bat = extrude(outline, THICKNESS)
+    hat = extrude(s["hat"], HAT_LAYER).apply_translation([0, 0, THICKNESS])
+    trim = extrude(s["trim"], TRIM_LAYER).apply_translation([0, 0, THICKNESS])
     for name, m in (("bat", bat), ("hat", hat), ("trim", trim)):
         assert m.is_watertight, f"{name} body not watertight"
         m.export(OUT / f"santa-bat-ornament-{name}.stl")
 
     # Single-colour print: everything merged into one solid.
-    body = extrude(unary_union([s["bat"], s["hat"], s["trim"]]).buffer(0.01).buffer(-0.01), THICKNESS)
-    merged = from_manifold(to_manifold(body) + to_manifold(trim))
+    merged = from_manifold(to_manifold(bat) + to_manifold(hat) + to_manifold(trim))
     merged.fix_normals()
     info = mk.report(merged)
     assert info["watertight"] and info["self_intersecting_faces"] == 0, info
@@ -276,7 +279,8 @@ def main():
         "width": round(float(merged.extents[0]), 1),
         "height": round(float(merged.extents[1]), 1),
         "thickness": THICKNESS,
-        "thickness_at_trim": THICKNESS + TRIM_PROUD,
+        "thickness_at_hat": THICKNESS + HAT_LAYER,
+        "thickness_at_trim": THICKNESS + TRIM_LAYER,
         "hang_hole_d": LOOP_HOLE_D,
         "loop_outer_d": LOOP_HOLE_D + 2 * LOOP_WALL,
         "pom_pom_d": round(2 * s["pom_r"], 1),

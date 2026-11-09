@@ -1,7 +1,7 @@
 {
   "page_title": "Santa Bat Ornament",
   "title": "Santa-hat bat ornament",
-  "subtitle": "Traced from your wall photo \u00b7 50 mm across, 2.4 mm thick, 3 colours \u00b7 hangs from a small black loop \u00b7 shown standing as it hangs \u00b7 millimetres",
+  "subtitle": "Traced from your wall photo \u00b7 50 mm across \u00b7 black base with the red hat and white trim layered on top \u00b7 shown standing as it hangs \u00b7 millimetres",
   "meshes": [
     {
       "path": "renders/view-bat.stl",
@@ -36,8 +36,12 @@
       "param": "height"
     },
     {
-      "label": "Thickness",
+      "label": "Black base",
       "param": "thickness"
+    },
+    {
+      "label": "Thickness at the red hat",
+      "param": "thickness_at_hat"
     },
     {
       "label": "Thickness at brim + pom-pom",
@@ -57,6 +61,6 @@
     }
   ],
   "scale_note": "Real size: 50 mm across (your pick). The photo looks along the wall, so the bat appeared squashed sideways; it's stretched 1.23\u00d7 to undo that (estimated from the round pom-pom).",
-  "notes_title": "v3: what changed, what to check",
-  "notes": "v3: 50 mm across, printed in three colours. To keep it in proportion it's 2.4 mm thick, with the brim and pom-pom 0.4 mm proud. The pom-pom (4.5 mm) and loop (4 mm across, 2 mm hole) are a little larger than true scale so the loop still takes thread or a wire hook. At this size the tiny wing-claw spikes smooth out (they'd be under 1.2 mm). Check: the hat and pom-pom size against the bat, and whether 2 mm is a big enough hole for what you'll hang it with."
+  "notes_title": "v4: what changed, what to check",
+  "notes": "v4, built for less waste: the bat is a plain black 2 mm base (including the loop). The red hat (0.6 mm) and white brim + pom-pom (0.8 mm) are thin layers printed on top, like the paper hat glued on. All the colour changes happen in the top 4 layers, about 5 swaps instead of ~25. The back is now a plain black bat. Check: the raised hat look, and whether the 2 mm loop hole suits your hook or thread."
 }

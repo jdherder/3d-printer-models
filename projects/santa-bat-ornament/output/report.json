@@ -6,11 +6,11 @@
       32.4,
       2.8
     ],
-    "faces": 2454,
+    "faces": 2436,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 0,
-    "volume_cm3": 1.7,
+    "volume_cm3": 1.4,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
@@ -27,7 +27,8 @@
     "ornament_size": 50.0,
     "width": 49.3,
     "height": 32.4,
-    "thickness": 2.4,
+    "thickness": 2.0,
+    "thickness_at_hat": 2.6,
     "thickness_at_trim": 2.8,
     "hang_hole_d": 2.0,
     "loop_outer_d": 4.0,
