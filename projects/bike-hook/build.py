@@ -163,12 +163,18 @@ def loads(p: HookParams, hub, x_load):
     s_bar = (m_t * 6 / (b_t * h_u ** 2) + m_u * 6 / (h_u * b_t ** 2)) / 0.9
 
     # Screws: elastic bolt group about its centroid (ignores the plate bearing on the board, so it overestimates tension).
-    sc = np.array(p.screws)
-    xb, zb = sc.mean(axis=0)
-    mx = W * seat[1] + P * (seat[2] - zb)                # tips the top of the plate off the board
-    mz = P * (seat[0] - xb)                              # twists it about a vertical line
-    dx, dz = sc[:, 0] - xb, sc[:, 1] - zb
-    tens = P / len(sc) + mx * dz / np.sum(dz ** 2) + mz * dx / np.sum(dx ** 2)
+    def bolt_group(screws):
+        sc = np.array(screws)
+        xb, zb = sc.mean(axis=0)
+        mx = W * seat[1] + P * (seat[2] - zb)            # tips the top of the plate off the board
+        mz = P * (seat[0] - xb)                          # twists it about a vertical line
+        dx, dz = sc[:, 0] - xb, sc[:, 1] - zb
+        return P / len(sc) + mx * dz / np.sum(dz ** 2) + mz * dx / np.sum(dx ** 2)
+
+    patterns = {name: float(bolt_group(s).max()) for name, s in p.install_patterns.items()}
+    worst = max(patterns, key=patterns.get)
+    tens = np.array([patterns[worst]])
+    sc = np.array(p.install_patterns[worst])
     shear = W / len(sc)
     return {
         "bike_mass_kg_assumed": BIKE_MASS_KG,
@@ -187,6 +193,8 @@ def loads(p: HookParams, hub, x_load):
                                 "safety_static_vs_design_value": round(SCREW_WITHDRAWAL_N / tens.max(), 1),
                                 "safety_dynamic_vs_design_value": round(SCREW_WITHDRAWAL_N / (tens.max() * DYNAMIC_FACTOR), 1)},
         "screw_shear_each_n": round(shear, 1),
+        "screw_max_tension_by_pattern_static_n": {k: round(v, 1) for k, v in patterns.items()},
+        "screw_worst_pattern": worst,
         "seat_point_mm": [round(float(v), 1) for v in seat],
         "note": ("Beam estimates at the arm's root (bending along the print layers) and the bar's root (the bar runs up "
                  "the print, so its bending pulls layers apart: lower allowables). Dynamic = x3. Screw tension from an "
@@ -313,7 +321,7 @@ def main():
         "print": info,
         "print_orientation": "on the arm's outer side (world X up); no supports; tip leans out at 45 deg",
         "screw_access_blocked_mm3": access,
-        "screws": {"positions_xz_mm": p.screws,
+        "screws": {"positions_xz_mm": p.screws, "install_patterns": p.install_patterns,
                    "length_note": f"#10 or #12 x 2 in: {50.8 - p.plate_t - t:.0f} mm into the 2x4 "
                                   f"(plate {p.plate_t:g} + pegboard {t:g})"},
         "wheel_fit": wheel,

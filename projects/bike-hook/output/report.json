@@ -4,13 +4,13 @@
     "extents_mm": [
       145.7,
       80.0,
-      106.0
+      126.9
     ],
-    "faces": 2646,
+    "faces": 3822,
     "watertight": true,
     "winding_consistent": true,
-    "euler_number": -8,
-    "volume_cm3": 305.2,
+    "euler_number": -14,
+    "volume_cm3": 352.9,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
@@ -32,14 +32,84 @@
         25.4
       ],
       [
+        76.19999999999999,
+        25.4
+      ],
+      [
+        76.19999999999999,
+        0.0
+      ],
+      [
         0.0,
         -25.4
       ],
       [
         25.4,
         -25.4
+      ],
+      [
+        76.19999999999999,
+        -25.4
       ]
     ],
+    "install_patterns": {
+      "three_rows_over_2x4": [
+        [
+          -25.4,
+          25.4
+        ],
+        [
+          0.0,
+          25.4
+        ],
+        [
+          25.4,
+          25.4
+        ],
+        [
+          76.19999999999999,
+          25.4
+        ],
+        [
+          76.19999999999999,
+          0.0
+        ],
+        [
+          0.0,
+          -25.4
+        ],
+        [
+          25.4,
+          -25.4
+        ],
+        [
+          76.19999999999999,
+          -25.4
+        ]
+      ],
+      "two_rows_over_2x4_top_and_middle": [
+        [
+          -25.4,
+          25.4
+        ],
+        [
+          0.0,
+          25.4
+        ],
+        [
+          25.4,
+          25.4
+        ],
+        [
+          76.19999999999999,
+          25.4
+        ],
+        [
+          76.19999999999999,
+          0.0
+        ]
+      ]
+    },
     "length_note": "#10 or #12 x 2 in: 35 mm into the 2x4 (plate 12 + pegboard 3.94)"
   },
   "wheel_fit": {
@@ -91,13 +161,18 @@
       "layers": "across"
     },
     "screw_max_tension_n": {
-      "static": 199.5,
-      "dynamic": 598.4,
+      "static": 206.4,
+      "dynamic": 619.1,
       "design_value": 580.0,
-      "safety_static_vs_design_value": 2.9,
-      "safety_dynamic_vs_design_value": 1.0
+      "safety_static_vs_design_value": 2.8,
+      "safety_dynamic_vs_design_value": 0.9
     },
     "screw_shear_each_n": 31.4,
+    "screw_max_tension_by_pattern_static_n": {
+      "three_rows_over_2x4": 132.4,
+      "two_rows_over_2x4_top_and_middle": 206.4
+    },
+    "screw_worst_pattern": "two_rows_over_2x4_top_and_middle",
     "seat_point_mm": [
       20.6,
       107.6,
@@ -131,13 +206,13 @@
     "bar_across_spokes": 26.0,
     "bar_along_load": 44.0,
     "overall_x": 106.0,
-    "plate_w": 76.1,
+    "plate_w": 126.9,
     "plate_h": 80.0,
     "bike_mass_kg": 16.0,
     "contact_angle_deg": 53.0,
     "hub_below_screws": 167.8,
     "pull_n": 208.1,
-    "screw_tension_n": 199.5,
+    "screw_tension_n": 206.4,
     "bar_safety_dynamic": 4.4
   }
 }

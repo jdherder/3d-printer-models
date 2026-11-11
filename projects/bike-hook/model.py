@@ -12,8 +12,8 @@ World frame (Z-up), used for modelling:
   X = along the wall (the bar points +X, the arm is on the -X side of the wheel)
   Y = out from the pegboard's front face (Y = 0); the 2x4 is behind the pegboard
   Z = up
-  The origin is a pegboard hole centre. Five screws go through pegboard holes (1 in grid) into the 2x4 behind:
-  three in the row above the bar (one directly over the arm), two in the row below.
+  The origin is a pegboard hole centre. Screws go through pegboard holes (1 in grid) into the 2x4 behind, in three rows
+  (z = +25.4, 0, -25.4) so the hook works whether 2 or 3 hole rows land over the 2x4 (see `install_patterns`).
 
 Print pose: lying on the arm's outer side (the X = x_min face on the bed). Plate, arm and bar all grow straight up
 from the bed, and the tip leans out at 45 deg, so it needs no supports.
@@ -34,7 +34,7 @@ class HookParams:
     tire_max_w: float = 50.0          # widest tire the arm clears (2 in). A 2.4 in MTB tire needs ~62
     rim_max_w: float = 30.0           # widest rim (outer) the slot between the arm and the tip takes
 
-    # --- plate on the pegboard (5 screws through pegboard holes into the 2x4) ---
+    # --- plate on the pegboard (screws through pegboard holes into the 2x4; 8 holes in 3 rows, see `screws`) ---
     plate_t: float = 12.0
     plate_z: float = 40.0             # plate spans z = -plate_z .. +plate_z (screw rows at +-PITCH)
     screw_hole_d: float = 6.0         # #10 or #12 screws (they also pass the 1/4 in pegboard holes)
@@ -85,7 +85,7 @@ class HookParams:
 
     @property
     def x_max_plate(self):
-        return PITCH + self.head_d / 2 + 6.0
+        return 3 * PITCH + self.head_d / 2 + 6.0
 
     @property
     def contact_centre(self):
@@ -117,9 +117,23 @@ class HookParams:
 
     @property
     def screws(self):
-        """(x, z) of the screws, all on pegboard holes. Top row: one right above the arm (its top is below the screw
-        head) and two to its right. Bottom row: two to the right (the arm's deep root covers the hole under it)."""
-        return [(-PITCH, PITCH), (0.0, PITCH), (PITCH, PITCH), (0.0, -PITCH), (PITCH, -PITCH)]
+        """(x, z) of every screw hole, all on pegboard holes, in three rows 1 in apart. A driver can reach each one straight on:
+        the bar and arm block the middle row everywhere except past the bar's far end, so the middle row has one hole, at
+        3 in. The arm's deep root also covers the bottom row's hole under it."""
+        top = [(-PITCH, PITCH), (0.0, PITCH), (PITCH, PITCH), (3 * PITCH, PITCH)]
+        mid = [(3 * PITCH, 0.0)]
+        bottom = [(0.0, -PITCH), (PITCH, -PITCH), (3 * PITCH, -PITCH)]
+        return top + mid + bottom
+
+    @property
+    def install_patterns(self):
+        """Which holes get screws, depending on how many hole rows are over the 2x4 (its face is 3.5 in, so either 2 or 3
+        rows are, depending on where the hole grid falls). With 2, mount the hook so its top and middle rows are on them:
+        top + bottom would put the screws below the load and they'd pull out far harder."""
+        return {
+            "three_rows_over_2x4": self.screws,
+            "two_rows_over_2x4_top_and_middle": [s for s in self.screws if s[1] >= 0],
+        }
 
     def derived(self) -> dict:
         return {
