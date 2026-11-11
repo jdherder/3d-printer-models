@@ -17,7 +17,7 @@ Pegboard parts form a catalog, with shared pegs: see [docs/pegboard.md](docs/peg
 | [pegboard-spool-holder](projects/pegboard-spool-holder/) | v5: two sloped 5.7 mm hooks (rock-in checked) + four pins (3 in span), 82 mm rounded-top arm with end lip; next: owner review, test print | Pegboard catalog: holds the A1's active spool on the board behind the printer |
 | [pegboard-bambu-sign](projects/pegboard-bambu-sign/) | v1.2: 250 × 120 mm, full logo raised 1.2 mm (one colour change), 2 hangers with the shared sloped hooks (rock-in checked) + keyhole slots; next: owner review, test print | Pegboard catalog: Bambu Lab logo sign that hangs flush on the board |
 | [pegboard-mat-holder](projects/pegboard-mat-holder/) | v0.2: 194 × 17 mm strip, 3.5 mm slots, 2 tilted slots, 2 hooks + 2 pins (rock-in checked); next: test print | Pegboard catalog: holds the A3 + A4 cutting mats leaning against the board |
-| [bike-hook](projects/bike-hook/) | v1: lip over a 2x4 + plate, lip screws in shear, prints on its side with no supports, ~12× safety factor (est.); next: owner's bike/wheel numbers, test print | Wall hook that hangs a bike vertically by its front rim, screwed to a horizontal 2x4 |
+| [bike-hook](projects/bike-hook/) | v2: on the pegboard (5 screws into the 2x4 behind), arm beside the wheel + bar through the spokes, wheel straight with tires on the board, no supports; next: owner's 2x4/bike/wheel numbers, test print | Wall hook that hangs a bike vertically by its front rim, perpendicular to the wall |
 
 ## Layout
 
