@@ -4,7 +4,7 @@
   "subtitle": "Thin slotted strip, one piece with the pegs · A3 + A4 mats lean back against the board · your Menards 3/16\" board · X out from the board, Z up · mm",
   "meshes": [
     {"path": "renders/asm-mat-holder.stl", "label": "Mat holder (2 hooks + 2 pins, 7 holes apart, 2 slots)", "style": "solid", "color": "#5b8fd9"},
-    {"path": "renders/ref-mats.stl", "label": "Your mats: A3 450×300 (back), A4 300×220 (front), 3 mm", "style": "wire", "color": "#e0a030"},
+    {"path": "renders/ref-mats.stl", "label": "Your mats: A3 450×300 (back), A4 300×220 (front), 2.5-3 mm", "style": "wire", "color": "#e0a030"},
     {"path": "renders/ref-pegboard.stl", "label": "Your board: Menards 3/16\" white", "style": "solid", "color": "#b08a5a"}
   ],
   "dims": [
@@ -15,7 +15,7 @@
     {"label": "Slot depth (mat sunk in)", "param": "slot_depth"},
     {"label": "Hook to hook", "param": "hook_spacing"}
   ],
-  "scale_note": "Real size. Mats from the listing, 3 mm thick (your estimate). Pegs are the shared 5.7 mm sloped hooks + 6.1 mm pins.",
+  "scale_note": "Real size. Mats from the listing, 2.5-3.0 mm thick (your calipers). Pegs are the shared 5.7 mm sloped hooks + 6.1 mm pins.",
   "notes_title": "Concept: what to look at",
-  "notes": "A 194 mm strip, 17 mm deep, hung on 2 hooks + 2 pins 7 holes apart. Two slots run its full length: the A3 stands in the back slot and leans on the board, the A4 in the front slot leans on the A3. Because it's so thin, the mats stand nearly upright (A3 about 1°, A4 about 2° back); each extra degree of lean adds ~5 mm of depth. Questions: (1) is that lean OK, or do you want them tipped back more? (2) landscape (as shown) or portrait? (3) a caliper reading of the mat thickness would let the slots get snug. Prints standing on its bottom edge, slots up, small supports under the 2 hooks."
+  "notes": "A 194 mm strip, 17 mm deep, hung on 2 hooks + 2 pins 7 holes apart. Two slots run its full length: the A3 stands in the back slot and leans on the board, the A4 in the front slot leans on the A3. Because it's so thin, the mats stand nearly upright (A3 about 1°, A4 about 2° back); each extra degree of lean adds ~5 mm of depth. Questions: (1) is that lean OK, or do you want them tipped back more? (2) landscape (as shown) or portrait? v0.2: slots tightened to 3.5 mm (3.0 mm thickest + 0.5) from your caliper reading. Prints standing on its bottom edge, slots up, small supports under the 2 hooks."
 }

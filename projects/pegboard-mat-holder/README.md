@@ -16,17 +16,17 @@ piece, shared pegs.
 - [x] v0.1 concept (2026-11-11): 194 × 17 mm strip, 2 slots, 2 hooks (row 1) + 2 pins (row 0) in columns 0 and 7.
       Watertight, Euler 2, 0 self-intersections; rock-in passes. A3 leans ~1°, A4 ~1.8°
 - [ ] Owner review of the concept (Open questions)
-- [ ] Caliper the mat thickness; tighten `SLOT_CLEAR`
+- [x] Mat thickness by calipers: 2.5–3.0 mm. Slots tightened from 3.8 to 3.5 mm (v0.2)
 - [ ] Test print and hang
 
 ## Measurements
 
 | Feature | Value (mm) | Notes |
 |---|---|---|
-| A3 mat | 450 × 300 × ~3 | listing size; thickness "about 3 mm" (owner) |
-| A4 mat | 300 × 220 × ~3 | listing size |
+| A3 mat | 450 × 300 × 2.5–3.0 | listing size; thickness by owner's calipers (varies across the mat) |
+| A4 mat | 300 × 220 × 2.5–3.0 | assumed same as the A3 |
 | Holder | 194 wide × 17.4 deep, slot block 16 high, plate 31.8 high | `holder_*` in report.json |
-| Slots | 3.8 wide (3 + 0.8), 14 deep, tilted to each mat's lean | `SLOT_CLEAR`, `SLOT_DEPTH` |
+| Slots | 3.5 wide (3.0 thickest + 0.5), 14 deep, tilted to each mat's lean | `SLOT_CLEAR`, `SLOT_DEPTH` |
 
 ## How it works
 
@@ -44,8 +44,7 @@ flat, layers along the pegs). Supports only under the 2 hooks (tree, on build pl
 
 - Lean: ~1° (as thin as it gets) OK, or tip them back more at ~5 mm depth per degree?
 - Landscape (as shown, 300 / 220 tall) or portrait (450 / 300 tall)?
-- Which holes behind the printers? It must clear the A1's bed travel (17 mm out + the mats' 3 mm).
-- Exact mat thickness (calipers).
+- Which holes behind the printers? It must clear the A1's bed travel (about 17 mm out + the mats' 3 mm).
 
 ## Files
 
@@ -55,3 +54,4 @@ flat, layers along the pegs). Supports only under the 2 hooks (tree, on build pl
 ## Log
 
 - **2026-11-11:** v0.1 concept from the owner's request (mats ~3 mm, thin, one piece, horizontal slots, lean on the board).
+- **2026-11-11:** v0.2: owner calipered the mats at 2.5–3.0 mm. Slot = 3.0 + 0.5 = 3.5 mm (was 3.8); the holder is ~0.6 mm thinner.

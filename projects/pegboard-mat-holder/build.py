@@ -41,8 +41,8 @@ NAME = "pegboard-mat-holder"
 BOARD = pb.DEFAULT_BOARD
 STYLE = pb.PegStyle()
 
-# Mats (owner: "about 3 mm thick"; sizes from the listing). Landscape: the long side across the board.
-MAT_T = 3.0
+# Mats (thickness: owner's calipers; sizes from the listing). Landscape: the long side across the board.
+MAT_T = 3.0                    # thickest point (owner's calipers 2026-11-11: 2.5-3.0 mm across the mat)
 MATS = {"A3": {"w": 450.0, "h": 300.0}, "A4": {"w": 300.0, "h": 220.0}}
 
 # Mount: hooks in row 1, pins in row 0, in columns 0 and 7 (178 mm apart, so the long strip can't rock side to side).
@@ -55,7 +55,8 @@ BOTTOM = -STYLE.r              # part's bottom (y), flush with the pins' undersi
 # Slot block, on the plate's front
 FLOOR_T = 2.0                  # under the slots
 SLOT_DEPTH = 14.0              # mat edge sunk this deep (slot floor to block top)
-SLOT_CLEAR = 0.8               # slot = mat + this (mats are "about 3 mm": a caliper reading will tighten it)
+SLOT_CLEAR = 0.5               # slot = thickest mat + this: 3.5 mm. Printed slots come out a bit narrow, so 0.5 still slides;
+                               # a 2.5 mm spot has 1 mm of play, which the lean takes up
 A3_GAP = 2.0                   # wall between the plate and the A3 slot (sets the A3's lean, see top docstring)
 RIB_T = 2.4                    # wall between the two slots
 FRONT_T = 2.4                  # front wall
@@ -178,7 +179,7 @@ def main():
 
     ext = hung.bounds[1] - hung.bounds[0]
     report = {
-        "scale_status": "real size (shared peg interface; mat sizes from the listing, thickness 'about 3 mm' from the owner)",
+        "scale_status": "real size (shared peg interface; mat sizes from the listing, thickness 2.5-3.0 mm by the owner's calipers)",
         "print": info,
         "print_orientation": "standing on its bottom edge, slots open up, pins on the bed (0.4 mm flat); supports under the 2 hooks only",
         "fit_on_board": {"board": BOARD.name, "clearance_checked_per_side": pb.FIT_CLEARANCE,
