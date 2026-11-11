@@ -1,128 +1,164 @@
-# Bike hook (vertical, on the pegboard)
+# Bike hooks (vertical, on the pegboard)
 
-A wall hook that hangs a bike vertically by its front rim. The bike is perpendicular to the wall with the front wheel
-straight, and both tires rest against the pegboard, as if the bike were riding up the wall. It screws through the
-pegboard into a horizontal 2x4 behind it. Printed in PETG.
+Wall hooks that hang the family's bikes vertically by their front rims. Each bike is perpendicular to the wall with its front
+wheel straight, and both tires rest against the pegboard, as if the bike were riding up the wall. They screw through the
+pegboard into a horizontal 2x4 behind it, about 6 ft up. Printed in PETG. There are two variants from one parametric model:
+an **adult** hook for 700c hybrids and a **kids'** hook for 16 and 20 in wheels.
 
-![on the pegboard with a 700c wheel](renders/in-use.png)
+![the four front wheels on their hooks, as laid out](renders/in-use.png)
 
 ## Goal
 
-A hook that is clearly strong enough for an everyday (non-e) bike hung off the ground, holds it with the wheel straight
-and the tires on the wall, prints without supports on the A1, and installs with screws driven only into the 2x4's face.
+Hooks that are clearly strong enough for the family's four (non-e) bikes hung off the ground, hold them with the wheel
+straight and the tires on the wall, print without supports on the A1, and install with screws driven only into the 2x4's face.
 
 ## Status
 
 - [x] v1 (2026-11-11): lip over the top of the 2x4, wheel turned to hook on. **Replaced**: the 2x4 is behind pegboard
       (only its face can take screws), and the owner wants the wheel straight with the tires on the wall
-- [x] v2 (2026-11-11): plate on the pegboard + arm beside the wheel + bar through the spokes; checks in `report.json`
+- [x] v2 (2026-11-11): plate on the pegboard + arm beside the wheel + bar through the spokes
 - [x] v2.1 (2026-11-11): middle-row screw holes, so it works whether 2 or 3 hole rows are over the 2x4
-- [ ] Owner's numbers: bike weight, wheel/tire size, spoke count, where the 2x4 is behind the pegboard (see Open questions)
-- [ ] Owner review of the viewer
-- [ ] Test print, hang the bike, check after a few weeks for any sag
+- [x] v3 (2026-11-11): checked against the owner's four bikes (photos in `source/`); kids' variant for 16/20 in wheels;
+      the 2x4 shows wood in 3 hole rows, so all 8 screws go in; suggested layout
+- [ ] Owner: weigh the bikes, count the kids' front spokes, mock up the layout (see Open questions)
+- [ ] Test print one adult hook, hang the Schwinn (the heaviest), check after a few weeks for any sag
 
-## How it works (v2)
+## The bikes (estimated from the photos; not measured)
 
-![sections](renders/sections.png)
+| Bike | Hook | Front wheel | Weight (est.) | Rim sits | Spoke clearance per side | Worst screw, hanging (3 rows) |
+|---|---|---|---|---|---|---|
+| Schwinn Trailway (suspension fork) | adult | 700×40 | 16.5 kg | 54° round | 10.7 mm (36 spokes) | 138 N |
+| Trek FX 7.2 | adult | 700×35 | 12.5 kg | 52° round | 11.5 / 10.2 mm (32 / 36 spokes) | 102 N |
+| Nishiki 20 in | kids | 20×1.95 | 12 kg | 36° round | 11.2 / 6.6 mm (28 / 36 spokes) | 99 N |
+| Dynacraft 16 in (training wheels) | kids | 16×2.125 | 9.5 kg | 28° round | 11.6 / 4.2 mm (20 / 28 spokes) | 75 N |
+
+"Rim sits" is where the rim meets the bar, measured round the wheel from its top on the wall side. "Spoke clearance" is at the
+best wheel rotation: you turn the wheel to line up a gap as you hang it. Spoke counts aren't readable in the photos, so each wheel
+is checked with the likely counts, laced crossed (3-cross adult, 2-cross 20 in, 1-cross 16 in).
+
+## How it works
+
+![adult hook, side and plan sections](renders/sections-adult.png)
 
 With the wheel straight and its tire on the wall, anything that comes straight out of the wall would hit the tire before
 it reached the rim. So:
 
-- **Plate** on the pegboard, with **8 screw holes on pegboard holes in three rows, 1 in apart**. The 2x4's 3.5 in face covers
-  either 2 or 3 hole rows, depending on where the grid falls, so the hook works either way (see Install). Every hole can
-  be driven straight in from the front. The bar blocks the middle row everywhere except past its far end, so the plate
-  reaches one column past the bar for the middle-row hole. The bar sits ~110 mm out, so use a 6 in bit extension.
-- **Arm** comes straight out *beside* the wheel, clear of tires up to 50 mm (2 in) wide.
-- **Bar** turns 90° and reaches sideways through the spokes, just inside the rim. Its section is a 26 × 44 mm slot that points at the hub.
+- **Plate** on the pegboard, with **8 screw holes on pegboard holes in three rows, 1 in apart**. The bar blocks the middle row
+  everywhere except past its far end, so the plate reaches one column past the bar for the middle-row hole. Every hole can be
+  driven straight in from the front.
+- **Arm** comes straight out *beside* the wheel, clear of tires up to 50 mm (adult) or 58 mm (kids) wide.
+- **Bar** turns 90° and reaches sideways through the spokes, just inside the rim. Its section is a slot that points at the hub.
   The rim's push points at the hub too, so the bar is deepest in the direction it's loaded. The spokes also point at the hub,
-  so the bar is narrow across the gap between two of them: 10.8 mm to spare per side on a 32-spoke wheel.
-- **The rim sits on the slot's rounded top end**, about 53° round from the top of the wheel, on the wall side. The rim's push there
-  points through the hub, so the wheel hangs still even though it's free to spin. The same push pulls the wheel toward the wall,
-  so the **front tire sits flat on the pegboard**. The rear tire leans on it too.
-- **Tip**: a 45° ramp past the far side of the rim keeps the wheel from sliding off the end of the bar. To get past it, the
-  bike would have to be lifted.
+  so the bar is narrow across the gap between two of them.
+- **The rim sits on the slot's rounded top end**, on the wall side. The rim's push there points through the hub, so the wheel hangs
+  still even though it's free to spin. The same push pulls the wheel toward the wall, so the **front tire sits flat on the pegboard**.
+  The rear tire leans on it too.
+- **Tip**: a 45° ramp past the far side of the rim keeps the wheel from sliding off the end of the bar.
 
-**To hang the bike:** stand it up on its rear wheel, front tire against the pegboard a little to the right of the hook (the bar
-points right). Lift the front wheel about 4 cm so the rim clears the tip, slide it left so the bar goes between two spokes
-under the rim, and let it down. The rim settles onto the seat and the tire onto the board. To take it down, lift, slide right, lower.
+**The two variants** (`HOOKS` in `build.py`):
+
+| | Adult (700c) | Kids (16 / 20 in) |
+|---|---|---|
+| Bar across the spoke gap × along the load | 26 × 44 mm | 16 × 38 mm |
+| Seat (rim) centre out from the pegboard | 118 mm | 140 mm |
+| Why | | Small wheels have their spokes much closer together, so the bar is slimmer. The seat is further out so small wheels hang lower and their tires clear the plate |
+
+Both variants share the plate and screw pattern, and the bottom front edge of the plate is chamfered for tire clearance.
+
+**To hang a bike:** stand it up on its rear wheel, front tire against the pegboard a little to the right of the hook (the bar
+points right). Lift the front wheel about 4 cm so the rim clears the tip, turn the wheel so a spoke gap lines up with the bar,
+slide it left onto the bar, and let it down. To take it down, lift, slide right, lower.
 
 **Print orientation:** it lies on the arm's outer side. The arm bends along its layers, which is the strong way. The bar runs up
 the print, so its bending pulls on layer bonds. That's why the bar's numbers below use lower PETG allowables.
 
-## Strength (v2 estimate, `report.json` → `loads`)
+## Strength (estimates, `report.json` → `bikes.*.loads`)
 
-Assumes a **16 kg bike** (not measured yet) and ×3 for the jolt of hanging it or knocking it.
+×3 is for the jolt of hanging a bike or knocking it. The screw figures are for all 8 screws, since three hole rows are over your 2x4.
 
-| Check | Hanging | With ×3 jolt | Margin |
-|---|---|---|---|
-| Rim force on the seat (53° round) | 261 N: 157 N down + 208 N pulling the hook off the wall | | |
-| Arm root (along layers) | 2.6 MPa | 7.9 MPa | 3.0× to creep limit, 3.8× to break |
-| Bar root (across layers) | 1.1 MPa | 3.4 MPa | 3.5× to creep limit, 4.4× to break |
-| Worst screw, pulling out: 3 rows over the 2x4 | 132 N | 400 N | 4.4× under a #10's design value hanging, 1.5× with the jolt |
-| Worst screw, pulling out: only 2 rows (top + middle) | 206 N | 620 N | 2.8× under the design value hanging; just over it with the jolt (a design value is already ~1/5 of real failure) |
+| Check | Schwinn (heaviest, adult hook) | Nishiki (heaviest kid, kids' hook) |
+|---|---|---|
+| Rim force on the seat | 273 N: 162 N down + 220 N pulling the hook off the wall | 146 N: 118 N down + 86 N pulling |
+| Arm root (along layers) | 2.9× to creep limit, 3.6× to break with the jolt | 4.5×, 5.6× |
+| Bar root (across layers) | 3.4× to creep limit, 4.3× to break with the jolt | 2.3×, 2.9× |
+| Worst screw pulling out | 138 N hanging: 4.2× under a #10's design value, 1.4× with the jolt | 99 N: 5.9×, 2.0× |
 
-The pull-off force is weight × tan(contact angle). That's why the seat sits ~118 mm out: closer to the wall, the rim sits
-further round the wheel and the pull climbs fast. The screws are the limit, so **don't hang an e-bike** without redoing the numbers.
+The Trek and the Dynacraft have larger margins than the bike shown for their hook. The pull-off force is weight × tan(where the rim sits),
+which is why the adult seat sits ~118 mm out. **Don't hang an e-bike** without redoing the numbers.
 
 ## Measurements
 
-Nothing measured yet. These are the assumptions, and all of them are parameters:
-
-| Feature | Assumed (mm) | Source | Notes |
+| Feature | Value (mm) | Source | Notes |
 |---|---|---|---|
 | Pegboard | 3.94 thick, 6.35 holes on 25.4 | owner's board (`pegboard.DEFAULT_BOARD`) | Screws go through its holes |
-| 2x4 behind it | 38 deep, 89 face | assumed | Flat (3.5 in face toward the pegboard), so 2 or 3 hole rows are over it |
-| Bike weight | 16 kg | typical | `BIKE_MASS_KG` in `build.py` |
-| Wheel | 700c, 38 mm tire (outer radius 347), 32 spokes | typical | `WHEEL` in `build.py`. The hub hangs 168 mm below the middle screw row |
-| Widest tire / rim the slot takes | 50 / 30 | design | `tire_max_w`, `rim_max_w` |
+| 2x4 behind it | 38 deep, 89 face, flat, ~1830 up (~6 ft) | owner photo 2026-11-11: wood shows through 3 hole rows; height from the owner | Use all 8 screws |
+| Bikes | see the table above | models identified from the owner's photos | Weights and spoke counts are estimates: `BIKES` in `build.py` |
 
 ## Print settings
 
-- **PETG**, as laid out in the STL (on the arm's side), **no supports**, 0.2 mm layers. 146 × 80 mm footprint, 127 mm tall
-  (the plate is the tall part).
-- **5–6 walls, 30–40 % gyroid infill.** Strength is in the walls. Roughly 200–240 g.
-- The screw holes are horizontal in the print, so they have teardrop points (no sagging bridge).
+- **PETG**, as laid out in the STL (on the arm's side), **no supports**, 0.2 mm layers. Adult: 146 × 80 mm footprint, 127 mm tall.
+  Kids: 160 × 80 mm, 127 mm tall.
+- **5–6 walls, 30–40 % gyroid infill.** Strength is in the walls. Roughly 200–240 g each.
+- Print **2 adult + 2 kids'**. Start with one adult hook and the Schwinn, since it's the heaviest load.
+
+## Layout and heights
+
+Hooks go **18 in (457 mm) apart, alternating adult, kid, adult, kid** (shown in the viewer as Schwinn, Nishiki, Trek, Dynacraft).
+A hanging bike's handlebar sits roughly 1 m out from the wall for the hybrids and 0.65–0.8 m for the kids' bikes. So an adult's and a
+kid's bars can overlap side to side without touching. Two adult bikes side by side would need ~26 in. The row needs about
+**6.5 ft (2 m) of clear wall**, and anything on the pegboard behind the bikes has to move.
+
+With the 2x4's middle at ~6 ft (rough, from the owner):
+
+| | Front hub | Front tire top | Rear tire bottom (approx.) | Sticks out from the wall |
+|---|---|---|---|---|
+| Adult hybrids | ~1.66 m | ~2.0 m | ~0.25 m off the floor | ~1.0–1.1 m |
+| Nishiki 20 in | ~1.69 m | ~1.94 m | ~0.6 m | ~0.8 m |
+| Dynacraft 16 in | ~1.72 m | ~1.92 m | ~0.8 m | ~0.7 m |
+
+The bikes hang high, so a grown-up hangs the kids' bikes. The tires sit near the wall only around hub height. Nothing on the
+board within ~30 cm above the 2x4 should stick out more than ~15 cm.
 
 ## Install
 
-1. Find the 2x4 behind the pegboard (a stud finder works through hardboard, or poke a thin wire through a hole) and note which
-   hole rows have at least ~12 mm of wood above and below them. Its 3.5 in face covers **3 rows** or **2 rows**.
-2. **3 rows:** line up the hook's three hole rows with them and use all **8** screws.
-   **2 rows:** line up the hook's **top and middle** rows with them, and use those **5** screws (4 top, 1 middle). This hangs
-   the bike 1 in lower than the other option. Don't use middle + bottom: those screws sit below where the bike pulls, and the
-   top screws would carry more than twice the load.
-3. Drive **#10 or #12 × 2 in** washer-head or pan-head wood screws through the pegboard holes into the 2x4, with 1/8 in
-   pilot holes. That puts about 35 mm in the 2x4. Use a 6 in bit extension to reach past the bar.
+1. Mock it up first: hold each bike in place against the board (tire on the board, front hub at ~5.5 ft) and mark where the
+   wheel's centre is. Check pedals, bars and saddles clear the neighbouring bikes. Turning a crank so its pedals point up and down helps.
+2. Each hook's plate sits **left of its wheel** (the arm is on the left; the wheel centre is ~21 mm right of the plate's "0" column).
+   Keep the plates off the existing washer-head screws that hold the pegboard on.
+3. Line up the plate's three hole rows with the three rows that show wood, and drive all **8** screws: **#10 or #12 × 2 in**
+   washer-head or pan-head wood screws, through the pegboard holes into the 2x4, with 1/8 in pilot holes. That puts about 35 mm
+   in the 2x4. Use a 6 in bit extension to reach past the bar.
+   (If a spot only has 2 rows over wood, use the top and middle rows, 5 screws. Don't use middle + bottom.)
 4. Optional: a strip of old inner tube on the seat protects the rim.
 
 ## Open questions
 
-- **The 2x4:** is it flat (3.5 in face toward the pegboard) or on edge (1.5 in face)? On edge, only one hole row would land on
-  it, and the plate would need re-planning. How high is it?
-- **Bike:** weight, and is any of them an e-bike?
-- **Wheel:** size (700c / 29 / 27.5 / 26), tire width, spoke count. Tire size changes where the rim sits on the bar (and so the
-  pull on the screws). A 27.5 or 26 in wheel needs the bar moved.
-- **Which side** should the arm be on? Right now it's left of the wheel as you face the wall, so you slide the bike on from the right.
-  Mirroring is easy.
+- **Weights:** stand on a bathroom scale holding each bike, minus your own weight. The Schwinn matters most. Above ~20 kg, recheck.
+- **Kids' spokes:** count the spokes on the Nishiki and Dynacraft *front* wheels. The 16 in at 28 spokes only has 4.2 mm per side,
+  which is fine but snug. More than 28 on the 16 in would need the bar slimmer.
+- **Which side** should the arm be on? Right now it's left of the wheel as you face the wall, so you slide the bike on from the
+  right. Mirroring is easy, and could differ per hook if that suits the layout better.
 
 ## Pipeline
 
-`build.py`: builds the hook (`model.py`), lays it on its side (`print_pose`) and exports STEP + STL. Then it:
-- checks a screwdriver and bit can reach each screw straight on
-- hangs a modelled wheel (rim + tire + spokes) with its tire on the pegboard and lowers it onto the bar. It checks it's the rim, not
-  the tire, that lands on the hook, for this tire and the widest one, and with the wheel slid against the arm, centred, and against the tip
-- turns the wheel about its axle to find the best and worst spoke gap
-- estimates the rim force, the stresses at the arm and bar roots, and the screw pull-out (elastic bolt group) for each install
-  pattern (`install_patterns` in `model.py`: 3 rows, or top + middle)
+`build.py` builds both variants (`HOOKS` → `model.py`), lays each on its side (`print_pose`), and exports STEP + STL. It checks a
+screwdriver and bit can reach every hole straight on. Then, for each bike in `BIKES`, it:
+- hangs its modelled front wheel (rim, tire, crossed spokes) with the tire on the pegboard and lowers it onto its hook's bar. It checks
+  it's the rim, not the tire, that lands on the hook, with the wheel slid against the arm, centred, and against the tip
+- turns the wheel about its axle to find the best and worst spoke gap for each likely spoke count (must be ≥ 4 mm)
+- estimates the rim force, the stresses at the arm and bar roots, and the screw pull-out (elastic bolt group) for both install patterns.
+  It asserts the margins
 
-Hook parameters are in `HookParams` (`model.py`). Board, bike and wheel assumptions are at the top of `build.py`.
+It also lays the four hooks and wheels out at `LAYOUT_X` for the viewer and `renders/in-use.png`.
 
 ## Files
 
-- `output/bike-hook.stl`: print this (Bambu Studio)
-- `output/bike-hook.step`: editable solid for Fusion
-- `output/report.json`: checks, params, wheel fit, loads
-- `renders/model.png`: print pose; `renders/in-use.png`: on the pegboard with a wheel; `renders/sections.png`: side + plan sections
+- `output/bike-hook-adult.stl`, `output/bike-hook-kids.stl`: print these (Bambu Studio)
+- `output/bike-hook-adult.step`, `output/bike-hook-kids.step`: editable solids for Fusion
+- `output/report.json`: per-variant checks and params, per-bike fit and loads
+- `renders/model-adult.png`, `renders/model-kids.png`: print poses; `renders/in-use.png`: the layout;
+  `renders/sections-adult.png` (Schwinn), `renders/sections-kids.png` (Dynacraft): side + plan sections
+- `source/photo-2026-11-11-*.jpg`: the owner's photos of the bikes, the wall, and the 2x4 through the pegboard
 - **Viewer artifact:** https://claude.ai/artifact/J58YQJDJZxmdjDr6LM3aJt (publish updates to this URL)
 
 ## Log
@@ -131,13 +167,14 @@ Hook parameters are in `HookParams` (`model.py`). Board, bike and wheel assumpti
   height, screwed to a horizontal 2x4 on the studs. v1: lip over the top of the 2x4 with screws down through it, plus a plate on
   the face. Tapered arm with a 35 mm tip, which needs the wheel turned ~80° to hook on. Viewer published.
 - **2026-11-11 (v2):** Owner: the 2x4 is behind pegboard, so only face screws are possible, and they want the bike perpendicular to the
-  wall with the tires resting on it. Redesigned: plate on the pegboard with 5 screws through its holes, an arm beside the wheel, and a
-  bar that reaches sideways through the spokes. The rim sits on the bar ~53° round from the top, so the rim's push goes through the hub
-  and pulls the tire onto the board. The bar's section is a slot pointing at the hub: strong the way it's loaded, and 10.8 mm clear of
-  the spokes per side. Prints on its side with no supports. Margins for a 16 kg bike with a ×3 jolt: arm 3.8×, bar 4.4×, and screws at
-  their design value. Waiting on the owner: how the 2x4 is oriented and where, bike weight, wheel size.
-- **2026-11-11 (v2.1):** The owner isn't sure both screw rows (2 in apart) will land over the 2x4, so they asked for middle-row holes too.
-  The bar and arm block a driver everywhere in the middle row except past the bar's far end. So the plate now reaches one column
-  further (76 → 127 mm wide), with 8 holes: top row at −1, 0, 1, 3 in; middle row at 3 in; bottom row at 0, 1, 3 in. With 3 rows over
-  the 2x4, use all 8 (worst screw 132 N hanging). With 2, use top + middle (5 screws, worst 206 N, about the same as v2). Middle +
-  bottom would be 476 N, so the README says not to use it.
+  wall with the tires resting on it. Redesigned: plate on the pegboard with screws through its holes, an arm beside the wheel, and a
+  bar that reaches sideways through the spokes. The rim sits on the bar ~53° round from the top, so the rim's push goes through the
+  hub and pulls the tire onto the board. The bar's section is a slot pointing at the hub. Prints on its side with no supports.
+- **2026-11-11 (v2.1):** The owner wasn't sure both screw rows would land over the 2x4, so the plate now has 8 holes in three rows (one
+  column past the bar, the only place a driver can reach the middle row). 3 rows: all 8. 2 rows: top + middle.
+- **2026-11-11 (v3):** Owner sent photos of the four bikes, the wall, and the 2x4 through the pegboard. Three hole rows show wood, so
+  the 2x4 is flat and all 8 screws go in. It's ~6 ft up. Identified the bikes: Trek FX 7.2 and Schwinn Trailway (700c), Nishiki 20 in,
+  Dynacraft 16 in. Spokes are now modelled crossed, not radial. The adult hook fits both hybrids (≥10 mm spoke clearance). It would not
+  fit the kids' wheels (3.4 mm or less on the 20 in, and the 16 in tire hits the plate). Added a kids' variant: bar 16 × 38 mm, seat at
+  140 mm. Also added a 10 mm chamfer on every plate's bottom edge. Each bike is checked against its hook in the build. Suggested layout
+  18 in apart, alternating adult/kid (~2 m of wall). Waiting on the owner: weights, kids' spoke counts, a mock-up of the layout.

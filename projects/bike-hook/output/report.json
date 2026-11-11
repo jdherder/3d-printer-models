@@ -1,190 +1,430 @@
 {
-  "scale_status": "designed (no scan). Pegboard = owner's (3.94 mm); 2x4, bike weight and wheel are assumed (see README)",
-  "print": {
-    "extents_mm": [
-      145.7,
-      80.0,
-      126.9
-    ],
-    "faces": 3822,
-    "watertight": true,
-    "winding_consistent": true,
-    "euler_number": -14,
-    "volume_cm3": 352.9,
-    "fits_A1_as_is": true,
-    "fits_A1_any_axis_order": true,
-    "self_intersecting_faces": 0
-  },
+  "scale_status": "designed (no scan). Pegboard = owner's (3.94 mm), 2x4 flat behind it (3 hole rows show wood). Bike weights and wheel details are estimates from the bike models (see README)",
   "print_orientation": "on the arm's outer side (world X up); no supports; tip leans out at 45 deg",
-  "screw_access_blocked_mm3": 0.0,
   "screws": {
-    "positions_xz_mm": [
-      [
-        -25.4,
-        25.4
-      ],
-      [
-        0.0,
-        25.4
-      ],
-      [
-        25.4,
-        25.4
-      ],
-      [
-        76.19999999999999,
-        25.4
-      ],
-      [
-        76.19999999999999,
-        0.0
-      ],
-      [
-        0.0,
-        -25.4
-      ],
-      [
-        25.4,
-        -25.4
-      ],
-      [
-        76.19999999999999,
-        -25.4
-      ]
-    ],
-    "install_patterns": {
-      "three_rows_over_2x4": [
-        [
-          -25.4,
-          25.4
-        ],
-        [
-          0.0,
-          25.4
-        ],
-        [
-          25.4,
-          25.4
-        ],
-        [
-          76.19999999999999,
-          25.4
-        ],
-        [
-          76.19999999999999,
-          0.0
-        ],
-        [
-          0.0,
-          -25.4
-        ],
-        [
-          25.4,
-          -25.4
-        ],
-        [
-          76.19999999999999,
-          -25.4
-        ]
-      ],
-      "two_rows_over_2x4_top_and_middle": [
-        [
-          -25.4,
-          25.4
-        ],
-        [
-          0.0,
-          25.4
-        ],
-        [
-          25.4,
-          25.4
-        ],
-        [
-          76.19999999999999,
-          25.4
-        ],
-        [
-          76.19999999999999,
-          0.0
-        ]
-      ]
-    },
-    "length_note": "#10 or #12 x 2 in: 35 mm into the 2x4 (plate 12 + pegboard 3.94)"
+    "install": "three hole rows are over the 2x4: use all 8 holes",
+    "length_note": "#10 or #12 x 2 in: 35 mm into the 2x4"
   },
-  "wheel_fit": {
-    "bed_r": 300.0,
-    "rim_h": 17.0,
-    "rim_w": 21.0,
-    "tire_w": 38.0,
-    "spokes": 32,
-    "spoke_d": 2.0,
-    "flange_r": 22.0,
-    "flange_half": 35.0,
-    "tire_outer_r": 347.1,
-    "hub_mm": [
-      20.6,
-      347.1,
-      -167.8
-    ],
-    "hub_below_middle_screw_row": 167.8,
-    "rim_rests_on_seat_not_tire": {
-      "this_tire_x+9.7": true,
-      "this_tire_x+20.6": true,
-      "this_tire_x+30.1": true,
-      "widest_tire_x+15.7": true,
-      "widest_tire_x+20.6": true,
-      "widest_tire_x+25.6": true
+  "variants": {
+    "adult": {
+      "print": {
+        "extents_mm": [
+          145.7,
+          80.0,
+          126.9
+        ],
+        "faces": 3826,
+        "watertight": true,
+        "winding_consistent": true,
+        "euler_number": -14,
+        "volume_cm3": 347.9,
+        "fits_A1_as_is": true,
+        "fits_A1_any_axis_order": true,
+        "self_intersecting_faces": 0
+      },
+      "screw_access_blocked_mm3": 0.0,
+      "params_mm": {
+        "tire_max_w": 50.0,
+        "rim_max_w": 30.0,
+        "plate_t": 12.0,
+        "plate_z": 40.0,
+        "plate_chamfer": 10.0,
+        "screw_hole_d": 6.0,
+        "head_d": 12.7,
+        "arm_w": 28.0,
+        "arm_root_z": -40.0,
+        "arm_taper_end_y": 95.0,
+        "seat_y": 118.0,
+        "seat_z": 5.0,
+        "seat_r": 13.0,
+        "bar_len": 18.0,
+        "bar_angle_deg": 55.0,
+        "tip_rise": 18.0,
+        "tip_top": 8.0,
+        "side_gap": 6.0,
+        "x_arm_inner_face": -10.3,
+        "x_wheel_nominal": 20.6,
+        "slot_arm_to_tip": 52.0,
+        "reach_to_seat": 118.0,
+        "reach_overall": 145.7,
+        "bar_across_spokes": 26.0,
+        "bar_along_load": 44.0,
+        "overall_x": 106.0,
+        "plate_w": 126.9,
+        "plate_h": 80.0
+      }
     },
-    "spoke_gap_best_phase_mm": 10.8,
-    "spoke_gap_worst_phase_mm": -0.9,
-    "tire_touches_pegboard": true
+    "kids": {
+      "print": {
+        "extents_mm": [
+          159.7,
+          80.0,
+          126.9
+        ],
+        "faces": 3834,
+        "watertight": true,
+        "winding_consistent": true,
+        "euler_number": -14,
+        "volume_cm3": 317.7,
+        "fits_A1_as_is": true,
+        "fits_A1_any_axis_order": true,
+        "self_intersecting_faces": 0
+      },
+      "screw_access_blocked_mm3": 0.0,
+      "params_mm": {
+        "tire_max_w": 58.0,
+        "rim_max_w": 28.0,
+        "plate_t": 12.0,
+        "plate_z": 40.0,
+        "plate_chamfer": 10.0,
+        "screw_hole_d": 6.0,
+        "head_d": 12.7,
+        "arm_w": 28.0,
+        "arm_root_z": -40.0,
+        "arm_taper_end_y": 95.0,
+        "seat_y": 140.0,
+        "seat_z": 8.0,
+        "seat_r": 8.0,
+        "bar_len": 22.0,
+        "bar_angle_deg": 32.0,
+        "tip_rise": 18.0,
+        "tip_top": 6.0,
+        "side_gap": 6.0,
+        "x_arm_inner_face": -10.3,
+        "x_wheel_nominal": 24.6,
+        "slot_arm_to_tip": 55.0,
+        "reach_to_seat": 140.0,
+        "reach_overall": 159.7,
+        "bar_across_spokes": 16.0,
+        "bar_along_load": 38.0,
+        "overall_x": 107.0,
+        "plate_w": 126.9,
+        "plate_h": 80.0
+      }
+    }
   },
-  "loads": {
-    "bike_mass_kg_assumed": 16.0,
-    "contact_angle_from_top_deg": 53.0,
-    "rim_force_n": 260.6,
-    "hook_pull_from_wall_n": 208.1,
-    "hook_down_n": 157.0,
-    "arm_root_stress_mpa": {
-      "static": 2.64,
-      "dynamic": 7.91,
-      "safety_dynamic": 3.8,
-      "safety_creep": 3.0,
-      "layers": "along"
+  "bikes": {
+    "trek_fx72": {
+      "name": "Trek FX 7.2 (700x35)",
+      "hook": "adult",
+      "mass_kg_estimated": 12.5,
+      "wheel": {
+        "bsd_r": 311.0,
+        "bed_r": 300.0,
+        "rim_h": 17.0,
+        "rim_w": 21.0,
+        "spoke_d": 2.0,
+        "flange_r": 22.0,
+        "flange_half": 35.0,
+        "cross": 3,
+        "tire_w": 35.0
+      },
+      "tire_outer_r": 344.2,
+      "hub_mm": [
+        20.6,
+        344.2,
+        -171.6
+      ],
+      "hub_below_middle_screw_row": 171.6,
+      "rim_rests_on_seat_not_tire": {
+        "x+8.2": true,
+        "x+20.6": true,
+        "x+30.1": true
+      },
+      "spoke_gaps_per_side": {
+        "32_spokes": {
+          "best_mm": 11.5,
+          "worst_mm": -0.9
+        },
+        "36_spokes": {
+          "best_mm": 10.2,
+          "worst_mm": -0.9
+        }
+      },
+      "loads": {
+        "bike_mass_kg_assumed": 12.5,
+        "contact_angle_from_top_deg": 52.0,
+        "rim_force_n": 199.3,
+        "hook_pull_from_wall_n": 157.1,
+        "hook_down_n": 122.6,
+        "arm_root_stress_mpa": {
+          "static": 2.02,
+          "dynamic": 6.05,
+          "safety_dynamic": 5.0,
+          "safety_creep": 4.0,
+          "layers": "along"
+        },
+        "bar_root_stress_mpa": {
+          "static": 0.89,
+          "dynamic": 2.67,
+          "safety_dynamic": 5.6,
+          "safety_creep": 4.5,
+          "layers": "across"
+        },
+        "screw_max_tension_n": {
+          "static": 160.6,
+          "dynamic": 481.8,
+          "design_value": 580.0,
+          "safety_static_vs_design_value": 3.6,
+          "safety_dynamic_vs_design_value": 1.2
+        },
+        "screw_shear_each_n": 24.5,
+        "screw_max_tension_by_pattern_static_n": {
+          "three_rows_over_2x4": 102.4,
+          "two_rows_over_2x4_top_and_middle": 160.6
+        },
+        "screw_worst_pattern": "two_rows_over_2x4_top_and_middle",
+        "seat_point_mm": [
+          20.6,
+          107.8,
+          13.0
+        ],
+        "note": "Beam estimates at the arm's root (bending along the print layers) and the bar's root (the bar runs up the print, so its bending pulls layers apart: lower allowables). Dynamic = x3. Screw tension from an elastic bolt group, which ignores the plate pressing on the board (conservative)."
+      }
     },
-    "bar_root_stress_mpa": {
-      "static": 1.13,
-      "dynamic": 3.4,
-      "safety_dynamic": 4.4,
-      "safety_creep": 3.5,
-      "layers": "across"
+    "schwinn_trailway": {
+      "name": "Schwinn Trailway (700x40, suspension fork)",
+      "hook": "adult",
+      "mass_kg_estimated": 16.5,
+      "wheel": {
+        "bsd_r": 311.0,
+        "bed_r": 300.0,
+        "rim_h": 17.0,
+        "rim_w": 21.0,
+        "spoke_d": 2.0,
+        "flange_r": 22.0,
+        "flange_half": 35.0,
+        "cross": 3,
+        "tire_w": 40.0
+      },
+      "tire_outer_r": 349.0,
+      "hub_mm": [
+        20.6,
+        349.0,
+        -165.3
+      ],
+      "hub_below_middle_screw_row": 165.3,
+      "rim_rests_on_seat_not_tire": {
+        "x+10.7": true,
+        "x+20.6": true,
+        "x+30.1": true
+      },
+      "spoke_gaps_per_side": {
+        "36_spokes": {
+          "best_mm": 10.7,
+          "worst_mm": -0.9
+        }
+      },
+      "loads": {
+        "bike_mass_kg_assumed": 16.5,
+        "contact_angle_from_top_deg": 53.6,
+        "rim_force_n": 272.8,
+        "hook_pull_from_wall_n": 219.6,
+        "hook_down_n": 161.9,
+        "arm_root_stress_mpa": {
+          "static": 2.76,
+          "dynamic": 8.27,
+          "safety_dynamic": 3.6,
+          "safety_creep": 2.9,
+          "layers": "along"
+        },
+        "bar_root_stress_mpa": {
+          "static": 1.17,
+          "dynamic": 3.5,
+          "safety_dynamic": 4.3,
+          "safety_creep": 3.4,
+          "layers": "across"
+        },
+        "screw_max_tension_n": {
+          "static": 213.4,
+          "dynamic": 640.2,
+          "design_value": 580.0,
+          "safety_static_vs_design_value": 2.7,
+          "safety_dynamic_vs_design_value": 0.9
+        },
+        "screw_shear_each_n": 32.4,
+        "screw_max_tension_by_pattern_static_n": {
+          "three_rows_over_2x4": 137.5,
+          "two_rows_over_2x4_top_and_middle": 213.4
+        },
+        "screw_worst_pattern": "two_rows_over_2x4_top_and_middle",
+        "seat_point_mm": [
+          20.6,
+          107.5,
+          12.7
+        ],
+        "note": "Beam estimates at the arm's root (bending along the print layers) and the bar's root (the bar runs up the print, so its bending pulls layers apart: lower allowables). Dynamic = x3. Screw tension from an elastic bolt group, which ignores the plate pressing on the board (conservative)."
+      }
     },
-    "screw_max_tension_n": {
-      "static": 206.4,
-      "dynamic": 619.1,
-      "design_value": 580.0,
-      "safety_static_vs_design_value": 2.8,
-      "safety_dynamic_vs_design_value": 0.9
+    "nishiki_20": {
+      "name": "Nishiki kids' 20 in (20x1.95)",
+      "hook": "kids",
+      "mass_kg_estimated": 12.0,
+      "wheel": {
+        "bsd_r": 203.0,
+        "bed_r": 195.0,
+        "rim_h": 13.0,
+        "rim_w": 22.0,
+        "spoke_d": 2.0,
+        "flange_r": 20.0,
+        "flange_half": 30.0,
+        "cross": 2,
+        "tire_w": 50.0
+      },
+      "tire_outer_r": 250.5,
+      "hub_mm": [
+        24.6,
+        250.5,
+        -142.9
+      ],
+      "hub_below_middle_screw_row": 142.9,
+      "rim_rests_on_seat_not_tire": {
+        "x+15.7": true,
+        "x+24.6": true,
+        "x+32.6": true
+      },
+      "spoke_gaps_per_side": {
+        "28_spokes": {
+          "best_mm": 11.2,
+          "worst_mm": -0.9
+        },
+        "36_spokes": {
+          "best_mm": 6.6,
+          "worst_mm": -0.9
+        }
+      },
+      "loads": {
+        "bike_mass_kg_assumed": 12.0,
+        "contact_angle_from_top_deg": 36.2,
+        "rim_force_n": 145.9,
+        "hook_pull_from_wall_n": 86.2,
+        "hook_down_n": 117.7,
+        "arm_root_stress_mpa": {
+          "static": 1.78,
+          "dynamic": 5.34,
+          "safety_dynamic": 5.6,
+          "safety_creep": 4.5,
+          "layers": "along"
+        },
+        "bar_root_stress_mpa": {
+          "static": 1.73,
+          "dynamic": 5.18,
+          "safety_dynamic": 2.9,
+          "safety_creep": 2.3,
+          "layers": "across"
+        },
+        "screw_max_tension_n": {
+          "static": 172.4,
+          "dynamic": 517.2,
+          "design_value": 580.0,
+          "safety_static_vs_design_value": 3.4,
+          "safety_dynamic_vs_design_value": 1.1
+        },
+        "screw_shear_each_n": 23.5,
+        "screw_max_tension_by_pattern_static_n": {
+          "three_rows_over_2x4": 98.5,
+          "two_rows_over_2x4_top_and_middle": 172.4
+        },
+        "screw_worst_pattern": "two_rows_over_2x4_top_and_middle",
+        "seat_point_mm": [
+          24.6,
+          135.3,
+          14.5
+        ],
+        "note": "Beam estimates at the arm's root (bending along the print layers) and the bar's root (the bar runs up the print, so its bending pulls layers apart: lower allowables). Dynamic = x3. Screw tension from an elastic bolt group, which ignores the plate pressing on the board (conservative)."
+      }
     },
-    "screw_shear_each_n": 31.4,
-    "screw_max_tension_by_pattern_static_n": {
-      "three_rows_over_2x4": 132.4,
-      "two_rows_over_2x4_top_and_middle": 206.4
-    },
-    "screw_worst_pattern": "two_rows_over_2x4_top_and_middle",
-    "seat_point_mm": [
-      20.6,
-      107.6,
-      12.8
-    ],
-    "note": "Beam estimates at the arm's root (bending along the print layers) and the bar's root (the bar runs up the print, so its bending pulls layers apart: lower allowables). Dynamic = x3. Screw tension from an elastic bolt group, which ignores the plate pressing on the board (conservative)."
+    "dynacraft_16": {
+      "name": "Dynacraft kids' 16 in (16x2.125, training wheels)",
+      "hook": "kids",
+      "mass_kg_estimated": 9.5,
+      "wheel": {
+        "bsd_r": 152.5,
+        "bed_r": 145.0,
+        "rim_h": 12.0,
+        "rim_w": 22.0,
+        "spoke_d": 2.0,
+        "flange_r": 20.0,
+        "flange_half": 28.0,
+        "cross": 1,
+        "tire_w": 54.0
+      },
+      "tire_outer_r": 203.8,
+      "hub_mm": [
+        24.6,
+        203.8,
+        -113.2
+      ],
+      "hub_below_middle_screw_row": 113.2,
+      "rim_rests_on_seat_not_tire": {
+        "x+17.6": true,
+        "x+24.6": true,
+        "x+32.6": true
+      },
+      "spoke_gaps_per_side": {
+        "20_spokes": {
+          "best_mm": 11.6,
+          "worst_mm": -0.8
+        },
+        "28_spokes": {
+          "best_mm": 4.2,
+          "worst_mm": -0.9
+        }
+      },
+      "loads": {
+        "bike_mass_kg_assumed": 9.5,
+        "contact_angle_from_top_deg": 27.8,
+        "rim_force_n": 105.3,
+        "hook_pull_from_wall_n": 49.0,
+        "hook_down_n": 93.2,
+        "arm_root_stress_mpa": {
+          "static": 1.24,
+          "dynamic": 3.73,
+          "safety_dynamic": 8.1,
+          "safety_creep": 6.4,
+          "layers": "along"
+        },
+        "bar_root_stress_mpa": {
+          "static": 1.25,
+          "dynamic": 3.74,
+          "safety_dynamic": 4.0,
+          "safety_creep": 3.2,
+          "layers": "across"
+        },
+        "screw_max_tension_n": {
+          "static": 134.2,
+          "dynamic": 402.6,
+          "design_value": 580.0,
+          "safety_static_vs_design_value": 4.3,
+          "safety_dynamic_vs_design_value": 1.4
+        },
+        "screw_shear_each_n": 18.6,
+        "screw_max_tension_by_pattern_static_n": {
+          "three_rows_over_2x4": 74.5,
+          "two_rows_over_2x4_top_and_middle": 134.2
+        },
+        "screw_worst_pattern": "two_rows_over_2x4_top_and_middle",
+        "seat_point_mm": [
+          24.6,
+          136.3,
+          15.1
+        ],
+        "note": "Beam estimates at the arm's root (bending along the print layers) and the bar's root (the bar runs up the print, so its bending pulls layers apart: lower allowables). Dynamic = x3. Screw tension from an elastic bolt group, which ignores the plate pressing on the board (conservative)."
+      }
+    }
+  },
+  "layout_x_mm": {
+    "schwinn_trailway": 0.0,
+    "nishiki_20": 457.2,
+    "trek_fx72": 914.4,
+    "dynacraft_16": 1371.6
   },
   "params_mm": {
     "tire_max_w": 50.0,
     "rim_max_w": 30.0,
     "plate_t": 12.0,
     "plate_z": 40.0,
+    "plate_chamfer": 10.0,
     "screw_hole_d": 6.0,
     "head_d": 12.7,
     "arm_w": 28.0,
@@ -208,11 +448,57 @@
     "overall_x": 106.0,
     "plate_w": 126.9,
     "plate_h": 80.0,
-    "bike_mass_kg": 16.0,
-    "contact_angle_deg": 53.0,
-    "hub_below_screws": 167.8,
-    "pull_n": 208.1,
-    "screw_tension_n": 206.4,
-    "bar_safety_dynamic": 4.4
+    "kids_tire_max_w": 58.0,
+    "kids_rim_max_w": 28.0,
+    "kids_plate_t": 12.0,
+    "kids_plate_z": 40.0,
+    "kids_plate_chamfer": 10.0,
+    "kids_screw_hole_d": 6.0,
+    "kids_head_d": 12.7,
+    "kids_arm_w": 28.0,
+    "kids_arm_root_z": -40.0,
+    "kids_arm_taper_end_y": 95.0,
+    "kids_seat_y": 140.0,
+    "kids_seat_z": 8.0,
+    "kids_seat_r": 8.0,
+    "kids_bar_len": 22.0,
+    "kids_bar_angle_deg": 32.0,
+    "kids_tip_rise": 18.0,
+    "kids_tip_top": 6.0,
+    "kids_side_gap": 6.0,
+    "kids_x_arm_inner_face": -10.3,
+    "kids_x_wheel_nominal": 24.6,
+    "kids_slot_arm_to_tip": 55.0,
+    "kids_reach_to_seat": 140.0,
+    "kids_reach_overall": 159.7,
+    "kids_bar_across_spokes": 16.0,
+    "kids_bar_along_load": 38.0,
+    "kids_overall_x": 107.0,
+    "kids_plate_w": 126.9,
+    "kids_plate_h": 80.0,
+    "trek_fx72_mass_kg": 12.5,
+    "trek_fx72_contact_deg": 52.0,
+    "trek_fx72_screw_n": 102.4,
+    "trek_fx72_spoke_gap": 10.2,
+    "trek_fx72_hub_below": 171.6,
+    "trek_fx72_x": 914.4,
+    "schwinn_trailway_mass_kg": 16.5,
+    "schwinn_trailway_contact_deg": 53.6,
+    "schwinn_trailway_screw_n": 137.5,
+    "schwinn_trailway_spoke_gap": 10.7,
+    "schwinn_trailway_hub_below": 165.3,
+    "schwinn_trailway_x": 0.0,
+    "nishiki_20_mass_kg": 12.0,
+    "nishiki_20_contact_deg": 36.2,
+    "nishiki_20_screw_n": 98.5,
+    "nishiki_20_spoke_gap": 6.6,
+    "nishiki_20_hub_below": 142.9,
+    "nishiki_20_x": 457.2,
+    "dynacraft_16_mass_kg": 9.5,
+    "dynacraft_16_contact_deg": 27.8,
+    "dynacraft_16_screw_n": 74.5,
+    "dynacraft_16_spoke_gap": 4.2,
+    "dynacraft_16_hub_below": 113.2,
+    "dynacraft_16_x": 1371.6
   }
 }

@@ -42,9 +42,42 @@ RENDERS = HERE / "renders"
 BOARD = pb.DEFAULT_BOARD         # the owner's pegboard (3/16 in hardboard, 1/4 in holes on 1 in centres)
 STUD_2X4 = {"depth": 38.1, "face": 88.9}   # assumed: 2x4 flat behind the pegboard (wide face toward it), centred on the screw rows
 
-# --- Not measured yet (see README "Open questions") ------------------------------------------------------------------
-MEASURED = {}
-BIKE_MASS_KG = 16.0              # assumed; do NOT hang an e-bike on it without redoing the numbers
+# --- Hook variants (model.py HookParams overrides) -------------------------------------------------------------------
+HOOKS = {
+    # 700c hybrids. The bar is 26 mm across the spoke gap, 44 mm deep along the load.
+    "adult": {},
+    # 16 and 20 in kids' wheels: their spokes are much closer together, so the bar is slimmer (16 mm across the gap, 38 deep). The seat sits
+    # further out, so these small wheels hang lower and their tires clear the bottom of the plate. Kids' bikes are light,
+    # so the slimmer bar still has the margin (checked below, per bike).
+    "kids": {"tire_max_w": 58.0, "rim_max_w": 28.0, "seat_y": 140.0, "seat_r": 8.0, "bar_len": 22.0,
+             "bar_angle_deg": 32.0, "tip_top": 6.0, "seat_z": 8.0},
+}
+
+# --- The owner's bikes (photos 2026-11-11; weights and wheel details estimated from the models, not measured) ---------
+# Wheels: bsd_r = half the bead-seat diameter (ISO: 622 for 700c, 406 for 20 in, 305 for 16 in); bed_r = rim spoke-bed
+# radius (~ERD / 2). Spoke counts aren't readable in the photos, so each wheel is checked with the likely counts.
+WHEEL_700C = {"bsd_r": 311.0, "bed_r": 300.0, "rim_h": 17.0, "rim_w": 21.0, "spoke_d": 2.0,
+              "flange_r": 22.0, "flange_half": 35.0, "cross": 3}
+WHEEL_20 = {"bsd_r": 203.0, "bed_r": 195.0, "rim_h": 13.0, "rim_w": 22.0, "spoke_d": 2.0,
+            "flange_r": 20.0, "flange_half": 30.0, "cross": 2}
+WHEEL_16 = {"bsd_r": 152.5, "bed_r": 145.0, "rim_h": 12.0, "rim_w": 22.0, "spoke_d": 2.0,
+            "flange_r": 20.0, "flange_half": 28.0, "cross": 1}
+BIKES = {
+    "trek_fx72": {"name": "Trek FX 7.2 (700x35)", "hook": "adult", "mass_kg": 12.5,
+                  "wheel": {**WHEEL_700C, "tire_w": 35.0}, "spokes": [32, 36]},
+    "schwinn_trailway": {"name": "Schwinn Trailway (700x40, suspension fork)", "hook": "adult", "mass_kg": 16.5,
+                         "wheel": {**WHEEL_700C, "tire_w": 40.0}, "spokes": [36]},
+    "nishiki_20": {"name": "Nishiki kids' 20 in (20x1.95)", "hook": "kids", "mass_kg": 12.0,
+                   "wheel": {**WHEEL_20, "tire_w": 50.0}, "spokes": [28, 36]},
+    "dynacraft_16": {"name": "Dynacraft kids' 16 in (16x2.125, training wheels)", "hook": "kids", "mass_kg": 9.5,
+                     "wheel": {**WHEEL_16, "tire_w": 54.0}, "spokes": [20, 28]},
+}
+# Suggested layout along the wall (hook X positions, mm, multiples of the 1 in hole pitch). Adult and kids' bikes alternate:
+# a kid's handlebar hangs ~0.25 m closer to the wall than an adult's, so the two can overlap side to side. 18 in also keeps
+# an adult's pedals clear of the kid's bike next to it (15 in was tight).
+LAYOUT_X = {"schwinn_trailway": 0.0, "nishiki_20": 457.2, "trek_fx72": 914.4, "dynacraft_16": 1371.6}   # 18 in apart
+SECTION_BIKES = ("schwinn_trailway", "dynacraft_16")   # side/plan section render per hook variant
+MIN_SPOKE_GAP = 4.0              # mm per side, at the best wheel rotation (you turn the wheel to line up a gap as you hang it)
 DYNAMIC_FACTOR = 3.0             # lifting the bike on, knocks
 
 # Printed PETG. Along the layers (arm) vs across them (the bar runs up the print, so its bending pulls layers apart).
@@ -52,21 +85,19 @@ PETG_ALONG_MPA, PETG_ALONG_SUSTAINED_MPA = 30.0, 8.0
 PETG_ACROSS_MPA, PETG_ACROSS_SUSTAINED_MPA = 15.0, 4.0
 SCREW_WITHDRAWAL_N = 580.0       # #10 wood screw, ~33 mm into SPF: design (allowable) value, ~1/5 of ultimate
 
-# Wheel (700c / 29er rims share a 622 mm bead seat). Tire outer radius ~ 311 + 0.95 * width.
-WHEEL = {"bed_r": 300.0, "rim_h": 17.0, "rim_w": 21.0, "tire_w": 38.0, "spokes": 32, "spoke_d": 2.0,
-         "flange_r": 22.0, "flange_half": 35.0}
-
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Wheel
 # ---------------------------------------------------------------------------------------------------------------------
 
 def tire_outer_r(w):
-    return 311.0 + 0.95 * w["tire_w"]
+    return w["bsd_r"] + 0.95 * w["tire_w"]
 
 
 def wheel_parts(w, hub, phase=0.0):
-    """Rim + tire and spokes in world coordinates. The wheel is straight: its plane is x = hub[0], axle along X."""
+    """Rim + tire and spokes in world coordinates. The wheel is straight: its plane is x = hub[0], axle along X.
+    Spokes are laced `cross`-cross (0 = radial): rim holes alternate flanges, and on each flange the spokes alternate
+    leading/trailing, each reaching the hub `cross` flange holes round from its rim hole."""
     R = np.array([[0, 0, 1], [1, 0, 0], [0, 1, 0]], dtype=float)   # local (x, y in the wheel plane; z axle) -> world (Y, Z, X)
     T = np.eye(4)
     T[:3, :3] = R
@@ -77,12 +108,14 @@ def wheel_parts(w, hub, phase=0.0):
     rim.apply_transform(T)
     tire.apply_transform(T)
     spokes, segs = [], []
-    for i in range(w["spokes"]):
-        a = phase + 2 * math.pi * i / w["spokes"]
-        d = np.array([math.cos(a), math.sin(a), 0.0])
+    n = w["spokes"]
+    for i in range(n):
+        a = phase + 2 * math.pi * i / n
         side = 1 if i % 2 else -1
-        q0 = R @ (d * w["flange_r"] + np.array([0, 0, side * w["flange_half"]])) + hub
-        q1 = R @ (d * (w["bed_r"] + 2)) + hub
+        lead = 1 if (i // 2) % 2 else -1
+        ah = a + lead * w["cross"] * 4 * math.pi / n                # one flange hole = 2 pi / (n / 2)
+        q0 = R @ np.array([w["flange_r"] * math.cos(ah), w["flange_r"] * math.sin(ah), side * w["flange_half"]]) + hub
+        q1 = R @ np.array([(w["bed_r"] + 2) * math.cos(a), (w["bed_r"] + 2) * math.sin(a), 0.0]) + hub
         segs.append((q0, q1))
         spokes.append(trimesh.creation.cylinder(radius=w["spoke_d"] / 2, segment=[q0, q1], sections=8))
     return rim, tire, trimesh.util.concatenate(spokes), segs
@@ -99,7 +132,7 @@ def hang(hook_w, w, x_wheel, seat, with_tire=True):
     y = tire_outer_r(w)
     cy, cz, cr = seat
     est = cz - math.sqrt((w["bed_r"] - cr) ** 2 - (y - cy) ** 2)   # seat edge just inside the rim's inner surface
-    lo, hi = est - 10.0, est + 10.0
+    lo, hi = est - 10.0, est + 3.0
 
     def hits(z):
         rim, tire, _, _ = wheel_parts(w, np.array([x_wheel, y, z]))
@@ -119,12 +152,12 @@ def spoke_gaps(hook_w, w, hub, n_phase=24):
     tree = cKDTree(hook_w.sample(60000))
     res = []
     for k in range(n_phase):
-        phase = (4 * math.pi / w["spokes"]) * k / n_phase        # the pattern repeats every 2 spokes
+        phase = (8 * math.pi / w["spokes"]) * k / n_phase        # the lacing pattern repeats every 4 spokes
         _, _, _, segs = wheel_parts(w, hub, phase)
         dmin = np.inf
         for q0, q1 in segs:
             line = q0 + (q1 - q0) * np.linspace(0, 1, 500)[:, None]
-            near = np.linalg.norm(line - hub, axis=1) > w["bed_r"] - 160
+            near = np.linalg.norm(line - hub, axis=1) > w["bed_r"] * 0.4
             if near.any():
                 dmin = min(dmin, tree.query(line[near])[0].min() - w["spoke_d"] / 2)
         res.append((phase, dmin))
@@ -135,9 +168,9 @@ def spoke_gaps(hook_w, w, hub, n_phase=24):
 # Loads
 # ---------------------------------------------------------------------------------------------------------------------
 
-def loads(p: HookParams, hub, x_load):
+def loads(p: HookParams, hub, x_load, mass_kg):
     """The rim pushes on the seat along the line to the hub (radial), so its vertical part is the bike's weight."""
-    W = BIKE_MASS_KG * 9.81
+    W = mass_kg * 9.81
     cy, cz = p.contact_centre
     phi = math.atan2(hub[1] - cy, cz - hub[2])           # angle of the contact from the top of the wheel, toward the wall
     P = W * math.tan(phi)                                # pull on the hook, away from the wall
@@ -177,7 +210,7 @@ def loads(p: HookParams, hub, x_load):
     sc = np.array(p.install_patterns[worst])
     shear = W / len(sc)
     return {
-        "bike_mass_kg_assumed": BIKE_MASS_KG,
+        "bike_mass_kg_assumed": mass_kg,
         "contact_angle_from_top_deg": round(math.degrees(phi), 1),
         "rim_force_n": round(N, 1),
         "hook_pull_from_wall_n": round(P, 1),
@@ -206,18 +239,18 @@ def loads(p: HookParams, hub, x_load):
 # Scene: pegboard, 2x4, wall (world)
 # ---------------------------------------------------------------------------------------------------------------------
 
-def pegboard_patch():
-    m = pb.board_mesh(BOARD, rows=range(-9, 4), cols=range(-5, 8))
+def pegboard_patch(cols=range(-5, 8)):
+    m = pb.board_mesh(BOARD, rows=range(-10, 4), cols=cols, sections=8)
     m.vertices = m.vertices[:, [2, 0, 1]]                # board frame (x out, y up, z across) -> world (X, Y, Z)
     return m
 
 
 def stud_and_wall():
     t = BOARD.thickness
-    stud = trimesh.creation.box(extents=[400, STUD_2X4["depth"], STUD_2X4["face"]])
-    stud.apply_translation([30, -t - STUD_2X4["depth"] / 2, 0])
-    wall = trimesh.creation.box(extents=[500, 12.7, 700])
-    wall.apply_translation([30, -t - STUD_2X4["depth"] - 6.35, -150])
+    stud = trimesh.creation.box(extents=[1900, STUD_2X4["depth"], STUD_2X4["face"]])
+    stud.apply_translation([700, -t - STUD_2X4["depth"] / 2, 0])
+    wall = trimesh.creation.box(extents=[2000, 12.7, 700])
+    wall.apply_translation([700, -t - STUD_2X4["depth"] - 6.35, -150])
     return stud, wall
 
 
@@ -231,7 +264,7 @@ def screw_access(p: HookParams, hook_w):
     return round(blocked, 1)
 
 
-def sections_png(p, hook_w, rim, tire, spokes, board, stud, wall, hub, path):
+def sections_png(p, hook_w, rim, tire, spokes, board, stud, wall, hub, path, title):
     fig, axes = plt.subplots(1, 2, figsize=(17, 8))
     ax = axes[0]
     for m, col, lab in [(hook_w, "black", "hook"), (board, "tab:olive", "pegboard"), (stud, "tab:brown", "2x4"),
@@ -264,94 +297,124 @@ def sections_png(p, hook_w, rim, tire, spokes, board, stud, wall, hub, path):
     ax.set_xlabel("X: along the wall (mm)")
     ax.set_ylabel("Y: out from the pegboard (mm)")
     ax.set_title(f"plan section through the seat (Z = {z0:g})")
-    fig.suptitle("bike-hook v2: wheel straight, tire on the pegboard, rim on the bar", fontsize=14)
+    fig.suptitle(title, fontsize=14)
     fig.savefig(path, dpi=75, bbox_inches="tight")
     plt.close(fig)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 
+def build_variant(name, p: HookParams):
+    hook = build_hook(p)
+    assert hook.is_valid and len(hook.solids()) == 1, name
+    printed = print_pose(hook, p)
+    export_step(printed, str(OUT / f"bike-hook-{name}.step"))
+    mesh = mk.cad_to_mesh(printed)
+    info = mk.report(mesh)
+    assert info["watertight"], f"{name}: print mesh is not watertight"
+    mesh.export(OUT / f"bike-hook-{name}.stl")
+    hook_w = mk.cad_to_mesh(hook)
+    access = screw_access(p, hook_w)
+    assert access < 1.0, f"{name}: a screw can't be driven straight in: {access} mm3 blocked"
+    return mesh, hook_w, {"print": info, "screw_access_blocked_mm3": access, "params_mm": p.report_params()}
+
+
+def check_bike(key, bike, p: HookParams, hook_w):
+    """Hang this bike's front wheel on its hook: rest position, rim (not tire) on the seat, spoke gaps, loads."""
+    seat = (*p.contact_centre, p.contact_r)
+    w0 = {**bike["wheel"], "spokes": bike["spokes"][0]}
+    hub = hang(hook_w, w0, p.x_wheel, seat)
+    tire_ok = {}
+    for xw in (p.x_arm_in + w0["tire_w"] / 2 + 1, p.x_wheel, p.x_tip - w0["rim_w"] / 2 - 1):   # against arm, centred, tip
+        tire_ok[f"x{xw:+.1f}"] = bool(abs(hang(hook_w, w0, xw, seat)[2] - hang(hook_w, w0, xw, seat, with_tire=False)[2]) < 0.5)
+    assert all(tire_ok.values()), f"{key}: the tire, not the rim, rests on the hook: {tire_ok}"
+    gaps, best_phase = {}, None
+    for n in bike["spokes"]:
+        best, worst = spoke_gaps(hook_w, {**bike["wheel"], "spokes": n}, hub)
+        gaps[f"{n}_spokes"] = {"best_mm": round(float(best[1]), 1), "worst_mm": round(float(worst[1]), 1)}
+        assert best[1] >= MIN_SPOKE_GAP, f"{key}: bar doesn't fit between {n} spokes ({best[1]:.1f} mm)"
+        if best_phase is None:
+            best_phase = best[0]
+    ld = loads(p, hub, p.x_wheel, bike["mass_kg"])
+    assert ld["contact_angle_from_top_deg"] < 62, f"{key}: rim sits too far round the wheel: {ld}"
+    assert ld["arm_root_stress_mpa"]["safety_creep"] >= 2 and ld["bar_root_stress_mpa"]["safety_creep"] >= 2, (key, ld)
+    return hub, best_phase, {
+        "name": bike["name"], "hook": bike["hook"], "mass_kg_estimated": bike["mass_kg"],
+        "wheel": bike["wheel"], "tire_outer_r": round(tire_outer_r(bike["wheel"]), 1),
+        "hub_mm": [round(float(v), 1) for v in hub], "hub_below_middle_screw_row": round(float(-hub[2]), 1),
+        "rim_rests_on_seat_not_tire": tire_ok, "spoke_gaps_per_side": gaps, "loads": ld}
+
+
 def main():
     OUT.mkdir(exist_ok=True)
     RENDERS.mkdir(exist_ok=True)
-    p = HookParams(**MEASURED)
-
-    hook = build_hook(p)
-    assert hook.is_valid and len(hook.solids()) == 1
-    printed = print_pose(hook, p)
-    export_step(printed, str(OUT / "bike-hook.step"))
-    mesh = mk.cad_to_mesh(printed)
-    info = mk.report(mesh)
-    assert info["watertight"], "print mesh is not watertight"
-    mesh.export(OUT / "bike-hook.stl")
-
-    hook_w = mk.cad_to_mesh(hook)
-    board = pegboard_patch()
+    for old in ("bike-hook.stl", "bike-hook.step"):
+        (OUT / old).unlink(missing_ok=True)
+    for old in ("side-section.png", "model.png", "sections.png", "asm-hook.stl", "ref-wheel.stl", "ref-spokes.stl"):
+        (RENDERS / old).unlink(missing_ok=True)
+    board = pegboard_patch(cols=range(-12, 62))
     stud, wall = stud_and_wall()
-    access = screw_access(p, hook_w)
-    assert access < 1.0, f"a screw can't be driven straight in: {access} mm3 blocked"
-
-    seat = (*p.contact_centre, p.contact_r)
-    # Wheel: hang it, then check the rim (not the tire) is what rests on the hook, for this tire and the widest one.
-    hub = hang(hook_w, WHEEL, p.x_wheel, seat)
-    hub_rim_only = hang(hook_w, WHEEL, p.x_wheel, seat, with_tire=False)
-    wide = {**WHEEL, "tire_w": p.tire_max_w, "rim_w": p.rim_max_w}
-    tire_ok = {}
-    for name, w in [("this_tire", WHEEL), ("widest_tire", wide)]:
-        # wheel slid against the arm (its tire touches it), centred, and against the tip (its rim touches it)
-        for xw in (p.x_arm_in + w["tire_w"] / 2 + 1, p.x_wheel, p.x_tip - w["rim_w"] / 2 - 1):
-            h_all, h_rim = hang(hook_w, w, xw, seat), hang(hook_w, w, xw, seat, with_tire=False)
-            tire_ok[f"{name}_x{xw:+.1f}"] = bool(abs(h_all[2] - h_rim[2]) < 0.5)
-    assert all(tire_ok.values()), f"the tire, not the rim, rests on the hook: {tire_ok}"
-    best, worst = spoke_gaps(hook_w, WHEEL, hub)
-    rim, tire, spokes, _ = wheel_parts(WHEEL, hub, best[0])
-    ld = loads(p, hub, p.x_wheel)
-    assert ld["contact_angle_from_top_deg"] < 62, f"rim sits too far round the wheel: {ld}"
-    assert ld["arm_root_stress_mpa"]["safety_creep"] >= 2 and ld["bar_root_stress_mpa"]["safety_creep"] >= 2, ld
-
-    wheel = {**WHEEL, "tire_outer_r": round(tire_outer_r(WHEEL), 1), "hub_mm": [round(float(v), 1) for v in hub],
-             "hub_below_middle_screw_row": round(float(-hub[2]), 1),
-             "rim_rests_on_seat_not_tire": tire_ok,
-             "spoke_gap_best_phase_mm": round(float(best[1]), 1),
-             "spoke_gap_worst_phase_mm": round(float(worst[1]), 1),
-             "tire_touches_pegboard": True}
     t = BOARD.thickness
+
+    variants, hooks = {}, {}
+    for name, kw in HOOKS.items():
+        p = HookParams(**kw)
+        mesh, hook_w, info = build_variant(name, p)
+        variants[name], hooks[name] = info, (p, hook_w)
+        render_sheet(mesh, str(RENDERS / f"model-{name}.png"),
+                     title=f"bike-hook ({name}): print pose (on the arm's side, no supports), mm",
+                     labels=[f"{name} hook"], sections_y=(0.0,), sections_x=(0.0,))
+
+    bikes, scene, flat = {}, [], {}
+    for key, bike in BIKES.items():
+        p, hook_w = hooks[bike["hook"]]
+        hub, phase, res = check_bike(key, bike, p, hook_w)
+        bikes[key] = res
+        dx = LAYOUT_X[key]
+        rim, tire, spokes, _ = wheel_parts({**bike["wheel"], "spokes": bike["spokes"][0]}, hub, phase)
+        for m in (rim, tire, spokes):
+            m.apply_translation([dx, 0, 0])
+        h = hook_w.copy()
+        h.apply_translation([dx, 0, 0])
+        h.export(RENDERS / f"asm-hook-{key}.stl")
+        trimesh.util.concatenate([rim, tire]).export(RENDERS / f"ref-wheel-{key}.stl")
+        spokes.export(RENDERS / f"ref-spokes-{key}.stl")
+        scene += [h, rim, tire, spokes]
+        ld = res["loads"]
+        flat.update({f"{key}_mass_kg": bike["mass_kg"], f"{key}_contact_deg": ld["contact_angle_from_top_deg"],
+                     f"{key}_screw_n": ld["screw_max_tension_by_pattern_static_n"]["three_rows_over_2x4"],
+                     f"{key}_spoke_gap": min(g["best_mm"] for g in res["spoke_gaps_per_side"].values()),
+                     f"{key}_hub_below": res["hub_below_middle_screw_row"], f"{key}_x": dx})
+        if key in SECTION_BIKES:
+            rim0, tire0, sp0, _ = wheel_parts({**bike["wheel"], "spokes": bike["spokes"][0]}, hub, phase)
+            sections_png(p, hook_w, rim0, tire0, sp0, board, stud, wall, hub, RENDERS / f"sections-{bike['hook']}.png",
+                         f"{bike['hook']} hook with the {bike['name']}: wheel straight, tire on the pegboard, rim on the bar")
+
     report = {
-        "scale_status": "designed (no scan). Pegboard = owner's (3.94 mm); 2x4, bike weight and wheel are assumed (see README)",
-        "print": info,
+        "scale_status": "designed (no scan). Pegboard = owner's (3.94 mm), 2x4 flat behind it (3 hole rows show wood). "
+                        "Bike weights and wheel details are estimates from the bike models (see README)",
         "print_orientation": "on the arm's outer side (world X up); no supports; tip leans out at 45 deg",
-        "screw_access_blocked_mm3": access,
-        "screws": {"positions_xz_mm": p.screws, "install_patterns": p.install_patterns,
-                   "length_note": f"#10 or #12 x 2 in: {50.8 - p.plate_t - t:.0f} mm into the 2x4 "
-                                  f"(plate {p.plate_t:g} + pegboard {t:g})"},
-        "wheel_fit": wheel,
-        "loads": ld,
-        "params_mm": {**p.report_params(), "bike_mass_kg": BIKE_MASS_KG,
-                      "contact_angle_deg": ld["contact_angle_from_top_deg"],
-                      "hub_below_screws": wheel["hub_below_middle_screw_row"],
-                      "pull_n": ld["hook_pull_from_wall_n"],
-                      "screw_tension_n": ld["screw_max_tension_n"]["static"],
-                      "bar_safety_dynamic": ld["bar_root_stress_mpa"]["safety_dynamic"]},
+        "screws": {"install": "three hole rows are over the 2x4: use all 8 holes",
+                   "length_note": f"#10 or #12 x 2 in: {50.8 - HookParams().plate_t - t:.0f} mm into the 2x4"},
+        "variants": variants,
+        "bikes": bikes,
+        "layout_x_mm": LAYOUT_X,
+        "params_mm": {**variants["adult"]["params_mm"], **{f"kids_{k}": v for k, v in variants["kids"]["params_mm"].items()},
+                      **flat},
     }
     (OUT / "report.json").write_text(json.dumps(report, indent=2) + "\n")
-    print(json.dumps({k: v for k, v in report.items() if k != "params_mm"}, indent=2))
+    print(json.dumps({k: {b: {"angle": v["loads"]["contact_angle_from_top_deg"], "gaps": v["spoke_gaps_per_side"],
+                             "screw": v["loads"]["screw_max_tension_n"], "arm": v["loads"]["arm_root_stress_mpa"],
+                             "bar": v["loads"]["bar_root_stress_mpa"], "hub_below": v["hub_below_middle_screw_row"]}
+                         for b, v in bikes.items()} for k in ["bikes"]}, indent=1))
+    print(json.dumps({n: v["print"] for n, v in variants.items()}, indent=1))
 
-    hook_w.export(RENDERS / "asm-hook.stl")
     board.export(RENDERS / "ref-pegboard.stl")
     stud.export(RENDERS / "ref-2x4.stl")
-    trimesh.util.concatenate([rim, tire]).export(RENDERS / "ref-wheel.stl")
-    spokes.export(RENDERS / "ref-spokes.stl")
-    for old in ("side-section.png",):
-        (RENDERS / old).unlink(missing_ok=True)
-
-    render_sheet(mesh, str(RENDERS / "model.png"), title="bike-hook v2: print pose (on the arm's side, no supports), mm",
-                 labels=["printed hook"], sections_y=(0.0,), sections_x=(0.0,))
-    scene = trimesh.util.concatenate([hook_w, board, rim, tire, spokes]).slice_plane([0, 0, hub[2] - 120], [0, 0, 1])
-    render_sheet(scene, str(RENDERS / "in-use.png"),
-                 title="bike-hook v2 on the pegboard, 700c wheel straight with its tire on the board (X along the wall, Y out, Z up)",
-                 labels=["hook + pegboard + wheel"], sections_y=(), sections_x=())
-    sections_png(p, hook_w, rim, tire, spokes, board, stud, wall, hub, RENDERS / "sections.png")
-
+    full = trimesh.util.concatenate(scene + [board])
+    render_sheet(full.slice_plane([0, 0, -330], [0, 0, 1]), str(RENDERS / "in-use.png"),
+                 title="the four bikes' front wheels on their hooks, as laid out (X along the wall, Y out, Z up)",
+                 labels=["hooks + pegboard + wheels"], sections_y=(), sections_x=())
 
 if __name__ == "__main__":
     main()

@@ -37,6 +37,8 @@ class HookParams:
     # --- plate on the pegboard (screws through pegboard holes into the 2x4; 8 holes in 3 rows, see `screws`) ---
     plate_t: float = 12.0
     plate_z: float = 40.0             # plate spans z = -plate_z .. +plate_z (screw rows at +-PITCH)
+    plate_chamfer: float = 10.0       # 45 deg off the plate's bottom front edge: the tire rests on the board just below it,
+                                      # and on small wheels it curves away from the board fast enough to come close
     screw_hole_d: float = 6.0         # #10 or #12 screws (they also pass the 1/4 in pegboard holes)
     head_d: float = 12.7              # washer/pan head, for the clearance checks
 
@@ -164,6 +166,12 @@ def build_hook(p: HookParams):
         # Plate on the pegboard
         with Locations(Location(((p.x_min + p.x_max_plate) / 2, p.plate_t / 2, 0))):
             Box(p.x_max_plate - p.x_min, p.plate_t, 2 * p.plate_z)
+        c = p.plate_chamfer
+        if c > 0:      # chamfer the bottom front edge (not under the arm, which covers it anyway)
+            with BuildSketch(Plane(origin=(p.x_arm_in, 0, 0), x_dir=(0, 1, 0), z_dir=(1, 0, 0))):
+                Polygon((p.plate_t + 1, -p.plate_z - 1), (p.plate_t + 1, -p.plate_z + c + 1),
+                        (p.plate_t - c - 1, -p.plate_z - 1), align=None)
+            extrude(amount=p.x_max_plate - p.x_arm_in + 1, mode=Mode.SUBTRACT)
 
         # Arm: side profile (Y, Z) extruded along X over the arm's width. Its top is level with the seat's top; it runs
         # out to the bar, which it merges into.
