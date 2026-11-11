@@ -3,7 +3,7 @@
   "print_orientation": "on the arm's outer side (world X up); no supports; tip leans out at 45 deg",
   "screws": {
     "install": "three hole rows are over the 2x4: use all 8 holes",
-    "length_note": "#10 or #12 x 2 in: 35 mm into the 2x4"
+    "length_note": "#10 or #12 x 2 in, heads in the counterbores: 38 mm into the 2x4"
   },
   "variants": {
     "adult": {
@@ -11,13 +11,13 @@
         "extents_mm": [
           145.7,
           80.0,
-          126.9
+          128.4
         ],
-        "faces": 3826,
+        "faces": 9494,
         "watertight": true,
         "winding_consistent": true,
         "euler_number": -14,
-        "volume_cm3": 347.9,
+        "volume_cm3": 346.9,
         "fits_A1_as_is": true,
         "fits_A1_any_axis_order": true,
         "self_intersecting_faces": 0
@@ -28,9 +28,15 @@
         "rim_max_w": 30.0,
         "plate_t": 12.0,
         "plate_z": 40.0,
-        "plate_chamfer": 10.0,
+        "plate_chamfer": 5.0,
+        "plate_corner_r": 10.0,
+        "plate_corner_cut": 8.0,
         "screw_hole_d": 6.0,
         "head_d": 12.7,
+        "cbore_d": 13.6,
+        "cbore_depth": 3.0,
+        "label": "ADULT",
+        "label_size": 8.0,
         "arm_w": 28.0,
         "arm_root_z": -40.0,
         "arm_taper_end_y": 95.0,
@@ -50,7 +56,7 @@
         "bar_across_spokes": 26.0,
         "bar_along_load": 44.0,
         "overall_x": 106.0,
-        "plate_w": 126.9,
+        "plate_w": 128.3,
         "plate_h": 80.0
       }
     },
@@ -59,13 +65,13 @@
         "extents_mm": [
           159.7,
           80.0,
-          126.9
+          128.4
         ],
-        "faces": 3834,
+        "faces": 12086,
         "watertight": true,
         "winding_consistent": true,
         "euler_number": -14,
-        "volume_cm3": 317.7,
+        "volume_cm3": 316.6,
         "fits_A1_as_is": true,
         "fits_A1_any_axis_order": true,
         "self_intersecting_faces": 0
@@ -76,9 +82,15 @@
         "rim_max_w": 28.0,
         "plate_t": 12.0,
         "plate_z": 40.0,
-        "plate_chamfer": 10.0,
+        "plate_chamfer": 5.0,
+        "plate_corner_r": 10.0,
+        "plate_corner_cut": 8.0,
         "screw_hole_d": 6.0,
         "head_d": 12.7,
+        "cbore_d": 13.6,
+        "cbore_depth": 3.0,
+        "label": "KIDS",
+        "label_size": 8.0,
         "arm_w": 28.0,
         "arm_root_z": -40.0,
         "arm_taper_end_y": 95.0,
@@ -98,7 +110,7 @@
         "bar_across_spokes": 16.0,
         "bar_along_load": 38.0,
         "overall_x": 107.0,
-        "plate_w": 126.9,
+        "plate_w": 128.3,
         "plate_h": 80.0
       }
     }
@@ -133,7 +145,7 @@
       },
       "spoke_gaps_per_side": {
         "32_spokes": {
-          "best_mm": 11.5,
+          "best_mm": 11.6,
           "worst_mm": -0.9
         },
         "36_spokes": {
@@ -364,10 +376,10 @@
       "spoke_gaps_per_side": {
         "20_spokes": {
           "best_mm": 11.6,
-          "worst_mm": -0.8
+          "worst_mm": -0.9
         },
         "28_spokes": {
-          "best_mm": 4.2,
+          "best_mm": 4.3,
           "worst_mm": -0.9
         }
       },
@@ -424,9 +436,15 @@
     "rim_max_w": 30.0,
     "plate_t": 12.0,
     "plate_z": 40.0,
-    "plate_chamfer": 10.0,
+    "plate_chamfer": 5.0,
+    "plate_corner_r": 10.0,
+    "plate_corner_cut": 8.0,
     "screw_hole_d": 6.0,
     "head_d": 12.7,
+    "cbore_d": 13.6,
+    "cbore_depth": 3.0,
+    "label": "ADULT",
+    "label_size": 8.0,
     "arm_w": 28.0,
     "arm_root_z": -40.0,
     "arm_taper_end_y": 95.0,
@@ -446,15 +464,21 @@
     "bar_across_spokes": 26.0,
     "bar_along_load": 44.0,
     "overall_x": 106.0,
-    "plate_w": 126.9,
+    "plate_w": 128.3,
     "plate_h": 80.0,
     "kids_tire_max_w": 58.0,
     "kids_rim_max_w": 28.0,
     "kids_plate_t": 12.0,
     "kids_plate_z": 40.0,
-    "kids_plate_chamfer": 10.0,
+    "kids_plate_chamfer": 5.0,
+    "kids_plate_corner_r": 10.0,
+    "kids_plate_corner_cut": 8.0,
     "kids_screw_hole_d": 6.0,
     "kids_head_d": 12.7,
+    "kids_cbore_d": 13.6,
+    "kids_cbore_depth": 3.0,
+    "kids_label": "KIDS",
+    "kids_label_size": 8.0,
     "kids_arm_w": 28.0,
     "kids_arm_root_z": -40.0,
     "kids_arm_taper_end_y": 95.0,
@@ -474,7 +498,7 @@
     "kids_bar_across_spokes": 16.0,
     "kids_bar_along_load": 38.0,
     "kids_overall_x": 107.0,
-    "kids_plate_w": 126.9,
+    "kids_plate_w": 128.3,
     "kids_plate_h": 80.0,
     "trek_fx72_mass_kg": 12.5,
     "trek_fx72_contact_deg": 52.0,
@@ -497,7 +521,7 @@
     "dynacraft_16_mass_kg": 9.5,
     "dynacraft_16_contact_deg": 27.8,
     "dynacraft_16_screw_n": 74.5,
-    "dynacraft_16_spoke_gap": 4.2,
+    "dynacraft_16_spoke_gap": 4.3,
     "dynacraft_16_hub_below": 113.2,
     "dynacraft_16_x": 1371.6
   }

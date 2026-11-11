@@ -1,6 +1,6 @@
 {
   "page_title": "Bike Hook",
-  "title": "Bike hooks v3: the family's four bikes",
+  "title": "Bike hooks v3.1: the family's four bikes",
   "subtitle": "Adult hook (700c) + kids' hook (16/20 in), screwed through the pegboard into the 2x4 · wheels straight, tires on the board · laid out 18 in apart · X along the wall, Y out, Z up · millimetres",
   "meshes": [
     {"path": "renders/asm-hook-schwinn_trailway.stl", "label": "Adult hook · Schwinn Trailway", "style": "solid"},
@@ -36,6 +36,6 @@
     {"label": "Dynacraft: front hub below the 2x4's middle", "param": "dynacraft_16_hub_below"}
   ],
   "scale_note": "Real size. The pegboard is yours; the 2x4 behind it is flat (three hole rows show wood). Bike weights and wheel details are estimates from the models in your photos. Hooks are shown 18 in apart, adult and kids' bikes alternating.",
-  "notes_title": "v3: what changed, and what to check",
-  "notes": "Checked against your four bikes. The 700c hybrids (Trek FX 7.2, Schwinn Trailway) use the adult hook. The kids' 20 in Nishiki and 16 in Dynacraft need their own hook: small wheels have their spokes much closer together, so it has a slimmer bar (16 mm across instead of 26), and its seat sits further out so the small tires hang clear of the plate. Both print on their side with no supports, and both use the same 8-hole plate. Your 2x4 shows wood in three hole rows, so use all 8 screws. Suggested layout: adult, kid, adult, kid, 18 in apart. A kid's handlebar hangs about 25 cm closer to the wall than an adult's, so they can overlap side to side. That needs about 6.5 ft of clear wall. Please check: (1) weigh each bike (stand on a scale holding it, minus your weight), especially the Schwinn; (2) count the front spokes on the two kids' bikes; (3) before screwing anything, hold each bike up where its hook would go and check pedals and bars clear their neighbours."
+  "notes_title": "v3.1: what changed, and what to check",
+  "notes": "v3.1: nicer plates. Rounded corners, chamfered front edges, flush counterbored screw holes (the heads sit in 3 mm recesses), and ADULT or KIDS pressed into the face. Facing the wall, the arm is on the right of each wheel and the bar points left, so you slide a bike on from the left (earlier notes had that backwards). v3: checked against your four bikes. The 700c hybrids (Trek FX 7.2, Schwinn Trailway) use the adult hook. The kids' 20 in Nishiki and 16 in Dynacraft need their own hook: small wheels have their spokes much closer together, so it has a slimmer bar (16 mm across instead of 26), and its seat sits further out so the small tires hang clear of the plate. Both print on their side with no supports, and both use the same 8-hole plate. Your 2x4 shows wood in three hole rows, so use all 8 screws. Suggested layout: adult, kid, adult, kid, 18 in apart. A kid's handlebar hangs about 25 cm closer to the wall than an adult's, so they can overlap side to side. That needs about 6.5 ft of clear wall. Please check: (1) weigh each bike (stand on a scale holding it, minus your weight), especially the Schwinn; (2) count the front spokes on the two kids' bikes; (3) before screwing anything, hold each bike up where its hook would go and check pedals and bars clear their neighbours."
 }

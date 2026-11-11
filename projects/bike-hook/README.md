@@ -20,6 +20,7 @@ straight and the tires on the wall, print without supports on the A1, and instal
 - [x] v2.1 (2026-11-11): middle-row screw holes, so it works whether 2 or 3 hole rows are over the 2x4
 - [x] v3 (2026-11-11): checked against the owner's four bikes (photos in `source/`); kids' variant for 16/20 in wheels;
       the 2x4 shows wood in 3 hole rows, so all 8 screws go in; suggested layout
+- [x] v3.1 (2026-11-11): nicer plate: rounded/cut corners, chamfered front edges, flush counterbored holes, ADULT/KIDS labels
 - [ ] Owner: weigh the bikes, count the kids' front spokes, mock up the layout (see Open questions)
 - [ ] Test print one adult hook, hang the Schwinn (the heaviest), check after a few weeks for any sag
 
@@ -45,7 +46,13 @@ it reached the rim. So:
 
 - **Plate** on the pegboard, with **8 screw holes on pegboard holes in three rows, 1 in apart**. The bar blocks the middle row
   everywhere except past its far end, so the plate reaches one column past the bar for the middle-row hole. Every hole can be
-  driven straight in from the front.
+  driven straight in from the front. The holes are **counterbored** (13.6 mm, 3 mm deep) so washer heads sit flush. They print
+  sideways, so their tops rise at 45° to a short flat that bridges, and they look nearly round from the front. The plate has
+  **rounded corners** away from the arm and a 45° cut on the corner above it (that one prints on the bed). Its front edges have a
+  **5 mm chamfer** all round except on the arm side, which also gives small wheels' tires room just below the plate. "ADULT" or
+  "KIDS" is **pressed into the face** so the two variants can't get mixed up.
+
+  ![the plates](renders/plates.png)
 - **Arm** comes straight out *beside* the wheel, clear of tires up to 50 mm (adult) or 58 mm (kids) wide.
 - **Bar** turns 90° and reaches sideways through the spokes, just inside the rim. Its section is a slot that points at the hub.
   The rim's push points at the hub too, so the bar is deepest in the direction it's loaded. The spokes also point at the hub,
@@ -63,11 +70,12 @@ it reached the rim. So:
 | Seat (rim) centre out from the pegboard | 118 mm | 140 mm |
 | Why | | Small wheels have their spokes much closer together, so the bar is slimmer. The seat is further out so small wheels hang lower and their tires clear the plate |
 
-Both variants share the plate and screw pattern, and the bottom front edge of the plate is chamfered for tire clearance.
+Both variants share the plate and screw pattern.
 
-**To hang a bike:** stand it up on its rear wheel, front tire against the pegboard a little to the right of the hook (the bar
-points right). Lift the front wheel about 4 cm so the rim clears the tip, turn the wheel so a spoke gap lines up with the bar,
-slide it left onto the bar, and let it down. To take it down, lift, slide right, lower.
+**To hang a bike** (as you face the wall, the arm is on the right of the wheel and the bar points left): stand the bike up on
+its rear wheel, front tire against the pegboard a little to the left of the hook. Lift the front wheel about 4 cm so the rim
+clears the tip, turn the wheel so a spoke gap lines up with the bar, slide it right onto the bar, and let it down. To take it
+down, lift, slide left, lower. (Before v3.1 this README had left and right swapped.)
 
 **Print orientation:** it lies on the arm's outer side. The arm bends along its layers, which is the strong way. The bar runs up
 the print, so its bending pulls on layer bonds. That's why the bar's numbers below use lower PETG allowables.
@@ -96,8 +104,8 @@ which is why the adult seat sits ~118 mm out. **Don't hang an e-bike** without r
 
 ## Print settings
 
-- **PETG**, as laid out in the STL (on the arm's side), **no supports**, 0.2 mm layers. Adult: 146 × 80 mm footprint, 127 mm tall.
-  Kids: 160 × 80 mm, 127 mm tall.
+- **PETG**, as laid out in the STL (on the arm's side), **no supports**, 0.2 mm layers. Adult: 146 × 80 mm footprint, 128 mm tall.
+  Kids: 160 × 80 mm, 128 mm tall. The label faces sideways in the print, so it prints cleanly.
 - **5–6 walls, 30–40 % gyroid infill.** Strength is in the walls. Roughly 200–240 g each.
 - Print **2 adult + 2 kids'**. Start with one adult hook and the Schwinn, since it's the heaviest load.
 
@@ -123,11 +131,12 @@ board within ~30 cm above the 2x4 should stick out more than ~15 cm.
 
 1. Mock it up first: hold each bike in place against the board (tire on the board, front hub at ~5.5 ft) and mark where the
    wheel's centre is. Check pedals, bars and saddles clear the neighbouring bikes. Turning a crank so its pedals point up and down helps.
-2. Each hook's plate sits **left of its wheel** (the arm is on the left; the wheel centre is ~21 mm right of the plate's "0" column).
-   Keep the plates off the existing washer-head screws that hold the pegboard on.
+2. As you face the wall, each hook's arm is on the **right** of its wheel, and the plate reaches left past the wheel. The wheel's
+   centre is ~21 mm left of the plate's lower-right screw column (25 mm for the kids' hook). Keep the plates off the existing
+   washer-head screws that hold the pegboard on.
 3. Line up the plate's three hole rows with the three rows that show wood, and drive all **8** screws: **#10 or #12 × 2 in**
-   washer-head or pan-head wood screws, through the pegboard holes into the 2x4, with 1/8 in pilot holes. That puts about 35 mm
-   in the 2x4. Use a 6 in bit extension to reach past the bar.
+   washer-head or pan-head wood screws, through the pegboard holes into the 2x4, with 1/8 in pilot holes. The heads sit in the
+   counterbores, which puts about 38 mm in the 2x4: essentially its full depth. Use a 6 in bit extension to reach past the bar.
    (If a spot only has 2 rows over wood, use the top and middle rows, 5 screws. Don't use middle + bottom.)
 4. Optional: a strip of old inner tube on the seat protects the rim.
 
@@ -136,8 +145,8 @@ board within ~30 cm above the 2x4 should stick out more than ~15 cm.
 - **Weights:** stand on a bathroom scale holding each bike, minus your own weight. The Schwinn matters most. Above ~20 kg, recheck.
 - **Kids' spokes:** count the spokes on the Nishiki and Dynacraft *front* wheels. The 16 in at 28 spokes only has 4.2 mm per side,
   which is fine but snug. More than 28 on the 16 in would need the bar slimmer.
-- **Which side** should the arm be on? Right now it's left of the wheel as you face the wall, so you slide the bike on from the
-  right. Mirroring is easy, and could differ per hook if that suits the layout better.
+- **Which side** should the arm be on? Right now it's on the right of the wheel as you face the wall, so you slide the bike on
+  from the left. Mirroring is easy, and could differ per hook if that suits the layout better (the label would be redone).
 
 ## Pipeline
 
@@ -156,6 +165,7 @@ It also lays the four hooks and wheels out at `LAYOUT_X` for the viewer and `ren
 - `output/bike-hook-adult.stl`, `output/bike-hook-kids.stl`: print these (Bambu Studio)
 - `output/bike-hook-adult.step`, `output/bike-hook-kids.step`: editable solids for Fusion
 - `output/report.json`: per-variant checks and params, per-bike fit and loads
+- `renders/plates.png`: both plates as seen facing the wall, and from the front, left and above
 - `renders/model-adult.png`, `renders/model-kids.png`: print poses; `renders/in-use.png`: the layout;
   `renders/sections-adult.png` (Schwinn), `renders/sections-kids.png` (Dynacraft): side + plan sections
 - `source/photo-2026-11-11-*.jpg`: the owner's photos of the bikes, the wall, and the 2x4 through the pegboard
@@ -178,3 +188,14 @@ It also lays the four hooks and wheels out at `LAYOUT_X` for the viewer and `ren
   fit the kids' wheels (3.4 mm or less on the 20 in, and the 16 in tire hits the plate). Added a kids' variant: bar 16 × 38 mm, seat at
   140 mm. Also added a 10 mm chamfer on every plate's bottom edge. Each bike is checked against its hook in the build. Suggested layout
   18 in apart, alternating adult/kid (~2 m of wall). Waiting on the owner: weights, kids' spoke counts, a mock-up of the layout.
+- **2026-11-11 (v3.1):** Owner asked for a nicer plate and holes, now that all 8 holes are known to get screws. Changes:
+  - **Plate outline:** rounded R10 corners away from the arm, and a 45° cut on the corner above the arm (it prints on the bed).
+  - **Front edges:** a 5 mm chamfer all round except the arm side. It replaces the 10 mm bottom-only chamfer, which the bottom screw
+    heads had been partly overhanging. A filler block keeps the chamfer from leaving a groove under the arm.
+  - **Holes:** counterbored 13.6 × 3 mm so washer heads sit flush, and a 2 in screw gets ~38 mm into the 2x4. Holes and counterbores
+    are truncated teardrops (45° to a short bridged flat) instead of pointed ones.
+  - **Labels:** "ADULT" / "KIDS" pressed 0.6 mm into the face.
+  - **Correction:** found that the README had left and right swapped. Facing the wall, +X is on your left: the arm is on the right
+    of the wheel and the bar points left.
+
+  All four bikes re-checked (fit, tire clearance, spoke gaps, loads): unchanged.

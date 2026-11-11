@@ -22,8 +22,8 @@ from the bed, and the tip leans out at 45 deg, so it needs no supports.
 import math
 from dataclasses import asdict, dataclass
 
-from build123d import (Axis, Box, BuildPart, BuildSketch, Cylinder, Location, Locations, Mode, Plane, Polygon,
-                       SlotCenterToCenter, Vector, extrude, fillet)
+from build123d import (Align, Axis, Box, BuildPart, BuildSketch, Circle, Cylinder, Location, Locations, Mode, Plane,
+                       Polygon, SlotCenterToCenter, Text, Vector, add, chamfer, extrude, fillet)
 
 PITCH = 25.4
 
@@ -37,10 +37,16 @@ class HookParams:
     # --- plate on the pegboard (screws through pegboard holes into the 2x4; 8 holes in 3 rows, see `screws`) ---
     plate_t: float = 12.0
     plate_z: float = 40.0             # plate spans z = -plate_z .. +plate_z (screw rows at +-PITCH)
-    plate_chamfer: float = 10.0       # 45 deg off the plate's bottom front edge: the tire rests on the board just below it,
-                                      # and on small wheels it curves away from the board fast enough to come close
+    plate_chamfer: float = 5.0       # 45 deg round the plate's front edges (not the arm side). Also clears small wheels' tires,
+                                      # which rest on the board just below the plate and curve away from it
+    plate_corner_r: float = 10.0      # rounded outline corners on the side away from the arm (they print at the top)
+    plate_corner_cut: float = 8.0     # the corner above the arm prints on the bed, so it's cut at 45 deg instead of rounded
     screw_hole_d: float = 6.0         # #10 or #12 screws (they also pass the 1/4 in pegboard holes)
     head_d: float = 12.7              # washer/pan head, for the clearance checks
+    cbore_d: float = 13.6             # counterbore so the heads sit flush (#10 washer/pan heads are 9.5-12.7)
+    cbore_depth: float = 3.0          # leaves 9 mm under the head; a 2 in screw then reaches ~38 mm into the 2x4
+    label: str = "ADULT"              # pressed into the plate's face so the variants can't get mixed up
+    label_size: float = 8.0
 
     # --- arm (beside the wheel, along Y) ---
     arm_w: float = 28.0               # in X
@@ -87,7 +93,7 @@ class HookParams:
 
     @property
     def x_max_plate(self):
-        return 3 * PITCH + self.head_d / 2 + 6.0
+        return 3 * PITCH + self.cbore_d / 2 + 7.0
 
     @property
     def contact_centre(self):
@@ -163,15 +169,8 @@ def build_hook(p: HookParams):
     r = p.seat_r
     ztop, zbot = p.z_top, p.z_bar_bottom
     with BuildPart() as part:
-        # Plate on the pegboard
-        with Locations(Location(((p.x_min + p.x_max_plate) / 2, p.plate_t / 2, 0))):
-            Box(p.x_max_plate - p.x_min, p.plate_t, 2 * p.plate_z)
-        c = p.plate_chamfer
-        if c > 0:      # chamfer the bottom front edge (not under the arm, which covers it anyway)
-            with BuildSketch(Plane(origin=(p.x_arm_in, 0, 0), x_dir=(0, 1, 0), z_dir=(1, 0, 0))):
-                Polygon((p.plate_t + 1, -p.plate_z - 1), (p.plate_t + 1, -p.plate_z + c + 1),
-                        (p.plate_t - c - 1, -p.plate_z - 1), align=None)
-            extrude(amount=p.x_max_plate - p.x_arm_in + 1, mode=Mode.SUBTRACT)
+        # Plate on the pegboard (built on its own so its edges can be chamfered cleanly)
+        add(_plate(p))
 
         # Arm: side profile (Y, Z) extruded along X over the arm's width. Its top is level with the seat's top; it runs
         # out to the bar, which it merges into.
@@ -198,16 +197,51 @@ def build_hook(p: HookParams):
             Polygon(*[(x, -z) for x, z in tip], align=None)
         extrude(amount=2 * half)
 
-        # Screw holes through the plate (along Y), teardrop point toward +X (up when printed on the arm's outer side).
-        hr = p.screw_hole_d / 2
-        off = hr / math.sqrt(2)
-        with BuildPart(mode=Mode.SUBTRACT):
-            for (x, z) in p.screws:
-                with Locations(Location((x, 0, z))):
-                    Cylinder(hr, 60, rotation=(90, 0, 0))
-                with Locations(Location((x + off, 0, z), (0, 45, 0))):
-                    Box(hr, 60, hr)
+        # Under the arm, the plate's bottom-edge chamfer would leave a groove between plate and arm: fill it back in.
+        c = p.plate_chamfer
+        with Locations(Location(((p.x_min + p.x_arm_in) / 2, p.plate_t - (c + 1) / 2, -p.plate_z + (c + 1) / 2))):
+            Box(p.x_arm_in - p.x_min, c + 1, c + 1)
+
+        # Screw holes + counterbores through the plate (along Y). They're horizontal when printed, so their tops are
+        # truncated teardrops: 45 deg up to a short flat that bridges (they look nearly round from the front).
+        for (x, z) in p.screws:
+            for r, y0, depth in ((p.screw_hole_d / 2, -1.0, p.plate_t + 2),
+                                 (p.cbore_d / 2, p.plate_t - p.cbore_depth, p.cbore_depth + 0.5)):
+                with BuildSketch(Plane(origin=(x, y0, z), x_dir=(0, 0, 1), z_dir=(0, 1, 0))):   # local +y = world +X (up)
+                    Circle(r)
+                    Polygon(*_truncated_teardrop(r), align=None)
+                extrude(amount=depth, mode=Mode.SUBTRACT)
+
+        # Label, pressed 0.6 mm into the face between the screw columns, readable from the front (looking at the wall).
+        if p.label:
+            lx = (PITCH + 3 * PITCH) / 2
+            with BuildSketch(Plane(origin=(lx, p.plate_t, 0), x_dir=(-1, 0, 0), z_dir=(0, 1, 0))):
+                Text(p.label, font_size=p.label_size, align=(Align.CENTER, Align.CENTER))
+            extrude(amount=-0.6, mode=Mode.SUBTRACT)
     return part.part
+
+
+def _truncated_teardrop(r):
+    """Wedge that turns a circle (radius r) into a teardrop pointing +y, cut flat at the circle's top."""
+    a, b = r / math.sqrt(2), r * (math.sqrt(2) - 1)
+    return [(0.0, 0.0), (a, a), (b, r), (-b, r), (-a, a)]
+
+
+def _plate(p: HookParams):
+    """Plate in world coordinates: outline in X/Z with rounded corners away from the arm and a 45 deg cut on the corner
+    above it, chamfered round its front edges except the arm side (where the arm carries on)."""
+    x0, x1, zt, k = p.x_min, p.x_max_plate, p.plate_z, p.plate_corner_cut
+    with BuildPart() as pl:
+        with BuildSketch(Plane(origin=(0, p.plate_t, 0), x_dir=(1, 0, 0), z_dir=(0, -1, 0))) as sk:   # local y = world Z
+            Polygon((x0, -zt), (x1, -zt), (x1, zt), (x0 + k, zt), (x0, zt - k), align=None)
+            for q in ((x1, -zt), (x1, zt)):
+                v = min(sk.vertices(), key=lambda v: (Vector(v) - Vector(q[0], q[1], 0)).length)
+                fillet(v, p.plate_corner_r)
+        extrude(amount=p.plate_t)
+        front = pl.faces().sort_by(Axis.Y)[-1]
+        edges = [e for e in front.edges() if abs(e.center().X - x0) > 1e-3]
+        chamfer(edges, p.plate_chamfer)
+    return pl.part
 
 
 def print_pose(solid, p: HookParams):

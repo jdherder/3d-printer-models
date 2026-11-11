@@ -32,7 +32,7 @@ import trimesh  # noqa: E402
 from build123d import export_step  # noqa: E402
 from matplotlib.collections import LineCollection  # noqa: E402
 from model import PITCH, HookParams, build_hook, print_pose  # noqa: E402
-from render import render_sheet, section_segments  # noqa: E402
+from render import rasterize, render_sheet, section_segments  # noqa: E402
 from scipy.spatial import cKDTree  # noqa: E402
 
 OUT = HERE / "output"
@@ -50,7 +50,7 @@ HOOKS = {
     # further out, so these small wheels hang lower and their tires clear the bottom of the plate. Kids' bikes are light,
     # so the slimmer bar still has the margin (checked below, per bike).
     "kids": {"tire_max_w": 58.0, "rim_max_w": 28.0, "seat_y": 140.0, "seat_r": 8.0, "bar_len": 22.0,
-             "bar_angle_deg": 32.0, "tip_top": 6.0, "seat_z": 8.0},
+             "bar_angle_deg": 32.0, "tip_top": 6.0, "seat_z": 8.0, "label": "KIDS"},
 }
 
 # --- The owner's bikes (photos 2026-11-11; weights and wheel details estimated from the models, not measured) ---------
@@ -365,6 +365,20 @@ def main():
                      title=f"bike-hook ({name}): print pose (on the arm's side, no supports), mm",
                      labels=[f"{name} hook"], sections_y=(0.0,), sections_x=(0.0,))
 
+    # The plates as you'd see them standing at the wall (looking along -Y; +X is on your left), plus a 3/4 view.
+    fig, axes = plt.subplots(2, 2, figsize=(16, 11))
+    for row, name in enumerate(hooks):
+        m = hooks[name][1]
+        for col, (vd, up, title) in enumerate([((0, -1, 0), (0, 0, 1), "facing the wall"),
+                                                ((0.5, -1, -0.45), (0, 0, 1), "from the front, left and above")]):
+            img, ext = rasterize(m, np.array(vd, float), np.array(up, float), px=800)
+            axes[row, col].imshow(img, extent=ext)
+            axes[row, col].set_title(f"{name} hook: {title}")
+            axes[row, col].axis("off")
+    fig.suptitle("bike-hook plates: counterbored screw holes, chamfered edges, labels", fontsize=14)
+    fig.savefig(RENDERS / "plates.png", dpi=70, bbox_inches="tight")
+    plt.close(fig)
+
     bikes, scene, flat = {}, [], {}
     for key, bike in BIKES.items():
         p, hook_w = hooks[bike["hook"]]
@@ -395,7 +409,8 @@ def main():
                         "Bike weights and wheel details are estimates from the bike models (see README)",
         "print_orientation": "on the arm's outer side (world X up); no supports; tip leans out at 45 deg",
         "screws": {"install": "three hole rows are over the 2x4: use all 8 holes",
-                   "length_note": f"#10 or #12 x 2 in: {50.8 - HookParams().plate_t - t:.0f} mm into the 2x4"},
+                   "length_note": f"#10 or #12 x 2 in, heads in the counterbores: "
+                                  f"{50.8 - (HookParams().plate_t - HookParams().cbore_depth) - t:.0f} mm into the 2x4"},
         "variants": variants,
         "bikes": bikes,
         "layout_x_mm": LAYOUT_X,
