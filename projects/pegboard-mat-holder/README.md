@@ -15,7 +15,7 @@ piece, shared pegs.
 
 - [x] v0.1 concept (2026-11-11): 194 × 17 mm strip, 2 slots, 2 hooks (row 1) + 2 pins (row 0) in columns 0 and 7.
       Watertight, Euler 2, 0 self-intersections; rock-in passes. A3 leans ~1°, A4 ~1.8°
-- [ ] Owner review of the concept (Open questions)
+- [x] Owner review (2026-11-11): near-upright lean OK, landscape OK. Owner picks the holes behind the printers
 - [x] Mat thickness by calipers: 2.5–3.0 mm. Slots tightened from 3.8 to 3.5 mm (v0.2)
 - [ ] Test print and hang
 
@@ -42,9 +42,8 @@ flat, layers along the pegs). Supports only under the 2 hooks (tree, on build pl
 
 ## Open questions
 
-- Lean: ~1° (as thin as it gets) OK, or tip them back more at ~5 mm depth per degree?
-- Landscape (as shown, 300 / 220 tall) or portrait (450 / 300 tall)?
-- Which holes behind the printers? It must clear the A1's bed travel (about 17 mm out + the mats' 3 mm).
+- None open. Placement behind the printers is the owner's call (it stands about 17 mm out, plus the mats' 3 mm,
+  so it must clear the A1's bed travel). If a slot is tight on the test print, raise `SLOT_CLEAR` to 0.6–0.7.
 
 ## Files
 
@@ -55,3 +54,4 @@ flat, layers along the pegs). Supports only under the 2 hooks (tree, on build pl
 
 - **2026-11-11:** v0.1 concept from the owner's request (mats ~3 mm, thin, one piece, horizontal slots, lean on the board).
 - **2026-11-11:** v0.2: owner calipered the mats at 2.5–3.0 mm. Slot = 3.0 + 0.5 = 3.5 mm (was 3.8); the holder is ~0.6 mm thinner.
+- **2026-11-11:** Owner approved v0.2: near-upright lean (A3 ~1°, A4 ~1.7°) and landscape mats. Owner handles placement. Next: test print.
