@@ -1,0 +1,26 @@
+{
+  "page_title": "Bike Hook",
+  "title": "Bike hook v1: vertical, on a 2x4",
+  "subtitle": "PETG hook that hangs a bike by its front rim · lip over the 2x4 + plate on its face · shown with a 700c wheel turned 80° · X along the 2x4, Y out, Z up · millimetres",
+  "meshes": [
+    {"path": "renders/asm-hook.stl", "label": "Bike hook", "style": "solid"},
+    {"path": "renders/ref-2x4.stl", "label": "2x4 (1.5 × 3.5 in, flat on the wall)", "style": "solid", "color": "#b08a5a"},
+    {"path": "renders/ref-wheel.stl", "label": "700c rim + 32 mm tire (illustration)", "style": "solid", "color": "#555555"},
+    {"path": "renders/ref-spokes.stl", "label": "32 spokes", "style": "solid", "color": "#999999"}
+  ],
+  "dims": [
+    {"label": "Width (passes between the spokes)", "param": "width"},
+    {"label": "Reach: 2x4 face to tip", "param": "reach"},
+    {"label": "Reach from the wall", "param": "reach_from_wall"},
+    {"label": "Tip height above the seat", "param": "tip_h"},
+    {"label": "Arm depth at the plate", "param": "root_depth"},
+    {"label": "Plate height down the 2x4 face", "param": "plate_h"},
+    {"label": "Lip depth over the 2x4", "param": "lip_depth"},
+    {"label": "Bike weight assumed (kg)", "param": "bike_mass_kg"},
+    {"label": "Arm stress, bike hanging (MPa)", "param": "arm_stress_static_mpa"},
+    {"label": "Safety factor (with ×3 jolt)", "param": "safety_factor_dynamic"}
+  ],
+  "scale_note": "Real size. The 2x4 is nominal (1.5 × 3.5 in). The wheel is a typical 700c with a 32 mm tire and 32 spokes, just to show the fit. Your bike's numbers aren't in yet.",
+  "notes_title": "How it works, and what to check",
+  "notes": "The lip sits on top of the 2x4 and takes the bike's weight. Two screws go down through the lip, loaded sideways (the strong way), and one goes through the bottom of the plate. You drive them all straight in with nothing in the way. The arm's top slopes down 5° so the rim slides against the 35 mm tip. It prints on its side with no supports, so the bending runs along the layers: estimated safety factor ~12 for a 16 kg bike with a ×3 jolt. Hang it like any J-hook: turn the front wheel and hook the rim with the tip between two spokes. Please check: (1) your bike's weight, wheel size, tire width and spoke count; (2) is the 2x4 flat on the wall (wide face out)? (3) the reach: your tire will rest against the 2x4 unless the wheel is turned about 80°. Is that OK, or should it reach further out?"
+}
