@@ -1,0 +1,60 @@
+{
+  "scale_status": "real size (shared peg interface; mat sizes from the listing, thickness 'about 3 mm' from the owner)",
+  "print": {
+    "extents_mm": [
+      193.8,
+      30.4,
+      42.0
+    ],
+    "faces": 16868,
+    "watertight": true,
+    "winding_consistent": true,
+    "euler_number": 2,
+    "volume_cm3": 42.0,
+    "fits_A1_as_is": true,
+    "fits_A1_any_axis_order": true,
+    "self_intersecting_faces": 0
+  },
+  "print_orientation": "standing on its bottom edge, slots open up, pins on the bed (0.4 mm flat); supports under the 2 hooks only",
+  "fit_on_board": {
+    "board": "3/16 in white hardboard (owner's, Menards)",
+    "clearance_checked_per_side": 0.1,
+    "flush_overlap_mm3_info_only": 2.35,
+    "rock_in": {
+      "ok": true,
+      "max_tilt_deg": 94.0,
+      "states": 3303,
+      "give_mm": 0.3
+    },
+    "holes_used": "2 hooks (row 1) + 2 pins (row 0), columns 0 and 7 (7 holes apart)"
+  },
+  "mats": {
+    "A3_lean_deg": 0.95,
+    "A4_lean_deg": 1.79,
+    "A3_top_above_hook_hole_mm": 273.5,
+    "A3_overhang_each_side_mm": 128.1,
+    "A4_overhang_each_side_mm": 53.1
+  },
+  "params_mm": {
+    "d": 6.1,
+    "hook_d": 5.7,
+    "hook_slope": 12.0,
+    "hook_gap": 7.3,
+    "hook_rise": 14.0,
+    "bend_r": 4.5,
+    "pin_len": 7.0,
+    "embed": 1.0,
+    "holder_depth": 17.4,
+    "holder_width": 193.8,
+    "holder_height": 42.5,
+    "block_height": 16.0,
+    "plate_thickness": 3.0,
+    "slot_width": 3.8,
+    "slot_depth": 14.0,
+    "mat_thickness": 3.0,
+    "hook_spacing": 177.79999999999998,
+    "a3_gap": 2.0,
+    "rib": 2.4,
+    "front_wall": 2.4
+  }
+}
