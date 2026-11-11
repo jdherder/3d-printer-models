@@ -11,7 +11,7 @@ Each part is its own project, named **`projects/pegboard-<thing>/`**. Add a row 
 | [pegboard-fit-test](../projects/pegboard-fit-test/) | Plate with one hook peg + one pin. **Print first** to check the shared pegs on the real board | shared | PETG, on its side, no supports | v4: 12° sloped 5.7 mm hook + 6.1 mm pin (rock-in checked) + **peg gauge** (pins 6.0–6.4 mm) to pick the pin size |
 | [pegboard-hook](../projects/pegboard-hook/) | Copy of the owner's steel hook (42 mm arm), printed at the steel wire's 5.53 mm, with a 12° S-bend (it rocks in easily) and a 6.1 mm pin. The reference the peg sizes came from | its own wire (S-bend) + shared pin size | PETG, on its side, no supports | v7: back to 5.53 mm wire (6.1 can't rock in), 6.1 mm pin; rock-in checked |
 | [pegboard-spool-holder](../projects/pegboard-spool-holder/) | Arm straight out of the board that holds the A1's active 1 kg spool (face parallel to the board), with an end lip. Bores ≥ 50 mm, spools up to 82 mm wide | shared: 2 hooks side by side + 4 pins 2 and 3 in below | PETG, on its side, supports under the 2nd peg column | v5: sloped 5.7 mm hooks (rock-in checked); next, owner review (where it hangs vs the A1's bed travel) |
-| [pegboard-bambu-sign](../projects/pegboard-bambu-sign/) | 250 × 120 mm sign, flush on the board, Bambu Lab logo + text raised in a 2nd colour. Hangs on 2 small hangers via hidden keyhole slots (slide down 14 mm) | shared: 2 hangers, 8 holes apart, hook + pin each | Sign PLA face up, 1 colour change; hangers on their side ×2 | v1.2: sloped hooks so the hangers rock in; approved; next, test print |
+| [pegboard-bambu-sign](../projects/pegboard-bambu-sign/) | 250 × 42 mm one-piece badge in the Bambu Lab logo's outline, 3 colours inlaid flush (dark, white letters, green mark). Prints face-down, no supports | shared, with 45° hook legs (`hook_leg_angle`): 2 hooks 8 holes apart + 2 pins | Face-down, PLA, 3-colour AMS, no supports | v2: one piece; next, owner review |
 | [pegboard-mat-holder](../projects/pegboard-mat-holder/) | Thin slotted strip (194 × 17 mm) that holds the A3 + A4 cutting mats upright, leaning back against the board | shared: 2 hooks + 2 pins, 7 holes apart | PETG, standing on its bottom edge, supports under the 2 hooks | v0.2 concept (3.5 mm slots for the 2.5–3 mm mats); next, owner review (lean, orientation) |
 
 ### Adding a part
@@ -54,6 +54,7 @@ The part's back face sits on x = 0, and its body is built out in +x.
 | `d` | 6.1 | **Pin** diameter. The steel wire is 5.53. Prints at 5.53 and 5.9 were loose in the owner's holes. Pick the final size with the peg gauge |
 | `hook_d` | 5.7 | **Hook** diameter. Thinner than the pin so the sloped hook rocks in (`rock_in`); a 6.1 mm hook jams, level or sloped. Its play doesn't matter: the load seats it |
 | `hook_slope` | 12 | The hook's through-board part rises toward the back at this angle, like the steel hook's S-jog. It guides the hook as it rocks in |
+| `hook_leg_angle` | 90 | The behind-board leg's angle above horizontal. 45 for parts printed face-down (pegs pointing up), so the leg doesn't overhang |
 | `hook_gap` | 7.3 | Clear space behind the front face for the board. It must exceed the board thickness |
 | `hook_rise` | 14.0 | How high the hook's rising leg reaches above the hole centre |
 | `bend_r` | 4.5 | Centreline radius of the hook's bend |
@@ -105,6 +106,10 @@ pb.to_zup(board).export("renders/ref-pegboard.stl")
   A peg printed standing up snaps off at a layer line. `lay_on_side(part, style)` sets this pose: it puts the pegs on
   the bed with a 0.4 mm flat for the first layer, and needs no supports if the pegs are the lowest thing.
   So it suits parts whose pegs are all in one column, or parts designed so the peg column sits on the bed.
+- **Face-down parts** (a flat sign or badge whose front should be printed on the plate): the pegs stand straight up
+  off the back. Give the hooks `hook_leg_angle=45` so their behind-board leg doesn't overhang, and keep `hook_rise` small
+  (the leg goes back as far as it rises; `pegboard-bambu-sign` uses `hook_gap` 4.8 and `hook_rise` 6 to reach no further
+  back than the steel hook). Pegs printed upright are weaker, so this suits light parts only.
 - With pegs in more than one column, some pegs won't touch the bed when it lies on its side. Either accept supports
   under those pegs, or make the pegs a separate printed or steel piece.
 - PETG by default. Plastic pegs at ~6 mm are fine for light and medium loads (tools, cables, small bins).

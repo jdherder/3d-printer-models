@@ -1,68 +1,60 @@
 {
-  "page_title": "Pegboard Bambu Sign",
-  "title": "Pegboard sign: Bambu Lab logo",
-  "subtitle": "250 \u00d7 120 mm sign, flush on the board, logo + \"Bambu Lab\" raised 1.2 mm in a second colour \u00b7 hangs on 2 small peg hangers (shared hook + pin, tools/pegboard.py) \u00b7 your Menards 3/16\" board \u00b7 X out from the board, Z up \u00b7 mm",
+  "page_title": "Pegboard Bambu Badge",
+  "title": "Pegboard Bambu Lab badge (v2): one piece, printed face-down",
+  "subtitle": "Logo-outline badge, 3 colours inlaid flush \u00b7 2 hooks 8 holes apart + 2 pins (shared pegs, 45\u00b0 hook legs) \u00b7 your Menards 3/16\" board \u00b7 X out from the board, Z up \u00b7 mm",
   "meshes": [
     {
       "path": "renders/asm-sign.stl",
-      "label": "Sign (base colour, black)",
+      "label": "Badge + pegs (dark)",
       "style": "solid",
       "color": "#2b2b2e"
     },
     {
-      "path": "renders/asm-logo.stl",
-      "label": "Logo + text (raised, green)",
+      "path": "renders/asm-white.stl",
+      "label": "Letters (white, inlaid 0.8 mm)",
+      "style": "solid",
+      "color": "#f2f2f2"
+    },
+    {
+      "path": "renders/asm-green.stl",
+      "label": "Mark + B accent (green)",
       "style": "solid",
       "color": "#00ae42"
     },
     {
-      "path": "renders/asm-hangers.stl",
-      "label": "2 hangers (12\u00b0 sloped hook + pin + T-stud), hidden in pockets behind the sign",
-      "style": "solid",
-      "color": "#5b8fd9"
-    },
-    {
       "path": "renders/ref-pegboard.stl",
-      "label": "Your board: Menards 3/16\" white (6.35 mm holes, 3.94 mm thick)",
+      "label": "Your board: Menards 3/16\" white",
       "style": "solid",
       "color": "#b08a5a"
     }
   ],
   "dims": [
     {
-      "label": "Sign width",
+      "label": "Badge width",
       "param": "sign_width"
     },
     {
-      "label": "Sign height",
+      "label": "Badge height",
       "param": "sign_height"
     },
     {
-      "label": "Sign thickness (plate)",
+      "label": "Badge thickness",
       "param": "sign_thickness"
     },
     {
-      "label": "Logo width",
-      "param": "logo_width"
+      "label": "Letter height (B)",
+      "param": "letter_height"
     },
     {
-      "label": "Logo height",
-      "param": "logo_height"
+      "label": "Colour inlay depth",
+      "param": "inlay"
     },
     {
-      "label": "Logo raised by",
-      "param": "logo_raise"
-    },
-    {
-      "label": "Hanger spacing (8 holes)",
-      "param": "hanger_spacing"
-    },
-    {
-      "label": "Slide-down distance",
-      "param": "drop"
+      "label": "Hook to hook (8 holes)",
+      "param": "peg_spacing"
     }
   ],
-  "scale_note": "Real size. 250 mm is as wide as the A1's 256 mm bed allows (3 mm spare each side). Pegs are the shared hook (5.7 mm, sloped 12\u00b0) + 6.1 mm pin.",
-  "notes_title": "What to check",
-  "notes": "v1.2: the hangers' hooks are now 5.7 mm and sloped 12\u00b0 (now the shared peg for every pegboard part, with 6.1 mm pins) (like your steel-hook copy v4, which went in easily). A rock-in simulation showed the level 6.1 mm hook would jam, the way v5 did. Toggle the sign off to see the two hangers behind it. How it goes up: hang the 2 hangers on the board first (8 holes apart, same row), then hold the sign flat against the board about 14 mm high so the slots on its back line up with the hangers' studs, push it flat, and slide it down: the studs' heads catch behind ledges inside the sign, so it can't come off the front, and it sits flush on the board. Printing: the sign prints face up with no supports and only ONE colour change (black plate, then green for the top 1.2 mm), so the AMS wastes almost nothing. The hangers print on their side (print 2). Check: (1) size and proportions; (2) colours (black + green, or something else); (3) whether you'd like a border or anything else on the plate."
+  "scale_note": "Real size. 250 mm is as wide as the A1 bed allows. Pegs: the shared 5.7 mm sloped hook (with its behind-board leg at 45\u00b0) and 6.1 mm pins.",
+  "notes_title": "What changed, and what to check",
+  "notes": "v2, a rethink after the v1 print: one piece, no supports. The badge is cut to the logo's outline (like the MakerWorld one) with the colours inlaid flush: it prints face-down, so the front is the smooth first layers on the plate and all the colour changes are in the first 0.8 mm. The pegs stand straight up off the back while printing; the hooks' legs behind the board rise at 45\u00b0 so they don't need support (they reach 14.5 mm behind the board's front face, less than your steel hooks). Toggle the board off to see the hooks. Check: (1) the shape and the one-line layout; (2) the colours (dark, white, green); (3) where on the board it goes: 2 hooks 8 holes apart, pins in the holes below."
 }

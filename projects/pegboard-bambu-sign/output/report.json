@@ -1,116 +1,70 @@
 {
-  "scale_status": "real size (shared peg interface; sign size is the owner's choice, default 250 x 120 mm, as big as the A1 bed allows)",
+  "scale_status": "real size (shared pegs; badge size is the owner's choice: as wide as the A1 bed allows)",
   "print": {
     "extents_mm": [
       250.0,
-      120.0,
-      10.7
+      42.5,
+      18.5
     ],
-    "faces": 3144,
+    "faces": 10208,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 2,
-    "volume_cm3": 284.1,
+    "volume_cm3": 32.9,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
   },
-  "print_orientation": "sign face up, back on the bed, no supports (pockets open to the bed; chamber roofs are ~12 mm bridges)",
-  "colour": {
-    "swaps": 1,
-    "swap_at_mm": 9.5,
-    "logo_layers_at_0.2": 6
+  "print_orientation": "face-down on the plate, no supports: colours in the first 0.8 mm, pegs pointing up (the hooks' legs rise at 45 deg so they don't overhang)",
+  "colours": {
+    "dark": "badge + pegs",
+    "white": "Bambu Lab letters",
+    "green": "mark + B accent",
+    "colour_layers_mm": 0.8,
+    "volume_cm3": {
+      "dark": 30.8,
+      "white": 1.7,
+      "green": 0.3
+    }
   },
-  "hanger_print": {
-    "extents_mm": [
-      20.5,
-      47.4,
-      10.6
-    ],
-    "faces": 7630,
-    "watertight": true,
-    "winding_consistent": true,
-    "euler_number": 2,
-    "volume_cm3": 2.3,
-    "fits_A1_as_is": true,
-    "fits_A1_any_axis_order": true,
-    "self_intersecting_faces": 0
-  },
-  "hanger_print_orientation": "on its side, pegs flat on the bed (0.4 mm flat at the pin; the sloped hook sits ~0.6 mm higher at its front), no supports. Print 2",
   "fit_on_board": {
     "board": "3/16 in white hardboard (owner's, Menards)",
     "hole_d": 6.35,
     "thickness": 3.94,
     "pitch": 25.4,
-    "clearance_checked_per_side": 0.1,
-    "hanger_flush_overlap_mm3_info_only": 2.34,
-    "hanger_rock_in": {
+    "flush_overlap_mm3_info_only": 2.34,
+    "rock_in": {
       "ok": true,
-      "max_tilt_deg": 94.0,
-      "states": 3296,
+      "max_tilt_deg": 58.0,
+      "states": 2180,
       "give_mm": 0.3
     },
-    "holes_used": "2 hangers, 8 holes apart: hook + pin 1 in below each",
-    "sign_top_above_hook_hole_mm": 11.6,
-    "sign_bottom_below_hook_hole_mm": 108.3,
-    "sign_past_outer_hanger_columns_mm": 25.9
-  },
-  "slide_on_check": {
-    "drop_mm": 13.6,
-    "interference_while_sliding_mm3": {
-      "0.0": 0.0,
-      "1.7": 0.0,
-      "3.4": 0.0,
-      "5.1": 0.0,
-      "6.8": 0.0,
-      "8.5": 0.0,
-      "10.2": 0.0,
-      "11.9": 0.0,
-      "13.6": 0.0
-    },
-    "interference_pushing_on_mm3": {
-      "9.5": 0.0,
-      "4.8": 0.0,
-      "2.0": 0.0,
-      "0.5": 0.0
-    },
-    "pull_off_blocked_mm3": 105.18
+    "holes_used": "2 hooks in one row, 8 holes apart, each with a pin 1 hole below",
+    "badge_top_above_hook_hole_mm": 12.7,
+    "badge_bottom_below_hook_hole_mm": 29.8,
+    "hook_reach_behind_front_face_mm": 14.5,
+    "peg_margin_to_badge_edge_mm": 0.1
   },
   "params_mm": {
     "d": 6.1,
     "hook_d": 5.7,
     "hook_slope": 12.0,
-    "hook_gap": 7.3,
-    "hook_rise": 14.0,
+    "hook_gap": 4.8,
+    "hook_rise": 6.0,
     "bend_r": 4.5,
     "pin_len": 7.0,
     "embed": 1.0,
+    "hook_leg_angle": 45.0,
     "pitch": 25.4,
     "sign_width": 250.0,
-    "sign_height": 120.0,
-    "sign_thickness": 9.5,
-    "total_thickness": 10.7,
-    "corner_radius": 10.0,
-    "front_chamfer": 1.0,
-    "logo_width": 220.0,
-    "logo_height": 64.1,
-    "logo_stroke": 5.5,
-    "logo_smallest_gap": 3.5,
-    "logo_raise": 1.2,
-    "hanger_spacing": 203.2,
-    "hook_to_pin": 25.4,
-    "drop": 13.6,
-    "hanger_plate_t": 3.0,
-    "stud_neck": [
-      5.0,
-      10.0
-    ],
-    "stud_head": [
-      11.0,
-      12.0,
-      2.0
-    ],
-    "slot_clearance": 0.3,
+    "sign_height": 42.5,
+    "sign_thickness": 4.0,
+    "inlay": 0.8,
+    "border": 6.0,
+    "letter_height": 23.0,
+    "letter_stroke": 4.9,
+    "min_colour_gap": 1.05,
+    "peg_spacing": 203.2,
     "hole_clearance_per_side": 0.12
   }
 }
