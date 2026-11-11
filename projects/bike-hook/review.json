@@ -1,0 +1,41 @@
+{
+  "page_title": "Bike Hook",
+  "title": "Bike hooks v3.1: the family's four bikes",
+  "subtitle": "Adult hook (700c) + kids' hook (16/20 in), screwed through the pegboard into the 2x4 · wheels straight, tires on the board · laid out 18 in apart · X along the wall, Y out, Z up · millimetres",
+  "meshes": [
+    {"path": "renders/asm-hook-schwinn_trailway.stl", "label": "Adult hook · Schwinn Trailway", "style": "solid"},
+    {"path": "renders/asm-hook-nishiki_20.stl", "label": "Kids' hook · Nishiki 20 in", "style": "solid", "color": "#4a90d9"},
+    {"path": "renders/asm-hook-trek_fx72.stl", "label": "Adult hook · Trek FX 7.2", "style": "solid"},
+    {"path": "renders/asm-hook-dynacraft_16.stl", "label": "Kids' hook · Dynacraft 16 in", "style": "solid", "color": "#4a90d9"},
+    {"path": "renders/ref-pegboard.stl", "label": "Your pegboard", "style": "solid", "color": "#e8e4dc"},
+    {"path": "renders/ref-2x4.stl", "label": "2x4 behind it (~6 ft up)", "style": "solid", "color": "#b08a5a", "visible": false},
+    {"path": "renders/ref-wheel-schwinn_trailway.stl", "label": "Schwinn front wheel (700x40)", "style": "solid", "color": "#555555"},
+    {"path": "renders/ref-wheel-nishiki_20.stl", "label": "Nishiki front wheel (20x1.95)", "style": "solid", "color": "#c2185b"},
+    {"path": "renders/ref-wheel-trek_fx72.stl", "label": "Trek front wheel (700x35)", "style": "solid", "color": "#555555"},
+    {"path": "renders/ref-wheel-dynacraft_16.stl", "label": "Dynacraft front wheel (16x2.125)", "style": "solid", "color": "#1e88e5"},
+    {"path": "renders/ref-spokes-schwinn_trailway.stl", "label": "Schwinn spokes", "style": "solid", "color": "#999999"},
+    {"path": "renders/ref-spokes-nishiki_20.stl", "label": "Nishiki spokes", "style": "solid", "color": "#999999"},
+    {"path": "renders/ref-spokes-trek_fx72.stl", "label": "Trek spokes", "style": "solid", "color": "#999999"},
+    {"path": "renders/ref-spokes-dynacraft_16.stl", "label": "Dynacraft spokes", "style": "solid", "color": "#999999"}
+  ],
+  "dims": [
+    {"label": "Adult hook: reach from the pegboard", "param": "reach_overall"},
+    {"label": "Kids' hook: reach from the pegboard", "param": "kids_reach_overall"},
+    {"label": "Schwinn: weight estimate (kg)", "param": "schwinn_trailway_mass_kg"},
+    {"label": "Schwinn: worst screw pull-out (N)", "param": "schwinn_trailway_screw_n"},
+    {"label": "Schwinn: spoke clearance per side", "param": "schwinn_trailway_spoke_gap"},
+    {"label": "Schwinn: front hub below the 2x4's middle", "param": "schwinn_trailway_hub_below"},
+    {"label": "Trek: weight estimate (kg)", "param": "trek_fx72_mass_kg"},
+    {"label": "Trek: worst screw pull-out (N)", "param": "trek_fx72_screw_n"},
+    {"label": "Trek: spoke clearance per side", "param": "trek_fx72_spoke_gap"},
+    {"label": "Nishiki: weight estimate (kg)", "param": "nishiki_20_mass_kg"},
+    {"label": "Nishiki: spoke clearance per side", "param": "nishiki_20_spoke_gap"},
+    {"label": "Nishiki: front hub below the 2x4's middle", "param": "nishiki_20_hub_below"},
+    {"label": "Dynacraft: weight estimate (kg)", "param": "dynacraft_16_mass_kg"},
+    {"label": "Dynacraft: spoke clearance per side", "param": "dynacraft_16_spoke_gap"},
+    {"label": "Dynacraft: front hub below the 2x4's middle", "param": "dynacraft_16_hub_below"}
+  ],
+  "scale_note": "Real size. The pegboard is yours; the 2x4 behind it is flat (three hole rows show wood). Bike weights and wheel details are estimates from the models in your photos. Hooks are shown 18 in apart, adult and kids' bikes alternating.",
+  "notes_title": "v3.1: what changed, and what to check",
+  "notes": "v3.1: nicer plates. Rounded corners, chamfered front edges, flush counterbored screw holes (the heads sit in 3 mm recesses), and ADULT or KIDS pressed into the face. Facing the wall, the arm is on the right of each wheel and the bar points left, so you slide a bike on from the left (earlier notes had that backwards). v3: checked against your four bikes. The 700c hybrids (Trek FX 7.2, Schwinn Trailway) use the adult hook. The kids' 20 in Nishiki and 16 in Dynacraft need their own hook: small wheels have their spokes much closer together, so it has a slimmer bar (16 mm across instead of 26), and its seat sits further out so the small tires hang clear of the plate. Both print on their side with no supports, and both use the same 8-hole plate. Your 2x4 shows wood in three hole rows, so use all 8 screws. Suggested layout: adult, kid, adult, kid, 18 in apart. A kid's handlebar hangs about 25 cm closer to the wall than an adult's, so they can overlap side to side. That needs about 6.5 ft of clear wall. Please check: (1) weigh each bike (stand on a scale holding it, minus your weight), especially the Schwinn; (2) count the front spokes on the two kids' bikes; (3) before screwing anything, hold each bike up where its hook would go and check pedals and bars clear their neighbours."
+}
