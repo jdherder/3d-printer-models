@@ -5,7 +5,7 @@
   "meshes": [
     {"path": "renders/asm-hook.stl", "label": "Bike hook", "style": "solid"},
     {"path": "renders/ref-pegboard.stl", "label": "Your pegboard (3/16 in, 1/4 in holes)", "style": "solid", "color": "#e8e4dc"},
-    {"path": "renders/ref-2x4.stl", "label": "2x4 behind it (assumed flat, centred on the screws)", "style": "solid", "color": "#b08a5a", "visible": false},
+    {"path": "renders/ref-2x4.stl", "label": "2x4 behind it (assumed flat)", "style": "solid", "color": "#b08a5a", "visible": false},
     {"path": "renders/ref-wheel.stl", "label": "700c rim + 38 mm tire (illustration)", "style": "solid", "color": "#555555"},
     {"path": "renders/ref-spokes.stl", "label": "32 spokes", "style": "solid", "color": "#999999"}
   ],
@@ -25,6 +25,6 @@
     {"label": "Plate height", "param": "plate_h"}
   ],
   "scale_note": "Real size. The pegboard is yours. The 2x4 (hidden, toggle it on) is assumed flat behind the board. The wheel is a typical 700c with a 38 mm tire and 32 spokes, to show the fit.",
-  "notes_title": "v2: what changed, and what to check",
-  "notes": "v2.1: the plate now has screw holes in three rows (8 holes), so it works whether 2 or 3 pegboard hole rows land over the 2x4. 3 rows: use all 8. 2 rows: put the hook's top and middle rows on them and use those 5. The middle row only has a hole past the bar's far end, because the bar is in the way everywhere else. v2: redone for screws into the 2x4's face only and the bike perpendicular with its tires on the pegboard. The arm comes out beside the wheel and a bar reaches sideways through the spokes; the rim sits on its rounded top about 53° round from the top of the wheel. There the rim's push goes through the hub, so the wheel hangs still and the tire is pulled flat onto the board. To hang: front tire on the board just right of the hook, lift about 4 cm, slide left onto the bar, lower. Five screws go through pegboard holes into the 2x4. Please check: (1) is the 2x4 flat behind the board (3.5 in face), and which hole rows are over it? (2) bike weight, wheel size, tire width, spoke count; (3) is left of the wheel the right side for the arm?"
+  "notes_title": "v2.1: what changed, and what to check",
+  "notes": "v2.1: the plate now has screw holes in three rows (8 holes), so it works whether 2 or 3 pegboard hole rows land over the 2x4. 3 rows: use all 8. 2 rows: put the hook's top and middle rows on them and use those 5. The middle row only has a hole past the bar's far end, because the bar is in the way everywhere else. v2: redone for screws into the 2x4's face only and the bike perpendicular with its tires on the pegboard. The arm comes out beside the wheel and a bar reaches sideways through the spokes; the rim sits on its rounded top about 53° round from the top of the wheel. There the rim's push goes through the hub, so the wheel hangs still and the tire is pulled flat onto the board. To hang: front tire on the board just right of the hook, lift about 4 cm, slide left onto the bar, lower. Please check: (1) is the 2x4 flat behind the board (3.5 in face)? (2) bike weight, wheel size, tire width, spoke count; (3) is left of the wheel the right side for the arm?"
 }
