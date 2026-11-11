@@ -61,6 +61,8 @@ class PegStyle:
     bend_r: float = 4.5      # centreline radius of the hook's bend
     pin_len: float = 7.0     # how far a straight pin sticks into the board past the front face
     embed: float = 1.0       # how far pegs reach into the part (x > 0) so they fuse with it
+    hook_leg_angle: float = 90.0  # the behind-board leg's angle above horizontal (going back). 90 = straight up. 45 prints
+                                  # without supports when the part lies face-down (pegs pointing up off the bed)
 
     @property
     def r(self):
@@ -83,7 +85,9 @@ class PegStyle:
                 msgs.append(f"{name} {d} mm does not fit {board.hole_d} mm holes")
         if self.hook_gap < board.thickness:
             msgs.append(f"hook gap {self.hook_gap} mm is less than the board thickness {board.thickness} mm")
-        if self.leg_x + self.bend_r > -board.thickness + 1.0:
+        import math
+        turn = math.radians(self.hook_leg_angle - self.hook_slope)
+        if self.leg_x + self.bend_r * math.tan(turn / 2) > -board.thickness + 1.0:
             msgs.append("the hook's bend starts more than 1 mm inside the hole, so it may bind; reduce bend_r or raise hook_gap")
         return msgs
 
@@ -96,14 +100,17 @@ def hook_peg(style: PegStyle, y: float = 0.0, z: float = 0.0, slope_deg: float |
     """Upper peg for the hole centred at (0, y, z): back through the board, a bend, then a leg rising behind it.
     The through-board part rises toward the back at slope_deg (default style.hook_slope, like the steel hook's S-jog),
     crossing the hole's centre `cross_depth` behind the front face. The slope guides the hook as it rocks in; a level
-    peg (0) can jam (see rock_in)."""
+    peg (0) can jam (see rock_in). The leg rises to `hook_rise` above the hole centre at `hook_leg_angle` (90 = straight up)."""
     slope_deg = style.hook_slope if slope_deg is None else slope_deg
     import math
     from build123d import BuildLine, BuildPart, BuildSketch, Circle, FilletPolyline, Plane, Vector, sweep
     t = math.tan(math.radians(slope_deg))
     y_at = lambda x: y + (-cross_depth - x) * t     # noqa: E731
-    pts = [Vector(style.embed, y_at(style.embed), z), Vector(style.leg_x, y_at(style.leg_x), z),
-           Vector(style.leg_x, y + style.hook_rise, z)]
+    corner_y = y_at(style.leg_x)
+    a = math.radians(style.hook_leg_angle)
+    leg_dx = 0.0 if style.hook_leg_angle == 90 else (y + style.hook_rise - corner_y) / math.tan(a)
+    pts = [Vector(style.embed, y_at(style.embed), z), Vector(style.leg_x, corner_y, z),
+           Vector(style.leg_x - leg_dx, y + style.hook_rise, z)]
     with BuildPart() as part:
         with BuildLine() as path:
             FilletPolyline(*pts, radius=style.bend_r)
