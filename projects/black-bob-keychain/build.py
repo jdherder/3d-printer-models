@@ -105,7 +105,11 @@ GREY_LIGHT = (70, 235)
 # its top), a white eyeball ~14 x 8 px (the logo's light grey shading counts as white), a dark pupil ~4 px across, left of
 # centre and low (it meets the bottom outline, so the bird looks slightly down), and a thin outline around the rest.
 # Pixel (i, j) is centred at (i + 0.5, j + 0.5) in these coordinates.
-EYE_PX = dict(centre=(160.0, 76.8), rx=7.0, ry=3.4, top=[(150, 73.9), (168, 72.9)], pupil=(159.2, 78.4), pupil_r=1.9)
+# Inside: a round iris ~6 px across (dark top edge at row 74, grey left edge at column 155) holding a black pupil in its
+# lower part, and a bright white highlight at its upper left (pixels 156-157, 76). Printed as one black iris + pupil
+# disc with a white highlight; the white eyeball shows on both sides.
+EYE_PX = dict(centre=(160.0, 76.8), rx=7.0, ry=3.4, top=[(150, 73.9), (168, 72.9)], iris=(158.8, 77.6), iris_r=3.6,
+              glint=(157.4, 76.6), glint_r=1.05)   # highlight ~0.45 mm at the upper left, ~0.2 mm of black round it
 EYE_RIM = 0.25             # mm: the logo's thin grey outline, printed black
 # White bits of the bird that stand at bird height instead of being cut in: everything white whose centre is in this
 # box (source px x0, y0, x1, y1): the beak (both jaws) and the eye.
@@ -295,15 +299,17 @@ def fit_bb(mask):
 
 
 def draw_eye():
-    """(white, black) of the eye, from EYE_PX: an eyeball cut by the bill's edge, a thin black rim, a round pupil."""
+    """(white, black) of the eye, from EYE_PX: an eyeball cut by the bill's edge, a thin black rim, a round black iris
+    with a white highlight."""
     e = EYE_PX
     c = Point(px_to_mm(*e["centre"]))
     ball = affinity.scale(c.buffer(1.0, 96), e["rx"] * K, e["ry"] * K)
     (x0, y0), (x1, y1) = (px_to_mm(*p) for p in e["top"])
     ball = ball.intersection(Polygon([(x0 - 5, y0), (x1 + 5, y1), (x1 + 5, y1 - 9), (x0 - 5, y0 - 9)]))
-    pupil = Point(px_to_mm(*e["pupil"])).buffer(e["pupil_r"] * K, 48).intersection(ball)
+    iris = Point(px_to_mm(*e["iris"])).buffer(e["iris_r"] * K, 64).intersection(ball)
+    glint = Point(px_to_mm(*e["glint"])).buffer(e["glint_r"] * K, 32).intersection(iris)
     rim = ball.buffer(EYE_RIM, 64).difference(ball)
-    return ball.difference(pupil), unary_union([rim, pupil])
+    return unary_union([ball.difference(iris), glint]), unary_union([rim, iris]).difference(glint)
 
 
 def build_regions():

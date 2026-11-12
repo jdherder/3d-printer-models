@@ -65,6 +65,6 @@
     }
   ],
   "scale_note": "Real size: 60 mm across the red ring (your pick: 55-60). The tab adds 8 mm on top. Type 55 in the real-size box to preview the smaller option.",
-  "notes_title": "v7: eye matched to the logo",
-  "notes": "v7: the eye is rebuilt from the logo's own pixels. It sits right under the bill, which cuts its top. It's a white eyeball (the logo's light-grey shading prints white) with a ~0.8 mm black pupil, low and left of centre so it meets the bottom outline and the bird looks slightly down, as in the logo, plus a thin outline. v6's clearing hack is gone. Thin red details are now kept down to 0.25 mm (was 0.3). The bill stays black, 3 colours."
+  "notes_title": "v8: eye with iris and highlight",
+  "notes": "v8: the eye's inside now follows the logo's parts: a round dark iris (~1.5 mm, printed black with its pupil) sitting low under the bill, with a white highlight (~0.45 mm) at its upper left, and white eyeball on both sides. The rest is as in v7."
 }

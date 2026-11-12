@@ -27,7 +27,9 @@ stands off a recessed white field, and the cap is the highest point (owner's pic
       (smaller) drawn eye. That area is now beak white (`EYE_CLEAR`, `EYE_CLEAR_EDGE`)
 - [x] v7: owner: "we're getting further away", match the original and keep it printable. Studied the logo pixel by pixel. The eye is
       rebuilt from its pixels (`EYE_PX`): under the bill, the pupil low-left touching the bottom outline. Red is kept to 0.25 mm
-- [ ] Owner review of v7 (viewer link below)
+- [x] v8: owner: the logo's pupil has several parts, like the cartoon eye. Re-read the pixels: a round iris (dark top edge,
+      grey left edge) with the black pupil low in it and a white highlight at its upper left. Printed as a black iris + a white highlight
+- [ ] Owner review of v8 (viewer link below)
 - [ ] Test print (P2S + AMS), then adjust heights and line widths
 
 ## Measurements
@@ -47,7 +49,7 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 | Ring letters | ~5.2 tall | Liberation Sans Bold (`source/LiberationSans-Bold.ttf`, SIL OFL) |
 | "BB" on the cap | ~2 tall, tilted like the logo's | DejaVu Sans Bold fitted onto the traced BB (best overlap of 7 fonts, 0.70), at 92% so the red shows around it, thickened 0.05/side |
 | Cap bill | black | Grey in the logo. The owner chose black to keep 3 colours. Found under `VISOR_PX` |
-| Eye | eyeball ~2.9 × 1.4 (top cut by the bill), rim 0.25, pupil Ø 0.8 | Drawn from the logo's pixels (`EYE_PX`). The pupil sits low-left and meets the bottom outline |
+| Eye | eyeball ~2.9 × 1.4 (top cut by the bill), rim 0.25, iris Ø 1.5 (black), highlight Ø 0.45 | Drawn from the logo's pixels (`EYE_PX`). Iris low, under the bill; highlight at its upper left with ~0.17 of black round it (Arachne widens that to ~0.34, so the highlight prints a touch smaller) |
 | White details in the bird | ≥ 0.45 wide | Narrower slits are dropped (become red) |
 
 ## Print settings
@@ -94,6 +96,9 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 
 ## Log
 
+- **2026-11-12 (v8):** Owner: the pupil "clearly has multiple parts like our friendly cartoon one". Pixels: an iris ~6-7 px with a dark
+  top edge, a black pupil low in it, and a white glint (211) at its upper left. Now a black iris (Ø 1.5) with a 0.45 white highlight there.
+  Centring the highlight (for more black round it) looked like a ring, so it stays upper left.
 - **2026-11-12 (v7):** Owner: "we're getting further away"; match the original, still printable. A pixel-level study found:
   beak line widths already match (~0.7 mm); the drift was around the head. Thin red was dropped to black. The eye was a
   free-floating round eye, but in the logo it's tucked under the bill with a low-left pupil (that reads friendly). Rebuilt the eye from the
