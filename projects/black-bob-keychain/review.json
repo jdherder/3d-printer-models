@@ -1,0 +1,70 @@
+{
+  "page_title": "Black Bob Keychain",
+  "title": "Black Bob Elementary keychain",
+  "subtitle": "Traced from the school logo \u00b7 60 mm across the ring \u00b7 style A layered heights \u00b7 red, white, black \u00b7 shown hanging \u00b7 millimetres",
+  "meshes": [
+    {
+      "path": "renders/view-red.stl",
+      "label": "Red (base, ring, bird, cap)",
+      "style": "solid",
+      "color": "#c8202c"
+    },
+    {
+      "path": "renders/view-white.stl",
+      "label": "White (field, letters, details, beak, BB)",
+      "style": "solid",
+      "color": "#f2f2f2"
+    },
+    {
+      "path": "renders/view-black.stl",
+      "label": "Black (outlines, cap bill, eye)",
+      "style": "solid",
+      "color": "#2b2b2e"
+    }
+  ],
+  "dims": [
+    {
+      "label": "Diameter (outside of the red ring)",
+      "param": "diameter"
+    },
+    {
+      "label": "Overall height incl. keyring tab",
+      "param": "overall_height"
+    },
+    {
+      "label": "Red base (back)",
+      "param": "base"
+    },
+    {
+      "label": "White field (recessed)",
+      "param": "field_top"
+    },
+    {
+      "label": "Cut-in white details",
+      "param": "inset_top"
+    },
+    {
+      "label": "Red ring (bezel)",
+      "param": "ring_top"
+    },
+    {
+      "label": "Bird, outline, beak",
+      "param": "bird_top"
+    },
+    {
+      "label": "Ring letters (embossed)",
+      "param": "text_top"
+    },
+    {
+      "label": "Cap (highest)",
+      "param": "cap_top"
+    },
+    {
+      "label": "Keyring hole",
+      "param": "tab_hole_d"
+    }
+  ],
+  "scale_note": "Real size: 60 mm across the red ring (your pick: 55-60). The tab adds 8 mm on top. Type 55 in the real-size box to preview the smaller option.",
+  "notes_title": "v8: eye with iris and highlight",
+  "notes": "v8: the eye's inside now follows the logo's parts: a round dark iris (~1.5 mm, printed black with its pupil) sitting low under the bill, with a white highlight (~0.45 mm) at its upper left, and white eyeball on both sides. The rest is as in v7."
+}
