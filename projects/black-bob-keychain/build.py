@@ -3,7 +3,7 @@
     python projects/black-bob-keychain/build.py        (~1 min)
 
 source/logo-2026-11-12-school-site-300px.png (the school's logo; 300 px is the largest the site has)
-  -> sub-pixel trace: redness and lightness upsampled 8x (cubic), each point classed red / white / black (grey visor)
+  -> sub-pixel trace: redness and lightness upsampled 8x (cubic), each point classed red / white / black
   -> regions: red ring, white ring text, white field, and the bird (filled black outline) with its red body,
      white feather/bolt details, white beak, and cap (red + white "BB")
   -> thin black lines thickened and tiny white specks dropped so every colour region prints with a 0.4 mm nozzle
@@ -12,8 +12,8 @@ source/logo-2026-11-12-school-site-300px.png (the school's logo; 300 px is the l
        red bird, black outline, white beak 3.0 | cap 3.4
   -> keyring tab above the ring at 12 o'clock
   -> output/black-bob-keychain.stl             single-colour print (all bodies merged)
-  -> output/black-bob-keychain-multicolor.3mf  one object, four parts (red, white, black, grey) for the AMS
-  -> output/black-bob-keychain-{red,white,black,grey}.stl
+  -> output/black-bob-keychain-multicolor.3mf  one object, three parts (red, white, black) for the AMS
+  -> output/black-bob-keychain-{red,white,black}.stl
   -> output/report.json, renders/*.png
 """
 
@@ -65,9 +65,9 @@ TAB_FILLET = 1.5           # rounds the tab-to-ring corners
 # after smoothing, so it stays smooth and centred on the logo's line) to >= ~0.45 mm, which a 0.4 mm nozzle prints.
 BLACK_GROW = 0.03
 MIN_RED = 0.3              # red bits inside the bird narrower than this are dropped (become black)
-MIN_RED_CAP = 0.25         # ... on the cap, the red around the "BB" is this thin in the logo (Arachne prints ~0.3)
+MIN_RED_CAP = 0.25         # ... except right around the "BB", where the red is this thin in the logo (Arachne prints ~0.3)
 MIN_WHITE = 0.3            # white details inside the bird narrower than this are dropped (become black)
-COLOUR_DEPTH = {"white": 1.0, "black": 0.8, "grey": 0.8}   # thick enough that the red below doesn't show through
+COLOUR_DEPTH = {"white": 1.0, "black": 0.8}   # thick enough that the red below doesn't show through
 MIN_AREA = 0.15            # specks smaller than this (mm^2) are dropped
 SMOOTH = 0.15              # traced outlines are smoothed along their length (Gaussian sigma, mm): no pixel steps or wobble
 CORNER_DEG = 40            # ... except at corners sharper than this, which stay crisp
@@ -94,11 +94,14 @@ BB_FONT = HERE / "source" / "DejaVuSans-Bold.ttf"
 BB_BOLD = 0.05
 BB_SCALE = 0.92            # a touch smaller than the logo's, so the red around it shows
 BB_BELOW_ROW_PX = 62       # the "BB" is above this source row; the visor below it
-# The visor is grey in the logo (AMS slot 4). Grey is looked for only inside this outline (source px): lightness
-# between GREY_LIGHT, plus the visor's white highlights.
+# The cap's bill (visor) is grey in the logo, with light highlights; it's printed all black (owner, v4). The bill is
+# found inside this outline (source px): lightness between GREY_LIGHT, plus its white highlights.
 VISOR_PX = [(145, 66.5), (152, 61.5), (160, 59.5), (170, 59), (180, 61.5), (184, 66), (176, 67.5), (165, 68),
             (155, 70), (147, 71)]
 GREY_LIGHT = (70, 235)
+# The eye (mm), drawn: read off the logo's pixels (eyeball ~x 0.9-3.3, y 14.6-16.3 including its grey edge; pupil
+# at ~(2.3, 15.3)).
+EYE = dict(centre=(2.1, 15.45), rx=1.0, ry=0.72, angle=0.0, rim=0.28, pupil=(2.3, 15.35), pupil_r=0.34)
 # White bits of the bird that stand at bird height instead of being cut in: everything white whose centre is in this
 # box (source px x0, y0, x1, y1): the beak (both jaws) and the eye.
 RAISED_WHITE_BOX_PX = (150, 70, 235, 105)
@@ -111,7 +114,7 @@ def px_to_mm(x, y):
 
 
 def classify():
-    """Upscaled label image: 0 red, 1 white, 2 black, 3 transparent, 4 grey (the visor only)."""
+    """Upscaled label image: 0 red, 1 white, 2 black, 3 transparent, 4 the cap's bill (grey in the logo)."""
     a = np.asarray(Image.open(LOGO).convert("RGBA")).astype(float)
     # Flatten onto white: transparent pixels hide arbitrary colours that would bleed into the upsampled edge.
     a[..., :3] = a[..., :3] * (a[..., 3:] / 255) + 255 * (1 - a[..., 3:] / 255)
@@ -131,8 +134,8 @@ def classify():
     # Beyond the thin white rim is background (the logo's half-transparent edge pixels would read as a dark ring).
     yy, xx = np.mgrid[:c.shape[0], :c.shape[1]]
     c[np.hypot((xx + 0.5) / UPSCALE - CENTRE_PX[0], (yy + 0.5) / UPSCALE - CENTRE_PX[1]) > R_OUT_PX + 2] = 3
-    # The cap's visor is grey (its own filament). Grey elsewhere is just anti-aliasing between black and white, so grey
-    # is only looked for under the visor, and thin grey (edge blends) is dropped.
+    # The bill is grey. Grey elsewhere is just anti-aliasing between black and white, so it's only looked for under the
+    # bill outline, and thin grey (edge blends) is dropped.
     from skimage.draw import polygon as fill_polygon
     visor = np.zeros(c.shape, bool)
     rr, cc = fill_polygon([y * UPSCALE for _, y in VISOR_PX], [x * UPSCALE for x, _ in VISOR_PX], c.shape)
@@ -286,6 +289,16 @@ def fit_bb(mask):
     return g.buffer(BB_BOLD), blob
 
 
+def draw_eye():
+    """(white, black) of the eye: an elliptical eyeball with a black rim and a round pupil."""
+    c = Point(EYE["centre"])
+    ball = affinity.scale(c.buffer(1.0, 64), EYE["rx"], EYE["ry"])
+    ball = affinity.rotate(ball, EYE["angle"], origin=c)
+    pupil = Point(EYE["pupil"]).buffer(EYE["pupil_r"], 48)
+    rim = ball.buffer(EYE["rim"], 64).difference(ball)
+    return ball.difference(pupil), unary_union([rim, pupil])
+
+
 def build_regions():
     c = classify()
     red, white, black = c == 0, c == 1, c == 2
@@ -348,10 +361,25 @@ def build_regions():
     inset_p = clean(inset_p.difference(black_p).buffer(-MIN_WHITE / 2).buffer(MIN_WHITE / 2))
     whites = unary_union([raised_p, inset_p, bb, grey_p])
     red_all = bird_p.difference(black_p).difference(whites)
-    red_p = unary_union([red_all.difference(cap).buffer(-MIN_RED / 2).buffer(MIN_RED / 2),
-                         red_all.intersection(cap).buffer(-MIN_RED_CAP / 2).buffer(MIN_RED_CAP / 2)])
+    near_bb = bb.buffer(0.5)
+    red_p = unary_union([red_all.difference(near_bb).buffer(-MIN_RED / 2).buffer(MIN_RED / 2),
+                         red_all.intersection(near_bb).buffer(-MIN_RED_CAP / 2).buffer(MIN_RED_CAP / 2)])
     red_p = clean(red_p)
-    black_p = clean(bird_p.difference(unary_union([whites, red_p])))
+    black_p = clean(unary_union([bird_p.difference(unary_union([whites, red_p])), grey_p]))   # the bill is black
+
+    # The eye: a few blurry px in the logo (a grey-white eyeball with a dark pupil under the bill), so it's drawn: white
+    # eyeball, thin black rim, round black pupil, at bird height. It replaces whatever was traced there.
+    eye_white, eye_black = draw_eye()
+    eye = unary_union([eye_white, eye_black])
+    raised_p, inset_p = (clean(g.difference(eye)) for g in (raised_p, inset_p))
+    # Red cut by the eye: drop the slivers left around it (keeping the thin red around the "BB").
+    red_p = red_p.difference(eye)
+    red_p = clean(unary_union([red_p.difference(near_bb).buffer(-MIN_RED / 2).buffer(MIN_RED / 2),
+                               red_p.intersection(near_bb)]))
+    raised_p = unary_union([raised_p, eye_white])
+    bird_p = unary_union([bird_p, eye])
+    black_p = clean(bird_p.difference(unary_union([raised_p, inset_p, bb, red_p])))
+    cap = cap.difference(eye)
     ring = disc.difference(inner).difference(text).difference(bird_p)
     field = inner.difference(bird_p)
 
@@ -373,7 +401,6 @@ def build_regions():
         "cap": (red_p.intersection(cap), "red", CAP_TOP),
         "cap-lines": (black_p.intersection(cap), "black", CAP_TOP),
         "cap-bb": (bb.intersection(cap), "white", CAP_TOP),
-        "visor": (grey_p, "grey", CAP_TOP),
     }
     regions = {k: (clean(p), col, top) for k, (p, col, top) in regions.items()}
     return regions, outline, dict(tab_centre=(tc.x, tc.y), r_in=r_in)
@@ -491,7 +518,7 @@ def separate_pinches(regions, outline, spans, r=0.02, rounds=6):
     raise AssertionError("couldn't separate pinch points")
 
 
-COLOURS = {"red": "#c8202c", "white": "#f4f4f4", "black": "#222222", "grey": "#8c8f94"}
+COLOURS = {"red": "#c8202c", "white": "#f4f4f4", "black": "#222222"}
 
 
 BG = (0.86, 0.9, 0.95)
@@ -585,7 +612,7 @@ def main():
     regions, outline, info = build_regions()
 
     # Every body is built from one shared planar partition (see column_mesh). Only the top COLOUR_DEPTH of a
-    # white/black/grey region is that colour; red fills in below it, so fewer layers hold several colours (fewer AMS
+    # white/black region is that colour; red fills in below it, so fewer layers hold several colours (fewer AMS
     # swaps, less purge). The red also includes the base under everything.
     def colour_span(col):
         def span(name):

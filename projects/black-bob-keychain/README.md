@@ -20,7 +20,8 @@ stands off a recessed white field, and the cap is the highest point (owner's pic
       redrawn as splines, the rest of the trace smoothed (corners kept), black thickened evenly in vector space
 - [x] v3: owner said v2's beak and "BB" looked nothing like the original. Beak and cap are traced again (no redraw),
       with a sub-pixel trace that keeps edges smooth. "BB" is a font fitted onto the logo's own BB. Grey visor (4th colour)
-- [ ] Owner review of v3 (viewer link below)
+- [x] v4: owner wanted the whole cap bill black (back to 3 colours) and the eye revisited. The eye is now drawn (`EYE`)
+- [ ] Owner review of v4 (viewer link below)
 - [ ] Test print (P2S + AMS), then adjust heights and line widths
 
 ## Measurements
@@ -39,15 +40,15 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 | Smoothing | σ 0.15 along the outline | Light, since the trace is already sub-pixel; corners sharper than 40° stay sharp |
 | Ring letters | ~5.2 tall | Liberation Sans Bold (`source/LiberationSans-Bold.ttf`, SIL OFL) |
 | "BB" on the cap | ~2 tall, tilted like the logo's | DejaVu Sans Bold fitted onto the traced BB (best overlap of 7 fonts, 0.70), at 92% so the red shows around it, thickened 0.05/side |
-| Visor | grey | 4th AMS colour, as in the logo |
+| Cap bill | black | Grey in the logo. The owner chose black to keep 3 colours. Found under `VISOR_PX` |
+| Eye | eyeball 2.0 × 1.44, rim 0.28, pupil Ø 0.68 | Drawn (`EYE`). The logo has only a few blurry px there |
 | White details in the bird | ≥ 0.45 wide | Narrower slits are dropped (become red) |
 
 ## Print settings
 
-- **P2S + AMS 2 Pro** (A1 works too): red, white, black, **grey** (the visor). PLA is fine. PETG holds up better on keys.
-  If you don't want a 4th colour, set the grey part to black in Bambu Studio.
+- **P2S + AMS 2 Pro** (A1 works too): red, white, black. PLA is fine. PETG holds up better on keys.
 - Open `output/black-bob-keychain-multicolor.3mf`. If Bambu Studio asks, load it as one object with multiple parts,
-  then set the parts: red, white, black, grey. Flat, back down, no supports, 0.2 mm layers (17 layers).
+  then set the parts: red, white, black. Flat, back down, no supports, 0.2 mm layers (17 layers).
 - Layers 1–4 are all red. The colour swaps run from 0.8 mm up. For a plate of several, add copies in Bambu Studio:
   they share the swaps, so the purge per keychain goes down.
 - Single colour: `output/black-bob-keychain.stl` (the relief still shows. Paint or ink the top if you like).
@@ -64,13 +65,13 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 `build.py`:
 - **Trace:** two smooth fields, redness R−(G+B)/2 and lightness (G+B)/2, are upsampled 8× with a cubic spline, so the edges
   come out sub-pixel from the logo's own anti-aliasing. Each point goes to the nearest of red, white or black in that plane,
-  so blends split at their midpoint. Black hairlines that the spline leaves at sharp red/white edges are dropped. Grey is
-  looked for only under the visor (`VISOR_PX`).
+  so blends split at their midpoint. Black hairlines that the spline leaves at sharp red/white edges are dropped. The cap's
+  grey bill is found under `VISOR_PX` and printed black.
 - **Regions:** the circles are fitted to the ring edges. Bird = the filled black outline. White inside the bird is split into raised
   (beak, eye: `RAISED_WHITE_BOX_PX`) and cut-in (slits, bolt, tail rays). The cap outline is `CAP_PX`. The outlines are smoothed
   lightly with the corners kept (`smooth_ring`).
 - **Fonts:** the ring letters are font glyphs, each fitted onto its traced letter (`fit_letters`; the touching "LA" is fitted as a pair).
-  "BB" is fitted onto the traced BB blob (`fit_bb`: tilt by best overlap).
+  "BB" is fitted onto the traced BB blob (`fit_bb`: tilt by best overlap). The eye is drawn (`draw_eye`).
 - **Mesh:** all region outlines are noded into one planar partition (`partition`, 1 µm grid). Each colour body is built straight from it as
   columns with shared vertices (`column_mesh`): caps by constrained Delaunay, walls only where neighbouring columns differ.
   There are no booleans, so it's watertight by construction. Where two columns touch only at a corner, a 0.02 mm disc moves to a
@@ -79,14 +80,16 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 
 ## Files
 
-- `output/black-bob-keychain-multicolor.3mf`: print this (4 parts)
+- `output/black-bob-keychain-multicolor.3mf`: print this (3 parts)
 - `output/black-bob-keychain.stl`: single-colour solid
-- `output/black-bob-keychain-{red,white,black,grey}.stl`: colour bodies
+- `output/black-bob-keychain-{red,white,black}.stl`: colour bodies
 - `renders/layout.png` (source vs colours vs heights), `renders/compare-head.png` (logo vs model), `renders/relief*.png`, `renders/model.png`
 - **Review page:** https://claude.ai/artifact/5FYvjmwh3QfyWj5R3MaU21 (`renders/viewer.html`; republish to this URL)
 
 ## Log
 
+- **2026-11-12 (v4):** Owner: "looks better". Whole cap bill black (keep 3 colours), and revisit the eye. The eye is now drawn:
+  a white eyeball, black rim, round pupil. Thin red slivers left around it are dropped.
 - **2026-11-12 (v3):** Owner: "the beak and the hat BB lettering now look nothing like the original." Went back to tracing
   them, with a better trace (sub-pixel, colour-blend aware) and much thinner black, plus a fitted "BB" and a grey visor. Replaced the
   slab/boolean meshing with a direct column mesher (the booleans kept leaving non-manifold edges).

@@ -1,7 +1,7 @@
 {
   "page_title": "Black Bob Keychain",
   "title": "Black Bob Elementary keychain",
-  "subtitle": "Traced from the school logo \u00b7 60 mm across the ring \u00b7 style A layered heights \u00b7 4 colours (red, white, black, grey visor) \u00b7 shown hanging \u00b7 millimetres",
+  "subtitle": "Traced from the school logo \u00b7 60 mm across the ring \u00b7 style A layered heights \u00b7 red, white, black \u00b7 shown hanging \u00b7 millimetres",
   "meshes": [
     {
       "path": "renders/view-red.stl",
@@ -17,15 +17,9 @@
     },
     {
       "path": "renders/view-black.stl",
-      "label": "Black (outlines, beak lines)",
+      "label": "Black (outlines, cap bill, eye)",
       "style": "solid",
       "color": "#2b2b2e"
-    },
-    {
-      "path": "renders/view-grey.stl",
-      "label": "Grey (cap visor)",
-      "style": "solid",
-      "color": "#8c8f94"
     }
   ],
   "dims": [
@@ -71,6 +65,6 @@
     }
   ],
   "scale_note": "Real size: 60 mm across the red ring (your pick: 55-60). The tab adds 8 mm on top. Type 55 in the real-size box to preview the smaller option.",
-  "notes_title": "v3: back to the logo\u2019s shapes",
-  "notes": "v3: the beak and cap are traced from the logo again, not redrawn, so they keep the logo's shapes: slim beak lines, the hooked tip, the lower jaw. The trace is now sub-pixel (it uses the logo's anti-aliasing), so edges are smooth without reshaping anything. The black lines are only slightly thickened (Bambu Studio's Arachne prints thin lines). The \"BB\" is a font fitted to the logo's own BB (its size, tilt and spot). The visor is grey, as in the logo, which needs a 4th AMS slot. Ring letters are still the fitted font from v2. Check: the beak, the cap and BB, and the eye area."
+  "notes_title": "v4: black bill, new eye",
+  "notes": "v4: the cap's whole bill is black (it was grey), so it's back to 3 colours. The eye is drawn instead of traced (it was just a few blurry pixels): a white eyeball with a thin black rim and a round black pupil, sized and placed from the logo. Everything else is as in v3. Check: the eye's size and where the pupil looks."
 }
