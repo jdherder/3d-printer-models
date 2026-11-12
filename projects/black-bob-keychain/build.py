@@ -105,6 +105,8 @@ GREY_LIGHT = (70, 235)
 # pupil set slightly forward, and a white highlight (0.5 mm, big enough to print). v4's small centred pupil read as a stare.
 EYE = dict(centre=(2.1, 15.4), rx=1.0, ry=0.78, rim=0.28, lid=None, pupil=(2.4, 15.35), pupil_r=(0.55, 0.6),
            glint=(2.55, 15.55), glint_r=0.25)
+EYE_CLEAR = 0.9            # beak side of the eye, out to this far, below EYE_CLEAR_EDGE: cleared to beak white
+EYE_CLEAR_EDGE = [(2.2, 16.46), (4.4, 16.7)]   # from the eye rim's top, along the beak's upper edge
 # White bits of the bird that stand at bird height instead of being cut in: everything white whose centre is in this
 # box (source px x0, y0, x1, y1): the beak (both jaws) and the eye.
 RAISED_WHITE_BOX_PX = (150, 70, 235, 105)
@@ -382,6 +384,17 @@ def build_regions():
     # eyeball, thin black rim, round black pupil, at bird height. It replaces whatever was traced there.
     eye_white, eye_black = draw_eye()
     eye = unary_union([eye_white, eye_black])
+    # The logo's eye has a grey ring, then the beak's white. The drawn eye is a little smaller, so the trace of that ring
+    # (a black spike, and a white crescent inside it) is cleared on the eye's beak side: there it's beak white.
+    cx, cy = EYE["centre"]
+    (ax, ay), (bx, by) = EYE_CLEAR_EDGE              # top of the cleared area: from the eye's top, rising gently
+    below = Polygon([(ax, ay), (bx, by), (bx + 3, by - 3), (ax, ay - 5)])
+    clear = eye.buffer(EYE_CLEAR).intersection(below).intersection(box(cx, cy - 5, cx + 5, by)).difference(eye)
+    clear = clear.difference(red_p)                 # the red patch under the bill stays whole
+    black_p = black_p.difference(clear)
+    bird_p = unary_union([bird_p, clear])
+    cap = cap.difference(clear)
+    raised_p = unary_union([raised_p, clear.intersection(bird_p)])
     raised_p, inset_p = (clean(g.difference(eye)) for g in (raised_p, inset_p))
     # Red cut by the eye: drop the slivers left around it (keeping the thin red around the "BB").
     red_p = red_p.difference(eye)

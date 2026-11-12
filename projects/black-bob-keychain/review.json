@@ -65,6 +65,6 @@
     }
   ],
   "scale_note": "Real size: 60 mm across the red ring (your pick: 55-60). The tab adds 8 mm on top. Type 55 in the real-size box to preview the smaller option.",
-  "notes_title": "v5: friendly eye",
-  "notes": "v5: new eye, the \"friendly\" style you picked: a round white eye with no lid, a big pupil set a little toward the beak, and a white highlight (0.5 mm, so it prints). The cap bill is black (3 colours), and everything else is as in v4. Check the eye up close."
+  "notes_title": "v6: eye cleaned up",
+  "notes": "v6: removed the white sliver (and the small black spike) to the right of the eye. They were the trace of the logo's grey ring around its eye, left over because the drawn eye is a little smaller. Now the eye sits right against the beak's white, and the red patch under the bill is whole. The rest is as in v5: friendly eye, black bill, 3 colours."
 }

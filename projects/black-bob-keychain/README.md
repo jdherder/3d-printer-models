@@ -23,7 +23,9 @@ stands off a recessed white field, and the cap is the highest point (owner's pic
 - [x] v4: owner wanted the whole cap bill black (back to 3 colours) and the eye revisited. The eye is now drawn (`EYE`)
 - [x] v5: owner found v4's eye creepy (a small centred pupil reads as a stare). From four styles they picked "friendly":
       a big pupil with a white highlight, no lid
-- [ ] Owner review of v5 (viewer link below)
+- [x] v6: removed a white sliver and black spike right of the eye: the logo's grey eye ring, traced outside the
+      (smaller) drawn eye. That area is now beak white (`EYE_CLEAR`, `EYE_CLEAR_EDGE`)
+- [ ] Owner review of v6 (viewer link below)
 - [ ] Test print (P2S + AMS), then adjust heights and line widths
 
 ## Measurements
@@ -90,6 +92,9 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 
 ## Log
 
+- **2026-11-12 (v6):** Owner: a white sliver right of the eye isn't in the original. It was the trace of the logo's grey eye ring (a
+  black spike, with white between it and the drawn eye). Cleared to beak white, up to a line from the eye's top along the beak's
+  upper edge, keeping the red patch under the bill.
 - **2026-11-12 (v5):** Owner: v4's eye was "creepy". Showed four eye styles (under the brim, friendly, determined, looking ahead),
   each with a big pupil and a highlight. The owner picked friendly. The highlight is 0.5 mm: smaller ones got dropped as specks.
 - **2026-11-12 (v4):** Owner: "looks better". Whole cap bill black (keep 3 colours), and revisit the eye. The eye is now drawn:
