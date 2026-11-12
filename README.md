@@ -1,6 +1,6 @@
 # 3D Printer Models
 
-Models for 3D printing on a **Bambu Lab A1**: scans from Polycam (iOS), edits in
+Models for 3D printing on a **Bambu Lab A1** and **P2S** (with AMS 2 Pro): scans from Polycam (iOS), edits in
 Autodesk Fusion, and reproducible Python cleanup pipelines.
 
 ## Projects
@@ -24,7 +24,7 @@ Pegboard parts form a catalog, with shared pegs: see [docs/pegboard.md](docs/peg
 - `projects/<name>/` has one folder per model: `source/` (raw), `build.py`,
   `output/` (print-ready), `renders/` (previews), and a `README.md` with status and notes
 - `tools/` holds shared mesh tooling (`meshkit.py`, `render.py`, `inspect_mesh.py`)
-- `docs/` holds workflow notes for the [A1](docs/bambu-a1.md), [Fusion](docs/fusion.md), [pegboard parts](docs/pegboard.md),
+- `docs/` holds workflow notes for the [A1](docs/bambu-a1.md), [P2S](docs/bambu-p2s.md), [Fusion](docs/fusion.md), [pegboard parts](docs/pegboard.md),
   [Polycam scanning](docs/scanning-polycam.md), and the [model review process](docs/review.md)
 - `CLAUDE.md` is guidance for AI agents working in this repo
 
