@@ -16,7 +16,9 @@ stands off a recessed white field, and the cap is the highest point (owner's pic
       that exists there (Cloudinary returns the same 300 px for the untransformed original). `…-web-300px.webp` is the
       owner's lossy copy, kept for reference only.
 - [x] v1: traced, style A heights, 60 mm, keyring tab. Watertight, 0 self-intersections, Euler 0 (the tab hole)
-- [ ] Owner review of v1 (viewer link below)
+- [x] v2: owner asked for crisp lines, not bumpy or wavy. Ring letters set in a font (fitted per letter), cap and beak
+      redrawn as splines, the rest of the trace smoothed (corners kept), black thickened evenly in vector space
+- [ ] Owner review of v2 (viewer link below)
 - [ ] Test print (P2S + AMS), then adjust heights and line widths
 
 ## Measurements
@@ -30,7 +32,10 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 | Heights (top of each colour) | red base 0.8, white field 1.8, cut-in white details 2.4, red ring 2.8, bird + outline + beak 3.0, letters 3.2, cap 3.4 | Style A |
 | Colour depth | white 1.0, black 0.8 | Below that it's red (`COLOUR_DEPTH`), so fewer layers hold all three colours |
 | Keyring hole | 4.0, 2.5 wall | Tab at 12 o'clock, outside the ring so it doesn't cut "BLACK BOB" |
-| Black lines | ≥ ~0.6 | The logo's hairline outlines are ~0.35 mm at this size. Lines thinner than 0.6 grow 0.12 per side; wider black is untouched |
+| Black lines | ≥ ~0.6 | The logo's hairlines are ~0.35 mm at this size. After smoothing, the red next to black is pulled back 0.13 (white 0.06), so every line grows evenly |
+| Smoothing | σ 0.3 along the outline | Corners sharper than 40° stay sharp (`SMOOTH`, `CORNER_DEG`) |
+| Ring letters | ~5.2 tall | Liberation Sans Bold (`source/LiberationSans-Bold.ttf`, SIL OFL) |
+| "BB" on the cap | 2.05 tall | Font glyphs thickened 0.08 per side so the strokes print (~0.45) |
 | White details in the bird | ≥ 0.45 wide | Narrower slits are dropped (become red) |
 
 ## Print settings
@@ -53,9 +58,12 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 
 `build.py`: the logo is upscaled 4× (Lanczos), and each pixel is classified to the nearest of red, white or black. The circles are fitted to the
 ring edges (the inner edge is ~0.5 px off-centre in the logo and is kept that way). Bird = the filled black outline. White
-inside the bird splits into raised (beak and eye, `RAISED_WHITE_BOX_PX`) and cut-in (slits, bolt, tail rays). Letters =
-white in the ring not connected to the field. The cap is a hand-drawn outline (`CAP_PX`). Contours are traced on a slightly blurred
-mask and snapped to a 0.005 mm grid. Each colour body is built as stacked slabs per height step and unioned with manifold3d (unioning region by region left pinch points).
+inside the bird splits into raised (beak and eye, `RAISED_WHITE_BOX_PX`) and cut-in (slits, bolt, tail rays). Traced
+outlines are smoothed along their length with the corners kept (`smooth_ring`). Then the black is grown evenly in vector space.
+**Not traced (for crisp edges):** the ring letters are font glyphs, each fitted (scaled and rotated) onto its traced letter
+(`fit_letters`; the touching "LA" is fitted as a pair). The cap (`CAP_*`) and the beak (`BEAK_*`, `JAW_LOOP`, `MOUTH_LINE`)
+are splines through points read off a gridded close-up of the logo. They replace the trace in their area. Polygons are snapped to a 0.005 mm grid. Each colour body is built as stacked slabs per height step, unioned with manifold3d and
+simplified at 1 µm. Each slab outline gets a 3 µm close first. Without these steps, near-coincident traced edges left non-manifold edges.
 
 ## Files
 
@@ -67,5 +75,7 @@ mask and snapped to a 0.005 mm grid. Each colour body is built as stacked slabs 
 
 ## Log
 
+- **2026-11-12 (v2):** Owner: "Lines should be crisp and not bumpy or wavy." Ring letters are now Liberation Sans Bold. It was picked by
+  overlap with the traced letters (0.88 mean, the best of 6 bold sans tried). The cap and beak are redrawn as splines, and the rest of the bird is smoothed.
 - **2026-11-12:** Workshopped options with the owner. Picked 55–60 mm, style A heights, plain back, several per plate.
   The owner sent the school site's image URL. Its original is also 300 px, but lossless, so it's the source. Built v1 at 60 mm and published the review page.

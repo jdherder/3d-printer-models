@@ -6,7 +6,7 @@
       68.0,
       3.4
     ],
-    "faces": 81048,
+    "faces": 103460,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 0,
@@ -17,16 +17,16 @@
   },
   "print_orientation": "flat on the bed, plain red back down (no supports)",
   "region_areas_mm2": {
-    "ring": 988.3,
-    "field": 576.2,
-    "text": 216.2,
-    "bird": 528.2,
-    "outline": 305.9,
-    "beak": 43.7,
-    "details": 191.0,
-    "cap": 14.1,
-    "cap-lines": 11.6,
-    "cap-bb": 4.1
+    "ring": 997.9,
+    "field": 609.1,
+    "text": 211.2,
+    "bird": 490.5,
+    "outline": 295.5,
+    "beak": 41.4,
+    "details": 186.0,
+    "cap": 15.5,
+    "cap-lines": 25.1,
+    "cap-bb": 6.7
   },
   "params_mm": {
     "diameter": 60.0,
@@ -42,7 +42,8 @@
     "tab_hole_d": 4.0,
     "tab_hole_wall": 2.5,
     "ring_inner_d": 44.8,
-    "black_line_grow": 0.12,
+    "black_line_grow": 0.13,
+    "smooth_sigma": 0.3,
     "min_white": 0.45
   }
 }
