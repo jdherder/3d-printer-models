@@ -21,7 +21,9 @@ stands off a recessed white field, and the cap is the highest point (owner's pic
 - [x] v3: owner said v2's beak and "BB" looked nothing like the original. Beak and cap are traced again (no redraw),
       with a sub-pixel trace that keeps edges smooth. "BB" is a font fitted onto the logo's own BB. Grey visor (4th colour)
 - [x] v4: owner wanted the whole cap bill black (back to 3 colours) and the eye revisited. The eye is now drawn (`EYE`)
-- [ ] Owner review of v4 (viewer link below)
+- [x] v5: owner found v4's eye creepy (a small centred pupil reads as a stare). From four styles they picked "friendly":
+      a big pupil with a white highlight, no lid
+- [ ] Owner review of v5 (viewer link below)
 - [ ] Test print (P2S + AMS), then adjust heights and line widths
 
 ## Measurements
@@ -41,7 +43,7 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 | Ring letters | ~5.2 tall | Liberation Sans Bold (`source/LiberationSans-Bold.ttf`, SIL OFL) |
 | "BB" on the cap | ~2 tall, tilted like the logo's | DejaVu Sans Bold fitted onto the traced BB (best overlap of 7 fonts, 0.70), at 92% so the red shows around it, thickened 0.05/side |
 | Cap bill | black | Grey in the logo. The owner chose black to keep 3 colours. Found under `VISOR_PX` |
-| Eye | eyeball 2.0 × 1.44, rim 0.28, pupil Ø 0.68 | Drawn (`EYE`). The logo has only a few blurry px there |
+| Eye | eyeball 2.0 × 1.56, rim 0.28, pupil 1.1 × 1.2, highlight Ø 0.5 | Drawn (`EYE`, "friendly" style). The logo has only a few blurry px there |
 | White details in the bird | ≥ 0.45 wide | Narrower slits are dropped (become red) |
 
 ## Print settings
@@ -88,6 +90,8 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 
 ## Log
 
+- **2026-11-12 (v5):** Owner: v4's eye was "creepy". Showed four eye styles (under the brim, friendly, determined, looking ahead),
+  each with a big pupil and a highlight. The owner picked friendly. The highlight is 0.5 mm: smaller ones got dropped as specks.
 - **2026-11-12 (v4):** Owner: "looks better". Whole cap bill black (keep 3 colours), and revisit the eye. The eye is now drawn:
   a white eyeball, black rim, round pupil. Thin red slivers left around it are dropped.
 - **2026-11-12 (v3):** Owner: "the beak and the hat BB lettering now look nothing like the original." Went back to tracing

@@ -101,7 +101,10 @@ VISOR_PX = [(145, 66.5), (152, 61.5), (160, 59.5), (170, 59), (180, 61.5), (184,
 GREY_LIGHT = (70, 235)
 # The eye (mm), drawn: read off the logo's pixels (eyeball ~x 0.9-3.3, y 14.6-16.3 including its grey edge; pupil
 # at ~(2.3, 15.3)).
-EYE = dict(centre=(2.1, 15.45), rx=1.0, ry=0.72, angle=0.0, rim=0.28, pupil=(2.3, 15.35), pupil_r=0.34)
+# Owner picked "friendly" (v5) from four styles (under the brim, friendly, determined, looking ahead): no lid, a big
+# pupil set slightly forward, and a white highlight (0.5 mm, big enough to print). v4's small centred pupil read as a stare.
+EYE = dict(centre=(2.1, 15.4), rx=1.0, ry=0.78, rim=0.28, lid=None, pupil=(2.4, 15.35), pupil_r=(0.55, 0.6),
+           glint=(2.55, 15.55), glint_r=0.25)
 # White bits of the bird that stand at bird height instead of being cut in: everything white whose centre is in this
 # box (source px x0, y0, x1, y1): the beak (both jaws) and the eye.
 RAISED_WHITE_BOX_PX = (150, 70, 235, 105)
@@ -290,13 +293,21 @@ def fit_bb(mask):
 
 
 def draw_eye():
-    """(white, black) of the eye: an elliptical eyeball with a black rim and a round pupil."""
-    c = Point(EYE["centre"])
-    ball = affinity.scale(c.buffer(1.0, 64), EYE["rx"], EYE["ry"])
-    ball = affinity.rotate(ball, EYE["angle"], origin=c)
-    pupil = Point(EYE["pupil"]).buffer(EYE["pupil_r"], 48)
-    rim = ball.buffer(EYE["rim"], 64).difference(ball)
-    return ball.difference(pupil), unary_union([rim, pupil])
+    """(white, black) of the eye: an elliptical eyeball with a black rim, optionally cut by a straight upper lid,
+    and an elliptical pupil (clipped to the eyeball, so it can tuck under the lid) with a white highlight."""
+    e = EYE
+    c = Point(e["centre"])
+    ball = affinity.scale(c.buffer(1.0, 64), e["rx"], e["ry"])
+    if e.get("lid"):
+        (x0, y0), (x1, y1) = e["lid"]                           # lid line, back to front; above it is lid (black)
+        d = np.array([x1 - x0, y1 - y0]) / np.hypot(x1 - x0, y1 - y0)
+        n = np.array([-d[1], d[0]])                             # points up
+        p0, p1 = np.array([x0, y0]) - 5 * d, np.array([x1, y1]) + 5 * d
+        ball = ball.difference(Polygon([p0, p1, p1 + 5 * n, p0 + 5 * n]))
+    rim = ball.buffer(e["rim"], 64).difference(ball)
+    pupil = affinity.scale(Point(e["pupil"]).buffer(1.0, 48), e["pupil_r"][0], e["pupil_r"][1]).intersection(ball)
+    glint = Point(e["glint"]).buffer(e["glint_r"], 32) if e.get("glint_r") else Polygon()
+    return unary_union([ball.difference(pupil), glint.intersection(pupil)]), unary_union([rim, pupil]).difference(glint)
 
 
 def build_regions():
