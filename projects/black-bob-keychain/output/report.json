@@ -1,0 +1,48 @@
+{
+  "scale_status": "designer's choice: 60 mm across the red ring (owner picked 55-60 mm)",
+  "print": {
+    "extents_mm": [
+      60.0,
+      68.0,
+      3.4
+    ],
+    "faces": 81048,
+    "watertight": true,
+    "winding_consistent": true,
+    "euler_number": 0,
+    "volume_cm3": 7.7,
+    "fits_A1_as_is": true,
+    "fits_A1_any_axis_order": true,
+    "self_intersecting_faces": 0
+  },
+  "print_orientation": "flat on the bed, plain red back down (no supports)",
+  "region_areas_mm2": {
+    "ring": 988.3,
+    "field": 576.2,
+    "text": 216.2,
+    "bird": 528.2,
+    "outline": 305.9,
+    "beak": 43.7,
+    "details": 191.0,
+    "cap": 14.1,
+    "cap-lines": 11.6,
+    "cap-bb": 4.1
+  },
+  "params_mm": {
+    "diameter": 60.0,
+    "overall_width": 60.0,
+    "overall_height": 68.0,
+    "base": 0.8,
+    "field_top": 1.8,
+    "ring_top": 2.8,
+    "text_top": 3.2,
+    "bird_top": 3.0,
+    "inset_top": 2.4,
+    "cap_top": 3.4,
+    "tab_hole_d": 4.0,
+    "tab_hole_wall": 2.5,
+    "ring_inner_d": 44.8,
+    "black_line_grow": 0.12,
+    "min_white": 0.45
+  }
+}

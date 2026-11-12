@@ -1,0 +1,25 @@
+{
+  "page_title": "Black Bob Keychain",
+  "title": "Black Bob Elementary keychain",
+  "subtitle": "Traced from the school logo · 60 mm across the ring · style A: raised red bezel, embossed letters, bird standing off a recessed white field, cap on top · shown hanging · millimetres",
+  "meshes": [
+    {"path": "renders/view-red.stl", "label": "Red (base, ring, bird, cap)", "style": "solid", "color": "#c8202c"},
+    {"path": "renders/view-white.stl", "label": "White (field, letters, details, beak, BB)", "style": "solid", "color": "#f2f2f2"},
+    {"path": "renders/view-black.stl", "label": "Black (bird outline)", "style": "solid", "color": "#2b2b2e"}
+  ],
+  "dims": [
+    {"label": "Diameter (outside of the red ring)", "param": "diameter"},
+    {"label": "Overall height incl. keyring tab", "param": "overall_height"},
+    {"label": "Red base (back)", "param": "base"},
+    {"label": "White field (recessed)", "param": "field_top"},
+    {"label": "Cut-in white details", "param": "inset_top"},
+    {"label": "Red ring (bezel)", "param": "ring_top"},
+    {"label": "Bird, outline, beak", "param": "bird_top"},
+    {"label": "Ring letters (embossed)", "param": "text_top"},
+    {"label": "Cap (highest)", "param": "cap_top"},
+    {"label": "Keyring hole", "param": "tab_hole_d"}
+  ],
+  "scale_note": "Real size: 60 mm across the red ring (your pick: 55-60). The tab adds 8 mm on top. Type 55 in the real-size box to preview the smaller option.",
+  "notes_title": "v1: what to check",
+  "notes": "First pass at style A. Heights (top of each colour): red base 0.8, white field 1.8, cut-in white details 2.4, red ring 2.8, bird 3.0, letters 3.2, cap 3.4. Check: (1) the black outline is thicker than the logo's, because hairlines had to grow to ~0.6 mm to print; (2) the beak and mouth area, where the low-res logo is roughest; (3) the tab position and hole size (4 mm, for a split ring); (4) whether the height steps feel right or should be bigger. The back is plain red."
+}
