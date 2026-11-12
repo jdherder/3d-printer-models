@@ -29,7 +29,10 @@ stands off a recessed white field, and the cap is the highest point (owner's pic
       rebuilt from its pixels (`EYE_PX`): under the bill, the pupil low-left touching the bottom outline. Red is kept to 0.25 mm
 - [x] v8: owner: the logo's pupil has several parts, like the cartoon eye. Re-read the pixels: a round iris (dark top edge,
       grey left edge) with the black pupil low in it and a white highlight at its upper left. Printed as a black iris + a white highlight
-- [ ] Owner review of v8 (viewer link below)
+- [x] Owner review of v8: merged (PR #13). A test print looked good overall
+- [x] v9: larger white areas printed a bit pink (1.0 mm of white over red). White is now 1.6 mm deep everywhere; all heights
+      above the base +0.6 (relief steps unchanged), total 4.0 mm
+- [ ] Test print v9: check the white field
 - [ ] Test print (P2S + AMS), then adjust heights and line widths
 
 ## Measurements
@@ -40,8 +43,8 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 |---|---|---|
 | Diameter (outside of the red ring) | 60.0 | `DIAMETER`. The logo's thin white outer rim is left off (~0.8 mm, too fragile/dirty on a keychain) |
 | Overall incl. tab | 60 × 68 | |
-| Heights (top of each colour) | red base 0.8, white field 1.8, cut-in white details 2.4, red ring 2.8, bird + outline + beak 3.0, letters 3.2, cap 3.4 | Style A |
-| Colour depth | white 1.0, black 0.8 | Below that it's red (`COLOUR_DEPTH`), so fewer layers hold all three colours |
+| Heights (top of each colour) | red base 0.8, white field 2.4, cut-in white details 3.0, red ring 3.4, bird + outline + beak 3.6, letters 3.8, cap 4.0 | Style A. Total 4.0 (was 3.4 until v9) |
+| Colour depth | white 1.6, black 0.8 | Below that it's red (`COLOUR_DEPTH`). White was 1.0 until v9 and printed pinkish over the red |
 | Keyring hole | 4.0, 2.5 wall | Tab at 12 o'clock, outside the ring so it doesn't cut "BLACK BOB" |
 | Black lines | ~0.3 and up, grown 0.03/side | As thin as the logo's. Bambu Studio's Arachne prints thin lines at ≥ ~0.34 |
 | Smallest white / red detail | white 0.3, red 0.25 | Narrower bits are dropped (become black). Bambu's Arachne prints ~0.34 minimum, so these come out a hair wider |
@@ -56,7 +59,7 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 
 - **P2S + AMS 2 Pro** (A1 works too): red, white, black. PLA is fine. PETG holds up better on keys.
 - Open `output/black-bob-keychain-multicolor.3mf`. If Bambu Studio asks, load it as one object with multiple parts,
-  then set the parts: red, white, black. Flat, back down, no supports, 0.2 mm layers (17 layers).
+  then set the parts: red, white, black. Flat, back down, no supports, 0.2 mm layers (20 layers).
 - Layers 1–4 are all red. The colour swaps run from 0.8 mm up. For a plate of several, add copies in Bambu Studio:
   they share the swaps, so the purge per keychain goes down.
 - Single colour: `output/black-bob-keychain.stl` (the relief still shows. Paint or ink the top if you like).
@@ -65,7 +68,7 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 
 - Is the black outline too heavy? It had to grow to print. Alternative: drop the black and let the height step
   outline the bird (2 colours, much less purge).
-- Should the heights be bigger? The total is now 3.4 mm.
+- Is 1.6 mm of white enough? If the field still looks pink, try 2.0 (`COLOUR_DEPTH`, then raise `FIELD_TOP` and the rest to match).
 - Is 4 mm right for their split ring?
 
 ## Pipeline
@@ -96,6 +99,9 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 
 ## Log
 
+- **2026-11-12 (v9):** Owner: "worked well overall", but the larger white areas looked a bit pink. White PLA over the red base needs
+  more depth: `COLOUR_DEPTH` white 1.0 → 1.6 (8 layers). To fit it under the field, every top moved up 0.6 (field 1.8 → 2.4 ...
+  cap 3.4 → 4.0). The step heights between colours are unchanged. The base (red back) stays 0.8.
 - **2026-11-12 (v8):** Owner: the pupil "clearly has multiple parts like our friendly cartoon one". Pixels: an iris ~6-7 px with a dark
   top edge, a black pupil low in it, and a white glint (211) at its upper left. Now a black iris (Ø 1.5) with a 0.45 white highlight there.
   Centring the highlight (for more black round it) looked like a ring, so it stays upper left.

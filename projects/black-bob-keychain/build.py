@@ -8,8 +8,8 @@ source/logo-2026-11-12-school-site-300px.png (the school's logo; 300 px is the l
      white feather/bolt details, white beak, and cap (red + white "BB")
   -> thin black lines thickened and tiny white specks dropped so every colour region prints with a 0.4 mm nozzle
   -> "bezel + hero bird" heights (owner's pick, style A), all on a plain red base:
-       red base 0.8 | white field 1.8 | red ring 2.8 | white text 3.2 | white details (cut in) 2.4 |
-       red bird, black outline, white beak 3.0 | cap 3.4
+       red base 0.8 | white field 2.4 | red ring 3.4 | white text 3.8 | white details (cut in) 3.0 |
+       red bird, black outline, white beak 3.6 | cap 4.0
   -> keyring tab above the ring at 12 o'clock
   -> output/black-bob-keychain.stl             single-colour print (all bodies merged)
   -> output/black-bob-keychain-multicolor.3mf  one object, three parts (red, white, black) for the AMS
@@ -51,12 +51,12 @@ NAME = "black-bob-keychain"
 # --- Design parameters (mm) ------------------------------------------------------------------------------------------
 DIAMETER = 60.0            # outside of the red ring (owner: 55 or 60; 60 keeps the wing details printable)
 BASE = 0.8                 # plain red base under everything (4 layers): the back is red, all colour swaps are above it
-FIELD_TOP = 1.8            # white background inside the ring (1.0 white over the red, so it doesn't turn pink)
-RING_TOP = 2.8             # red ring: a raised bezel around the field
-TEXT_TOP = 3.2             # white ring letters, embossed 0.4 above the ring
-BIRD_TOP = 3.0             # red bird, its black outline and the white beak: stand 1.2 off the field
-INSET_TOP = 2.4            # white feather slits, lightning bolt, tail rays: cut 0.6 into the bird
-CAP_TOP = 3.4              # cap (and its "BB"): the highest point
+FIELD_TOP = 2.4            # white background inside the ring (1.6 white over the red base; 1.0 printed pinkish, v9)
+RING_TOP = 3.4             # red ring: a raised bezel around the field
+TEXT_TOP = 3.8             # white ring letters, embossed 0.4 above the ring
+BIRD_TOP = 3.6             # red bird, its black outline and the white beak: stand 1.2 off the field
+INSET_TOP = 3.0            # white feather slits, lightning bolt, tail rays: cut 0.6 into the bird
+CAP_TOP = 4.0              # cap (and its "BB"): the highest point
 TAB_R = 4.5                # keyring tab (radius), above the ring at 12 o'clock
 TAB_HOLE_D = 4.0           # for a split ring
 TAB_CENTRE_OUT = 3.5       # tab/hole centre, this far outside the ring
@@ -67,7 +67,9 @@ BLACK_GROW = 0.03
 MIN_RED = 0.25             # red bits inside the bird narrower than this are dropped (become black)
 MIN_RED_CAP = 0.25         # ... except right around the "BB", where the red is this thin in the logo (Arachne prints ~0.3)
 MIN_WHITE = 0.3            # white details inside the bird narrower than this are dropped (become black)
-COLOUR_DEPTH = {"white": 1.0, "black": 0.8}   # thick enough that the red below doesn't show through
+# Thick enough that the red below doesn't show through. White PLA is translucent: 1.0 mm (5 layers) over red printed
+# pink (owner's test print, v8), so white is 1.6 mm (8 layers). Black hides red in 0.8.
+COLOUR_DEPTH = {"white": 1.6, "black": 0.8}
 MIN_AREA = 0.15            # specks smaller than this (mm^2) are dropped
 SMOOTH = 0.15              # traced outlines are smoothed along their length (Gaussian sigma, mm): no pixel steps or wobble
 CORNER_DEG = 40            # ... except at corners sharper than this, which stay crisp
