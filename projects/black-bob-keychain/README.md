@@ -25,7 +25,9 @@ stands off a recessed white field, and the cap is the highest point (owner's pic
       a big pupil with a white highlight, no lid
 - [x] v6: removed a white sliver and black spike right of the eye: the logo's grey eye ring, traced outside the
       (smaller) drawn eye. That area is now beak white (`EYE_CLEAR`, `EYE_CLEAR_EDGE`)
-- [ ] Owner review of v6 (viewer link below)
+- [x] v7: owner: "we're getting further away", match the original and keep it printable. Studied the logo pixel by pixel. The eye is
+      rebuilt from its pixels (`EYE_PX`): under the bill, the pupil low-left touching the bottom outline. Red is kept to 0.25 mm
+- [ ] Owner review of v7 (viewer link below)
 - [ ] Test print (P2S + AMS), then adjust heights and line widths
 
 ## Measurements
@@ -40,12 +42,12 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 | Colour depth | white 1.0, black 0.8 | Below that it's red (`COLOUR_DEPTH`), so fewer layers hold all three colours |
 | Keyring hole | 4.0, 2.5 wall | Tab at 12 o'clock, outside the ring so it doesn't cut "BLACK BOB" |
 | Black lines | ~0.3 and up, grown 0.03/side | As thin as the logo's. Bambu Studio's Arachne prints thin lines at ≥ ~0.34 |
-| Smallest white / red detail | 0.3 (red on the cap 0.25) | Narrower bits are dropped (become black) |
+| Smallest white / red detail | white 0.3, red 0.25 | Narrower bits are dropped (become black). Bambu's Arachne prints ~0.34 minimum, so these come out a hair wider |
 | Smoothing | σ 0.15 along the outline | Light, since the trace is already sub-pixel; corners sharper than 40° stay sharp |
 | Ring letters | ~5.2 tall | Liberation Sans Bold (`source/LiberationSans-Bold.ttf`, SIL OFL) |
 | "BB" on the cap | ~2 tall, tilted like the logo's | DejaVu Sans Bold fitted onto the traced BB (best overlap of 7 fonts, 0.70), at 92% so the red shows around it, thickened 0.05/side |
 | Cap bill | black | Grey in the logo. The owner chose black to keep 3 colours. Found under `VISOR_PX` |
-| Eye | eyeball 2.0 × 1.56, rim 0.28, pupil 1.1 × 1.2, highlight Ø 0.5 | Drawn (`EYE`, "friendly" style). The logo has only a few blurry px there |
+| Eye | eyeball ~2.9 × 1.4 (top cut by the bill), rim 0.25, pupil Ø 0.8 | Drawn from the logo's pixels (`EYE_PX`). The pupil sits low-left and meets the bottom outline |
 | White details in the bird | ≥ 0.45 wide | Narrower slits are dropped (become red) |
 
 ## Print settings
@@ -92,6 +94,11 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 
 ## Log
 
+- **2026-11-12 (v7):** Owner: "we're getting further away"; match the original, still printable. A pixel-level study found:
+  beak line widths already match (~0.7 mm); the drift was around the head. Thin red was dropped to black. The eye was a
+  free-floating round eye, but in the logo it's tucked under the bill with a low-left pupil (that reads friendly). Rebuilt the eye from the
+  logo's pixels. Dropped v6's clearing hack. Kept red down to 0.25 mm. Not yet fixed: the red tongue streaks in the lower jaw, and some
+  red in the head crest (dark red in the logo, which reads as black).
 - **2026-11-12 (v6):** Owner: a white sliver right of the eye isn't in the original. It was the trace of the logo's grey eye ring (a
   black spike, with white between it and the drawn eye). Cleared to beak white, up to a line from the eye's top along the beak's
   upper edge, keeping the red patch under the bill.

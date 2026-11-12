@@ -64,7 +64,7 @@ TAB_FILLET = 1.5           # rounds the tab-to-ring corners
 # Black lines in the logo are as thin as ~0.3 mm at 60 mm. Every black line grows by BLACK_GROW on each side (evenly,
 # after smoothing, so it stays smooth and centred on the logo's line) to >= ~0.45 mm, which a 0.4 mm nozzle prints.
 BLACK_GROW = 0.03
-MIN_RED = 0.3              # red bits inside the bird narrower than this are dropped (become black)
+MIN_RED = 0.25             # red bits inside the bird narrower than this are dropped (become black)
 MIN_RED_CAP = 0.25         # ... except right around the "BB", where the red is this thin in the logo (Arachne prints ~0.3)
 MIN_WHITE = 0.3            # white details inside the bird narrower than this are dropped (become black)
 COLOUR_DEPTH = {"white": 1.0, "black": 0.8}   # thick enough that the red below doesn't show through
@@ -101,12 +101,12 @@ VISOR_PX = [(145, 66.5), (152, 61.5), (160, 59.5), (170, 59), (180, 61.5), (184,
 GREY_LIGHT = (70, 235)
 # The eye (mm), drawn: read off the logo's pixels (eyeball ~x 0.9-3.3, y 14.6-16.3 including its grey edge; pupil
 # at ~(2.3, 15.3)).
-# Owner picked "friendly" (v5) from four styles (under the brim, friendly, determined, looking ahead): no lid, a big
-# pupil set slightly forward, and a white highlight (0.5 mm, big enough to print). v4's small centred pupil read as a stare.
-EYE = dict(centre=(2.1, 15.4), rx=1.0, ry=0.78, rim=0.28, lid=None, pupil=(2.4, 15.35), pupil_r=(0.55, 0.6),
-           glint=(2.55, 15.55), glint_r=0.25)
-EYE_CLEAR = 0.9            # beak side of the eye, out to this far, below EYE_CLEAR_EDGE: cleared to beak white
-EYE_CLEAR_EDGE = [(2.2, 16.46), (4.4, 16.7)]   # from the eye rim's top, along the beak's upper edge
+# The eye is drawn, but from the logo's own pixels (source px; v7): it sits right under the bill's lower edge (which cuts
+# its top), a white eyeball ~14 x 8 px (the logo's light grey shading counts as white), a dark pupil ~4 px across, left of
+# centre and low (it meets the bottom outline, so the bird looks slightly down), and a thin outline around the rest.
+# Pixel (i, j) is centred at (i + 0.5, j + 0.5) in these coordinates.
+EYE_PX = dict(centre=(160.0, 76.8), rx=7.0, ry=3.4, top=[(150, 73.9), (168, 72.9)], pupil=(159.2, 78.4), pupil_r=1.9)
+EYE_RIM = 0.25             # mm: the logo's thin grey outline, printed black
 # White bits of the bird that stand at bird height instead of being cut in: everything white whose centre is in this
 # box (source px x0, y0, x1, y1): the beak (both jaws) and the eye.
 RAISED_WHITE_BOX_PX = (150, 70, 235, 105)
@@ -295,21 +295,15 @@ def fit_bb(mask):
 
 
 def draw_eye():
-    """(white, black) of the eye: an elliptical eyeball with a black rim, optionally cut by a straight upper lid,
-    and an elliptical pupil (clipped to the eyeball, so it can tuck under the lid) with a white highlight."""
-    e = EYE
-    c = Point(e["centre"])
-    ball = affinity.scale(c.buffer(1.0, 64), e["rx"], e["ry"])
-    if e.get("lid"):
-        (x0, y0), (x1, y1) = e["lid"]                           # lid line, back to front; above it is lid (black)
-        d = np.array([x1 - x0, y1 - y0]) / np.hypot(x1 - x0, y1 - y0)
-        n = np.array([-d[1], d[0]])                             # points up
-        p0, p1 = np.array([x0, y0]) - 5 * d, np.array([x1, y1]) + 5 * d
-        ball = ball.difference(Polygon([p0, p1, p1 + 5 * n, p0 + 5 * n]))
-    rim = ball.buffer(e["rim"], 64).difference(ball)
-    pupil = affinity.scale(Point(e["pupil"]).buffer(1.0, 48), e["pupil_r"][0], e["pupil_r"][1]).intersection(ball)
-    glint = Point(e["glint"]).buffer(e["glint_r"], 32) if e.get("glint_r") else Polygon()
-    return unary_union([ball.difference(pupil), glint.intersection(pupil)]), unary_union([rim, pupil]).difference(glint)
+    """(white, black) of the eye, from EYE_PX: an eyeball cut by the bill's edge, a thin black rim, a round pupil."""
+    e = EYE_PX
+    c = Point(px_to_mm(*e["centre"]))
+    ball = affinity.scale(c.buffer(1.0, 96), e["rx"] * K, e["ry"] * K)
+    (x0, y0), (x1, y1) = (px_to_mm(*p) for p in e["top"])
+    ball = ball.intersection(Polygon([(x0 - 5, y0), (x1 + 5, y1), (x1 + 5, y1 - 9), (x0 - 5, y0 - 9)]))
+    pupil = Point(px_to_mm(*e["pupil"])).buffer(e["pupil_r"] * K, 48).intersection(ball)
+    rim = ball.buffer(EYE_RIM, 64).difference(ball)
+    return ball.difference(pupil), unary_union([rim, pupil])
 
 
 def build_regions():
@@ -384,17 +378,6 @@ def build_regions():
     # eyeball, thin black rim, round black pupil, at bird height. It replaces whatever was traced there.
     eye_white, eye_black = draw_eye()
     eye = unary_union([eye_white, eye_black])
-    # The logo's eye has a grey ring, then the beak's white. The drawn eye is a little smaller, so the trace of that ring
-    # (a black spike, and a white crescent inside it) is cleared on the eye's beak side: there it's beak white.
-    cx, cy = EYE["centre"]
-    (ax, ay), (bx, by) = EYE_CLEAR_EDGE              # top of the cleared area: from the eye's top, rising gently
-    below = Polygon([(ax, ay), (bx, by), (bx + 3, by - 3), (ax, ay - 5)])
-    clear = eye.buffer(EYE_CLEAR).intersection(below).intersection(box(cx, cy - 5, cx + 5, by)).difference(eye)
-    clear = clear.difference(red_p)                 # the red patch under the bill stays whole
-    black_p = black_p.difference(clear)
-    bird_p = unary_union([bird_p, clear])
-    cap = cap.difference(clear)
-    raised_p = unary_union([raised_p, clear.intersection(bird_p)])
     raised_p, inset_p = (clean(g.difference(eye)) for g in (raised_p, inset_p))
     # Red cut by the eye: drop the slivers left around it (keeping the thin red around the "BB").
     red_p = red_p.difference(eye)

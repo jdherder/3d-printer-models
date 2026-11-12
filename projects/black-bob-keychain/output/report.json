@@ -6,7 +6,7 @@
       68.0,
       3.4
     ],
-    "faces": 157782,
+    "faces": 147614,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 0,
@@ -20,12 +20,12 @@
     "ring": 991.6,
     "field": 589.0,
     "text": 214.4,
-    "bird": 542.6,
-    "outline": 270.5,
-    "beak": 47.2,
+    "bird": 543.5,
+    "outline": 269.9,
+    "beak": 47.0,
     "details": 188.4,
-    "cap": 11.0,
-    "cap-lines": 19.8,
+    "cap": 11.1,
+    "cap-lines": 19.7,
     "cap-bb": 4.3
   },
   "params_mm": {

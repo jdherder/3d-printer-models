@@ -65,6 +65,6 @@
     }
   ],
   "scale_note": "Real size: 60 mm across the red ring (your pick: 55-60). The tab adds 8 mm on top. Type 55 in the real-size box to preview the smaller option.",
-  "notes_title": "v6: eye cleaned up",
-  "notes": "v6: removed the white sliver (and the small black spike) to the right of the eye. They were the trace of the logo's grey ring around its eye, left over because the drawn eye is a little smaller. Now the eye sits right against the beak's white, and the red patch under the bill is whole. The rest is as in v5: friendly eye, black bill, 3 colours."
+  "notes_title": "v7: eye matched to the logo",
+  "notes": "v7: the eye is rebuilt from the logo's own pixels. It sits right under the bill, which cuts its top. It's a white eyeball (the logo's light-grey shading prints white) with a ~0.8 mm black pupil, low and left of centre so it meets the bottom outline and the bird looks slightly down, as in the logo, plus a thin outline. v6's clearing hack is gone. Thin red details are now kept down to 0.25 mm (was 0.3). The bill stays black, 3 colours."
 }
