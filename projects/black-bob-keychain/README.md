@@ -18,7 +18,9 @@ stands off a recessed white field, and the cap is the highest point (owner's pic
 - [x] v1: traced, style A heights, 60 mm, keyring tab. Watertight, 0 self-intersections, Euler 0 (the tab hole)
 - [x] v2: owner asked for crisp lines, not bumpy or wavy. Ring letters set in a font (fitted per letter), cap and beak
       redrawn as splines, the rest of the trace smoothed (corners kept), black thickened evenly in vector space
-- [ ] Owner review of v2 (viewer link below)
+- [x] v3: owner said v2's beak and "BB" looked nothing like the original. Beak and cap are traced again (no redraw),
+      with a sub-pixel trace that keeps edges smooth. "BB" is a font fitted onto the logo's own BB. Grey visor (4th colour)
+- [ ] Owner review of v3 (viewer link below)
 - [ ] Test print (P2S + AMS), then adjust heights and line widths
 
 ## Measurements
@@ -32,17 +34,20 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 | Heights (top of each colour) | red base 0.8, white field 1.8, cut-in white details 2.4, red ring 2.8, bird + outline + beak 3.0, letters 3.2, cap 3.4 | Style A |
 | Colour depth | white 1.0, black 0.8 | Below that it's red (`COLOUR_DEPTH`), so fewer layers hold all three colours |
 | Keyring hole | 4.0, 2.5 wall | Tab at 12 o'clock, outside the ring so it doesn't cut "BLACK BOB" |
-| Black lines | ≥ ~0.6 | The logo's hairlines are ~0.35 mm at this size. After smoothing, the red next to black is pulled back 0.13 (white 0.06), so every line grows evenly |
-| Smoothing | σ 0.3 along the outline | Corners sharper than 40° stay sharp (`SMOOTH`, `CORNER_DEG`) |
+| Black lines | ~0.3 and up, grown 0.03/side | As thin as the logo's. Bambu Studio's Arachne prints thin lines at ≥ ~0.34 |
+| Smallest white / red detail | 0.3 (red on the cap 0.25) | Narrower bits are dropped (become black) |
+| Smoothing | σ 0.15 along the outline | Light, since the trace is already sub-pixel; corners sharper than 40° stay sharp |
 | Ring letters | ~5.2 tall | Liberation Sans Bold (`source/LiberationSans-Bold.ttf`, SIL OFL) |
-| "BB" on the cap | 2.05 tall | Font glyphs thickened 0.08 per side so the strokes print (~0.45) |
+| "BB" on the cap | ~2 tall, tilted like the logo's | DejaVu Sans Bold fitted onto the traced BB (best overlap of 7 fonts, 0.70), at 92% so the red shows around it, thickened 0.05/side |
+| Visor | grey | 4th AMS colour, as in the logo |
 | White details in the bird | ≥ 0.45 wide | Narrower slits are dropped (become red) |
 
 ## Print settings
 
-- **P2S + AMS 2 Pro** (A1 works too): red, white, black. PLA is fine. PETG holds up better on keys.
+- **P2S + AMS 2 Pro** (A1 works too): red, white, black, **grey** (the visor). PLA is fine. PETG holds up better on keys.
+  If you don't want a 4th colour, set the grey part to black in Bambu Studio.
 - Open `output/black-bob-keychain-multicolor.3mf`. If Bambu Studio asks, load it as one object with multiple parts,
-  then set the parts: red, white, black. Flat, back down, no supports, 0.2 mm layers (17 layers).
+  then set the parts: red, white, black, grey. Flat, back down, no supports, 0.2 mm layers (17 layers).
 - Layers 1–4 are all red. The colour swaps run from 0.8 mm up. For a plate of several, add copies in Bambu Studio:
   they share the swaps, so the purge per keychain goes down.
 - Single colour: `output/black-bob-keychain.stl` (the relief still shows. Paint or ink the top if you like).
@@ -56,25 +61,35 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 
 ## Pipeline
 
-`build.py`: the logo is upscaled 4× (Lanczos), and each pixel is classified to the nearest of red, white or black. The circles are fitted to the
-ring edges (the inner edge is ~0.5 px off-centre in the logo and is kept that way). Bird = the filled black outline. White
-inside the bird splits into raised (beak and eye, `RAISED_WHITE_BOX_PX`) and cut-in (slits, bolt, tail rays). Traced
-outlines are smoothed along their length with the corners kept (`smooth_ring`). Then the black is grown evenly in vector space.
-**Not traced (for crisp edges):** the ring letters are font glyphs, each fitted (scaled and rotated) onto its traced letter
-(`fit_letters`; the touching "LA" is fitted as a pair). The cap (`CAP_*`) and the beak (`BEAK_*`, `JAW_LOOP`, `MOUTH_LINE`)
-are splines through points read off a gridded close-up of the logo. They replace the trace in their area. Polygons are snapped to a 0.005 mm grid. Each colour body is built as stacked slabs per height step, unioned with manifold3d and
-simplified at 1 µm. Each slab outline gets a 3 µm close first. Without these steps, near-coincident traced edges left non-manifold edges.
+`build.py`:
+- **Trace:** two smooth fields, redness R−(G+B)/2 and lightness (G+B)/2, are upsampled 8× with a cubic spline, so the edges
+  come out sub-pixel from the logo's own anti-aliasing. Each point goes to the nearest of red, white or black in that plane,
+  so blends split at their midpoint. Black hairlines that the spline leaves at sharp red/white edges are dropped. Grey is
+  looked for only under the visor (`VISOR_PX`).
+- **Regions:** the circles are fitted to the ring edges. Bird = the filled black outline. White inside the bird is split into raised
+  (beak, eye: `RAISED_WHITE_BOX_PX`) and cut-in (slits, bolt, tail rays). The cap outline is `CAP_PX`. The outlines are smoothed
+  lightly with the corners kept (`smooth_ring`).
+- **Fonts:** the ring letters are font glyphs, each fitted onto its traced letter (`fit_letters`; the touching "LA" is fitted as a pair).
+  "BB" is fitted onto the traced BB blob (`fit_bb`: tilt by best overlap).
+- **Mesh:** all region outlines are noded into one planar partition (`partition`, 1 µm grid). Each colour body is built straight from it as
+  columns with shared vertices (`column_mesh`): caps by constrained Delaunay, walls only where neighbouring columns differ.
+  There are no booleans, so it's watertight by construction. Where two columns touch only at a corner, a 0.02 mm disc moves to a
+  neighbour (`separate_pinches`).
+- v2's redrawn cap and beak (splines) were dropped in v3. They didn't look like the logo.
 
 ## Files
 
-- `output/black-bob-keychain-multicolor.3mf`: print this (3 parts)
+- `output/black-bob-keychain-multicolor.3mf`: print this (4 parts)
 - `output/black-bob-keychain.stl`: single-colour solid
-- `output/black-bob-keychain-{red,white,black}.stl`: colour bodies
-- `renders/layout.png` (source vs colours vs heights), `renders/relief.png`, `renders/relief-head.png`, `renders/model.png`
+- `output/black-bob-keychain-{red,white,black,grey}.stl`: colour bodies
+- `renders/layout.png` (source vs colours vs heights), `renders/compare-head.png` (logo vs model), `renders/relief*.png`, `renders/model.png`
 - **Review page:** https://claude.ai/artifact/5FYvjmwh3QfyWj5R3MaU21 (`renders/viewer.html`; republish to this URL)
 
 ## Log
 
+- **2026-11-12 (v3):** Owner: "the beak and the hat BB lettering now look nothing like the original." Went back to tracing
+  them, with a better trace (sub-pixel, colour-blend aware) and much thinner black, plus a fitted "BB" and a grey visor. Replaced the
+  slab/boolean meshing with a direct column mesher (the booleans kept leaving non-manifold edges).
 - **2026-11-12 (v2):** Owner: "Lines should be crisp and not bumpy or wavy." Ring letters are now Liberation Sans Bold. It was picked by
   overlap with the traced letters (0.88 mean, the best of 6 bold sans tried). The cap and beak are redrawn as splines, and the rest of the bird is smoothed.
 - **2026-11-12:** Workshopped options with the owner. Picked 55–60 mm, style A heights, plain back, several per plate.

@@ -1,9 +1,9 @@
 """Reproducible build for the Black Bob Elementary logo keychain.
 
-    python projects/black-bob-keychain/build.py        (~20 s)
+    python projects/black-bob-keychain/build.py        (~1 min)
 
 source/logo-2026-11-12-school-site-300px.png (the school's logo; 300 px is the largest the site has)
-  -> upscaled 4x, every pixel classified as red / white / black
+  -> sub-pixel trace: redness and lightness upsampled 8x (cubic), each point classed red / white / black (grey visor)
   -> regions: red ring, white ring text, white field, and the bird (filled black outline) with its red body,
      white feather/bolt details, white beak, and cap (red + white "BB")
   -> thin black lines thickened and tiny white specks dropped so every colour region prints with a 0.4 mm nozzle
@@ -12,8 +12,8 @@ source/logo-2026-11-12-school-site-300px.png (the school's logo; 300 px is the l
        red bird, black outline, white beak 3.0 | cap 3.4
   -> keyring tab above the ring at 12 o'clock
   -> output/black-bob-keychain.stl             single-colour print (all bodies merged)
-  -> output/black-bob-keychain-multicolor.3mf  one object, three parts (red, white, black) for the AMS
-  -> output/black-bob-keychain-{red,white,black}.stl
+  -> output/black-bob-keychain-multicolor.3mf  one object, four parts (red, white, black, grey) for the AMS
+  -> output/black-bob-keychain-{red,white,black,grey}.stl
   -> output/report.json, renders/*.png
 """
 
@@ -27,17 +27,15 @@ sys.path[:0] = [str(HERE.parents[1] / "tools")]
 import matplotlib  # noqa: E402
 
 matplotlib.use("Agg")
-import manifold3d as m3d  # noqa: E402
 import matplotlib.pyplot as plt  # noqa: E402
 import meshkit as mk  # noqa: E402
 import numpy as np  # noqa: E402
 import shapely  # noqa: E402
 import trimesh  # noqa: E402
-from matplotlib.patches import Polygon as MplPolygon  # noqa: E402
 from PIL import Image  # noqa: E402
 from scipy import ndimage  # noqa: E402
 from shapely import affinity  # noqa: E402
-from shapely.geometry import MultiPolygon, Point, Polygon, box  # noqa: E402
+from shapely.geometry import Point, Polygon, box  # noqa: E402
 from shapely.ops import unary_union  # noqa: E402
 from skimage import measure  # noqa: E402
 
@@ -63,47 +61,44 @@ TAB_R = 4.5                # keyring tab (radius), above the ring at 12 o'clock
 TAB_HOLE_D = 4.0           # for a split ring
 TAB_CENTRE_OUT = 3.5       # tab/hole centre, this far outside the ring
 TAB_FILLET = 1.5           # rounds the tab-to-ring corners
-# Black lines in the logo are as thin as ~0.35 mm at 60 mm. After smoothing, the red next to them is pulled back by
-# BLACK_GROW (white by WHITE_PULL), so every black line grows evenly to >= ~0.6 mm and stays smooth.
-BLACK_GROW = 0.13
-WHITE_PULL = 0.06
-MIN_RED = 0.5              # red bits inside the bird narrower than this are dropped (become black)
-MIN_WHITE = 0.45           # white details inside the bird narrower than this are dropped (become red)
-COLOUR_DEPTH = {"white": 1.0, "black": 0.8}   # thick enough that the red below doesn't show through
+# Black lines in the logo are as thin as ~0.3 mm at 60 mm. Every black line grows by BLACK_GROW on each side (evenly,
+# after smoothing, so it stays smooth and centred on the logo's line) to >= ~0.45 mm, which a 0.4 mm nozzle prints.
+BLACK_GROW = 0.03
+MIN_RED = 0.3              # red bits inside the bird narrower than this are dropped (become black)
+MIN_RED_CAP = 0.25         # ... on the cap, the red around the "BB" is this thin in the logo (Arachne prints ~0.3)
+MIN_WHITE = 0.3            # white details inside the bird narrower than this are dropped (become black)
+COLOUR_DEPTH = {"white": 1.0, "black": 0.8, "grey": 0.8}   # thick enough that the red below doesn't show through
 MIN_AREA = 0.15            # specks smaller than this (mm^2) are dropped
-SMOOTH = 0.3               # traced outlines are smoothed along their length (Gaussian sigma, mm): no pixel steps or wobble
+SMOOTH = 0.15              # traced outlines are smoothed along their length (Gaussian sigma, mm): no pixel steps or wobble
 CORNER_DEG = 40            # ... except at corners sharper than this, which stay crisp
 SLIVER = 0.03              # region slivers narrower than 2x this (from overlapping traces) are dropped
 
 # --- Logo geometry (source pixels, measured from the 300 px image) ---------------------------------------------------
-UPSCALE = 4
+UPSCALE = 8
 # Circles fitted (least squares) to the colour edges of the upscaled logo:
 CENTRE_PX = (149.68, 149.83)       # x, y: centre of the outside of the red ring (the keychain's centre)
 R_OUT_PX = 143.39                  # outside of the red ring (a thin white rim outside it is left off: too thin to print)
 INNER_CENTRE_PX = (150.19, 150.04) # the inside of the ring is ~0.5 px off-centre in the logo; kept, so the field matches
 R_IN_PX = 107.04
+# Colours are told apart in two smooth fields, upsampled with a cubic spline (sub-pixel edges from the logo's own
+# anti-aliasing): redness R - (G+B)/2 and lightness (G+B)/2. Each point goes to the nearest of the three colours in that
+# plane, so any blend of two colours (an anti-aliased edge) splits at its midpoint. The cap's grey visor reads black.
 PALETTE = {"red": (200, 20, 30), "white": (255, 250, 250), "black": (45, 15, 15)}
-# The cap is redrawn, not traced: at 300 px it's ~45 px wide, too blurry to trace cleanly. Smooth closed splines
-# through these points (mm, read off a gridded close-up of the logo), all raised to CAP_TOP.
-CAP_CROWN = [(-2.6, 16.7), (-2.5, 18.1), (-1.7, 19.7), (-0.1, 20.8), (1.8, 21.15), (3.4, 20.8), (4.5, 19.8),
-             (5.0, 18.6), (3.0, 17.7), (0.6, 17.0), (-1.2, 16.6)]
-CAP_VISOR = [(-0.2, 16.75), (2.5, 17.45), (5.0, 18.6), (6.6, 18.2), (7.8, 17.4), (6.6, 16.75), (4.5, 16.35),
-             (2.0, 16.15), (0.4, 16.3)]
-CAP_SEAM = [(-1.6, 16.9), (-1.1, 18.8), (-0.2, 20.6)]   # panel seam, left of the "BB"
-CAP_SEAM_W = 0.5
-CAP_RIM = 0.45             # black outline around the cap
-CAP_BB = dict(centre=(2.25, 19.4), height=2.05, angle=-6.0, bold=0.08)   # "BB" in FONT; bold thickens the strokes
-# The beak is redrawn too (the logo's mouth is a few px of anti-aliasing): black lines along the centre of the logo's
-# lines, white between them. Everything traced in the beak area is replaced; the gap between the jaws is field.
-BEAK_LINE_W = 0.45
-BEAK_LOWER_EDGE = [(0.05, 13.1), (1, 12.55), (2, 12.5), (3, 12.6), (4, 12.75), (5, 13.0), (6, 13.3), (7, 13.6),
-                   (8, 13.85), (10, 14.15), (12, 14.3), (14, 14.3), (15.5, 14.2), (16.6, 14.0)]
-BEAK_TOP_EDGE = [(16.6, 14.0), (15.6, 14.85), (14, 15.55), (12, 16.1), (10, 16.4), (8, 16.6), (6, 16.75), (4.5, 16.9)]
-BEAK_UPPER_LEFT = [(4.5, 16.9), (3.6, 15.6), (2.6, 14.3), (1.2, 13.2)]   # closes the upper beak's white (no line)
-JAW_LOOP = [(2.9, 11.75), (5, 11.55), (7, 11.35), (9, 11.15), (11, 10.95), (12.8, 10.85), (13.5, 10.5), (13.1, 10.05),
-            (12, 9.85), (10, 9.8), (8, 9.8), (6, 9.85), (4, 9.95), (3.0, 10.3), (2.75, 11.0)]
-MOUTH_LINE = [(2.8, 11.65, 0.55), (5.5, 11.45, 0.42), (9, 11.12, 0.3), (12.6, 10.85, 0.24)]   # x, y, half-width
-BEAK_CORNER_DOT = 0.32
+# Cap (crown + visor), outlined by hand in source pixels: everything of the bird inside it is raised to CAP_TOP.
+CAP_PX = [(135, 71.5), (136.2, 58.7), (142.5, 52.5), (151.2, 49), (162.5, 49.5), (169, 53.5), (174, 58.5), (181, 60),
+          (186, 65), (179, 68.5), (168, 69), (152, 73.5), (145, 73)]
+# The "BB" on the cap is ~8 px tall in the logo: traced, it's a blob. It's set in this font instead (Bitstream Vera
+# licence), fitted onto the traced blob (size, tilt, position): best overlap (0.70) of 7 bold serif and sans fonts.
+# Its strokes are thickened by BB_BOLD each side so they print.
+BB_FONT = HERE / "source" / "DejaVuSans-Bold.ttf"
+BB_BOLD = 0.05
+BB_SCALE = 0.92            # a touch smaller than the logo's, so the red around it shows
+BB_BELOW_ROW_PX = 62       # the "BB" is above this source row; the visor below it
+# The visor is grey in the logo (AMS slot 4). Grey is looked for only inside this outline (source px): lightness
+# between GREY_LIGHT, plus the visor's white highlights.
+VISOR_PX = [(145, 66.5), (152, 61.5), (160, 59.5), (170, 59), (180, 61.5), (184, 66), (176, 67.5), (165, 68),
+            (155, 70), (147, 71)]
+GREY_LIGHT = (70, 235)
 # White bits of the bird that stand at bird height instead of being cut in: everything white whose centre is in this
 # box (source px x0, y0, x1, y1): the beak (both jaws) and the eye.
 RAISED_WHITE_BOX_PX = (150, 70, 235, 105)
@@ -116,13 +111,35 @@ def px_to_mm(x, y):
 
 
 def classify():
-    """Upscaled label image: 0 red, 1 white, 2 black, 3 transparent."""
-    im = Image.open(LOGO).convert("RGBA")
-    n = im.size[0] * UPSCALE
-    a = np.asarray(im.resize((n, n), Image.LANCZOS)).astype(float)
-    pal = np.array(list(PALETTE.values()), float)
-    c = ((a[..., None, :3] - pal) ** 2).sum(-1).argmin(-1)
-    c[a[..., 3] < 128] = 3
+    """Upscaled label image: 0 red, 1 white, 2 black, 3 transparent, 4 grey (the visor only)."""
+    a = np.asarray(Image.open(LOGO).convert("RGBA")).astype(float)
+    # Flatten onto white: transparent pixels hide arbitrary colours that would bleed into the upsampled edge.
+    a[..., :3] = a[..., :3] * (a[..., 3:] / 255) + 255 * (1 - a[..., 3:] / 255)
+    redness = a[..., 0] - (a[..., 1] + a[..., 2]) / 2
+    light = (a[..., 1] + a[..., 2]) / 2
+    up = lambda f: ndimage.zoom(f, UPSCALE, order=3)  # noqa: E731
+    redness, light, alpha = up(redness), up(light), up(a[..., 3])
+    pal = np.array([(r - (g + b) / 2, (g + b) / 2) for r, g, b in PALETTE.values()])
+    d = (redness[..., None] - pal[:, 0]) ** 2 + (light[..., None] - pal[:, 1]) ** 2
+    c = d.argmin(-1)
+    # A sharp red/white edge dips briefly towards black in the spline, leaving a black hairline (~2 px). Real black
+    # lines are ~10 px wide here: drop black narrower than ~4 px and give it to the nearer of red and white.
+    black = c == 2
+    hair = black & ~ndimage.binary_opening(black, iterations=2)
+    c[hair] = d[hair][:, :2].argmin(-1)
+    c[alpha < 128] = 3
+    # Beyond the thin white rim is background (the logo's half-transparent edge pixels would read as a dark ring).
+    yy, xx = np.mgrid[:c.shape[0], :c.shape[1]]
+    c[np.hypot((xx + 0.5) / UPSCALE - CENTRE_PX[0], (yy + 0.5) / UPSCALE - CENTRE_PX[1]) > R_OUT_PX + 2] = 3
+    # The cap's visor is grey (its own filament). Grey elsewhere is just anti-aliasing between black and white, so grey
+    # is only looked for under the visor, and thin grey (edge blends) is dropped.
+    from skimage.draw import polygon as fill_polygon
+    visor = np.zeros(c.shape, bool)
+    rr, cc = fill_polygon([y * UPSCALE for _, y in VISOR_PX], [x * UPSCALE for x, _ in VISOR_PX], c.shape)
+    visor[rr, cc] = True
+    grey = visor & (redness < 50) & (light > GREY_LIGHT[0]) & (light < GREY_LIGHT[1]) | (visor & (c == 1))
+    grey = ndimage.binary_opening(ndimage.binary_closing(grey, disk(0.1)), disk(0.12))
+    c[grey] = 4
     return c
 
 
@@ -248,75 +265,25 @@ def fit_letters(mask):
     return clean(unary_union(out))
 
 
-def spline_loop(pts, n=400):
-    """Smooth closed curve through the points (periodic cubic spline) as a polygon."""
-    from scipy.interpolate import splev, splprep
-    p = np.asarray(pts, float)
-    tck, _ = splprep([np.r_[p[:, 0], p[0, 0]], np.r_[p[:, 1], p[0, 1]]], s=0, per=True)
-    x, y = splev(np.linspace(0, 1, n, endpoint=False), tck)
-    return Polygon(np.c_[x, y]).buffer(0)
-
-
-def spline_stroke(pts, width, n=200):
-    from scipy.interpolate import splev, splprep
-    from shapely.geometry import LineString
-    p = np.asarray(pts, float)
-    tck, _ = splprep([p[:, 0], p[:, 1]], s=0, k=min(3, len(p) - 1))
-    x, y = splev(np.linspace(0, 1, n), tck)
-    return LineString(np.c_[x, y]).buffer(width / 2, cap_style="round")
-
-
-def tapered_stroke(pts):
-    """Stroke whose half-width varies along it: (x, y, r) points, joined by hulls of consecutive circles."""
-    from scipy.interpolate import interp1d
-    p = np.asarray(pts, float)
-    t = np.r_[0, np.cumsum(np.hypot(*np.diff(p[:, :2], axis=0).T))]
-    f = interp1d(t, p, axis=0, kind="quadratic" if len(p) > 2 else "linear")
-    q = f(np.linspace(0, t[-1], 60))
-    circles = [Point(x, y).buffer(r, 32) for x, y, r in q]
-    return unary_union([unary_union([a, b]).convex_hull for a, b in zip(circles, circles[1:])])
-
-
-def spline_open(pts, n=200):
-    from scipy.interpolate import splev, splprep
-    p = np.asarray(pts, float)
-    tck, _ = splprep([p[:, 0], p[:, 1]], s=0, k=min(3, len(p) - 1))
-    x, y = splev(np.linspace(0, 1, n), tck)
-    return np.c_[x, y]
-
-
-def draw_beak():
-    """Returns (white, black, zone): the redrawn beak's white and black, and the area of the trace it replaces."""
-    from shapely.geometry import LineString
-    lower = spline_open(BEAK_LOWER_EDGE)
-    top = spline_open(BEAK_TOP_EDGE)
-    left = spline_open(BEAK_UPPER_LEFT, 40)
-    upper_fill = Polygon(np.r_[lower, top[1:], left[1:]]).buffer(0)
-    lines = unary_union([LineString(lower).buffer(BEAK_LINE_W / 2), LineString(top).buffer(BEAK_LINE_W / 2),
-                         Point(BEAK_LOWER_EDGE[0]).buffer(BEAK_CORNER_DOT, 32)])
-    jaw_line = spline_loop(JAW_LOOP)
-    jaw_black = unary_union([jaw_line.exterior.buffer(BEAK_LINE_W / 2), tapered_stroke(MOUTH_LINE)])
-    jaw_white = jaw_line.difference(jaw_black)
-    black = unary_union([lines, jaw_black])
-    white = unary_union([upper_fill, jaw_white]).difference(black)
-    shapes = unary_union([black, white])
-    right = box(3.2, 8, 20, 18)
-    zone = unary_union([shapes.buffer(0.15), shapes.intersection(right).convex_hull.buffer(0.8)])
-    return white, black, zone
-
-
-def draw_cap():
+def fit_bb(mask):
+    """Font "BB" fitted onto the traced BB blob: the slant (and box) with the best overlap, then thickened."""
     from matplotlib.font_manager import FontProperties
-    crown = spline_loop(CAP_CROWN)
-    visor = spline_loop(CAP_VISOR).difference(crown)
-    seam = spline_stroke(CAP_SEAM, CAP_SEAM_W).intersection(crown)
-    g = glyph("BB", FontProperties(fname=str(FONT)))
-    gx0, gy0, gx1, gy1 = g.bounds
-    k = CAP_BB["height"] / (gy1 - gy0)
-    g = affinity.scale(affinity.translate(g, -(gx0 + gx1) / 2, -(gy0 + gy1) / 2), k, k, origin=(0, 0))
-    g = affinity.rotate(g, CAP_BB["angle"], origin=(0, 0))
-    bb = affinity.translate(g, *CAP_BB["centre"]).buffer(CAP_BB["bold"]).intersection(crown.buffer(-0.3))
-    return crown, visor, seam, bb
+    blob = mask_to_poly(mask, smooth=0)
+    c = blob.centroid
+    g0 = glyph("BB", FontProperties(fname=str(BB_FONT)))
+    gx0, gy0, gx1, gy1 = g0.bounds
+    g0 = affinity.translate(g0, -(gx0 + gx1) / 2, -(gy0 + gy1) / 2)
+    best = None
+    for ang in np.arange(-30, 30.1, 1.0):
+        q = affinity.rotate(blob, -ang, origin=c)
+        qx0, qy0, qx1, qy1 = q.bounds
+        g = affinity.scale(g0, (qx1 - qx0) / (gx1 - gx0), (qy1 - qy0) / (gy1 - gy0), origin=(0, 0))
+        g = affinity.rotate(affinity.translate(g, (qx0 + qx1) / 2, (qy0 + qy1) / 2), ang, origin=c)
+        iou = g.intersection(blob).area / g.union(blob).area
+        if best is None or iou > best[0]:
+            best = (iou, g, ang)
+    g = affinity.scale(best[1], BB_SCALE, BB_SCALE, origin=best[1].centroid)
+    return g.buffer(BB_BOLD), blob
 
 
 def build_regions():
@@ -351,41 +318,42 @@ def build_regions():
     raised_p = mask_to_poly(raised).intersection(bird_p)
     inset_p = mask_to_poly(inset).intersection(bird_p).difference(raised_p)
     red_p = mask_to_poly(bird_red).intersection(bird_p).difference(raised_p).difference(inset_p)
-    # Grow the black evenly into what it borders (red by BLACK_GROW, white by WHITE_PULL), but not where red meets white
-    # directly. Hairline gaps between the separately traced red and white aren't black; they go to the red.
+
+    # The cap, and the font "BB" in place of the traced one.
+    cap = Polygon([px_to_mm(x, y) for x, y in CAP_PX]).buffer(0.3).buffer(-0.3).intersection(bird_p)
+    cap_px = np.zeros_like(bird)
+    from skimage.draw import polygon as fill_polygon
+    rr, cc = fill_polygon([y * UPSCALE for _, y in CAP_PX], [x * UPSCALE for x, _ in CAP_PX], bird.shape)
+    cap_px[rr, cc] = True
+    # White in the cap: pieces on the crown (above BB_BELOW_ROW_PX) are the "BB"; below that it's the grey visor's
+    # highlights, which go black.
+    cap_white = white & cap_px & bird
+    lab, n = ndimage.label(cap_white)
+    cms = ndimage.center_of_mass(cap_white, lab, range(1, n + 1))
+    bb_px = np.isin(lab, [i + 1 for i, (cy, _) in enumerate(cms) if cy / UPSCALE < BB_BELOW_ROW_PX])
+    bb, bb_traced = fit_bb(bb_px)
+    cap_poly_white = mask_to_poly(cap_white & ~bb_px, smooth=0).buffer(0.1)
+    grey_p = mask_to_poly(c == 4).intersection(bird_p)
+    raised_p = raised_p.difference(bb_traced.buffer(0.15)).difference(cap_poly_white)
+    inset_p = inset_p.difference(bb_traced.buffer(0.15)).difference(cap_poly_white)
+    red_p = unary_union([red_p, bb_traced.buffer(0.15).intersection(cap)]).difference(bb)
+
+    # Grow every black line evenly (it stays centred on the logo's line). Hairline gaps between the separately traced
+    # red and white aren't black: they're dropped from the black first and end up red.
     whites = unary_union([raised_p, inset_p])
-    black_core = bird_p.difference(unary_union([whites, red_p])).buffer(-0.06).buffer(0.06)
-    black_p = unary_union([black_core.buffer(WHITE_PULL), black_core.buffer(BLACK_GROW).difference(whites)])
-    black_p = black_p.intersection(bird_p)
+    black_core = bird_p.difference(unary_union([whites, red_p, bb, grey_p])).buffer(-0.06).buffer(0.06)
+    black_p = black_core.buffer(BLACK_GROW).intersection(bird_p).difference(bb)
+    grey_p = clean(grey_p.difference(black_p))
     raised_p = clean(raised_p.difference(black_p).buffer(-MIN_WHITE / 2).buffer(MIN_WHITE / 2))
     inset_p = clean(inset_p.difference(black_p).buffer(-MIN_WHITE / 2).buffer(MIN_WHITE / 2))
-    whites = unary_union([raised_p, inset_p])
-    red_p = clean(bird_p.difference(black_p).difference(whites).buffer(-MIN_RED / 2).buffer(MIN_RED / 2))
+    whites = unary_union([raised_p, inset_p, bb, grey_p])
+    red_all = bird_p.difference(black_p).difference(whites)
+    red_p = unary_union([red_all.difference(cap).buffer(-MIN_RED / 2).buffer(MIN_RED / 2),
+                         red_all.intersection(cap).buffer(-MIN_RED_CAP / 2).buffer(MIN_RED_CAP / 2)])
+    red_p = clean(red_p)
     black_p = clean(bird_p.difference(unary_union([whites, red_p])))
     ring = disc.difference(inner).difference(text).difference(bird_p)
     field = inner.difference(bird_p)
-
-    # The beak: redrawn, replacing the trace in its area.
-    beak_white, beak_black, zone = draw_beak()
-    beak = unary_union([beak_white, beak_black])
-    red_p, inset_p, black_p = (g.difference(zone) for g in (red_p, inset_p, black_p))
-    red_p = clean(red_p.buffer(-MIN_RED / 2).buffer(MIN_RED / 2))
-    # Close the hairline left between the traced white (cheek) and the new beak white, where no line separates them.
-    raised_p = unary_union([raised_p.difference(zone), beak_white]).buffer(0.2).buffer(-0.2).difference(beak_black)
-    raised_p = raised_p.difference(red_p)
-    bird_p = unary_union([bird_p.difference(zone), beak]).buffer(0.2).buffer(-0.2)
-    black_p = clean(bird_p.difference(unary_union([raised_p, inset_p, red_p])))
-    ring = disc.difference(inner).difference(text).difference(bird_p)
-    field = inner.difference(bird_p)
-
-    # The cap: redrawn (crown red, "BB" white, visor + seam + rim black), on top of the traced bird.
-    crown, visor, seam, bb = draw_cap()
-    cap = unary_union([crown, visor]).buffer(CAP_RIM)
-    bird_p = unary_union([bird_p, cap])
-    ring = ring.difference(cap)
-    field = field.difference(cap)
-    cap_red = crown.difference(seam).difference(bb.buffer(0.0))
-    cap_black = cap.difference(cap_red).difference(bb)
 
     # Keyring tab at 12 o'clock, filleted into the ring.
     tc = Point(0, R + TAB_CENTRE_OUT)
@@ -402,61 +370,128 @@ def build_regions():
         "outline": (black_p.difference(cap), "black", BIRD_TOP),
         "beak": (raised_p.difference(cap), "white", BIRD_TOP),
         "details": (inset_p.difference(cap), "white", INSET_TOP),
-        "cap": (cap_red, "red", CAP_TOP),
-        "cap-lines": (cap_black, "black", CAP_TOP),
-        "cap-bb": (bb, "white", CAP_TOP),
+        "cap": (red_p.intersection(cap), "red", CAP_TOP),
+        "cap-lines": (black_p.intersection(cap), "black", CAP_TOP),
+        "cap-bb": (bb.intersection(cap), "white", CAP_TOP),
+        "visor": (grey_p, "grey", CAP_TOP),
     }
     regions = {k: (clean(p), col, top) for k, (p, col, top) in regions.items()}
     return regions, outline, dict(tab_centre=(tc.x, tc.y), r_in=r_in)
 
 
-def fill_small_holes(g, max_area=0.5):
-    """Close pinholes left where colour regions nearly meet (they'd mesh as non-manifold pinch points)."""
-    # A tiny close first heals zero-width slits and pieces that touch only along an edge (non-manifold when extruded).
-    g = g.buffer(0.003, join_style="mitre").buffer(-0.003, join_style="mitre")
-    out = [Polygon(p.exterior, [i for i in p.interiors if Polygon(i).area > max_area]) for p in getattr(g, "geoms", [g])]
-    return shapely.set_precision(unary_union(out), 0.005).buffer(0)
+def partition(regions, outline, simplify=0.0):
+    """One planar partition of the keychain: every region outline noded together (on a 1 µm grid), so neighbouring
+    faces share exactly the same edges and vertices. Returns [(face polygon, region name)]. Faces in hairline gaps
+    between regions go to the nearest region."""
+    from shapely.strtree import STRtree
+    names = list(regions)
+    polys = [regions[n][0].simplify(simplify) if simplify else regions[n][0] for n in names]
+    rings = []
+    for g in [outline, *polys]:
+        for p in getattr(g, "geoms", [g]):
+            rings += [p.exterior, *p.interiors]
+    lines = shapely.union_all([shapely.LineString(r.coords) for r in rings], grid_size=0.001)
+    faces = list(shapely.get_parts(shapely.polygonize(shapely.get_parts(lines))))
+    tree = STRtree(polys)
+    out = []
+    for f in faces:
+        pt = f.representative_point()
+        if not outline.contains(pt):
+            continue                                         # the keyring hole
+        hits = [i for i in tree.query(pt, predicate="within")]
+        i = max(hits) if hits else int(tree.nearest(pt))     # later regions win, like the renders
+        out.append((shapely.geometry.polygon.orient(f, 1.0), names[i]))
+    return out
 
 
-def extrude(poly, z0, z1):
-    parts = [trimesh.creation.extrude_polygon(g, z1 - z0) for g in getattr(poly, "geoms", [poly]) if g.area > 0.01]
-    m = trimesh.util.concatenate(parts)
-    m.apply_translation([0, 0, z0])
-    return m
+def column_mesh(faces, span):
+    """Watertight mesh of vertical columns, one per face: span(name) -> (z0, z1) or None. Each face gets a top and a
+    bottom cap; walls go up only where neighbouring columns differ, split at every height used anywhere so all
+    vertices line up. Built directly from the shared partition, so no booleans (and no near-coincident edges)."""
+    spans = [span(n) for _, n in faces]
+    levels = sorted({z for sp in spans if sp for z in sp})
+    verts, index, tris = [], {}, []
+
+    def vid(x, y, z):
+        key = (x, y, z)
+        if key not in index:
+            index[key] = len(verts)
+            verts.append(key)
+        return index[key]
+
+    owner = {}
+    for i, (f, _) in enumerate(faces):
+        for ring in [f.exterior, *f.interiors]:
+            c = list(ring.coords)
+            for p, q in zip(c, c[1:]):
+                owner[(p, q)] = i
+    for i, ((f, _), sp) in enumerate(zip(faces, spans)):
+        if not sp:
+            continue
+        z0, z1 = sp
+        # Constrained Delaunay keeps every ring edge and adds no vertices, so caps meet walls and neighbours exactly.
+        for t in shapely.get_parts(shapely.constrained_delaunay_triangles(f)):
+            a, b, c = (tuple(map(float, xy)) for xy in list(t.exterior.coords)[:3])
+            ccw = (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]) > 0
+            if not ccw:
+                b, c = c, b
+            tris.append((vid(*a, z1), vid(*b, z1), vid(*c, z1)))      # top, facing up
+            tris.append((vid(*a, z0), vid(*c, z0), vid(*b, z0)))      # bottom, facing down
+        for ring in [f.exterior, *f.interiors]:
+            c = list(ring.coords)
+            for p, q in zip(c, c[1:]):
+                j = owner.get((q, p))
+                other = spans[j] if j is not None else None
+                for za, zb in zip(levels, levels[1:]):
+                    if not (z0 <= za and zb <= z1):
+                        continue
+                    if other and other[0] <= za and zb <= other[1]:
+                        continue                                       # neighbour fills it: no wall
+                    pa, qa, qb, pb = vid(*p, za), vid(*q, za), vid(*q, zb), vid(*p, zb)
+                    tris += [(pa, qa, qb), (pa, qb, pb)]               # faces outward (right of p -> q)
+    return trimesh.Trimesh(np.array(verts), np.array(tris), process=False)
 
 
-def to_manifold(mesh):
-    return m3d.Manifold(m3d.Mesh(vert_properties=np.asarray(mesh.vertices, np.float32),
-                                 tri_verts=np.asarray(mesh.faces, np.uint32)))
+def pinches(m):
+    """(x, y, z0, z1) of vertical edges shared by 4 faces: two columns touching only along a corner."""
+    from collections import Counter
+    e = np.sort(m.faces[:, [0, 1, 1, 2, 2, 0]].reshape(-1, 2), axis=1)
+    count = Counter(map(tuple, e))
+    out = []
+    for (i, j), n in count.items():
+        a, b = m.vertices[i], m.vertices[j]
+        if n > 2 and a[0] == b[0] and a[1] == b[1]:
+            out.append((a[0], a[1], min(a[2], b[2]), max(a[2], b[2])))
+    return out
 
 
-def from_manifold(man):
-    m = man.to_mesh()
-    return trimesh.Trimesh(m.vert_properties[:, :3], m.tri_verts, process=False)
+def separate_pinches(regions, outline, spans, r=0.02, rounds=6):
+    """Partition the regions, then wherever two columns of a body touch only at a corner (non-manifold), hand a
+    tiny disc (radius r) of one of them to a neighbour and partition again. Changes regions in place."""
+    for _ in range(rounds):
+        faces = partition(regions, outline)
+        found = False
+        for span in spans.values():
+            for x, y, z0, z1 in pinches(column_mesh(faces, span)):
+                p = Point(x, y)
+                around = [(f, n) for f, n in faces if f.boundary.distance(p) < 1e-9]
+                inside = [(f, n) for f, n in around if span(n) and span(n)[0] <= z0 and z1 <= span(n)[1]]
+                outside = [(f, n) for f, n in around if (f, n) not in inside]
+                if not inside or not outside:
+                    continue
+                _, c = min(inside, key=lambda fn: fn[0].area)
+                _, b = max(outside, key=lambda fn: fn[0].area)
+                disc = p.buffer(r, 16)
+                cut = regions[c][0].intersection(disc)
+                regions[c] = (regions[c][0].difference(disc), *regions[c][1:])
+                regions[b] = (unary_union([regions[b][0], cut]), *regions[b][1:])
+                found = True
+        if not found:
+            return faces
+    raise AssertionError("couldn't separate pinch points")
 
 
-def tidy(m):
-    """Merge coincident vertices and drop zero-area stray shells (manifold leaves a few at near-touching walls)."""
-    m = trimesh.Trimesh(m.vertices, m.faces)
-    parts = m.split(only_watertight=False)
-    m = trimesh.util.concatenate([p for p in parts if p.area > 1e-3])
-    return m
-
-
-def check_body(m, name):
-    """Watertight as saved: an STL reload merges coincident vertices, which exposes zero-width slivers."""
-    re = trimesh.Trimesh(m.vertices, m.faces)   # merges vertices like a reload
-    assert re.is_watertight and len(re.split(only_watertight=False)) == len(m.split(only_watertight=False)), name
-
-
-def union(meshes):
-    # simplify() collapses the sub-micron edges a boolean can leave where traced outlines nearly coincide; those would
-    # otherwise merge into non-manifold edges when the STL is reloaded.
-    u = m3d.Manifold.batch_boolean([to_manifold(m) for m in meshes], m3d.OpType.Add)
-    return from_manifold(u.simplify(0.001))
-
-
-COLOURS = {"red": "#c8202c", "white": "#f4f4f4", "black": "#222222"}
+COLOURS = {"red": "#c8202c", "white": "#f4f4f4", "black": "#222222", "grey": "#8c8f94"}
 
 
 BG = (0.86, 0.9, 0.95)
@@ -522,47 +557,61 @@ def relief_render(regions, outline, path, zoom=None):
     plt.close(fig)
 
 
+def compare_render(regions, outline, path, ext=(-6, 18, 8, 23)):
+    """The logo next to the model (lit top surface), same area and scale: for checking the trace by eye."""
+    from matplotlib.colors import LightSource
+    step = 0.03
+    H, C, inside = raster(regions, outline, ext, step)
+    shade = LightSource(azdeg=315, altdeg=35).hillshade(H, vert_exag=1.0, dx=step, dy=step)
+    img = np.clip(C * (0.45 + 0.75 * shade[..., None]), 0, 1)
+    img[~inside] = BG
+    x0, y0 = px_to_mm(0, 300)
+    x1, y1 = px_to_mm(300, 0)
+    fig, axes = plt.subplots(1, 2, figsize=(22, 7.5))
+    axes[0].imshow(Image.open(LOGO).convert("RGBA"), extent=(x0, x1, y0, y1), interpolation="bicubic")
+    axes[0].set_title("logo (300 px)", fontsize=16)
+    axes[1].imshow(img, extent=ext)
+    axes[1].set_title("keychain, as modelled (mm)", fontsize=16)
+    for ax in axes:
+        ax.set_xlim(ext[0], ext[1])
+        ax.set_ylim(ext[2], ext[3])
+    fig.savefig(path, dpi=60, bbox_inches="tight")
+    plt.close(fig)
+
+
 def main():
     OUT.mkdir(exist_ok=True)
     RENDERS.mkdir(exist_ok=True)
     regions, outline, info = build_regions()
 
-    # Each body is built as stacked slabs, one per height step: at each step, the union of the regions that are that
-    # colour there, with hairline gaps and pinholes between neighbouring regions closed. Extruding regions one by one and
-    # unioning them leaves zero-width pinch points where traced regions nearly touch.
-    # Only the top COLOUR_DEPTH of a white/black region is that colour; red fills in below it. Fewer layers then hold
-    # all three colours, so fewer AMS swaps and less purge.
-    spans = {c: [] for c in COLOURS}          # colour -> [(poly, z0, z1)]
-    for poly, col, top in regions.values():
-        start = max(BASE, top - COLOUR_DEPTH.get(col, top))
-        spans["red"].append((poly, BASE, start))
-        spans[col].append((poly, start, top))
-    levels = sorted({BASE, *[z for sp in spans.values() for _, z0, z1 in sp for z in (z0, z1)]})
+    # Every body is built from one shared planar partition (see column_mesh). Only the top COLOUR_DEPTH of a
+    # white/black/grey region is that colour; red fills in below it, so fewer layers hold several colours (fewer AMS
+    # swaps, less purge). The red also includes the base under everything.
+    def colour_span(col):
+        def span(name):
+            _, c, top = regions[name]
+            start = max(BASE, top - COLOUR_DEPTH.get(c, top))
+            if col == "red":
+                return (0.0, start if c != "red" else top)
+            return (start, top) if c == col else None
+        return span
 
-    def slab_body(items, with_base, simplify=0.0):
-        slabs = [extrude(outline, 0, BASE)] if with_base else []
-        for lo, hi in zip(levels, levels[1:]):
-            polys = [p for p, z0, z1 in items if z0 <= lo and z1 >= hi and z1 > z0]
-            if not polys:
-                continue
-            area = fill_small_holes(unary_union(polys))
-            if simplify:
-                area = area.simplify(simplify).buffer(0)
-            if not area.is_empty:
-                slabs.append(extrude(area, lo, hi))
-        return tidy(union(slabs))
+    def check(m, name):
+        assert m.is_watertight and m.is_winding_consistent, f"{name} body not watertight"
+
+    spans = {col: colour_span(col) for col in COLOURS}
+    spans["merged"] = lambda n: (0.0, regions[n][2])
+    faces = separate_pinches(regions, outline, spans)
 
     colour_meshes = {}
     for col in COLOURS:
-        m = slab_body(spans[col], col == "red")
-        check_body(m, col)
+        m = column_mesh(faces, spans[col])
+        check(m, col)
         colour_meshes[col] = m
         m.export(OUT / f"{NAME}-{col}.stl")
 
-    # Single-colour solid: the same, over all regions regardless of colour.
-    merged = slab_body([(p, BASE, t) for p, _, t in regions.values()], True)
-    check_body(merged, "merged")
-    merged.fix_normals()
+    merged = column_mesh(faces, spans["merged"])
+    check(merged, "merged")
     rep = mk.report(merged)
     merged.export(OUT / f"{NAME}.stl")
 
@@ -574,8 +623,9 @@ def main():
     # Viewer copies, standing up as it hangs (drawing Y -> Z), lifted so the bottom sits on Z=0.
     stand = trimesh.transformations.rotation_matrix(np.pi / 2, [1, 0, 0])
     lift = -float(merged.bounds[0, 1])
-    for col in COLOURS:   # lighter copies (outlines simplified to 0.05 mm) so the page stays under 65k vertices/mesh
-        v = slab_body(spans[col], col == "red", simplify=0.05)
+    light_faces = partition(regions, outline, simplify=0.05)   # lighter copies so the page stays under 65k verts/mesh
+    for col in COLOURS:
+        v = column_mesh(light_faces, colour_span(col))
         v.apply_translation([0, 0, -CAP_TOP / 2])
         v.apply_transform(stand)
         v.apply_translation([0, 0, lift])
@@ -607,6 +657,7 @@ def main():
     relief_render(regions, outline, RENDERS / "relief.png")
     relief_render(regions, outline, RENDERS / "relief-head.png", zoom=(-6, 18, 8, 23))
     relief_render(regions, outline, RENDERS / "relief-wing.png", zoom=(-28, -10, -12, 4))
+    compare_render(regions, outline, RENDERS / "compare-head.png")
     from render import render_sheet
     render_sheet(merged, str(RENDERS / "model.png"), title=f"{NAME}: print pose (flat), mm",
                  labels=["keychain"], sections_y=(0.0, 14.0), sections_x=(0.0, 2.0))
