@@ -1,5 +1,8 @@
 # Bambu Lab A1 notes
 
+The owner also has an enclosed **P2S + AMS 2 Pro**. See [`bambu-p2s.md`](bambu-p2s.md)
+for ASA/ABS and multi-material work.
+
 - **Build volume:** 256 × 256 × 256 mm. Parts bigger than that get split, with
   alignment pins or dovetails, or scaled down.
 - **Kinematics:** bed-slinger (the Y axis moves the bed). Tall, narrow parts wobble,

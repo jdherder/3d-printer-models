@@ -16,7 +16,7 @@ Global context lives here and in `docs/`, and each project's `README.md` holds t
 
 | What | Details |
 |---|---|
-| Printer | **Bambu Lab A1** (bed-slinger, open frame). Build volume **256 × 256 × 256 mm**. 0.4 mm nozzle (stock). See `docs/bambu-a1.md` |
+| Printers | **Bambu Lab A1** (bed-slinger, open frame) and **Bambu Lab P2S** (enclosed CoreXY) with an **AMS 2 Pro** (4 slots, dries filament). Both build **256 × 256 × 256 mm**, 0.4 mm nozzle. See `docs/bambu-a1.md` and `docs/bambu-p2s.md` |
 | Slicer | Bambu Studio (takes STL / 3MF / STEP) |
 | CAD | **Autodesk Fusion**, for hands-on edits. See `docs/fusion.md` for mesh import and export |
 | Scanning | **Polycam on iOS**, exports GLB (metres, Y-up, textured). See `docs/scanning-polycam.md` |
@@ -34,7 +34,9 @@ Global context lives here and in `docs/`, and each project's `README.md` holds t
 - **Fit check:** anything bigger than 256 mm on any axis must be split
   (with alignment pins/keys) or scaled. `report()` flags this.
 - **Outdoor or load-bearing parts:** default to PETG. PLA creeps and degrades
-  in sun, and ASA/ABS warp on the open-frame A1.
+  in sun. ASA/ABS warp on the open-frame A1 but are fine on the enclosed P2S, so
+  use ASA there for parts that see real heat or UV (car interiors, harsh sun).
+  Say which printer a part targets in its README.
 
 ## Repo layout
 
