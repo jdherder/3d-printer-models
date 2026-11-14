@@ -72,14 +72,16 @@ TAIL = dict(c=(0.0, 11.5, 27.0), r=(5.5, 5.0, 2.4))
 CAP = dict(grow=1.2, cut_z=65.3, brim_c=(0.0, -12.0, 66.3), brim_r=(9.8, 8.8, 1.5), brim_tilt_deg=8.0, button_r=1.4)
 EYE = dict(x=4.5, z=62.0, r=(2.1, 1.3, 2.2), highlight_r=0.6, highlight_at=(0.5, 0.7))
 # Beak: a broad, hooked eagle beak, slightly open. Ellipsoids blended along the beak: (centre, radii)
-# v3: angular beak (owner: "more angular"). Each half is a side profile (y, z) cut by a top-view taper (x, y) and,
-# for the upper beak, a roof that slopes off a ridge line: flat faces and crisp edges, a sharp downward hook.
-UPPER_BEAK = dict(side=[(-5.0, 60.6), (-12.0, 59.9), (-19.0, 58.0), (-23.0, 51.0), (-20.4, 52.9), (-13.0, 54.4),
-                        (-5.0, 54.2)],
-                  top=[(-7.4, -4.0), (7.4, -4.0), (1.5, -23.5), (-1.5, -23.5)], roof=0.4)
-LOWER_BEAK = dict(side=[(-5.0, 55.0), (-12.0, 53.4), (-17.8, 52.5), (-14.8, 49.8), (-5.0, 48.2)],
-                  top=[(-6.0, -4.0), (6.0, -4.0), (1.2, -19.0), (-1.2, -19.0)])
-BEAK_EDGE = 0.5   # edge rounding (mm): just enough to print cleanly
+# v4: big costume beak (owner: v3 "too blocky", and the costume's beak is huge). Nearly head-wide, long, deeply
+# hooked, mouth open. Lofted: rounded cross-sections (a superellipse, exponent BEAK_P: >2 gives a defined but soft
+# shape) through stations along y. Each station: (y, half-width, top z, bottom z).
+UPPER_BEAK = dict(stations=[(-4.0, 8.0, 60.8, 53.6), (-10.0, 7.8, 60.6, 53.8), (-16.0, 6.6, 59.6, 53.4),
+                            (-21.0, 4.6, 57.8, 52.5), (-24.5, 3.0, 55.8, 51.0), (-26.5, 1.9, 53.4, 49.6),
+                            (-27.5, 1.2, 51.8, 49.3)], end=-27.9)
+LOWER_BEAK = dict(stations=[(-4.0, 7.2, 53.0, 46.0), (-10.0, 6.6, 52.0, 46.3), (-15.0, 5.0, 51.0, 47.0),
+                            (-19.0, 3.2, 50.4, 48.0), (-21.5, 1.8, 49.9, 48.8)], end=-22.3)
+BEAK_P = 2.4
+BEAK_END_ROUND = 1.5
 LEG = dict(x=5.8, foot_x=6.4, y=2.0, z0=7.5, z1=25.0, r0=2.9, r1=3.5)
 # v2: feet much smaller than the costume's (owner's pick)
 FOOT = dict(splay_deg=12.0, heel=(0.0, 2.5, 6.2), heel_r=(3.4, 3.8, 2.3), toe_root=(0.0, 0.5, 6.0),
@@ -212,37 +214,23 @@ def foot_parts(side):
     return tips
 
 
-def sd_polygon(px, py, verts):
-    """Signed distance to a simple 2D polygon (any winding), vectorised (from projects/wagon-cup-holder/sdf.py)."""
-    v = np.asarray(verts, dtype=np.float32)
-    shape = np.broadcast(px, py).shape
-    d = np.full(shape, np.inf, dtype=np.float32)
-    s = np.ones(shape, dtype=np.float32)
-    j = len(v) - 1
-    for i in range(len(v)):
-        ex, ey = v[j, 0] - v[i, 0], v[j, 1] - v[i, 1]
-        wx, wy = px - v[i, 0], py - v[i, 1]
-        t = np.clip((wx * ex + wy * ey) / (ex * ex + ey * ey + 1e-12), 0.0, 1.0)
-        bx, by = wx - ex * t, wy - ey * t
-        d = np.minimum(d, bx * bx + by * by)
-        c1, c2, c3 = py >= v[i, 1], py < v[j, 1], ex * wy > ey * wx
-        s = np.where((c1 & c2 & c3) | (~c1 & ~c2 & ~c3), -s, s)
-        j = i
-    return s * np.sqrt(d)
-
-
-def angular_beak(X, Y, Z, spec):
-    d = smax(sd_polygon(Y, Z, spec["side"]), sd_polygon(X, Y, spec["top"]), BEAK_EDGE)
-    if "roof" in spec:   # faces sloping off the ridge (the profile's top edge, up to the hook)
-        top = spec["side"][:3]
-        ridge = np.interp(-Y, [-p[0] for p in top], [p[1] for p in top])
-        roof = (Z + spec["roof"] * np.abs(X) - ridge) / np.hypot(1.0, spec["roof"])
-        d = smax(d, roof, BEAK_EDGE)
-    return d
+def loft_beak(X, Y, Z, spec):
+    st = np.array(spec["stations"], np.float32)
+    ys = -st[:, 0]                         # np.interp needs increasing x
+    yy = -Y
+    w = np.interp(yy, ys, st[:, 1])
+    t = np.interp(yy, ys, st[:, 2])
+    b = np.interp(yy, ys, st[:, 3])
+    c, h = (t + b) / 2, (t - b) / 2
+    p = BEAK_P
+    n = (np.abs(X / w) ** p + np.abs((Z - c) / h) ** p) ** (1.0 / p)
+    d = (n - 1.0) * np.minimum(w, h)
+    d = smax(d, spec["end"] - Y, BEAK_END_ROUND)     # rounded tip end
+    return smax(d, Y - (-2.0), 0.5)                  # back end, buried in the head
 
 
 def white_parts(X, Y, Z):
-    d = np.minimum(angular_beak(X, Y, Z, UPPER_BEAK), angular_beak(X, Y, Z, LOWER_BEAK))
+    d = np.minimum(loft_beak(X, Y, Z, UPPER_BEAK), loft_beak(X, Y, Z, LOWER_BEAK))
     for side in (1, -1):
         leg = round_cone(X, Y, Z, (side * LEG["foot_x"], LEG["y"], LEG["z0"]), (side * LEG["x"], LEG["y"], LEG["z1"]),
                          LEG["r0"], LEG["r1"])

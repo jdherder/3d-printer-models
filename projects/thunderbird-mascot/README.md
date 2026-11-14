@@ -18,7 +18,9 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - [x] v2: slimmer torso, head, wings and legs; feet ~40% smaller; base 49 × 43
 - [x] Owner review of v2: arms should be more wing-like, the beak more angular
 - [x] v3: flat swept wing blades with three primary feathers; faceted beak (ridge, flat faces, sharp hook)
-- [ ] Owner review of v3: likeness, proportions, size, a name on the base?
+- [x] Owner review of v3: beak too blocky; make it big like the costume's
+- [x] v4: big lofted beak (rounded sections, deep hook, open mouth)
+- [ ] Owner review of v4: likeness, proportions, size, a name on the base?
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Measurements
@@ -49,7 +51,7 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
 
 ## Open questions
 
-- Does it read as the Thunderbird? Beak (v3 is angular, check it isn't too blocky), the white "goggle" face patch, the chest burst.
+- Does it read as the Thunderbird? Beak size/hook/mouth opening (v4), the white "goggle" face patch, the chest burst.
 - Wings: stand out more from the body? (`WING["tilt_deg"]`)
 - v2 legs read long and thin. Shorten them, or is that fine?
 - Size: 80 mm OK, or bigger (100–120 mm is easier to paint/see, more filament and time)?
@@ -61,7 +63,8 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
 - **Shapes** are signed-distance fields, meshed by marching cubes (0.3 mm voxel) and decimated (pymeshlab): red body
   (torso + head + wings + tail, smoothly blended), red cap, white parts (beak, legs, feet), black claws.
   Wings are built in their own frame (`wing_frame`: thickness, front-back, down the wing; tilted and swept). The beak
-  is angular (`angular_beak`): a side profile ∩ a top-view taper ∩ a roof off the ridge, edges rounded 0.5. Eyes
+  is lofted (`loft_beak`): superellipse sections (exponent `BEAK_P`) through stations (y, half-width, top, bottom),
+  rounded tip end. v3's angular version (profile ∩ taper ∩ roof) looked too blocky. Eyes
   and highlights are analytic spheres (marching-cubes facets that small made sliver triangles).
 - **Decals** are exact boolean regions that recolour the red skin: chest starburst, face goggles (`cone_decal`: the
   outline swept from a point inside the head, so its walls meet the surface squarely), zigzag hem and wing tips
@@ -94,3 +97,6 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
   tilted, swept wing frame) with three flattened primary feathers; the white zigzag follows the wing frame. Beak: side
   profile ∩ top taper ∩ ridge roof, crisp hook. The face patch's cusps are closed with a round offset (a cusp against the
   beak ridge made slivers).
+- **2026-11-14 (v4):** Owner: v3 beak too blocky, and the costume's beak is much bigger. First tried the v3 method
+  scaled up: still a box. Rebuilt as a loft of rounded superellipse sections: nearly head-wide at the root, ~28 mm
+  long (design), deep hook, mouth open. Beak root kept 8 mm half-width (8.8 grazed the head and made a sliver).
