@@ -14,7 +14,9 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 
 - [x] Source: `source/costume-photo-2026-11-14-instagram.png` (owner's screenshot of the school's Instagram post)
 - [x] v1: chibi figure on a black base, 80 mm tall, 3 colours. Watertight, 0 self-intersections, colour bodies disjoint
-- [ ] Owner review: likeness, proportions, size, a name on the base?
+- [x] Owner review of v1: "too pudgy and bloated", and wants smaller feet (even though the costume's are huge)
+- [x] v2: slimmer torso, head, wings and legs; feet ~40% smaller; base 49 × 43
+- [ ] Owner review of v2: likeness, proportions, size, a name on the base?
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Measurements
@@ -23,10 +25,13 @@ No real object: the size is our choice. **80 mm tall** (`HEIGHT_MM`) is a first 
 
 | Feature | Value (mm) | Notes |
 |---|---|---|
-| Overall W × D × H | 62.7 × 56.4 × 80.0 | Footprint = the base |
-| Base | 62.7 × 56.4 × 5.2 | Black, rounded edge |
-| Eyes | 5.4 tall | Black, Ø 1.5 white highlight, "friendly" (as the keychain) |
-| "BB" on the cap | 4.4 tall | DejaVu Sans Bold (matplotlib's bundled font) |
+| Overall W × D × H | 49.0 × 44.6 × 80.0 | Base 49 × 43; the beak sticks out past it a little |
+| Base | 49.0 × 42.6 × 5.3 | Black, rounded edge |
+| Torso (design) | 24 wide × 21 deep | v1 was 32 × 28 |
+| Legs | Ø ~6–7.5 | |
+| Feet | ~10 long toes | v1 ~16. Owner wanted them smaller than the costume's |
+| Eyes | 4.7 tall | Black, Ø 1.3 white highlight, "friendly" (as the keychain) |
+| "BB" on the cap | 3.8 tall | DejaVu Sans Bold (matplotlib's bundled font) |
 | Claw tips | ~0.9 | Smallest feature |
 
 Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form one loop (a "handle"). That's expected.
@@ -41,7 +46,8 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
 
 ## Open questions
 
-- Does it read as the Thunderbird? Beak shape/size, the white "goggle" face patch, the chest burst, leg length.
+- Does it read as the Thunderbird? Beak shape/size (it's big for the slimmer head), the white "goggle" face patch, the chest burst.
+- v2 legs read long and thin. Shorten them, or is that fine?
 - Size: 80 mm OK, or bigger (100–120 mm is easier to paint/see, more filament and time)?
 - Add a name on the base ("BLACK BOB" / "THUNDERBIRDS")? A pose (waving wing)? A tail?
 
@@ -49,7 +55,7 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
 
 `build.py` (~45 s):
 - **Shapes** are signed-distance fields, meshed by marching cubes (0.3 mm voxel) and decimated (pymeshlab): red body
-  (torso + head + wings + tail + tongue, smoothly blended), red cap, white parts (beak, legs, feet), black claws. Eyes
+  (torso + head + wings + tail, smoothly blended), red cap, white parts (beak, legs, feet), black claws. Eyes
   and highlights are analytic spheres (marching-cubes facets that small made sliver triangles).
 - **Decals** are exact boolean regions that recolour the red skin: chest starburst, face goggles (`cone_decal`: the
   outline swept from a point inside the head, so its walls meet the surface squarely), zigzag hem and wing tips
@@ -57,7 +63,8 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
 - **Colour bodies** (manifold3d): black = claws + eyes − highlights + base; white = white parts + highlights +
   decal regions − black; red = red − decals − white − black. Lessons: never subtract a solid that shares skin with
   the one it's cut from, avoid coplanar faces (claws are clipped 0.35 above the soles), scale *before* the booleans,
-  and build the merged STL from the raw shapes, not the colour bodies.
+  and build the merged STL from the raw shapes, not the colour bodies. Grazing contacts also leave slivers: v2 dropped
+  the red tongue (it touched the beak at shallow angles) and lowered the eyes clear of the cap rim.
 - Every parameter is at the top of `build.py` in design mm (≈76 mm tall); `HEIGHT_MM` scales the result.
 
 ## Files
@@ -73,3 +80,7 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
 - **2026-11-14 (v1):** Owner shared a photo of the costume mascot and asked for a little figurine. Built a chibi
   version: cap with BB, goggle face, hooked beak with the red mouth showing, chest burst, zigzag hem and wing tips,
   white legs and three-toed feet with black claws, black base. 80 mm tall. Published for review.
+- **2026-11-14 (v2):** Owner: "too pudgy and bloated", and wants smaller feet even though the costume's are huge.
+  Torso 32×28 → 24×21 (design mm), head narrower, neck blend 7 → 4, thinner wings (closer in) and legs, feet ~40%
+  shorter with thinner toes and smaller claws, base 63×56 → 49×43. Beak, cap, eyes, face patch and chest burst scaled
+  to the new head. Dropped the tongue (mesh slivers); the mouth still shows the red head.

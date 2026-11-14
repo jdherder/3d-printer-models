@@ -1,73 +1,73 @@
 {
   "merged": {
     "extents_mm": [
-      62.7,
-      56.4,
+      49.0,
+      44.6,
       80.0
     ],
-    "faces": 191584,
+    "faces": 171444,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 0,
-    "volume_cm3": 57.6,
+    "volume_cm3": 34.4,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
   },
   "params_mm": {
     "height": 80.0,
-    "width": 62.7,
-    "depth": 56.4,
-    "base_w": 62.7,
-    "base_d": 56.4,
-    "base_h": 5.2,
-    "eye_h": 5.4,
-    "bb_h": 4.4,
-    "claw_tip_d": 0.94,
-    "highlight_d": 1.46
+    "width": 49.0,
+    "depth": 44.6,
+    "base_w": 49.0,
+    "base_d": 42.6,
+    "base_h": 5.3,
+    "eye_h": 4.7,
+    "bb_h": 3.8,
+    "claw_tip_d": 0.96,
+    "highlight_d": 1.28
   },
-  "design_scale": 1.0447,
+  "design_scale": 1.065,
   "scale_status": "owner's choice (no real object): HEIGHT_MM = 80",
   "bodies": {
     "red": {
       "extents_mm": [
-        50.4,
-        46.9,
-        54.8
+        39.7,
+        39.6,
+        54.0
       ],
-      "faces": 126940,
+      "faces": 110450,
       "watertight": true,
       "winding_consistent": true,
-      "euler_number": 6,
-      "volume_cm3": 31.7,
+      "euler_number": 2,
+      "volume_cm3": 19.9,
       "fits_A1_as_is": true,
       "fits_A1_any_axis_order": true
     },
     "white": {
       "extents_mm": [
-        51.2,
-        49.8,
-        69.8
+        40.5,
+        42.8,
+        69.9
       ],
-      "faces": 114678,
+      "faces": 95924,
       "watertight": true,
       "winding_consistent": true,
-      "euler_number": 10,
-      "volume_cm3": 11.5,
+      "euler_number": 6,
+      "volume_cm3": 5.9,
       "fits_A1_as_is": true,
       "fits_A1_any_axis_order": true
     },
     "black": {
       "extents_mm": [
-        62.7,
-        56.4,
-        68.0
+        49.0,
+        42.6,
+        68.4
       ],
-      "faces": 42016,
+      "faces": 36610,
       "watertight": true,
       "winding_consistent": true,
       "euler_number": 6,
-      "volume_cm3": 14.5,
+      "volume_cm3": 8.6,
       "fits_A1_as_is": true,
       "fits_A1_any_axis_order": true
     }

@@ -56,31 +56,32 @@ COLOURS = {"red": "#c8202c", "white": "#f2f2f2", "black": "#2b2b2e"}
 # ------------------------------------------------------------------------------------------------
 # Design parameters (design mm, before scaling)
 # ------------------------------------------------------------------------------------------------
-BASE = dict(c=(0.0, -3.0), r=(30.0, 27.0), h=5.0, round=1.6)
-BODY = dict(c=(0.0, 2.0, 36.0), r=(16.0, 14.0, 17.0))
-HEAD = dict(c=(0.0, 0.0, 60.0), r=(15.0, 14.0, 14.0))
-NECK_BLEND = 7.0
-WING = dict(shoulder=(15.0, 1.5, 45.0, 5.2), hand=(20.5, -1.0, 30.0, 4.0))      # x, y, z, radius (right wing; mirrored)
-TAIL = dict(c=(0.0, 14.0, 27.0), r=(8.0, 6.0, 3.0))
-CAP = dict(grow=1.3, cut_z=65.5, brim_c=(0.0, -14.5, 66.6), brim_r=(12.0, 10.5, 1.8), brim_tilt_deg=8.0, button_r=1.6)
-EYE = dict(x=5.5, z=62.5, r=(2.4, 1.5, 2.6), highlight_r=0.7, highlight_at=(0.6, 0.8))
+BASE = dict(c=(0.0, -2.0), r=(23.0, 20.0), h=5.0, round=1.6)
+# v2: slimmer (owner: v1 "too pudgy and bloated"). Torso and head narrower and deeper-set, thinner wings and legs.
+BODY = dict(c=(0.0, 2.0, 36.0), r=(12.0, 10.5, 17.5))
+HEAD = dict(c=(0.0, 0.0, 60.0), r=(12.0, 11.5, 12.8))
+NECK_BLEND = 4.0
+WING = dict(shoulder=(11.0, 1.5, 45.5, 3.8), hand=(16.0, -0.5, 30.0, 3.0))      # x, y, z, radius (right wing; mirrored)
+TAIL = dict(c=(0.0, 11.5, 27.0), r=(5.5, 5.0, 2.4))
+CAP = dict(grow=1.2, cut_z=65.3, brim_c=(0.0, -12.0, 66.3), brim_r=(9.8, 8.8, 1.5), brim_tilt_deg=8.0, button_r=1.4)
+EYE = dict(x=4.5, z=62.0, r=(2.1, 1.3, 2.2), highlight_r=0.6, highlight_at=(0.5, 0.7))
 # Beak: a broad, hooked eagle beak, slightly open. Ellipsoids blended along the beak: (centre, radii)
-UPPER_BEAK = [((0, -9.0, 57.0), (8.2, 6.0, 4.8)), ((0, -16.5, 56.3), (6.4, 5.0, 3.9)),
-              ((0, -22.5, 54.6), (3.8, 3.6, 3.0)), ((0, -25.6, 51.8), (2.2, 2.0, 2.6))]
-LOWER_BEAK = [((0, -8.5, 51.2), (6.6, 5.0, 3.0)), ((0, -15.0, 50.4), (4.8, 4.0, 2.3)),
-              ((0, -19.5, 50.9), (2.4, 2.4, 1.7))]
-TONGUE = dict(c=(0.0, -13.0, 52.5), r=(3.8, 6.0, 2.0))
-LEG = dict(x=8.5, foot_x=9.5, y=2.0, z0=8.0, z1=25.0, r0=4.4, r1=5.4)
-FOOT = dict(splay_deg=12.0, heel=(0.0, 3.0, 6.6), heel_r=(5.5, 6.0, 3.0), toe_root=(0.0, -1.0, 6.4),
-            toe_len=13.0, toe_r=(3.1, 2.5), toe_spread_deg=28.0)
+UPPER_BEAK = [((0, -7.6, 57.0), (6.6, 5.2, 4.2)), ((0, -14.0, 56.4), (5.2, 4.4, 3.4)),
+              ((0, -19.2, 54.9), (3.2, 3.1, 2.6)), ((0, -21.8, 52.4), (1.9, 1.8, 2.3))]
+LOWER_BEAK = [((0, -7.2, 51.6), (5.4, 4.4, 2.7)), ((0, -12.8, 50.9), (3.9, 3.5, 2.0)),
+              ((0, -16.8, 51.3), (2.1, 2.1, 1.5))]
+LEG = dict(x=5.8, foot_x=6.4, y=2.0, z0=7.5, z1=25.0, r0=2.9, r1=3.5)
+# v2: feet much smaller than the costume's (owner's pick)
+FOOT = dict(splay_deg=12.0, heel=(0.0, 2.5, 6.2), heel_r=(3.4, 3.8, 2.3), toe_root=(0.0, 0.5, 6.0),
+            toe_len=7.5, toe_r=(2.0, 1.7), toe_spread_deg=30.0)
 FOOT_FLOOR = BASE["h"] - 0.8   # soles and claws are cut flat here, inside the base
-CLAW = dict(len=2.6, drop=3.2, r=(1.4, 0.45))
-HEM = dict(c=(0.0, 2.0), radius=24.0, z=25.5, amp=2.5, teeth=11)
-WING_TIP = dict(z=32.5, amp=1.6, teeth=7, radius=5.2)
-CHEST = dict(c=(0.0, 39.5), y_ref=-11.7, spikes=7, r_out=9.5, r_in=5.0, twist_deg=-8.0)  # XZ plane
-FACE_MASK = dict(eye_r=4.5, eye_z=62.6, chin=(0.0, 58.0, 7.0, 3.6))   # white goggles round the eyes + a band down
+CLAW = dict(len=1.9, drop=2.6, r=(1.0, 0.45))
+HEM = dict(c=(0.0, 2.0), radius=19.0, z=25.5, amp=2.2, teeth=11)
+WING_TIP = dict(z=32.3, amp=1.4, teeth=7, radius=3.9)
+CHEST = dict(c=(0.0, 39.5), y_ref=-8.4, spikes=7, r_out=7.6, r_in=4.0, twist_deg=-8.0)  # XZ plane
+FACE_MASK = dict(eye_r=4.0, eye_z=62.4, chin=(0.0, 58.2, 5.6, 3.2))   # white goggles round the eyes + a band down
                                                                        # to the beak (chin: x, z, half-width, half-height)
-BB = dict(text="BB", height=4.2, z=71.3, x=0.0, y_ref=-11.0)
+BB = dict(text="BB", height=3.6, z=70.0, x=0.0, y_ref=-9.2)
 
 
 # ------------------------------------------------------------------------------------------------
@@ -156,7 +157,7 @@ def red_body(X, Y, Z):
     d = smin(d, ellipsoid(X, Y, Z, HEAD["c"], HEAD["r"]), NECK_BLEND)
     d = smin(d, mirror_x(wing)(X, Y, Z), 3.0)
     d = smin(d, ellipsoid(X, Y, Z, TAIL["c"], TAIL["r"]), 3.0)
-    return np.minimum(d, ellipsoid(X, Y, Z, TONGUE["c"], TONGUE["r"]))
+    return d   # v2: no tongue (it grazed the beak and left slivers); the head shows red in the open mouth
 
 
 def cap(X, Y, Z):
@@ -369,7 +370,7 @@ def bb_text():
 
 def build_bodies():
     print("meshing shape groups ...")
-    red = mesh_field(red_body, (-26, -22, 17), (26, 22, 76))
+    red = mesh_field(red_body, (-22, -20, 15), (22, 20, 76))
     capm = mesh_field(cap, (-18, -26, 63), (18, 18, 78))
     white = mesh_field(white_parts, (-26, -32, 3), (26, 12, 64))
     eyes, hilite = eyes_and_highlights()

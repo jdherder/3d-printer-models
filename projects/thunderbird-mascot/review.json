@@ -1,21 +1,57 @@
 {
   "page_title": "Thunderbird Mascot",
   "title": "Black Bob Thunderbird figurine",
-  "subtitle": "Chibi figurine of the costume mascot · 80 mm tall on a display base · red, white, black · millimetres",
+  "subtitle": "Chibi figurine of the costume mascot \u00b7 80 mm tall on a display base \u00b7 red, white, black \u00b7 millimetres",
   "meshes": [
-    {"path": "renders/view-red.stl", "label": "Red (body, head, wings, cap)", "style": "solid", "color": "#c8202c", "crease": 0.9},
-    {"path": "renders/view-white.stl", "label": "White (beak, face, chest burst, zigzags, legs, feet, BB)", "style": "solid", "color": "#f2f2f2", "crease": 0.9},
-    {"path": "renders/view-black.stl", "label": "Black (eyes, claws, base)", "style": "solid", "color": "#2b2b2e", "crease": 0.9}
+    {
+      "path": "renders/view-red.stl",
+      "label": "Red (body, head, wings, cap)",
+      "style": "solid",
+      "color": "#c8202c",
+      "crease": 0.9
+    },
+    {
+      "path": "renders/view-white.stl",
+      "label": "White (beak, face, chest burst, zigzags, legs, feet, BB)",
+      "style": "solid",
+      "color": "#f2f2f2",
+      "crease": 0.9
+    },
+    {
+      "path": "renders/view-black.stl",
+      "label": "Black (eyes, claws, base)",
+      "style": "solid",
+      "color": "#2b2b2e",
+      "crease": 0.9
+    }
   ],
   "dims": [
-    {"label": "Height (base to cap)", "param": "height"},
-    {"label": "Base width", "param": "base_w"},
-    {"label": "Base depth", "param": "base_d"},
-    {"label": "Base thickness", "param": "base_h"},
-    {"label": "Eye height", "param": "eye_h"},
-    {"label": "\"BB\" letters on the cap", "param": "bb_h"}
+    {
+      "label": "Height (base to cap)",
+      "param": "height"
+    },
+    {
+      "label": "Base width",
+      "param": "base_w"
+    },
+    {
+      "label": "Base depth",
+      "param": "base_d"
+    },
+    {
+      "label": "Base thickness",
+      "param": "base_h"
+    },
+    {
+      "label": "Eye height",
+      "param": "eye_h"
+    },
+    {
+      "label": "\"BB\" letters on the cap",
+      "param": "bb_h"
+    }
   ],
   "scale_note": "80 mm tall is a first guess for a 'little' figurine. Type a different height in the real-size box to preview it; HEIGHT_MM in build.py sets it.",
-  "notes_title": "v1: first pass",
-  "notes": "A chibi version of the costume in the Instagram photo: red ball cap with white BB, white goggle face with friendly black eyes, a big hooked white beak with the red mouth showing, red body with the white chest starburst and the white zigzag hem, red wings with white zigzag tips, white legs and big three-toed feet with black claws, on a black round base. Things to check: does it read as our Thunderbird? Beak size and shape, the face patch, cap, chest mark, leg length, and whether 80 mm is the right size. Ideas: a name on the base (BLACK BOB or THUNDERBIRDS), arms raised or waving, a tail."
+  "notes_title": "v2: slimmer, smaller feet",
+  "notes": "v2 (you said v1 was too pudgy and bloated, and asked for smaller feet): the torso is about 25% narrower and shallower, the head is narrower, the neck is less blended, and the wings and legs are thinner and closer in. The feet are about 40% shorter, with thinner toes and smaller claws. The beak, cap, chest burst and face patch are scaled down to the new head. The footprint shrank from 63 \u00d7 56 to 49 \u00d7 43 mm. Same 80 mm height. The red tongue is gone (it caused mesh glitches); the mouth still shows red from the head. Check: is it slim enough now, or too skinny? Are the legs too long and thin? Is the beak too big for the smaller head?"
 }
