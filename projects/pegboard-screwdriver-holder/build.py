@@ -16,7 +16,7 @@ Drop each driver in from above, tip first. The holes are sized for the tip (a sl
   -> renders/asm-*.stl, ref-*.stl                     hung on the board with the drivers in it (world Z-up), for the viewer
 
 Board frame (tools/pegboard.py): x out of the board, y up, z across. One piece: back plate with 2 shared hooks (row 1)
-and 2 pins (row -1), a top shelf with the cups, a bottom shelf with the guide holes, and ribs between the stations.
+and 2 pins (row -1), windowed between them (only strips along the hooks and pins, joined behind the ribs), a top shelf with the cups, a bottom shelf with the guide holes, and ribs between the stations.
 """
 
 import json
@@ -69,6 +69,8 @@ FRONT_WALL = 3.0        # front of the biggest cup to the shelf's front face
 END_WALL = 3.0          # outer cup to the holder's end
 RIB_T = 2.4             # ribs between stations, from the bottom shelf to the top shelf
 BOTTOM = min(ROWS) * pb.PITCH - STYLE.r   # holder's bottom (y), flush with the pins' undersides: it prints standing on this
+PLATE_STRIP = 3.0       # back plate kept this far beyond the pegs: a strip along the hooks and one along the pins.
+                        # Between them, each bay gets a window, so only posts behind the ribs and end walls join the strips
 GUIDE_T = 3.4           # bottom shelf thickness (2.6 left after the 0.4 mm print flat)
 TOP_Y = 31.0            # top shelf's top face (y): 5.6 mm above the hook hole, so it still rocks on
 FUNNEL_WALL = 2.4       # wall under each cup's cone (perpendicular to it): the top shelf is a slab + one funnel per cup
@@ -139,6 +141,11 @@ def build():
         body -= vcone(rc, rc + CUP_LEAD + 1, TOP_Y - CUP_LEAD, TOP_Y + 1, xc, z)          # lead-in
         body -= vcone(rh, rc, y_cone - cone_h(t), y_cone, xc, z)
         body -= vcyl(rh, BOTTOM - 1, y_cone, xc, z)                             # through both shelves
+    hook_y, pin_y = max(ROWS) * pb.PITCH, min(ROWS) * pb.PITCH
+    win_y0 = pin_y + STYLE.r + PLATE_STRIP                     # top of the pin strip
+    win_y1 = hook_y - STYLE.hook_r - PLATE_STRIP               # bottom of the hook strip
+    for a, b in zip(walls, walls[1:]):
+        plate -= box(-1, PLATE_T + 0.1, win_y0, win_y1, a + RIB_T / 2, b - RIB_T / 2)
     return plate + body
 
 

@@ -6,11 +6,11 @@
       55.5,
       67.4
     ],
-    "faces": 38880,
+    "faces": 39000,
     "watertight": true,
     "winding_consistent": true,
-    "euler_number": -22,
-    "volume_cm3": 142.6,
+    "euler_number": -34,
+    "volume_cm3": 118.5,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
@@ -23,7 +23,7 @@
     "rock_in": {
       "ok": true,
       "max_tilt_deg": 94.0,
-      "states": 3259,
+      "states": 3285,
       "give_mm": 0.3
     },
     "holes_used": "2 hooks (row 1) + 2 pins (row -1), columns 0 and 8"
