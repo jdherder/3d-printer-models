@@ -20,7 +20,9 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - [x] v3: flat swept wing blades with three primary feathers; faceted beak (ridge, flat faces, sharp hook)
 - [x] Owner review of v3: beak too blocky; make it big like the costume's
 - [x] v4: big lofted beak (rounded sections, deep hook, open mouth)
-- [ ] Owner review of v4: likeness, proportions, size, a name on the base?
+- [x] Owner review of v4: the upper and lower beak join at the back on the costume; the head is too round
+- [x] v5: one-piece beak (halves blended at the gape), pear-shaped head (cranium + cheeks), white face plate under the cap
+- [ ] Owner review of v5: likeness, proportions, size, a name on the base?
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Measurements
@@ -34,7 +36,7 @@ No real object: the size is our choice. **80 mm tall** (`HEIGHT_MM`) is a first 
 | Torso (design) | 24 wide × 21 deep | v1 was 32 × 28 |
 | Legs | Ø ~6–7.5 | |
 | Feet | ~10 long toes | v1 ~16. Owner wanted them smaller than the costume's |
-| Eyes | 4.7 tall | Black, Ø 1.3 white highlight, "friendly" (as the keychain) |
+| Eyes | 4.2 tall | Black, Ø 1.3 white highlight, "friendly" (as the keychain) |
 | "BB" on the cap | 3.8 tall | DejaVu Sans Bold (matplotlib's bundled font) |
 | Claw tips | ~0.9 | Smallest feature |
 | Feather tips (wings) | ~1.3 thick | Flat primaries; tilted 19° out, swept 12° back |
@@ -63,7 +65,7 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
 - **Shapes** are signed-distance fields, meshed by marching cubes (0.3 mm voxel) and decimated (pymeshlab): red body
   (torso + head + wings + tail, smoothly blended), red cap, white parts (beak, legs, feet), black claws.
   Wings are built in their own frame (`wing_frame`: thickness, front-back, down the wing; tilted and swept). The beak
-  is lofted (`loft_beak`): superellipse sections (exponent `BEAK_P`) through stations (y, half-width, top, bottom),
+  is lofted (`loft_beak`; the halves are blended, `BEAK_JOIN`, so they're one piece at the gape): superellipse sections (exponent `BEAK_P`) through stations (y, half-width, top, bottom),
   rounded tip end. v3's angular version (profile ∩ taper ∩ roof) looked too blocky. Eyes
   and highlights are analytic spheres (marching-cubes facets that small made sliver triangles).
 - **Decals** are exact boolean regions that recolour the red skin: chest starburst, face goggles (`cone_decal`: the
@@ -81,7 +83,7 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
 - `output/thunderbird-mascot-multicolor.3mf`: print this (3 parts)
 - `output/thunderbird-mascot.stl`: single-colour solid
 - `output/thunderbird-mascot-{red,white,black}.stl`: colour bodies
-- `renders/figure.png`: front / three-quarter / side / back
+- `renders/figure.png`: front / three-quarter / side / back; `renders/head.png`: head close-up
 - **Review page:** https://claude.ai/artifact/WYCbtWrxjguZYgr4q8fuSh (`renders/viewer.html`; republish to this URL)
 
 ## Log
@@ -100,3 +102,10 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
 - **2026-11-14 (v4):** Owner: v3 beak too blocky, and the costume's beak is much bigger. First tried the v3 method
   scaled up: still a box. Rebuilt as a loft of rounded superellipse sections: nearly head-wide at the root, ~28 mm
   long (design), deep hook, mouth open. Beak root kept 8 mm half-width (8.8 grazed the head and made a sliver).
+- **2026-11-14 (v5):** Owner: the top and bottom of the beak clearly join at the back in the photo; the head is too round.
+  The lower beak's top now rises into the upper beak at the back and the two are blended (`BEAK_JOIN`); the mouth opens
+  from about y = -12 forward. Head = taller, narrower cranium (`HEAD`) blended with cheeks/jaw (`JOWL`), a pear shape. The cap
+  dome now follows that head field (the old ellipsoid cap let the cheeks poke through: two loops at the rim). Eyes are
+  placed on the real surface (`eye_centre` searches the field), stand 0.85 proud (0.4 grazed and made slivers), and
+  are 4 tall so they clear the cap rim (touching it made loops). Face: one white plate (`FACE_MASK`) whose top runs up
+  under the cap, so the rim is its edge (goggle circles ending near the rim grazed it).

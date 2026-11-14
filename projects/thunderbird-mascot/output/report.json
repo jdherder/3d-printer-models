@@ -1,73 +1,73 @@
 {
   "merged": {
     "extents_mm": [
-      49.0,
-      48.8,
+      48.7,
+      48.5,
       80.0
     ],
-    "faces": 178804,
+    "faces": 180842,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 0,
-    "volume_cm3": 35.7,
+    "volume_cm3": 35.5,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
   },
   "params_mm": {
     "height": 80.0,
-    "width": 49.0,
-    "depth": 48.8,
-    "base_w": 49.0,
-    "base_d": 42.6,
+    "width": 48.7,
+    "depth": 48.5,
+    "base_w": 48.7,
+    "base_d": 42.3,
     "base_h": 5.3,
-    "eye_h": 4.7,
+    "eye_h": 4.2,
     "bb_h": 3.8,
-    "claw_tip_d": 0.96,
-    "highlight_d": 1.28
+    "claw_tip_d": 0.95,
+    "highlight_d": 1.27
   },
-  "design_scale": 1.065,
+  "design_scale": 1.058,
   "scale_status": "owner's choice (no real object): HEIGHT_MM = 80",
   "bodies": {
     "red": {
       "extents_mm": [
-        37.6,
-        39.6,
-        54.0
+        37.3,
+        39.4,
+        54.2
       ],
-      "faces": 114592,
+      "faces": 112408,
       "watertight": true,
       "winding_consistent": true,
       "euler_number": 2,
-      "volume_cm3": 20.0,
+      "volume_cm3": 19.8,
       "fits_A1_as_is": true,
       "fits_A1_any_axis_order": true
     },
     "white": {
       "extents_mm": [
-        40.2,
-        47.0,
-        69.9
+        39.9,
+        46.7,
+        69.7
       ],
-      "faces": 109402,
+      "faces": 110012,
       "watertight": true,
       "winding_consistent": true,
-      "euler_number": 8,
-      "volume_cm3": 7.1,
+      "euler_number": 10,
+      "volume_cm3": 7.3,
       "fits_A1_as_is": true,
       "fits_A1_any_axis_order": true
     },
     "black": {
       "extents_mm": [
-        49.0,
-        42.6,
-        68.4
+        48.7,
+        42.3,
+        67.7
       ],
-      "faces": 36610,
+      "faces": 36582,
       "watertight": true,
       "winding_consistent": true,
       "euler_number": 6,
-      "volume_cm3": 8.6,
+      "volume_cm3": 8.5,
       "fits_A1_as_is": true,
       "fits_A1_any_axis_order": true
     }

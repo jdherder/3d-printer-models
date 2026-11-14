@@ -52,6 +52,6 @@
     }
   ],
   "scale_note": "80 mm tall is a first guess for a 'little' figurine. Type a different height in the real-size box to preview it; HEIGHT_MM in build.py sets it.",
-  "notes_title": "v4: big costume beak",
-  "notes": "v4 (you said v3's beak was too blocky, and pointed out how big the costume's beak is). The beak is rebuilt as one smooth lofted form: rounded cross-sections that taper from nearly the full width of the head down to a deep downward hook, with the mouth open and red showing inside. It's about a third longer and wider than v3, and the tip reaches about 28 mm in front of the face (design scale). The edges are soft, but the top still has a clear shape. The wings, slim body and small feet are as in v3. Check: is the size right next to the costume? Should the hook be deeper? Should the mouth be more or less open?"
+  "notes_title": "v5: one-piece beak, less round head",
+  "notes": "v5. Beak: the upper and lower halves now join at the back into one piece, like the costume. The mouth opens only toward the front. Head: no longer a ball. It's a taller, narrower top over fuller cheeks and jaw (a pear shape), and the cap follows the new shape. The white face is now one plate around the eyes, running up under the cap so the cap rim is its top edge, like the white face under the brim in the photo. The eyes sit on the new head surface. The body, wings and feet are as in v4. Check: the head shape, how far back the mouth opens, and the white face plate."
 }

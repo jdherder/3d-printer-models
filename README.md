@@ -19,7 +19,7 @@ Pegboard parts form a catalog, with shared pegs: see [docs/pegboard.md](docs/peg
 | [pegboard-bambu-sign](projects/pegboard-bambu-sign/) | v2: one-piece 250 × 42 mm badge, logo inlaid flush in 3 colours, prints face-down with no supports; next: owner review, test print | Pegboard catalog: Bambu Lab logo badge that hangs flush on the board |
 | [pegboard-mat-holder](projects/pegboard-mat-holder/) | v0.2: 194 × 17 mm strip, 3.5 mm slots, 2 tilted slots, 2 hooks + 2 pins (rock-in checked); next: test print | Pegboard catalog: holds the A3 + A4 cutting mats leaning against the board |
 | [bike-hook](projects/bike-hook/) | v3.1: flush counterbored 8-hole plates, chamfered edges, ADULT/KIDS labels; adult (700c) + kids' (16/20 in) variants, checked against the family's 4 bikes; plate with 8 screws through the pegboard into the 2x4; no supports; next: owner weighs bikes, counts kids' spokes, test print | Wall hooks that hang bikes vertically by the front rim, perpendicular to the wall, tires on the board |
-| [thunderbird-mascot](projects/thunderbird-mascot/) | v4: slim body, feathered wings, big hooked beak, small feet, 80 mm, red/white/black on a black base; next: owner review | Figurine of the Black Bob Thunderbird costume mascot |
+| [thunderbird-mascot](projects/thunderbird-mascot/) | v5: slim body, pear head, feathered wings, big one-piece hooked beak, small feet, 80 mm, red/white/black on a black base; next: owner review | Figurine of the Black Bob Thunderbird costume mascot |
 
 ## Layout
 

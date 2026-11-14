@@ -59,7 +59,10 @@ COLOURS = {"red": "#c8202c", "white": "#f2f2f2", "black": "#2b2b2e"}
 BASE = dict(c=(0.0, -2.0), r=(23.0, 20.0), h=5.0, round=1.6)
 # v2: slimmer (owner: v1 "too pudgy and bloated"). Torso and head narrower and deeper-set, thinner wings and legs.
 BODY = dict(c=(0.0, 2.0, 36.0), r=(12.0, 10.5, 17.5))
-HEAD = dict(c=(0.0, 0.0, 60.0), r=(12.0, 11.5, 12.8))
+# v5: less round head (owner). A taller, narrower cranium (the cap fits this one) over fuller cheeks/jaw, blended:
+# a pear shape, like the costume's.
+HEAD = dict(c=(0.0, 0.5, 61.5), r=(10.6, 11.6, 11.8))
+JOWL = dict(c=(0.0, -1.5, 55.5), r=(11.4, 10.6, 8.0), blend=5.0)
 NECK_BLEND = 4.0
 # v3: real wings (owner: "more wing like"). A flat blade hanging from the shoulder, tilted out at the bottom and swept
 # back, ending in three flat primary feathers. Shapes are in the wing's own frame: u = thickness (out from the body),
@@ -70,17 +73,21 @@ WING = dict(shoulder=(11.2, 1.5, 46.0), tilt_deg=19.0, sweep_deg=12.0,
             feather_root=12.0, feather_spread=3.6, feather_r=(2.4, 0.9), feather_flat=1.45)
 TAIL = dict(c=(0.0, 11.5, 27.0), r=(5.5, 5.0, 2.4))
 CAP = dict(grow=1.2, cut_z=65.3, brim_c=(0.0, -12.0, 66.3), brim_r=(9.8, 8.8, 1.5), brim_tilt_deg=8.0, button_r=1.4)
-EYE = dict(x=4.5, z=62.0, r=(2.1, 1.3, 2.2), highlight_r=0.6, highlight_at=(0.5, 0.7))
+EYE = dict(x=4.7, z=62.0, r=(2.1, 1.3, 2.0), highlight_r=0.6, highlight_at=(0.5, 0.7))
 # Beak: a broad, hooked eagle beak, slightly open. Ellipsoids blended along the beak: (centre, radii)
 # v4: big costume beak (owner: v3 "too blocky", and the costume's beak is huge). Nearly head-wide, long, deeply
 # hooked, mouth open. Lofted: rounded cross-sections (a superellipse, exponent BEAK_P: >2 gives a defined but soft
 # shape) through stations along y. Each station: (y, half-width, top z, bottom z).
-UPPER_BEAK = dict(stations=[(-4.0, 8.0, 60.8, 53.6), (-10.0, 7.8, 60.6, 53.8), (-16.0, 6.6, 59.6, 53.4),
+UPPER_BEAK = dict(stations=[(-4.0, 8.0, 59.3, 53.4), (-10.0, 7.8, 59.3, 53.6), (-16.0, 6.6, 59.1, 53.3),
                             (-21.0, 4.6, 57.8, 52.5), (-24.5, 3.0, 55.8, 51.0), (-26.5, 1.9, 53.4, 49.6),
                             (-27.5, 1.2, 51.8, 49.3)], end=-27.9)
-LOWER_BEAK = dict(stations=[(-4.0, 7.2, 53.0, 46.0), (-10.0, 6.6, 52.0, 46.3), (-15.0, 5.0, 51.0, 47.0),
+# v5: the lower beak's top rises into the upper beak at the back, so the two are one piece (owner: they "clearly
+# attach together at the back"); the mouth opens from about y = -12 forward.
+LOWER_BEAK = dict(stations=[(-4.0, 7.2, 55.0, 46.0), (-10.0, 6.8, 54.7, 46.3), (-13.0, 6.0, 52.6, 46.6),
+                            (-15.5, 4.8, 51.0, 47.0),
                             (-19.0, 3.2, 50.4, 48.0), (-21.5, 1.8, 49.9, 48.8)], end=-22.3)
 BEAK_P = 2.4
+BEAK_JOIN = 2.0   # blend where the upper and lower beak meet at the back
 BEAK_END_ROUND = 1.5
 LEG = dict(x=5.8, foot_x=6.4, y=2.0, z0=7.5, z1=25.0, r0=2.9, r1=3.5)
 # v2: feet much smaller than the costume's (owner's pick)
@@ -91,8 +98,7 @@ CLAW = dict(len=1.9, drop=2.6, r=(1.0, 0.45))
 HEM = dict(c=(0.0, 2.0), radius=19.0, z=25.5, amp=2.2, teeth=11)
 WING_TIP = dict(start=14.3, amp=1.4, teeth=6, radius=(3.4, 9.5))   # white zigzag on the feather ends (wing frame)
 CHEST = dict(c=(0.0, 39.5), y_ref=-8.4, spikes=7, r_out=7.6, r_in=4.0, twist_deg=-8.0)  # XZ plane
-FACE_MASK = dict(eye_r=4.0, eye_z=62.4, chin=(0.0, 58.6, 5.6, 3.7))   # white goggles round the eyes + a band down
-                                                                       # to the beak (chin: x, z, half-width, half-height)
+FACE_MASK = dict(half_w=8.6, bottom=58.6, top=68.0, corner=3.6, chin=(0.0, 57.6, 5.6, 3.4))   # XZ, design mm
 BB = dict(text="BB", height=3.6, z=70.0, x=0.0, y_ref=-9.2)
 
 
@@ -179,9 +185,13 @@ def wing(X, Y, Z):
     return d
 
 
+def head_field(X, Y, Z):
+    return smin(ellipsoid(X, Y, Z, HEAD["c"], HEAD["r"]), ellipsoid(X, Y, Z, JOWL["c"], JOWL["r"]), JOWL["blend"])
+
+
 def red_body(X, Y, Z):
     d = ellipsoid(X, Y, Z, BODY["c"], BODY["r"])
-    d = smin(d, ellipsoid(X, Y, Z, HEAD["c"], HEAD["r"]), NECK_BLEND)
+    d = smin(d, head_field(X, Y, Z), NECK_BLEND)
     d = smin(d, mirror_x(wing)(X, Y, Z), 3.0)
     d = smin(d, ellipsoid(X, Y, Z, TAIL["c"], TAIL["r"]), 3.0)
     return d   # v2: no tongue (it grazed the beak and left slivers); the head shows red in the open mouth
@@ -189,7 +199,7 @@ def red_body(X, Y, Z):
 
 def cap(X, Y, Z):
     g = CAP["grow"]
-    dome = ellipsoid(X, Y, Z, HEAD["c"], np.add(HEAD["r"], g))
+    dome = head_field(X, Y, Z) - g      # follows the real head (cheeks included), so nothing pokes through
     dome = smax(dome, CAP["cut_z"] - Z, 0.6)
     # brim: a thin ellipsoid tilted down at the front (rotate about X through the brim centre)
     c = CAP["brim_c"]
@@ -230,7 +240,7 @@ def loft_beak(X, Y, Z, spec):
 
 
 def white_parts(X, Y, Z):
-    d = np.minimum(loft_beak(X, Y, Z, UPPER_BEAK), loft_beak(X, Y, Z, LOWER_BEAK))
+    d = smin(loft_beak(X, Y, Z, UPPER_BEAK), loft_beak(X, Y, Z, LOWER_BEAK), BEAK_JOIN)   # one piece at the gape
     for side in (1, -1):
         leg = round_cone(X, Y, Z, (side * LEG["foot_x"], LEG["y"], LEG["z0"]), (side * LEG["x"], LEG["y"], LEG["z1"]),
                          LEG["r0"], LEG["r1"])
@@ -242,10 +252,13 @@ def white_parts(X, Y, Z):
 
 
 def eye_centre(side):
+    """On the real head surface (cranium + cheeks blended), found along the line of sight; stands ~0.85 proud
+    (shallower and the eye meets the head at a grazing angle, which leaves slivers)."""
     x, z = side * EYE["x"], EYE["z"]
-    c, r = HEAD["c"], HEAD["r"]
-    y_surf = c[1] - r[1] * np.sqrt(1 - (x / r[0]) ** 2 - ((z - c[2]) / r[2]) ** 2)
-    return np.array([x, y_surf + 0.9, z])          # sits 0.6 mm proud of the head
+    ys = np.linspace(-20.0, HEAD["c"][1], 4001, dtype=np.float32)
+    f = red_body(np.float32(x), ys, np.float32(z))
+    y_surf = float(ys[np.argmax(f < 0)])
+    return np.array([x, y_surf + 0.45, z])
 
 
 def claws(X, Y, Z):
@@ -390,13 +403,15 @@ def cone_decal(poly_xz, apex, y_ref):
 
 
 def face_mask():
-    cs = m3d.CrossSection.circle(FACE_MASK["eye_r"], 96)
-    eyes = cs.translate((EYE["x"], FACE_MASK["eye_z"])) + cs.translate((-EYE["x"], FACE_MASK["eye_z"]))
+    """v5: one white face plate round the eyes, running up under the cap (the cap rim is its top edge, as on the
+    costume) and down to the beak. Its own top edge sits well above the rim so the two never graze."""
+    hw, z0, z1, r = FACE_MASK["half_w"], FACE_MASK["bottom"], FACE_MASK["top"], FACE_MASK["corner"]
+    plate = m3d.CrossSection.square((2 * (hw - r), z1 - z0 - 2 * r)).translate((-(hw - r), z0 + r)).offset(
+        r, m3d.JoinType.Round, circular_segments=96)
     x, z, hx, hz = FACE_MASK["chin"]
     chin = m3d.CrossSection.circle(1.0, 96).scale((hx, hz)).translate((x, z))
-    # close the cusps where the circles meet (sharp notches there made sliver faces against the beak ridge)
-    return (eyes + chin).offset(1.2, m3d.JoinType.Round, circular_segments=96).offset(
-        -1.2, m3d.JoinType.Round, circular_segments=96)
+    return (plate + chin).offset(1.0, m3d.JoinType.Round, circular_segments=96).offset(
+        -1.0, m3d.JoinType.Round, circular_segments=96)
 
 
 def starburst():
@@ -573,6 +588,13 @@ def main():
         "three-quarter": (np.array([0.7, 1.0, -0.35]), np.array([0.0, 0.0, 1.0])),
         "side": (np.array([-1.0, 0.0, 0.0]), np.array([0.0, 0.0, 1.0])),
         "back": (np.array([0.0, -1.0, -0.2]), np.array([0.0, 0.0, 1.0])),
+    })
+    z_cut = 0.66 * float(e[2])   # head close-up: everything above the neck
+    head = [(m.slice_plane([0, 0, z_cut], [0, 0, 1]), c) for m, c in parts]
+    render_colour(head, RENDERS / "head.png", {
+        "front": (np.array([0.0, 1.0, 0.0]), np.array([0.0, 0.0, 1.0])),
+        "three-quarter": (np.array([0.8, 1.0, -0.2]), np.array([0.0, 0.0, 1.0])),
+        "side": (np.array([-1.0, 0.0, 0.0]), np.array([0.0, 0.0, 1.0])),
     })
     print("done:", params)
 
