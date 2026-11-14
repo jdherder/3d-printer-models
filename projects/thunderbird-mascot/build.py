@@ -76,13 +76,17 @@ WING = dict(shoulder=(10.6, 1.5, 47.0), tilt_deg=15.0, sweep_deg=10.0,
             feather_root=12.0, feather_spread=3.4, feather_r=(2.4, 0.9), feather_flat=1.45)
 CAP = dict(grow=1.2, cut_z=65.4, brim_c=(0.0, -11.5, 67.2), brim_r=(8.6, 7.6, 1.2), brim_tilt_deg=0.0, button_r=1.3)
 EYE = dict(x=6.0, z=62.6, r=(2.0, 1.3, 2.2), highlight_r=0.55, highlight_at=(0.5, 0.7))
+# v8: the mouth is a smile, not an "O" (owner: v7 looked surprised). The opening's top edge (under the upper beak)
+# is nearly straight, its bottom edge (the lower lip) dips in the middle and both rise to pinched, upturned corners.
+# Heights are z at the centre and at the corners (|x| = half_w); the cavity runs back into the head (red back wall).
+SMILE = dict(half_w=6.2, top=(54.0, 54.7), bottom=(50.2, 53.3), back_y=-6.5, edge_round=1.4)
 # Beak: one rounded white muzzle: a bulk, a short downward hook, a narrow blaze up between the eyes and a lower jaw,
 # blended; the mouth is a cavity cut into it, deep enough that its back wall is the red head (the red inside).
 MUZZLE = dict(bulk=((0.0, -11.5, 56.5), (7.0, 8.0, 5.0)),
               hook=((0.0, -16.0, 56.8), (0.0, -20.4, 54.3), 4.0, 1.9),
               blaze=((0.0, -8.5, 61.0), (3.0, 3.5, 3.8)),
               jaw=((0.0, -10.5, 49.6), (6.6, 7.5, 3.2)),
-              mouth=((0.0, -13.5, 51.9), (5.8, 9.0, 2.0)), mouth_round=1.0,
+              mouth_round=1.0,
               corner=((5.6, -9.4, 52.3), (2.4, 4.2, 2.8)))   # mouth corners: upper and lower beak join here (mirrored)
 LEG = dict(x=5.0, foot_x=5.8, y=1.5, z0=7.5, z1=20.0, r0=2.6, r1=3.1)
 FOOT = dict(splay_deg=12.0, heel=(0.0, 2.5, 6.2), heel_r=(3.4, 3.8, 2.3), toe_root=(0.0, 0.5, 6.0),
@@ -225,7 +229,19 @@ def muzzle(X, Y, Z):
     cx = m["corner"][0]
     for side in (1, -1):
         d = smin(d, ellipsoid(X, Y, Z, (side * cx[0], cx[1], cx[2]), m["corner"][1]), 2.0)
-    return smax(d, -ellipsoid(X, Y, Z, *m["mouth"]), m["mouth_round"])
+    return smax(d, -smile(X, Y, Z), m["mouth_round"])
+
+
+def smile(X, Y, Z):
+    """The mouth opening (see SMILE): between a bottom curve and a top curve, both parabolas in x, open at the front."""
+    sm = SMILE
+    u = (X / sm["half_w"]) ** 2
+    top = sm["top"][0] + (sm["top"][1] - sm["top"][0]) * u
+    bottom = sm["bottom"][0] + (sm["bottom"][1] - sm["bottom"][0]) * u
+    k = sm["edge_round"]
+    d = smax(bottom - Z, Z - top, k)
+    d = smax(d, np.abs(X) - sm["half_w"], k)
+    return smax(d, Y - sm["back_y"], k)
 
 
 def white_parts(X, Y, Z):

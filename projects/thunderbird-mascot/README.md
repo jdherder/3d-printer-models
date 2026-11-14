@@ -26,7 +26,9 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - [x] v6: from the logo: chest lightning bolt, logo beak (long, hooked, open grin, gape under the eye), smaller head, black cap bill, crest feathers
 - [x] Owner review of v6: "not going well". Owner sent six more costume photos (`source/costume-2026-11-14-facebook-*.png`)
 - [x] v7: rebuilt from the costume photos (see Design notes); v1-v6 history is in the Log
-- [ ] Owner review of v7
+- [x] Owner review of v7: "def the closest the beak has been", but looks surprised, not smiling
+- [x] v8: mouth reshaped into a grin (`SMILE`)
+- [ ] Owner review of v8
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Design notes (v7, from the costume photos)
@@ -35,7 +37,8 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - Chest: white jagged blaze from the neck, widening to a white belly, zigzag bottom edge; red "shorts" below; white legs.
 - Wings: red blades with three flat feathers, red to the tips.
 - Face: one rounded white muzzle (bulk + short hook + blaze up between the eyes + lower jaw + mouth corners), with a
-  wide mouth cut into it; the back of the mouth is the red head. Black eyes high at the sides, under the bill.
+  wide smiling mouth cut into it (`SMILE`: straight top edge, lower lip dipping in the middle, upturned corners); the
+  back of the mouth is the red head. Black eyes high at the sides, under the bill.
 - Cap: red dome, black bill, two staggered B's. Feet: small (owner's pick; the costume's are huge), black talons.
 - The logo (v6) wasn't the right reference: its beak is long and thin, the costume's is short, round and open.
 
@@ -66,7 +69,7 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
 
 ## Open questions
 
-- After v7: what's the biggest thing still off against the costume photos?
+- After v8: what's the biggest thing still off against the costume photos?
 - Size: 80 mm OK? Name on the base?
 
 ## Pipeline
@@ -128,3 +131,6 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
   all-red wings, a short rounded white beak with a wide open red mouth and joined corners, eyes high under a black bill,
   staggered B's. Dropped the logo-derived parts (long beak, bolt, crest) and the v1 hem/wing-tip zigzags. Fixes on the
   way: the mouth cut first severed the hook tip (a loose piece; Euler 2 instead of 0); the corners grazed the head.
+- **2026-11-14 (v8):** Owner: beak is the closest yet, but he looks surprised, not smiling. The v7 mouth was an ellipsoid
+  cut (an "O"). Replaced with `smile()`: between two parabolas in x (top nearly flat 54.0 → 54.7 at the corners, bottom
+  50.2 → 53.3), so the lower lip dips and the corners turn up, open at the front, back wall the red head.
