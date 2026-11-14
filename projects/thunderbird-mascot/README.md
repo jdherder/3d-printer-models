@@ -1,8 +1,7 @@
 # Thunderbird mascot figurine
 
-A small standing figurine of the Black Bob Elementary Thunderbird: the costume mascot (red bird in a red "BB" ball
-cap, big white beak, zigzag trim), with cues from the school logo (`projects/black-bob-keychain/source/`): the chest
-lightning bolt, the long hooked grinning beak, black cap bill, crest feathers. Multicolour for the AMS: red, white, black.
+A small standing figurine of the Black Bob Elementary Thunderbird costume mascot. Multicolour for the AMS: red,
+white, black.
 
 ![figure](renders/figure.png)
 
@@ -25,8 +24,20 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - [x] v5: one-piece beak (halves blended at the gape), pear-shaped head (cranium + cheeks), white face plate under the cap
 - [x] Owner review of v5: "perhaps referencing our Black Bob Elementary keychain model image will help"
 - [x] v6: from the logo: chest lightning bolt, logo beak (long, hooked, open grin, gape under the eye), smaller head, black cap bill, crest feathers
-- [ ] Owner review of v6: likeness, proportions, size, a name on the base?
+- [x] Owner review of v6: "not going well". Owner sent six more costume photos (`source/costume-2026-11-14-facebook-*.png`)
+- [x] v7: rebuilt from the costume photos (see Design notes); v1-v6 history is in the Log
+- [ ] Owner review of v7
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
+
+## Design notes (v7, from the costume photos)
+
+- Body: a tall red column (chest + belly ellipsoids blended), no waist; the head (an egg) flows straight into it.
+- Chest: white jagged blaze from the neck, widening to a white belly, zigzag bottom edge; red "shorts" below; white legs.
+- Wings: red blades with three flat feathers, red to the tips.
+- Face: one rounded white muzzle (bulk + short hook + blaze up between the eyes + lower jaw + mouth corners), with a
+  wide mouth cut into it; the back of the mouth is the red head. Black eyes high at the sides, under the bill.
+- Cap: red dome, black bill, two staggered B's. Feet: small (owner's pick; the costume's are huge), black talons.
+- The logo (v6) wasn't the right reference: its beak is long and thin, the costume's is short, round and open.
 
 ## Measurements
 
@@ -34,16 +45,14 @@ No real object: the size is our choice. **80 mm tall** (`HEIGHT_MM`) is a first 
 
 | Feature | Value (mm) | Notes |
 |---|---|---|
-| Overall W × D × H | 49.0 × 44.6 × 80.0 | Base 49 × 43; the beak sticks out past it a little |
-| Base | 49.0 × 42.6 × 5.3 | Black, rounded edge |
-| Torso (design) | 24 wide × 21 deep | v1 was 32 × 28 |
-| Legs | Ø ~6–7.5 | |
-| Feet | ~10 long toes | v1 ~16. Owner wanted them smaller than the costume's |
-| Beak | ~29 long from the face, tip ~35 in front of the body centre | Logo proportions; needs supports |
-| Eyes | 4.2 tall | Black, Ø 1.3 white highlight, "friendly" (as the keychain) |
-| "BB" on the cap | 3.8 tall | DejaVu Sans Bold (matplotlib's bundled font) |
-| Claw tips | ~0.9 | Smallest feature |
-| Feather tips (wings) | ~1.3 thick | Flat primaries; tilted 19° out, swept 12° back |
+| Overall W × D × H | 47.4 × 42.3 × 80.0 | Base 47 × 41 |
+| Base | 47.4 × 40.9 × 5.4 | Black, rounded edge |
+| Eyes | 4.7 tall | Black, Ø 1.2 white highlight |
+| "B B" on the cap | 2.9 tall each | DejaVu Sans Bold, staggered |
+| Claw tips | ~1.0 | Smallest feature |
+| Feather tips (wings) | ~1.3 thick | |
+
+Euler number of the merged solid is 0: base, leg, body, leg, base form one loop. That's expected.
 
 Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form one loop (a "handle"). That's expected.
 
@@ -57,31 +66,25 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
 
 ## Open questions
 
-- Does it read as the Thunderbird? Beak size/hook/mouth opening (v4), the white "goggle" face patch, the chest burst.
-- Wings: stand out more from the body? (`WING["tilt_deg"]`)
-- v2 legs read long and thin. Shorten them, or is that fine?
-- Size: 80 mm OK, or bigger (100–120 mm is easier to paint/see, more filament and time)?
-- Add a name on the base ("BLACK BOB" / "THUNDERBIRDS")? A pose (waving wing)? A tail?
+- After v7: what's the biggest thing still off against the costume photos?
+- Size: 80 mm OK? Name on the base?
 
 ## Pipeline
 
 `build.py` (~45 s):
 - **Shapes** are signed-distance fields, meshed by marching cubes (0.3 mm voxel) and decimated (pymeshlab): red body
-  (torso + head + wings + tail, smoothly blended), red cap, crest feathers (flattened round cones), white parts (beak, legs, feet), black claws. The black
-  cap bill and the eyes are analytic ellipsoid meshes (thin marching-cubes ones cut neighbours with slivers).
-  Wings are built in their own frame (`wing_frame`: thickness, front-back, down the wing; tilted and swept). The beak
-  is lofted (`loft_beak`; the halves are blended, `BEAK_JOIN`, so they're one piece at the gape): superellipse sections (exponent `BEAK_P`) through stations (y, half-width, top, bottom),
-  rounded tip end. v3's angular version (profile ∩ taper ∩ roof) looked too blocky. Eyes
-  and highlights are analytic spheres (marching-cubes facets that small made sliver triangles).
-- **Decals** are exact boolean regions that recolour the red skin: chest lightning bolt (`CHEST["bolt"]`), face goggles (`cone_decal`: the
-  outline swept from a point inside the head, so its walls meet the surface squarely), zigzag hem and wing tips
-  (`zigzag_region`; the wing's is mapped into the wing frame, `wing_tip_region`), and the BB (cap only).
-- **Colour bodies** (manifold3d): black = claws + eyes − highlights + base; white = white parts + highlights +
-  decal regions − black; red = red − decals − white − black. Lessons: never subtract a solid that shares skin with
-  the one it's cut from, avoid coplanar faces (claws are clipped 0.35 above the soles), scale *before* the booleans,
-  and build the merged STL from the raw shapes, not the colour bodies. Grazing contacts also leave slivers: v2 dropped
-  the red tongue (it touched the beak at shallow angles) and lowered the eyes clear of the cap rim.
-- Every parameter is at the top of `build.py` in design mm (≈76 mm tall); `HEIGHT_MM` scales the result.
+  (torso, head, shorts, wings, smoothly blended), red cap dome, white parts (muzzle, legs, feet), black claws. Eyes,
+  highlights and the cap bill are analytic ellipsoid meshes (thin or small marching-cubes ones made sliver faces).
+  Wings are built in their own tilted, swept frame (`wing_frame`). The muzzle's mouth is a smooth-subtracted ellipsoid.
+- **Decals** are exact boolean regions that recolour the red skin: the chest blaze (`chest_blaze`) and the B's, both
+  `cone_decal`s (the outline swept from a point inside the part, so its walls meet the surface squarely).
+- **Colour bodies** (manifold3d): black = claws + eyes + bill − highlights + base; white = white parts + highlights +
+  decal regions − black; red = red − decals − white − black.
+- **Lessons** (each cost a rebuild): never subtract a solid that shares skin with the one it's cut from; avoid coplanar
+  or grazing contacts (soles vs claws, bill vs cap edge, eye vs head, eye vs cap rim, decal edge vs another edge);
+  scale *before* the booleans; build the merged STL from the raw shapes, not the colour bodies; a cut (the mouth)
+  can leave a loose piece (watch the Euler number).
+- Every parameter is at the top of `build.py` in design mm (~74 mm tall); `HEIGHT_MM` scales the result.
 
 ## Files
 
@@ -119,3 +122,9 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
   than v5 so it isn't a pancake from the front), a smaller head so the beak dominates, the black bill (tipped up 5°,
   as on the keychain), and three red crest feathers out the back under the cap. The bill is its own black part; it sat flush
   with the cap's bottom edge at first (slivers), so it's raised 0.6 and the BB moved up.
+
+- **2026-11-14 (v7):** Owner: "this is not going well", sent six more costume photos. Started over from them: column
+  body with the head flowing in, white chest blaze widening to a white belly with a zigzag edge, red shorts, white legs,
+  all-red wings, a short rounded white beak with a wide open red mouth and joined corners, eyes high under a black bill,
+  staggered B's. Dropped the logo-derived parts (long beak, bolt, crest) and the v1 hem/wing-tip zigzags. Fixes on the
+  way: the mouth cut first severed the hook tip (a loose piece; Euler 2 instead of 0); the corners grazed the head.

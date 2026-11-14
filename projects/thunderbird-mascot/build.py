@@ -2,14 +2,14 @@
 
     python projects/thunderbird-mascot/build.py        (~1-2 min)
 
-source/costume-photo-2026-11-14-instagram.png is the reference (the costume mascot at school). There is no scan:
-the figure is a chibi interpretation built from smooth signed-distance shapes, meshed with marching cubes.
+References: source/costume-*.png (photos of the costume mascot at school). There is no scan: the figure is a
+chibi interpretation built from smooth signed-distance shapes, meshed with marching cubes.
 
-  -> four shape groups, each one smooth field (parts of one group blend into each other):
-       red body (torso, head, wings, tail, tongue) | red cap (dome, brim, button) |
-       white parts (legs, feet, beak) | black parts (eyes, claws)
-  -> colour "decals" painted onto the red with exact boolean regions: white chest starburst, white zigzag hem,
-     white zigzag wing tips, white face mask, white "BB" on the cap
+  -> shape groups, each one smooth field (parts of one group blend into each other):
+       red body (torso, head, red "shorts", wings) | red cap (dome, button) |
+       white parts (beak muzzle with an open mouth, legs, feet) | black (eyes, cap bill, claws)
+  -> colour "decals" painted onto the red with exact boolean regions: the white chest blaze (jagged sides,
+     zigzag bottom edge) and the white staggered "B B" on the cap
   -> a black display base
   -> colour bodies by priority (black > white > red), all disjoint, made with manifold3d booleans
   -> scaled so the whole figure (base to cap) is HEIGHT_MM tall
@@ -56,54 +56,41 @@ COLOURS = {"red": "#c8202c", "white": "#f2f2f2", "black": "#2b2b2e"}
 # ------------------------------------------------------------------------------------------------
 # Design parameters (design mm, before scaling)
 # ------------------------------------------------------------------------------------------------
-BASE = dict(c=(0.0, -2.0), r=(23.0, 20.0), h=5.0, round=1.6)
-# v2: slimmer (owner: v1 "too pudgy and bloated"). Torso and head narrower and deeper-set, thinner wings and legs.
-BODY = dict(c=(0.0, 2.0, 36.0), r=(12.0, 10.5, 17.5))
-# v5: less round head (owner). A taller, narrower cranium (the cap fits this one) over fuller cheeks/jaw, blended:
-# a pear shape, like the costume's.
-HEAD = dict(c=(0.0, 0.5, 61.5), r=(9.8, 11.2, 11.6))     # v6: a bit smaller, the beak dominates (as in the logo)
-JOWL = dict(c=(0.0, -1.0, 55.5), r=(10.2, 9.8, 7.2), blend=5.0)
-# v6: crest feathers sticking out the back of the head under the cap (logo). (x, start, tip, radii)
-CREST = [((0.0, 7.0, 59.5), (0.0, 16.0, 63.0)), ((-2.6, 6.5, 58.5), (-4.0, 15.0, 60.0)),
-         ((2.6, 6.5, 58.5), (4.0, 15.0, 60.0))]
-CREST_R, CREST_FLAT = (2.3, 0.8), 1.6
-NECK_BLEND = 4.0
-# v3: real wings (owner: "more wing like"). A flat blade hanging from the shoulder, tilted out at the bottom and swept
-# back, ending in three flat primary feathers. Shapes are in the wing's own frame: u = thickness (out from the body),
-# v = front-back, a = distance down the wing.
-WING = dict(shoulder=(11.2, 1.5, 46.0), tilt_deg=19.0, sweep_deg=12.0,
-            bulb=((0.0, 0.0, 1.5), (3.4, 5.0, 4.5)), blade=((0.0, 0.8, 8.5), (2.3, 6.6, 9.0)),
-            feathers=[(-1, 18.5), (0, 20.3), (1, 21.6)],   # (front/mid/back, tip distance down the wing)
-            feather_root=12.0, feather_spread=3.6, feather_r=(2.4, 0.9), feather_flat=1.45)
-TAIL = dict(c=(0.0, 11.5, 27.0), r=(5.5, 5.0, 2.4))
-CAP = dict(grow=1.2, cut_z=65.3, brim_c=(0.0, -12.5, 67.2), brim_r=(9.2, 8.6, 1.4), brim_tilt_deg=-5.0, button_r=1.4)
-# v6: the bill is black (logo; the keychain's pick) and tips up a little, the cap sits back like the logo's
-EYE = dict(x=4.4, z=62.0, r=(2.1, 1.3, 2.0), highlight_r=0.6, highlight_at=(0.5, 0.7))
-# Beak: a broad, hooked eagle beak, slightly open. Ellipsoids blended along the beak: (centre, radii)
-# v6: the logo's beak (owner pointed to the keychain): long, flat-topped with a hook, and a long open grin whose
-# corners (the gape) meet right under the eye. Lofted: superellipse sections through stations (y, half-width, top, bottom).
-UPPER_BEAK = dict(stations=[(-4.0, 6.2, 59.3, 53.6), (-11.0, 5.8, 59.2, 53.7), (-18.0, 4.8, 58.6, 53.8),
-                            (-24.0, 3.5, 57.6, 53.3), (-28.0, 2.5, 56.4, 52.1), (-30.5, 1.7, 54.8, 50.3),
-                            (-31.3, 1.1, 53.2, 49.5)], end=-31.7)
-LOWER_BEAK = dict(stations=[(-4.0, 5.6, 54.4, 47.2), (-11.0, 5.0, 52.8, 47.5), (-17.0, 4.0, 51.0, 47.7),
-                            (-22.0, 2.9, 50.0, 47.7), (-25.5, 1.8, 50.4, 48.3)], end=-26.2)
-BEAK_P = 2.2
-BEAK_JOIN = 2.0   # blend where the upper and lower beak meet at the back
-BEAK_END_ROUND = 1.5
-LEG = dict(x=5.8, foot_x=6.4, y=2.0, z0=7.5, z1=25.0, r0=2.9, r1=3.5)
-# v2: feet much smaller than the costume's (owner's pick)
+# v7: rebuilt from the owner's costume photos (source/costume-2026-11-14-facebook-*.png). The costume is a tall red
+# column with no waist, the head flowing straight into it; a big rounded white beak with a short hook and a wide-open
+# red mouth, the white running up between the eyes; black eyes high at the sides under the bill; a white jagged blaze
+# down the chest that widens into a white belly with a zigzag bottom edge; red "shorts"; white legs; red wings with red
+# feathered tips; small white feet (owner's pick) with black talons.
+BASE = dict(c=(0.0, -2.0), r=(22.0, 19.0), h=5.0, round=1.6)
+CHEST_E = dict(c=(0.0, 1.5, 42.0), r=(10.5, 9.2, 12.0))     # torso = chest + belly blended: a column
+BELLY_E = dict(c=(0.0, 0.5, 30.0), r=(11.0, 9.6, 10.0))
+TORSO_BLEND = 6.0
+SHORTS = dict(x=4.8, c=(0.0, 1.5, 21.5), r=(5.0, 5.5, 4.2))   # red thighs (mirrored in x)
+HEAD = dict(c=(0.0, 0.5, 60.5), r=(10.5, 10.5, 11.5))         # an egg, taller than wide
+NECK_BLEND = 6.0
+# Wings: a flat blade hanging from the shoulder, tilted out at the bottom and swept back, ending in three flat
+# feathers (all red, as on the costume). Built in the wing's own frame: u = thickness, v = front-back, a = down the wing.
+WING = dict(shoulder=(10.6, 1.5, 47.0), tilt_deg=15.0, sweep_deg=10.0,
+            bulb=((0.0, 0.0, 1.5), (3.4, 5.0, 4.5)), blade=((0.0, 0.8, 8.5), (2.3, 6.4, 9.0)),
+            feathers=[(-1, 17.5), (0, 19.3), (1, 20.4)],   # (front/mid/back, tip distance down the wing)
+            feather_root=12.0, feather_spread=3.4, feather_r=(2.4, 0.9), feather_flat=1.45)
+CAP = dict(grow=1.2, cut_z=65.4, brim_c=(0.0, -11.5, 67.2), brim_r=(8.6, 7.6, 1.2), brim_tilt_deg=0.0, button_r=1.3)
+EYE = dict(x=6.0, z=62.6, r=(2.0, 1.3, 2.2), highlight_r=0.55, highlight_at=(0.5, 0.7))
+# Beak: one rounded white muzzle: a bulk, a short downward hook, a narrow blaze up between the eyes and a lower jaw,
+# blended; the mouth is a cavity cut into it, deep enough that its back wall is the red head (the red inside).
+MUZZLE = dict(bulk=((0.0, -11.5, 56.5), (7.0, 8.0, 5.0)),
+              hook=((0.0, -16.0, 56.8), (0.0, -20.4, 54.3), 4.0, 1.9),
+              blaze=((0.0, -8.5, 61.0), (3.0, 3.5, 3.8)),
+              jaw=((0.0, -10.5, 49.6), (6.6, 7.5, 3.2)),
+              mouth=((0.0, -13.5, 51.9), (5.8, 9.0, 2.0)), mouth_round=1.0,
+              corner=((5.6, -9.4, 52.3), (2.4, 4.2, 2.8)))   # mouth corners: upper and lower beak join here (mirrored)
+LEG = dict(x=5.0, foot_x=5.8, y=1.5, z0=7.5, z1=20.0, r0=2.6, r1=3.1)
 FOOT = dict(splay_deg=12.0, heel=(0.0, 2.5, 6.2), heel_r=(3.4, 3.8, 2.3), toe_root=(0.0, 0.5, 6.0),
             toe_len=7.5, toe_r=(2.0, 1.7), toe_spread_deg=30.0)
 FOOT_FLOOR = BASE["h"] - 0.8   # soles and claws are cut flat here, inside the base
 CLAW = dict(len=1.9, drop=2.6, r=(1.0, 0.45))
-HEM = dict(c=(0.0, 2.0), radius=19.0, z=25.5, amp=2.2, teeth=11)
-WING_TIP = dict(start=14.3, amp=1.4, teeth=6, radius=(3.4, 9.5))   # white zigzag on the feather ends (wing frame)
-# v6: a white lightning bolt down the chest, the logo's (replaces the v1-v5 starburst). XZ outline, design mm.
-CHEST = dict(c=(0.0, 39.5), y_ref=-8.4,
-             bolt=[(-1.4, 49.0), (2.4, 49.0), (1.0, 43.2), (3.4, 43.2), (0.8, 36.6), (2.8, 36.6), (-1.8, 26.0),
-                   (-0.2, 34.4), (-2.6, 34.4), (-0.6, 40.8), (-3.0, 40.8)])
-FACE_MASK = dict(half_w=8.0, bottom=58.6, top=68.0, corner=3.6, chin=(0.0, 57.6, 5.6, 3.4))   # XZ, design mm
-BB = dict(text="BB", height=3.3, z=71.1, x=0.0, y_ref=-7.8)
+CHEST = dict(apex=(0.0, 1.5, 38.0), y_ref=-8.0)   # the blaze outline is made by chest_blaze()
+BB = dict(letters=[(-1.9, 71.3), (1.9, 70.3)], height=2.7, y_ref=-6.3)   # staggered like the costume's cap
 
 
 # ------------------------------------------------------------------------------------------------
@@ -190,18 +177,16 @@ def wing(X, Y, Z):
 
 
 def head_field(X, Y, Z):
-    return smin(ellipsoid(X, Y, Z, HEAD["c"], HEAD["r"]), ellipsoid(X, Y, Z, JOWL["c"], JOWL["r"]), JOWL["blend"])
+    return ellipsoid(X, Y, Z, HEAD["c"], HEAD["r"])
 
 
 def red_body(X, Y, Z):
-    d = ellipsoid(X, Y, Z, BODY["c"], BODY["r"])
+    d = smin(ellipsoid(X, Y, Z, CHEST_E["c"], CHEST_E["r"]), ellipsoid(X, Y, Z, BELLY_E["c"], BELLY_E["r"]),
+             TORSO_BLEND)
+    for side in (1, -1):
+        d = smin(d, ellipsoid(X, Y, Z, np.add(SHORTS["c"], (side * SHORTS["x"], 0, 0)), SHORTS["r"]), 3.0)
     d = smin(d, head_field(X, Y, Z), NECK_BLEND)
-    for a, b in CREST:
-        d = smin(d, round_cone(X * CREST_FLAT, Y, Z, (a[0] * CREST_FLAT, a[1], a[2]), (b[0] * CREST_FLAT, b[1], b[2]),
-                               *CREST_R) / CREST_FLAT, 1.5)
-    d = smin(d, mirror_x(wing)(X, Y, Z), 3.0)
-    d = smin(d, ellipsoid(X, Y, Z, TAIL["c"], TAIL["r"]), 3.0)
-    return d   # v2: no tongue (it grazed the beak and left slivers); the head shows red in the open mouth
+    return smin(d, mirror_x(wing)(X, Y, Z), 3.0)
 
 
 def cap(X, Y, Z):
@@ -231,23 +216,20 @@ def foot_parts(side):
     return tips
 
 
-def loft_beak(X, Y, Z, spec):
-    st = np.array(spec["stations"], np.float32)
-    ys = -st[:, 0]                         # np.interp needs increasing x
-    yy = -Y
-    w = np.interp(yy, ys, st[:, 1])
-    t = np.interp(yy, ys, st[:, 2])
-    b = np.interp(yy, ys, st[:, 3])
-    c, h = (t + b) / 2, (t - b) / 2
-    p = BEAK_P
-    n = (np.abs(X / w) ** p + np.abs((Z - c) / h) ** p) ** (1.0 / p)
-    d = (n - 1.0) * np.minimum(w, h)
-    d = smax(d, spec["end"] - Y, BEAK_END_ROUND)     # rounded tip end
-    return smax(d, Y - (-2.0), 0.5)                  # back end, buried in the head
+def muzzle(X, Y, Z):
+    m = MUZZLE
+    d = ellipsoid(X, Y, Z, *m["bulk"])
+    d = smin(d, round_cone(X, Y, Z, *m["hook"]), 3.0)
+    d = smin(d, ellipsoid(X, Y, Z, *m["blaze"]), 3.0)
+    d = smin(d, ellipsoid(X, Y, Z, *m["jaw"]), 2.5)
+    cx = m["corner"][0]
+    for side in (1, -1):
+        d = smin(d, ellipsoid(X, Y, Z, (side * cx[0], cx[1], cx[2]), m["corner"][1]), 2.0)
+    return smax(d, -ellipsoid(X, Y, Z, *m["mouth"]), m["mouth_round"])
 
 
 def white_parts(X, Y, Z):
-    d = smin(loft_beak(X, Y, Z, UPPER_BEAK), loft_beak(X, Y, Z, LOWER_BEAK), BEAK_JOIN)   # one piece at the gape
+    d = muzzle(X, Y, Z)
     for side in (1, -1):
         leg = round_cone(X, Y, Z, (side * LEG["foot_x"], LEG["y"], LEG["z0"]), (side * LEG["x"], LEG["y"], LEG["z1"]),
                          LEG["r0"], LEG["r1"])
@@ -349,40 +331,9 @@ def from_manifold(man):
     return trimesh.Trimesh(m.vert_properties[:, :3], m.tri_verts, process=False)
 
 
-def wing_tip_region(side):
-    """White zigzag on the feather ends: a zigzag region built round the wing's own axis, mapped into its frame."""
-    S, U, D, sw = wing_frame()
-    ru, rv = WING_TIP["radius"]
-    z = zigzag_region(0.0, 0.0, 1.0, -WING_TIP["start"], WING_TIP["amp"], WING_TIP["teeth"], -40.0).scale((ru, rv, 1.0))
-    # local (u, v, h) with h = -a (up the wing) -> world; the sweep shears v with a
-    m = np.array([[U[0], 0.0, -D[0], S[0]],
-                  [U[1], 1.0, -D[1] - sw, S[1]],
-                  [U[2], 0.0, -D[2], S[2]]])
-    z = z.transform(m)
-    return z.mirror((1.0, 0.0, 0.0)) if side < 0 else z
-
-
 def drop_slivers(man, min_volume=0.01):
     """Remove zero-volume shells that booleans can leave where surfaces meet at a shallow angle."""
     return m3d.Manifold.compose([p for p in man.decompose() if abs(p.volume()) >= min_volume])
-
-
-def zigzag_region(cx, cy, radius, z, amp, teeth, z_bottom):
-    """Solid below a zigzag rim z(θ) = z ± amp around a vertical axis: the shape of a crown, points up."""
-    n = 2 * teeth
-    th = np.linspace(0, 2 * np.pi, n, endpoint=False)
-    zt = z + np.where(np.arange(n) % 2 == 0, amp, -amp)
-    ring_top = np.c_[cx + radius * np.cos(th), cy + radius * np.sin(th), zt]
-    ring_bot = np.c_[cx + radius * np.cos(th), cy + radius * np.sin(th), np.full(n, z_bottom)]
-    v = np.vstack([ring_top, ring_bot, [[cx, cy, z]], [[cx, cy, z_bottom]]])
-    ct, cb = 2 * n, 2 * n + 1
-    f = []
-    for i in range(n):
-        j = (i + 1) % n
-        f += [[ct, i, j], [cb, n + j, n + i], [i, n + i, n + j], [i, n + j, j]]
-    m = trimesh.Trimesh(v, f, process=True)
-    m.fix_normals()
-    return to_manifold(m)
 
 
 def prism_xz(poly_xz, y0, y1):
@@ -409,26 +360,30 @@ def cone_decal(poly_xz, apex, y_ref):
     return pr.warp_batch(warp)
 
 
-def face_mask():
-    """v5: one white face plate round the eyes, running up under the cap (the cap rim is its top edge, as on the
-    costume) and down to the beak. Its own top edge sits well above the rim so the two never graze."""
-    hw, z0, z1, r = FACE_MASK["half_w"], FACE_MASK["bottom"], FACE_MASK["top"], FACE_MASK["corner"]
-    plate = m3d.CrossSection.square((2 * (hw - r), z1 - z0 - 2 * r)).translate((-(hw - r), z0 + r)).offset(
-        r, m3d.JoinType.Round, circular_segments=96)
-    x, z, hx, hz = FACE_MASK["chin"]
-    chin = m3d.CrossSection.circle(1.0, 96).scale((hx, hz)).translate((x, z))
-    return (plate + chin).offset(1.0, m3d.JoinType.Round, circular_segments=96).offset(
-        -1.0, m3d.JoinType.Round, circular_segments=96)
-
-
 def bb_text():
-    tp = TextPath((0, 0), BB["text"], size=1.0, prop=FontProperties(family="DejaVu Sans", weight="bold"))
-    polys = [np.asarray(p, np.float64) for p in tp.to_polygons() if len(p) >= 3]
-    cs = m3d.CrossSection(polys, m3d.FillRule.EvenOdd)
-    lo, hi = np.array(cs.bounds()[:2]), np.array(cs.bounds()[2:])
-    s = BB["height"] / (hi[1] - lo[1])
-    centre = (lo + hi) / 2
-    return cs.translate(tuple(-centre)).scale((s, s)).translate((BB["x"], BB["z"]))
+    """The cap's two B's, staggered (the costume's: left one higher)."""
+    out = None
+    for x, z in BB["letters"]:
+        tp = TextPath((0, 0), "B", size=1.0, prop=FontProperties(family="DejaVu Sans", weight="bold"))
+        cs = m3d.CrossSection([np.asarray(p, np.float64) for p in tp.to_polygons() if len(p) >= 3], m3d.FillRule.EvenOdd)
+        lo, hi = np.array(cs.bounds()[:2]), np.array(cs.bounds()[2:])
+        sc = BB["height"] / (hi[1] - lo[1])
+        cs = cs.translate(tuple(-(lo + hi) / 2)).scale((sc, sc)).translate((x, z))
+        out = cs if out is None else out + cs
+    return out
+
+
+def chest_blaze():
+    """The white blaze: narrow at the neck, jagged spikes out to both sides, widening to the belly, with a zigzag
+    bottom edge (white points hanging into the red). The left side is shifted up a little: the costume's isn't
+    symmetric."""
+    right = [(1.0, 51.0), (2.6, 47.0), (5.6, 48.6), (4.0, 44.2), (7.6, 44.6), (5.6, 40.2), (8.8, 39.4), (6.8, 35.4),
+             (9.4, 33.0), (8.8, 27.0)]
+    xs = np.linspace(8.8, -8.8, 9)[1:-1]
+    bottom = [(x, 23.2 if i % 2 == 0 else 26.6) for i, x in enumerate(xs)]
+    left = [(-x, z + 1.0) for x, z in reversed(right)]
+    left[0] = (-8.8, 27.0)
+    return right + bottom + left
 
 
 # ------------------------------------------------------------------------------------------------
@@ -437,9 +392,9 @@ def bb_text():
 
 def build_bodies():
     print("meshing shape groups ...")
-    red = mesh_field(red_body, (-24, -20, 15), (24, 25, 76))
+    red = mesh_field(red_body, (-22, -16, 13), (22, 16, 74))
     capm = mesh_field(cap, (-18, -26, 63), (18, 18, 78))
-    white = mesh_field(white_parts, (-26, -32, 3), (26, 12, 64))
+    white = mesh_field(white_parts, (-14, -26, 3), (14, 8, 67))
     eyes, hilite = eyes_and_highlights()
     black = mesh_field(claws, (-26, -32, 3), (26, 0, 12), h=0.2) + eyes + brim_mesh()
     basem = mesh_field(base, (-32, -32, 0), (32, 26, BASE["h"]), faces=20000)
@@ -456,13 +411,8 @@ def build_bodies():
     red, capm, white, black, hilite, basem = map(place, (red, capm, white, black, hilite, basem))
     red_solid = red + capm
     head_c = np.add(HEAD["c"], (0.0, 0.0, 0.5))
-    # Decals on the body (chest, hem, wing tips, face) and on the cap (BB) are kept apart, so the face colour can't
-    # spill onto the brim above it.
-    body_decals = place(cone_decal(CHEST["bolt"], (0.0, BODY["c"][1], CHEST["c"][1]), CHEST["y_ref"])
-                        + zigzag_region(HEM["c"][0], HEM["c"][1], HEM["radius"], HEM["z"], HEM["amp"], HEM["teeth"], 0.0)
-                        + cone_decal(face_mask(), head_c, -13.0))
-    for side in (1, -1):
-        body_decals += place(wing_tip_region(side))
+    # Decals on the body (chest) and on the cap (BB) are kept apart.
+    body_decals = place(cone_decal(chest_blaze(), CHEST["apex"], CHEST["y_ref"]))
     cap_decals = place(cone_decal(bb_text(), head_c, BB["y_ref"]))
 
     # Never subtract a body that shares surface with the one it's cut from (red ^ decals lies on red's skin):
