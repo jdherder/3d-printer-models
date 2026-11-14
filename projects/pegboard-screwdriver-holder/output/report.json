@@ -1,0 +1,102 @@
+{
+  "scale_status": "real size, but handle/bolster sizes are ESTIMATES from photos (shafts 5.03/6.43 and blade 9.58 measured)",
+  "print": {
+    "extents_mm": [
+      223.5,
+      55.5,
+      67.4
+    ],
+    "faces": 32080,
+    "watertight": true,
+    "winding_consistent": true,
+    "euler_number": -22,
+    "volume_cm3": 228.9,
+    "fits_A1_as_is": true,
+    "fits_A1_any_axis_order": true,
+    "self_intersecting_faces": 0
+  },
+  "print_orientation": "standing as it hangs (cups open up), bottom shelf + pins on the bed (0.4 mm flat); supports under the 2 hooks only",
+  "fit_on_board": {
+    "board": "3/16 in white hardboard (owner's, Menards)",
+    "clearance_checked_per_side": 0.1,
+    "flush_overlap_mm3_info_only": 2.35,
+    "rock_in": {
+      "ok": true,
+      "max_tilt_deg": 94.0,
+      "states": 3263,
+      "give_mm": 0.3
+    },
+    "holes_used": "2 hooks (row 1) + 2 pins (row -1), columns 0 and 8"
+  },
+  "stations": [
+    {
+      "tool": "slotted, small",
+      "z_mm": 8.6,
+      "cup_d": 31.5,
+      "hole_d": 6.53,
+      "guide_and_cup_deg": 1.7,
+      "old_ring_style_deg": "~15-30 (one loose ring, from the photos)"
+    },
+    {
+      "tool": "slotted, small 2",
+      "z_mm": 44.6,
+      "cup_d": 31.5,
+      "hole_d": 6.5,
+      "guide_and_cup_deg": 1.7,
+      "old_ring_style_deg": "~15-30 (one loose ring, from the photos)"
+    },
+    {
+      "tool": "slotted, medium",
+      "z_mm": 80.6,
+      "cup_d": 31.5,
+      "hole_d": 8.0,
+      "guide_and_cup_deg": 2.0,
+      "old_ring_style_deg": "~15-30 (one loose ring, from the photos)"
+    },
+    {
+      "tool": "slotted, large",
+      "z_mm": 118.1,
+      "cup_d": 34.5,
+      "hole_d": 11.08,
+      "guide_and_cup_deg": 3.5,
+      "old_ring_style_deg": "~15-30 (one loose ring, from the photos)"
+    },
+    {
+      "tool": "Phillips #1",
+      "z_mm": 155.6,
+      "cup_d": 31.5,
+      "hole_d": 6.5,
+      "guide_and_cup_deg": 1.7,
+      "old_ring_style_deg": "~15-30 (one loose ring, from the photos)"
+    },
+    {
+      "tool": "Phillips #2",
+      "z_mm": 193.1,
+      "cup_d": 34.5,
+      "hole_d": 7.93,
+      "guide_and_cup_deg": 1.7,
+      "old_ring_style_deg": "~15-30 (one loose ring, from the photos)"
+    }
+  ],
+  "params_mm": {
+    "d": 6.1,
+    "hook_d": 5.7,
+    "hook_slope": 12.0,
+    "hook_gap": 7.3,
+    "hook_rise": 14.0,
+    "bend_r": 4.5,
+    "pin_len": 7.0,
+    "embed": 1.0,
+    "hook_leg_angle": 90.0,
+    "holder_width": 223.5,
+    "holder_front_x": 42.5,
+    "holder_height": 59.5,
+    "cup_wall": 7.0,
+    "cup_clearance_dia": 1.5,
+    "hole_clearance_dia": 1.5,
+    "support_span": 50.8,
+    "grip_gap": 4.0,
+    "hook_spacing": 203.2,
+    "cup_centre_x": 22.2
+  }
+}

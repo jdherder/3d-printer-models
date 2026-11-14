@@ -1,0 +1,21 @@
+{
+  "page_title": "Screwdriver Holder",
+  "title": "Pegboard screwdriver holder: concept",
+  "subtitle": "6 Ryobi drivers, each held at two heights so it can't tip · your Menards 3/16\" board · X out from the board, Z up · mm",
+  "meshes": [
+    {"path": "renders/asm-screwdriver-holder.stl", "label": "Holder (2 hooks + 2 pins, cups on top, guide holes below)", "style": "solid", "color": "#5b8fd9"},
+    {"path": "renders/ref-screwdrivers.stl", "label": "Your 6 drivers (rough shapes, handle sizes estimated)", "style": "wire", "color": "#c8d400"},
+    {"path": "renders/ref-pegboard.stl", "label": "Your board: Menards 3/16\" white", "style": "solid", "color": "#b08a5a"}
+  ],
+  "dims": [
+    {"label": "Width (across the board)", "param": "holder_width"},
+    {"label": "Out from the board", "param": "holder_front_x"},
+    {"label": "Height", "param": "holder_height"},
+    {"label": "Cup to guide hole (support span)", "param": "support_span"},
+    {"label": "Cup wall (holds the bolster's side)", "param": "cup_wall"},
+    {"label": "Hook to hook", "param": "hook_spacing"}
+  ],
+  "scale_note": "Real size. Shafts 5.03 / 6.43 mm and the big slotted blade 9.58 mm are your caliper readings; handle and bolster widths are estimates from the photos, to be measured.",
+  "notes_title": "Concept: what to look at",
+  "notes": "Why yours tip: each driver sits in one loose wire ring, so it pivots on it. Here each driver is held at two heights 50 mm apart: the yellow bolster drops into a close cup (45° cone floor, so it self-centres) and the shaft passes through a guide hole in the bottom shelf. Worst-case lean is about 2° (3.5° for the big slotted, whose hole has to pass its 9.6 mm blade). Drop drivers in tip first from above. Hangs on 2 hooks + 2 pins (8 holes apart, 2 rows apart), prints standing as it hangs, supports only under the hooks. To finish it I need handle measurements (see chat)."
+}
