@@ -16,7 +16,9 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - [x] v1: chibi figure on a black base, 80 mm tall, 3 colours. Watertight, 0 self-intersections, colour bodies disjoint
 - [x] Owner review of v1: "too pudgy and bloated", and wants smaller feet (even though the costume's are huge)
 - [x] v2: slimmer torso, head, wings and legs; feet ~40% smaller; base 49 × 43
-- [ ] Owner review of v2: likeness, proportions, size, a name on the base?
+- [x] Owner review of v2: arms should be more wing-like, the beak more angular
+- [x] v3: flat swept wing blades with three primary feathers; faceted beak (ridge, flat faces, sharp hook)
+- [ ] Owner review of v3: likeness, proportions, size, a name on the base?
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Measurements
@@ -33,6 +35,7 @@ No real object: the size is our choice. **80 mm tall** (`HEIGHT_MM`) is a first 
 | Eyes | 4.7 tall | Black, Ø 1.3 white highlight, "friendly" (as the keychain) |
 | "BB" on the cap | 3.8 tall | DejaVu Sans Bold (matplotlib's bundled font) |
 | Claw tips | ~0.9 | Smallest feature |
+| Feather tips (wings) | ~1.3 thick | Flat primaries; tilted 19° out, swept 12° back |
 
 Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form one loop (a "handle"). That's expected.
 
@@ -46,7 +49,8 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
 
 ## Open questions
 
-- Does it read as the Thunderbird? Beak shape/size (it's big for the slimmer head), the white "goggle" face patch, the chest burst.
+- Does it read as the Thunderbird? Beak (v3 is angular, check it isn't too blocky), the white "goggle" face patch, the chest burst.
+- Wings: stand out more from the body? (`WING["tilt_deg"]`)
 - v2 legs read long and thin. Shorten them, or is that fine?
 - Size: 80 mm OK, or bigger (100–120 mm is easier to paint/see, more filament and time)?
 - Add a name on the base ("BLACK BOB" / "THUNDERBIRDS")? A pose (waving wing)? A tail?
@@ -55,11 +59,13 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
 
 `build.py` (~45 s):
 - **Shapes** are signed-distance fields, meshed by marching cubes (0.3 mm voxel) and decimated (pymeshlab): red body
-  (torso + head + wings + tail, smoothly blended), red cap, white parts (beak, legs, feet), black claws. Eyes
+  (torso + head + wings + tail, smoothly blended), red cap, white parts (beak, legs, feet), black claws.
+  Wings are built in their own frame (`wing_frame`: thickness, front-back, down the wing; tilted and swept). The beak
+  is angular (`angular_beak`): a side profile ∩ a top-view taper ∩ a roof off the ridge, edges rounded 0.5. Eyes
   and highlights are analytic spheres (marching-cubes facets that small made sliver triangles).
 - **Decals** are exact boolean regions that recolour the red skin: chest starburst, face goggles (`cone_decal`: the
   outline swept from a point inside the head, so its walls meet the surface squarely), zigzag hem and wing tips
-  (`zigzag_region`), and the BB (cap only).
+  (`zigzag_region`; the wing's is mapped into the wing frame, `wing_tip_region`), and the BB (cap only).
 - **Colour bodies** (manifold3d): black = claws + eyes − highlights + base; white = white parts + highlights +
   decal regions − black; red = red − decals − white − black. Lessons: never subtract a solid that shares skin with
   the one it's cut from, avoid coplanar faces (claws are clipped 0.35 above the soles), scale *before* the booleans,
@@ -84,3 +90,7 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
   Torso 32×28 → 24×21 (design mm), head narrower, neck blend 7 → 4, thinner wings (closer in) and legs, feet ~40%
   shorter with thinner toes and smaller claws, base 63×56 → 49×43. Beak, cap, eyes, face patch and chest burst scaled
   to the new head. Dropped the tongue (mesh slivers); the mouth still shows the red head.
+- **2026-11-14 (v3):** Owner: arms more wing-like, beak more angular. Wings: flat blade (bulb + blade ellipsoids in a
+  tilted, swept wing frame) with three flattened primary feathers; the white zigzag follows the wing frame. Beak: side
+  profile ∩ top taper ∩ ridge roof, crisp hook. The face patch's cusps are closed with a round offset (a cusp against the
+  beak ridge made slivers).

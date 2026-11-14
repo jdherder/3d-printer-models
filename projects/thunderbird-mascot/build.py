@@ -61,15 +61,25 @@ BASE = dict(c=(0.0, -2.0), r=(23.0, 20.0), h=5.0, round=1.6)
 BODY = dict(c=(0.0, 2.0, 36.0), r=(12.0, 10.5, 17.5))
 HEAD = dict(c=(0.0, 0.0, 60.0), r=(12.0, 11.5, 12.8))
 NECK_BLEND = 4.0
-WING = dict(shoulder=(11.0, 1.5, 45.5, 3.8), hand=(16.0, -0.5, 30.0, 3.0))      # x, y, z, radius (right wing; mirrored)
+# v3: real wings (owner: "more wing like"). A flat blade hanging from the shoulder, tilted out at the bottom and swept
+# back, ending in three flat primary feathers. Shapes are in the wing's own frame: u = thickness (out from the body),
+# v = front-back, a = distance down the wing.
+WING = dict(shoulder=(11.2, 1.5, 46.0), tilt_deg=19.0, sweep_deg=12.0,
+            bulb=((0.0, 0.0, 1.5), (3.4, 5.0, 4.5)), blade=((0.0, 0.8, 8.5), (2.3, 6.6, 9.0)),
+            feathers=[(-1, 18.5), (0, 20.3), (1, 21.6)],   # (front/mid/back, tip distance down the wing)
+            feather_root=12.0, feather_spread=3.6, feather_r=(2.4, 0.9), feather_flat=1.45)
 TAIL = dict(c=(0.0, 11.5, 27.0), r=(5.5, 5.0, 2.4))
 CAP = dict(grow=1.2, cut_z=65.3, brim_c=(0.0, -12.0, 66.3), brim_r=(9.8, 8.8, 1.5), brim_tilt_deg=8.0, button_r=1.4)
 EYE = dict(x=4.5, z=62.0, r=(2.1, 1.3, 2.2), highlight_r=0.6, highlight_at=(0.5, 0.7))
 # Beak: a broad, hooked eagle beak, slightly open. Ellipsoids blended along the beak: (centre, radii)
-UPPER_BEAK = [((0, -7.6, 57.0), (6.6, 5.2, 4.2)), ((0, -14.0, 56.4), (5.2, 4.4, 3.4)),
-              ((0, -19.2, 54.9), (3.2, 3.1, 2.6)), ((0, -21.8, 52.4), (1.9, 1.8, 2.3))]
-LOWER_BEAK = [((0, -7.2, 51.6), (5.4, 4.4, 2.7)), ((0, -12.8, 50.9), (3.9, 3.5, 2.0)),
-              ((0, -16.8, 51.3), (2.1, 2.1, 1.5))]
+# v3: angular beak (owner: "more angular"). Each half is a side profile (y, z) cut by a top-view taper (x, y) and,
+# for the upper beak, a roof that slopes off a ridge line: flat faces and crisp edges, a sharp downward hook.
+UPPER_BEAK = dict(side=[(-5.0, 60.6), (-12.0, 59.9), (-19.0, 58.0), (-23.0, 51.0), (-20.4, 52.9), (-13.0, 54.4),
+                        (-5.0, 54.2)],
+                  top=[(-7.4, -4.0), (7.4, -4.0), (1.5, -23.5), (-1.5, -23.5)], roof=0.4)
+LOWER_BEAK = dict(side=[(-5.0, 55.0), (-12.0, 53.4), (-17.8, 52.5), (-14.8, 49.8), (-5.0, 48.2)],
+                  top=[(-6.0, -4.0), (6.0, -4.0), (1.2, -19.0), (-1.2, -19.0)])
+BEAK_EDGE = 0.5   # edge rounding (mm): just enough to print cleanly
 LEG = dict(x=5.8, foot_x=6.4, y=2.0, z0=7.5, z1=25.0, r0=2.9, r1=3.5)
 # v2: feet much smaller than the costume's (owner's pick)
 FOOT = dict(splay_deg=12.0, heel=(0.0, 2.5, 6.2), heel_r=(3.4, 3.8, 2.3), toe_root=(0.0, 0.5, 6.0),
@@ -77,9 +87,9 @@ FOOT = dict(splay_deg=12.0, heel=(0.0, 2.5, 6.2), heel_r=(3.4, 3.8, 2.3), toe_ro
 FOOT_FLOOR = BASE["h"] - 0.8   # soles and claws are cut flat here, inside the base
 CLAW = dict(len=1.9, drop=2.6, r=(1.0, 0.45))
 HEM = dict(c=(0.0, 2.0), radius=19.0, z=25.5, amp=2.2, teeth=11)
-WING_TIP = dict(z=32.3, amp=1.4, teeth=7, radius=3.9)
+WING_TIP = dict(start=14.3, amp=1.4, teeth=6, radius=(3.4, 9.5))   # white zigzag on the feather ends (wing frame)
 CHEST = dict(c=(0.0, 39.5), y_ref=-8.4, spikes=7, r_out=7.6, r_in=4.0, twist_deg=-8.0)  # XZ plane
-FACE_MASK = dict(eye_r=4.0, eye_z=62.4, chin=(0.0, 58.2, 5.6, 3.2))   # white goggles round the eyes + a band down
+FACE_MASK = dict(eye_r=4.0, eye_z=62.4, chin=(0.0, 58.6, 5.6, 3.7))   # white goggles round the eyes + a band down
                                                                        # to the beak (chin: x, z, half-width, half-height)
 BB = dict(text="BB", height=3.6, z=70.0, x=0.0, y_ref=-9.2)
 
@@ -147,9 +157,24 @@ def mirror_x(f):
 # Shape groups
 # ------------------------------------------------------------------------------------------------
 
+def wing_frame():
+    """(origin S, outward U, down-the-wing D, sweep tangent) of the right wing."""
+    a, sw = np.radians(WING["tilt_deg"]), np.tan(np.radians(WING["sweep_deg"]))
+    return np.array(WING["shoulder"]), np.array([np.cos(a), 0, np.sin(a)]), np.array([np.sin(a), 0, -np.cos(a)]), sw
+
+
 def wing(X, Y, Z):
-    s, h = WING["shoulder"], WING["hand"]
-    return round_cone(X, Y, Z, s[:3], h[:3], s[3], h[3])
+    S, U, D, sw = wing_frame()
+    dx, dy, dz = X - S[0], Y - S[1], Z - S[2]
+    a = dx * D[0] + dz * D[2]
+    u = dx * U[0] + dz * U[2]
+    v = dy - a * sw
+    d = smin(ellipsoid(u, v, a, *WING["bulb"]), ellipsoid(u, v, a, *WING["blade"]), 3.0)
+    for k, tip in WING["feathers"]:
+        f = round_cone(u * WING["feather_flat"], v, a, (0, k * WING["feather_spread"], WING["feather_root"]),
+                       (0, k * WING["feather_spread"] * 1.1, tip), *WING["feather_r"])
+        d = smin(d, f / WING["feather_flat"], 1.2)
+    return d
 
 
 def red_body(X, Y, Z):
@@ -187,9 +212,37 @@ def foot_parts(side):
     return tips
 
 
+def sd_polygon(px, py, verts):
+    """Signed distance to a simple 2D polygon (any winding), vectorised (from projects/wagon-cup-holder/sdf.py)."""
+    v = np.asarray(verts, dtype=np.float32)
+    shape = np.broadcast(px, py).shape
+    d = np.full(shape, np.inf, dtype=np.float32)
+    s = np.ones(shape, dtype=np.float32)
+    j = len(v) - 1
+    for i in range(len(v)):
+        ex, ey = v[j, 0] - v[i, 0], v[j, 1] - v[i, 1]
+        wx, wy = px - v[i, 0], py - v[i, 1]
+        t = np.clip((wx * ex + wy * ey) / (ex * ex + ey * ey + 1e-12), 0.0, 1.0)
+        bx, by = wx - ex * t, wy - ey * t
+        d = np.minimum(d, bx * bx + by * by)
+        c1, c2, c3 = py >= v[i, 1], py < v[j, 1], ex * wy > ey * wx
+        s = np.where((c1 & c2 & c3) | (~c1 & ~c2 & ~c3), -s, s)
+        j = i
+    return s * np.sqrt(d)
+
+
+def angular_beak(X, Y, Z, spec):
+    d = smax(sd_polygon(Y, Z, spec["side"]), sd_polygon(X, Y, spec["top"]), BEAK_EDGE)
+    if "roof" in spec:   # faces sloping off the ridge (the profile's top edge, up to the hook)
+        top = spec["side"][:3]
+        ridge = np.interp(-Y, [-p[0] for p in top], [p[1] for p in top])
+        roof = (Z + spec["roof"] * np.abs(X) - ridge) / np.hypot(1.0, spec["roof"])
+        d = smax(d, roof, BEAK_EDGE)
+    return d
+
+
 def white_parts(X, Y, Z):
-    d = blob(X, Y, Z, UPPER_BEAK, 4.0)
-    d = np.minimum(d, blob(X, Y, Z, LOWER_BEAK, 3.0))
+    d = np.minimum(angular_beak(X, Y, Z, UPPER_BEAK), angular_beak(X, Y, Z, LOWER_BEAK))
     for side in (1, -1):
         leg = round_cone(X, Y, Z, (side * LEG["foot_x"], LEG["y"], LEG["z0"]), (side * LEG["x"], LEG["y"], LEG["z1"]),
                          LEG["r0"], LEG["r1"])
@@ -288,6 +341,19 @@ def from_manifold(man):
     return trimesh.Trimesh(m.vert_properties[:, :3], m.tri_verts, process=False)
 
 
+def wing_tip_region(side):
+    """White zigzag on the feather ends: a zigzag region built round the wing's own axis, mapped into its frame."""
+    S, U, D, sw = wing_frame()
+    ru, rv = WING_TIP["radius"]
+    z = zigzag_region(0.0, 0.0, 1.0, -WING_TIP["start"], WING_TIP["amp"], WING_TIP["teeth"], -40.0).scale((ru, rv, 1.0))
+    # local (u, v, h) with h = -a (up the wing) -> world; the sweep shears v with a
+    m = np.array([[U[0], 0.0, -D[0], S[0]],
+                  [U[1], 1.0, -D[1] - sw, S[1]],
+                  [U[2], 0.0, -D[2], S[2]]])
+    z = z.transform(m)
+    return z.mirror((1.0, 0.0, 0.0)) if side < 0 else z
+
+
 def drop_slivers(man, min_volume=0.01):
     """Remove zero-volume shells that booleans can leave where surfaces meet at a shallow angle."""
     return m3d.Manifold.compose([p for p in man.decompose() if abs(p.volume()) >= min_volume])
@@ -340,7 +406,9 @@ def face_mask():
     eyes = cs.translate((EYE["x"], FACE_MASK["eye_z"])) + cs.translate((-EYE["x"], FACE_MASK["eye_z"]))
     x, z, hx, hz = FACE_MASK["chin"]
     chin = m3d.CrossSection.circle(1.0, 96).scale((hx, hz)).translate((x, z))
-    return eyes + chin
+    # close the cusps where the circles meet (sharp notches there made sliver faces against the beak ridge)
+    return (eyes + chin).offset(1.2, m3d.JoinType.Round, circular_segments=96).offset(
+        -1.2, m3d.JoinType.Round, circular_segments=96)
 
 
 def starburst():
@@ -370,7 +438,7 @@ def bb_text():
 
 def build_bodies():
     print("meshing shape groups ...")
-    red = mesh_field(red_body, (-22, -20, 15), (22, 20, 76))
+    red = mesh_field(red_body, (-24, -20, 15), (24, 22, 76))
     capm = mesh_field(cap, (-18, -26, 63), (18, 18, 78))
     white = mesh_field(white_parts, (-26, -32, 3), (26, 12, 64))
     eyes, hilite = eyes_and_highlights()
@@ -395,9 +463,7 @@ def build_bodies():
                         + zigzag_region(HEM["c"][0], HEM["c"][1], HEM["radius"], HEM["z"], HEM["amp"], HEM["teeth"], 0.0)
                         + cone_decal(face_mask(), head_c, -13.0))
     for side in (1, -1):
-        h = WING["hand"]
-        body_decals += place(zigzag_region(side * h[0], h[1], WING_TIP["radius"], WING_TIP["z"], WING_TIP["amp"],
-                                           WING_TIP["teeth"], 0.0))
+        body_decals += place(wing_tip_region(side))
     cap_decals = place(cone_decal(bb_text(), head_c, BB["y_ref"]))
 
     # Never subtract a body that shares surface with the one it's cut from (red ^ decals lies on red's skin):

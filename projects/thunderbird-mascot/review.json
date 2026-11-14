@@ -52,6 +52,6 @@
     }
   ],
   "scale_note": "80 mm tall is a first guess for a 'little' figurine. Type a different height in the real-size box to preview it; HEIGHT_MM in build.py sets it.",
-  "notes_title": "v2: slimmer, smaller feet",
-  "notes": "v2 (you said v1 was too pudgy and bloated, and asked for smaller feet): the torso is about 25% narrower and shallower, the head is narrower, the neck is less blended, and the wings and legs are thinner and closer in. The feet are about 40% shorter, with thinner toes and smaller claws. The beak, cap, chest burst and face patch are scaled down to the new head. The footprint shrank from 63 \u00d7 56 to 49 \u00d7 43 mm. Same 80 mm height. The red tongue is gone (it caused mesh glitches); the mouth still shows red from the head. Check: is it slim enough now, or too skinny? Are the legs too long and thin? Is the beak too big for the smaller head?"
+  "notes_title": "v3: wings and an angular beak",
+  "notes": "v3 (you asked for more wing-like arms and a more angular beak). Wings: each arm is now a flat wing blade hanging from the shoulder, angled out at the bottom and swept back, ending in three flat primary feathers (front shortest, back longest) with the white zigzag across the feather ends. The thinnest feather tips are about 1.3 mm. Beak: rebuilt from flat faces instead of blobs. A ridge runs down the top with faces sloping off both sides, the upper beak ends in a sharp downward hook, and the lower beak is a wedge underneath, with the mouth slightly open. Everything else is as in v2. Check: do the wings read well from the front, or should they stand out further from the body? Is the beak angular enough, or too blocky?"
 }
