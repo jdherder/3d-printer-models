@@ -5,21 +5,21 @@
   "meshes": [
     {
       "path": "renders/view-red.stl",
-      "label": "Red (body, head, wings, cap)",
+      "label": "Red (body, head, crest, wings, cap)",
       "style": "solid",
       "color": "#c8202c",
       "crease": 0.9
     },
     {
       "path": "renders/view-white.stl",
-      "label": "White (beak, face, chest burst, zigzags, legs, feet, BB)",
+      "label": "White (beak, face, lightning bolt, zigzags, legs, feet, BB)",
       "style": "solid",
       "color": "#f2f2f2",
       "crease": 0.9
     },
     {
       "path": "renders/view-black.stl",
-      "label": "Black (eyes, claws, base)",
+      "label": "Black (eyes, cap bill, claws, base)",
       "style": "solid",
       "color": "#2b2b2e",
       "crease": 0.9
@@ -52,6 +52,6 @@
     }
   ],
   "scale_note": "80 mm tall is a first guess for a 'little' figurine. Type a different height in the real-size box to preview it; HEIGHT_MM in build.py sets it.",
-  "notes_title": "v5: one-piece beak, less round head",
-  "notes": "v5. Beak: the upper and lower halves now join at the back into one piece, like the costume. The mouth opens only toward the front. Head: no longer a ball. It's a taller, narrower top over fuller cheeks and jaw (a pear shape), and the cap follows the new shape. The white face is now one plate around the eyes, running up under the cap so the cap rim is its top edge, like the white face under the brim in the photo. The eyes sit on the new head surface. The body, wings and feet are as in v4. Check: the head shape, how far back the mouth opens, and the white face plate."
+  "notes_title": "v6: borrowing from the school logo",
+  "notes": "v6 takes cues from the Black Bob logo (the keychain's source): (1) a white lightning bolt down the chest instead of the starburst, the 'thunder' in Thunderbird; (2) the logo's beak: long, flat-topped, ending in a hook, with a long open grin whose corners meet under the eye. The upper beak is deeper and narrower than v5's, and the lower jaw is long and slim with the tip turned up a little; (3) a slightly smaller head, so the beak dominates as in the logo; (4) a black cap bill, tipped up a little (the keychain's black bill); (5) three red crest feathers sticking out the back of the head under the cap. The body, wings and feet are as in v5. Check: does it feel like our logo bird now? Is the beak length OK? It is the main thing that needs supports."
 }

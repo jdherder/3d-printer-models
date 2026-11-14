@@ -1,7 +1,8 @@
 # Thunderbird mascot figurine
 
-A small standing figurine of the Black Bob Elementary Thunderbird, the costume mascot (red bird in a red "BB" ball
-cap, big white beak, white chest burst and zigzag trim). Multicolour for the AMS: red, white, black.
+A small standing figurine of the Black Bob Elementary Thunderbird: the costume mascot (red bird in a red "BB" ball
+cap, big white beak, zigzag trim), with cues from the school logo (`projects/black-bob-keychain/source/`): the chest
+lightning bolt, the long hooked grinning beak, black cap bill, crest feathers. Multicolour for the AMS: red, white, black.
 
 ![figure](renders/figure.png)
 
@@ -22,7 +23,9 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - [x] v4: big lofted beak (rounded sections, deep hook, open mouth)
 - [x] Owner review of v4: the upper and lower beak join at the back on the costume; the head is too round
 - [x] v5: one-piece beak (halves blended at the gape), pear-shaped head (cranium + cheeks), white face plate under the cap
-- [ ] Owner review of v5: likeness, proportions, size, a name on the base?
+- [x] Owner review of v5: "perhaps referencing our Black Bob Elementary keychain model image will help"
+- [x] v6: from the logo: chest lightning bolt, logo beak (long, hooked, open grin, gape under the eye), smaller head, black cap bill, crest feathers
+- [ ] Owner review of v6: likeness, proportions, size, a name on the base?
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Measurements
@@ -36,6 +39,7 @@ No real object: the size is our choice. **80 mm tall** (`HEIGHT_MM`) is a first 
 | Torso (design) | 24 wide × 21 deep | v1 was 32 × 28 |
 | Legs | Ø ~6–7.5 | |
 | Feet | ~10 long toes | v1 ~16. Owner wanted them smaller than the costume's |
+| Beak | ~29 long from the face, tip ~35 in front of the body centre | Logo proportions; needs supports |
 | Eyes | 4.2 tall | Black, Ø 1.3 white highlight, "friendly" (as the keychain) |
 | "BB" on the cap | 3.8 tall | DejaVu Sans Bold (matplotlib's bundled font) |
 | Claw tips | ~0.9 | Smallest feature |
@@ -63,12 +67,13 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
 
 `build.py` (~45 s):
 - **Shapes** are signed-distance fields, meshed by marching cubes (0.3 mm voxel) and decimated (pymeshlab): red body
-  (torso + head + wings + tail, smoothly blended), red cap, white parts (beak, legs, feet), black claws.
+  (torso + head + wings + tail, smoothly blended), red cap, crest feathers (flattened round cones), white parts (beak, legs, feet), black claws. The black
+  cap bill and the eyes are analytic ellipsoid meshes (thin marching-cubes ones cut neighbours with slivers).
   Wings are built in their own frame (`wing_frame`: thickness, front-back, down the wing; tilted and swept). The beak
   is lofted (`loft_beak`; the halves are blended, `BEAK_JOIN`, so they're one piece at the gape): superellipse sections (exponent `BEAK_P`) through stations (y, half-width, top, bottom),
   rounded tip end. v3's angular version (profile ∩ taper ∩ roof) looked too blocky. Eyes
   and highlights are analytic spheres (marching-cubes facets that small made sliver triangles).
-- **Decals** are exact boolean regions that recolour the red skin: chest starburst, face goggles (`cone_decal`: the
+- **Decals** are exact boolean regions that recolour the red skin: chest lightning bolt (`CHEST["bolt"]`), face goggles (`cone_decal`: the
   outline swept from a point inside the head, so its walls meet the surface squarely), zigzag hem and wing tips
   (`zigzag_region`; the wing's is mapped into the wing frame, `wing_tip_region`), and the BB (cap only).
 - **Colour bodies** (manifold3d): black = claws + eyes − highlights + base; white = white parts + highlights +
@@ -109,3 +114,8 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
   placed on the real surface (`eye_centre` searches the field), stand 0.85 proud (0.4 grazed and made slivers), and
   are 4 tall so they clear the cap rim (touching it made loops). Face: one white plate (`FACE_MASK`) whose top runs up
   under the cap, so the rim is its edge (goggle circles ending near the rim grazed it).
+- **2026-11-14 (v6):** Owner suggested using the Black Bob logo (keychain source). Took from it: the white chest lightning bolt
+  (replaces the starburst), the beak (long, flat top, hook, long open grin, gape under the eye; upper deeper/narrower
+  than v5 so it isn't a pancake from the front), a smaller head so the beak dominates, the black bill (tipped up 5°,
+  as on the keychain), and three red crest feathers out the back under the cap. The bill is its own black part; it sat flush
+  with the cap's bottom edge at first (slivers), so it's raised 0.6 and the BB moved up.
