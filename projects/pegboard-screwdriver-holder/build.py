@@ -71,7 +71,8 @@ RIB_T = 2.4             # ribs between stations, from the bottom shelf to the to
 BOTTOM = min(ROWS) * pb.PITCH - STYLE.r   # holder's bottom (y), flush with the pins' undersides: it prints standing on this
 GUIDE_T = 3.4           # bottom shelf thickness (2.6 left after the 0.4 mm print flat)
 TOP_Y = 31.0            # top shelf's top face (y): 5.6 mm above the hook hole, so it still rocks on
-SHELF_UNDER = 3.0       # solid below the bottom of the cup's cone
+FUNNEL_WALL = 2.4       # wall under each cup's cone (perpendicular to it): the top shelf is a slab + one funnel per cup
+FUNNEL_LAND = 1.2       # funnel continues this far below the cone, so its bottom edge is a ring, not a knife edge
 
 
 def r_hole(t):
@@ -102,10 +103,6 @@ def cone_h(t):
     return (r_cup(t) - r_hole(t)) * math.tan(math.radians(CONE_DEG))
 
 
-def shelf_bottom():
-    return TOP_Y - CUP_WALL - max(cone_h(t) for t in TOOLS) - SHELF_UNDER
-
-
 def box(x0, x1, y0, y1, z0, z1):
     return Box(x1 - x0, y1 - y0, z1 - z0).locate(Location(((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2)))
 
@@ -123,16 +120,21 @@ def build():
     zs, (z0, z1), cols = layout()
     xc = x_centre()
     front = xc + max(r_cup(t) for t in TOOLS) + FRONT_WALL
-    sb = shelf_bottom()
     plate = pb.mount_plate(STYLE, cols=cols, rows=ROWS, thickness=PLATE_T, margin=-BOTTOM, z_range=(z0, z1))
-    body = box(PLATE_T - 0.5, front, sb, TOP_Y, z0, z1)                       # top shelf
+    y_cone = TOP_Y - CUP_WALL
+    body = box(PLATE_T - 0.5, front, y_cone, TOP_Y, z0, z1)                   # top slab: the cups' straight walls
+    d = FUNNEL_WALL / math.cos(math.radians(CONE_DEG))                        # wall measured across the cone, horizontally
+    k = math.tan(math.radians(CONE_DEG))
+    for t, z in zip(TOOLS, zs):                                                # funnel under each cup, parallel to its cone
+        rh, yb = r_hole(t), y_cone - cone_h(t) - FUNNEL_LAND
+        funnel = vcone(rh + d - FUNNEL_LAND / k, r_cup(t) + d, yb, y_cone + 0.01, xc, z)
+        body += funnel & box(PLATE_T - 0.5, front, yb - 1, y_cone + 1, z0, z1)
     body += box(PLATE_T - 0.5, front, BOTTOM, BOTTOM + GUIDE_T, z0, z1)       # bottom shelf
     walls = [z0 + RIB_T / 2] + [(a + b) / 2 for a, b in zip(zs, zs[1:])] + [z1 - RIB_T / 2]
     for zw in walls:
         body += box(PLATE_T - 0.5, front, BOTTOM, TOP_Y, zw - RIB_T / 2, zw + RIB_T / 2)
     for t, z in zip(TOOLS, zs):
         rc, rh = r_cup(t), r_hole(t)
-        y_cone = TOP_Y - CUP_WALL
         body -= vcyl(rc, y_cone, TOP_Y + 1, xc, z)
         body -= vcone(rc, rc + CUP_LEAD + 1, TOP_Y - CUP_LEAD, TOP_Y + 1, xc, z)          # lead-in
         body -= vcone(rh, rc, y_cone - cone_h(t), y_cone, xc, z)

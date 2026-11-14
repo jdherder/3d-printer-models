@@ -15,6 +15,8 @@ shared pegs.
 
 - [x] v0.1 concept (2026-11-14): 223.5 × 42.5 × 59.5 mm, 6 cups + 6 guide holes, 2 hooks (row 1) + 2 pins (row -1),
       columns 0 and 8. Watertight, 0 self-intersections (Euler -22: each station's 2 holes open into the front bays); rock-in passes
+- [x] v0.2 (2026-11-14): top shelf is a 7 mm slab + a 2.4 mm funnel under each cup instead of a solid 22 mm block.
+      229 → 143 cm³, fit unchanged
 - [ ] **Owner measures the handles** (see Open questions). Handle/bolster sizes are estimates until then
 - [ ] Owner review of the concept
 - [ ] Test print one station, check the cup fit, then the full holder
@@ -36,7 +38,9 @@ Phillips #1, **Phillips #2** (bold = the two bigger handles).
 ## How it works
 
 - **Cup** (top shelf): the bolster drops into a pocket 1.5 mm wider than it, with 7 mm of straight wall and a 45° cone
-  floor that self-centres the bolster's tapered bottom. 1.5 mm lead-in chamfer at the mouth.
+  floor that self-centres the bolster's tapered bottom. 1.5 mm lead-in chamfer at the mouth. The top shelf is only a
+  7 mm slab (the cups' straight walls) with a 2.4 mm-wall funnel hanging under each cone (`FUNNEL_WALL`), ending in a
+  1.2 mm ring around the hole (`FUNNEL_LAND`). The funnels' 45° undersides print without supports.
 - **Guide hole** (bottom shelf), 50.8 mm below: the shaft passes through. Hole = max(shaft, tip) + 1.5 mm.
 - Worst-case lean = atan((hole play + cup play) / span): ~1.7° for most, 3.5° for the large slotted (its hole must pass
   the 9.6 mm blade). The wire rack allows far more.
@@ -45,7 +49,7 @@ Phillips #1, **Phillips #2** (bold = the two bigger handles).
 ## Print settings
 
 `output/pegboard-screwdriver-holder.stl`, standing as it hangs (cups up, bottom shelf + pins on the bed, 0.4 mm flat).
-Supports only under the 2 hooks (tree, build plate only). PETG. ~229 cm³ solid volume, so normal sparse infill.
+Supports only under the 2 hooks (tree, build plate only). PETG. ~143 cm³ solid volume, so normal sparse infill.
 Target either printer (A1 fine, it's indoor and light).
 
 ## Open questions
@@ -71,3 +75,5 @@ hits the holder, neighbouring handles don't touch, ≤ 250 mm wide.
 
 - **2026-11-14:** v0.1 concept from the owner's photos and 3 caliper readings: two-point support (bolster cup + shaft
   guide hole 50.8 mm apart), rows -1/1 so the span is 2 holes. Handle sizes estimated; asked the owner to measure.
+- **2026-11-14:** v0.2: owner asked why so much plastic under the cups. Top shelf was a solid block (cone depth pushed it
+  down, plus 3 mm under the cone); now a slab + one funnel per cup. 229 → 143 cm³; tilt limits and checks unchanged.
