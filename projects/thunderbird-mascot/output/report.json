@@ -5,7 +5,7 @@
       42.3,
       80.0
     ],
-    "faces": 171850,
+    "faces": 170320,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 0,
@@ -36,11 +36,11 @@
         22.9,
         60.8
       ],
-      "faces": 113158,
+      "faces": 114428,
       "watertight": true,
       "winding_consistent": true,
       "euler_number": 0,
-      "volume_cm3": 18.8,
+      "volume_cm3": 18.7,
       "fits_A1_as_is": true,
       "fits_A1_any_axis_order": true
     },
@@ -50,7 +50,7 @@
         30.8,
         71.4
       ],
-      "faces": 90388,
+      "faces": 90386,
       "watertight": true,
       "winding_consistent": true,
       "euler_number": -2,
@@ -64,7 +64,7 @@
         41.0,
         73.7
       ],
-      "faces": 35674,
+      "faces": 35652,
       "watertight": true,
       "winding_consistent": true,
       "euler_number": 4,

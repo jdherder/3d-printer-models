@@ -30,7 +30,9 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - [x] v8: mouth reshaped into a grin (`SMILE`)
 - [x] Owner review of v8: make the eyes friendlier, like the keychain's
 - [x] v9: white eyeballs, big black pupils (low, toward the beak), white highlight upper left, painted flush
-- [ ] Owner review of v9
+- [x] Owner review of v9: pupils better; eyes should be on the sides of the head, like a real bird
+- [x] v10: eyes 58° round from the front, facing out (`EYE["azimuth"]`), pupils glancing forward
+- [ ] Owner review of v10
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Design notes (v7, from the costume photos)
@@ -38,10 +40,11 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - Body: a tall red column (chest + belly ellipsoids blended), no waist; the head (an egg) flows straight into it.
 - Chest: white jagged blaze from the neck, widening to a white belly, zigzag bottom edge; red "shorts" below; white legs.
 - Wings: red blades with three flat feathers, red to the tips.
+- Eyes on the sides of the head (`EYE["azimuth"]` 58°), like a real bird.
 - Face: one rounded white muzzle (bulk + short hook + blaze up between the eyes + lower jaw + mouth corners), with a
   wide smiling mouth cut into it (`SMILE`: straight top edge, lower lip dipping in the middle, upturned corners); the
-  back of the mouth is the red head. Eyes high at the sides, under the bill: white eyeballs, big black pupils
-  low and toward the beak, white highlight upper left (the keychain's "friendly" style; v7-v8 were solid black).
+  back of the mouth is the red head. Eyes high, under the bill: white eyeballs, big black pupils
+  low and glancing forward, white highlight upper left (the keychain's "friendly" style; v7-v8 were solid black).
 - Cap: red dome, black bill, two staggered B's. Feet: small (owner's pick; the costume's are huge), black talons.
 - The logo (v6) wasn't the right reference: its beak is long and thin, the costume's is short, round and open.
 
@@ -141,3 +144,7 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
   2.6 design) with a big black pupil (r 1.75, offset 0.45 toward the beak and 0.35 down) and a white highlight (r 0.55)
   at its upper left, painted on with cone decals from the eyeball centre (flush). Red loses the whole eyeballs in
   one subtraction, so no faces are shared between cuts.
+- **2026-11-15 (v10):** Owner: pupils better, but the eyes should be on the sides of the head like a real bird. Each eye is
+  now built facing -Y at the origin (ball + pupil/highlight paint), turned to its heading (±58°) and placed on the head
+  surface found along that ray (`eye_frame`). Sunk 0.9 into the head: at 0.6 and 0.4 the rim grazed the side of the
+  head (slivers).

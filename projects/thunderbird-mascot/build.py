@@ -78,7 +78,9 @@ CAP = dict(grow=1.2, cut_z=65.4, brim_c=(0.0, -11.5, 67.2), brim_r=(8.6, 7.6, 1.
 # v9: friendly eyes, like the keychain's: a white eyeball, a big black pupil set a little low and toward the beak,
 # and a white highlight at the pupil's upper left (as seen from the front). Pupil and highlight are painted onto the
 # eyeball (cone decals from its centre), so they're flush: nothing thin to print. Offsets are on the eye's front, in mm.
-EYE = dict(x=6.2, z=62.2, r=(2.5, 1.6, 2.6), pupil_r=1.75, pupil_at=(-0.45, -0.35), highlight_r=0.55,
+# v10: on the sides of the head like a real bird (owner): each eye sits `azimuth` degrees round from straight ahead,
+# turned to face out from the head; pupil_at x is toward the front of the head (so he still glances forward).
+EYE = dict(azimuth=58.0, z=62.2, r=(2.5, 1.6, 2.6), pupil_r=1.75, pupil_at=(0.55, -0.35), highlight_r=0.55,
            highlight_at=(-0.6, 0.65))
 # v8: the mouth is a smile, not an "O" (owner: v7 looked surprised). The opening's top edge (under the upper beak)
 # is nearly straight, its bottom edge (the lower lip) dips in the middle and both rise to pinched, upturned corners.
@@ -260,14 +262,19 @@ def white_parts(X, Y, Z):
     return np.maximum(d, FOOT_FLOOR - Z)     # flat soles, sunk into the base
 
 
-def eye_centre(side):
-    """On the real head surface (cranium + cheeks blended), found along the line of sight; stands ~0.85 proud
-    (shallower and the eye meets the head at a grazing angle, which leaves slivers)."""
-    x, z = side * EYE["x"], EYE["z"]
-    ys = np.linspace(-20.0, HEAD["c"][1], 4001, dtype=np.float32)
-    f = red_body(np.float32(x), ys, np.float32(z))
-    y_surf = float(ys[np.argmax(f < 0)])
-    return np.array([x, y_surf + 0.6, z])
+def eye_frame(side):
+    """(centre, heading in degrees about Z) of one eye. The centre is found on the real head surface along the ray
+    from the head's axis at that heading, 0.9 inside it (the eye stands ~0.7 proud; at 0.6 and 0.4 its rim grazed the
+    head at the side and left slivers)."""
+    phi = side * EYE["azimuth"]
+    a = np.radians(phi)
+    d = np.array([np.sin(a), -np.cos(a), 0.0])
+    axis = np.array([0.0, HEAD["c"][1], EYE["z"]])
+    ts = np.linspace(20.0, 0.0, 4001, dtype=np.float32)
+    pts = axis[None, :] + ts[:, None] * d[None, :]
+    f = red_body(pts[:, 0].astype(np.float32), pts[:, 1].astype(np.float32), pts[:, 2].astype(np.float32))
+    t_surf = float(ts[np.argmax(f < 0)])
+    return axis + (t_surf - 0.9) * d, phi
 
 
 def claws(X, Y, Z):
@@ -281,18 +288,20 @@ def claws(X, Y, Z):
 
 
 def eyes():
-    """(eyeballs, pupil regions): white analytic eyeballs, and the regions that paint them black (pupil cone minus
-    highlight cone). x offsets are as seen from the front (viewer's left is -x for both eyes)."""
+    """(eyeballs, pupil paint): white analytic eyeballs, and the regions that paint them black (pupil cone minus
+    highlight cone). Each eye is built facing -Y at the origin, then turned to its heading and moved into place.
+    In that local frame the highlight's x is as seen by someone looking straight at the eye."""
     balls = paint = None
     for side in (1, -1):
-        c = eye_centre(side)
-        ball = m3d.Manifold.sphere(1.0, 96).scale(tuple(EYE["r"])).translate(tuple(c))
-        y_front = c[1] - EYE["r"][1]
-        px, pz = c[0] + side * EYE["pupil_at"][0], c[2] + EYE["pupil_at"][1]   # toward the beak, a little low
+        c, phi = eye_frame(side)
+        ball = m3d.Manifold.sphere(1.0, 96).scale(tuple(EYE["r"]))
+        px, pz = -side * EYE["pupil_at"][0], EYE["pupil_at"][1]     # local -x of the right eye points forward
         pupil = m3d.CrossSection.circle(EYE["pupil_r"], 64).translate((px, pz))
         hl = m3d.CrossSection.circle(EYE["highlight_r"], 48).translate(
             (px + EYE["highlight_at"][0], pz + EYE["highlight_at"][1]))
-        p = cone_decal(pupil, tuple(c), y_front) - cone_decal(hl, tuple(c), y_front)
+        y_front = -EYE["r"][1]
+        p = cone_decal(pupil, (0.0, 0.0, 0.0), y_front) - cone_decal(hl, (0.0, 0.0, 0.0), y_front)
+        ball, p = (m.rotate((0.0, 0.0, phi)).translate(tuple(c)) for m in (ball, p))
         balls, paint = (ball, p) if balls is None else (balls + ball, paint + p)
     return balls, paint
 

@@ -56,6 +56,6 @@
     }
   ],
   "scale_note": "80 mm tall is a first guess for a 'little' figurine. Type a different height in the real-size box to preview it; HEIGHT_MM in build.py sets it.",
-  "notes_title": "v9: friendly eyes",
-  "notes": "v9 (you asked for friendlier eyes, like the keychain's). The solid black eyes are now white eyeballs with a big black pupil, set a little low and in toward the beak, and a white highlight at the upper left of each pupil. That's the 'friendly' style you picked for the keychain. The pupil and highlight are flush with the eyeball (colour only), so there's nothing tiny sticking out to print. Everything else is as in v8."
+  "notes_title": "v10: eyes on the sides of the head",
+  "notes": "v10 (you said the eyes should be more on the sides of the head, like a real bird, and that the pupils were better). Each eye now sits about 58\u00b0 round from the front of the head and faces outward, so from the front you see them on the edges of the head, and from the side each one looks straight at you. The v9 pupils are kept (big, black, white highlight) and still glance a little forward. Everything else is as in v9."
 }
