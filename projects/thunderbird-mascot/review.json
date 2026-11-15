@@ -56,6 +56,6 @@
     }
   ],
   "scale_note": "80 mm tall is a first guess for a 'little' figurine. Type a different height in the real-size box to preview it; HEIGHT_MM in build.py sets it.",
-  "notes_title": "v17: beak comes to an axe-head point (your pick, C)",
-  "notes": "v17 = v16 + option C from the four point options. The front of the whole beak, upper and lower, narrows toward an edge like an axe head. Look from the front or the top to see it. The tip end is less rounded, so it also comes to a crisper point from the side. The side shape, arc top, hooked tip and mouth corners are unchanged."
+  "notes_title": "v18: wider smile (your pick, C)",
+  "notes": "v18 = v17 + option C from the four smile options. The mouth opening runs wider and a little deeper, with the corners slightly up, so it reads more clearly as a smile from the front and from your photo's angle. The axe-head beak, arched top and everything else are as in v17."
 }

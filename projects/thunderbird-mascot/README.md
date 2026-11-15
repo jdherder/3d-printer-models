@@ -47,7 +47,9 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
       4 options (`renders/beak-top-options-v16.png`); picked **D**: gentle arc, hooked tip (`TOP_ARC`)
 - [x] v17: owner: the whole beak should come to more of a point, same general shape, "like an axe head"; 4 options
       (`renders/beak-point-options-v17.png`); picked **C**: axe edge + sharper tip (`BEAK_POINT`, `TOP_ARC` tip_round 1.2)
-- [ ] Next: small refinements from v17, one at a time, each compared side by side with the close-up before publishing
+- [x] v18: owner: the beak/mouth should look more like a smile; 4 options (`renders/smile-options-v18.png`);
+      picked **C**: wider grin (`SMILE` half_w 4.9 → 5.5, slightly deeper, corners up 0.4)
+- [ ] Next: small refinements from v18, one at a time, each compared side by side with the close-up before publishing
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Design notes (v7, from the costume photos)
@@ -201,3 +203,8 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
   front/top while the side profile stays. Options: A mild (k 0.5), B axe edge (k 1.2), C = B + sharper tip (tip_round 2.2 → 1.2),
   D = C + pointed lower beak. A first C/D at k 1.6 made the lips paper-thin and ragged and D's jaw a needle; toned down to
   k 1.2. Owner picked C.
+- **2026-11-15 (v18):** Owner: make the beak/mouth look more like a smile, 4 options. A deeper lower lip, B upturned corners,
+  C wider grin, D all three. B and D at full strength left ragged edges at the mouth corners (thin lips), so they were
+  eased; a little roughness remains at the corners from the front in B/D (and a trace in v17). Owner picked C: `SMILE`
+  half_w 4.9 → 5.5, back_taper 0.3 → 0.25, top (54.0, 55.1) → (54.0, 55.6), bottom (50.2, 53.8) → (49.7, 54.3); mouth
+  corners up 0.4 (z 53.0 → 53.4).

@@ -86,8 +86,9 @@ EYE = dict(azimuth=58.0, z=62.2, r=(2.5, 1.6, 2.6), pupil_r=1.75, pupil_at=(0.55
 # is nearly straight, its bottom edge (the lower lip) dips in the middle and both rise to pinched, upturned corners.
 # Heights are z at the centre and at the corners (|x| = half_w); the cavity runs back into the head (red back wall).
 # v15 (owner's pick "C" of four): corners 2.5 further back, mouth opening deeper (back_y -6.5 -> -5.5, less taper)
-SMILE = dict(half_w=4.9, top=(54.0, 55.1), bottom=(50.2, 53.8), back_y=-5.5, edge_round=1.4,
-             back_taper=0.3, taper_from_y=-12.0)
+# v18 (owner's pick "C" of four smiles): a wider grin, a little deeper, corners slightly up
+SMILE = dict(half_w=5.5, top=(54.0, 55.6), bottom=(49.7, 54.3), back_y=-5.5, edge_round=1.4,
+             back_taper=0.25, taper_from_y=-12.0)
 # v14: bulk and hook moved so the top of the beak runs in a gentler, straighter slope to the tip (owner's close-up).
 # Beak: one rounded white muzzle: a bulk, a short downward hook, a narrow blaze up between the eyes and a lower jaw,
 # blended; the mouth is a cavity cut into it, deep enough that its back wall is the red head (the red inside).
@@ -96,7 +97,7 @@ MUZZLE = dict(bulk=((0.0, -11.5, 56.8), (6.4, 8.6, 5.0)),
               blaze=((0.0, -8.5, 61.0), (3.0, 3.5, 3.8)),
               jaw=((0.0, -11.8, 49.8), (5.2, 7.0, 3.0)),
               mouth_round=1.0,
-              corner=((4.0, -8.0, 53.0), (1.8, 4.2, 2.4)))   # mouth corners: upper and lower beak join here (mirrored)
+              corner=((4.0, -8.0, 53.4), (1.8, 4.2, 2.4)))   # mouth corners: upper and lower beak join here (mirrored)
 # v16 (owner's pick "D" of four): the beak's top is one smooth arc from the face to the tip, ending in a small
 # hooked downturn (see top_arc / arc_body). None would bring back the v15 blob top.
 TOP_ARC = dict(p0=(-7.5, 64.6), p1=(-16.5, 63.8), p2=(-21.6, 53.2), w=(4.4, 2.6), h=(5.0, 3.8),
