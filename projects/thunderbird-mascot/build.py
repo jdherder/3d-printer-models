@@ -85,15 +85,16 @@ EYE = dict(azimuth=58.0, z=62.2, r=(2.5, 1.6, 2.6), pupil_r=1.75, pupil_at=(0.55
 # v8: the mouth is a smile, not an "O" (owner: v7 looked surprised). The opening's top edge (under the upper beak)
 # is nearly straight, its bottom edge (the lower lip) dips in the middle and both rise to pinched, upturned corners.
 # Heights are z at the centre and at the corners (|x| = half_w); the cavity runs back into the head (red back wall).
-SMILE = dict(half_w=5.6, top=(54.0, 54.7), bottom=(50.2, 53.3), back_y=-6.5, edge_round=1.4)
+SMILE = dict(half_w=4.9, top=(54.0, 54.7), bottom=(50.2, 53.3), back_y=-6.5, edge_round=1.4,
+             back_taper=0.4, taper_from_y=-12.0)
 # Beak: one rounded white muzzle: a bulk, a short downward hook, a narrow blaze up between the eyes and a lower jaw,
 # blended; the mouth is a cavity cut into it, deep enough that its back wall is the red head (the red inside).
 MUZZLE = dict(bulk=((0.0, -11.5, 56.5), (6.4, 8.0, 5.0)),
               hook=((0.0, -16.0, 56.8), (0.0, -20.4, 54.3), 4.0, 1.9),
               blaze=((0.0, -8.5, 61.0), (3.0, 3.5, 3.8)),
-              jaw=((0.0, -10.5, 49.6), (6.0, 7.5, 3.2)),
+              jaw=((0.0, -11.8, 49.8), (5.2, 7.0, 3.0)),
               mouth_round=1.0,
-              corner=((5.0, -9.6, 52.3), (2.3, 4.2, 2.8)))   # mouth corners: upper and lower beak join here (mirrored)
+              corner=((4.3, -10.2, 52.3), (1.9, 3.8, 2.5)))   # mouth corners: upper and lower beak join here (mirrored)
 LEG = dict(x=5.0, foot_x=5.8, y=1.5, z0=7.5, z1=20.0, r0=2.6, r1=3.1)
 FOOT = dict(splay_deg=12.0, heel=(0.0, 2.5, 6.2), heel_r=(3.4, 3.8, 2.3), toe_root=(0.0, 0.5, 6.0),
             toe_len=7.5, toe_r=(2.0, 1.7), toe_spread_deg=30.0)
@@ -241,12 +242,15 @@ def muzzle(X, Y, Z):
 def smile(X, Y, Z):
     """The mouth opening (see SMILE): between a bottom curve and a top curve, both parabolas in x, open at the front."""
     sm = SMILE
-    u = (X / sm["half_w"]) ** 2
+    # narrower toward the back, so the cut stays inside the (narrow) beak where it meets the head; else it punches
+    # out through the sides behind the mouth corners
+    hw = sm["half_w"] - sm["back_taper"] * np.maximum(Y - sm["taper_from_y"], 0.0)
+    u = (X / hw) ** 2
     top = sm["top"][0] + (sm["top"][1] - sm["top"][0]) * u
     bottom = sm["bottom"][0] + (sm["bottom"][1] - sm["bottom"][0]) * u
     k = sm["edge_round"]
     d = smax(bottom - Z, Z - top, k)
-    d = smax(d, np.abs(X) - sm["half_w"], k)
+    d = smax(d, np.abs(X) - hw, k)
     return smax(d, Y - sm["back_y"], k)
 
 
@@ -404,7 +408,7 @@ def chest_blaze():
     """The white blaze: narrow at the neck, jagged spikes out to both sides, widening to the belly, with a zigzag
     bottom edge (white points hanging into the red). The left side is shifted up a little: the costume's isn't
     symmetric."""
-    right = [(1.0, 51.0), (2.6, 47.0), (5.6, 48.6), (4.0, 44.2), (7.6, 44.6), (5.6, 40.2), (8.8, 39.4), (6.8, 35.4),
+    right = [(1.0, 47.6), (2.6, 45.8), (5.6, 47.2), (4.0, 44.2), (7.6, 44.6), (5.6, 40.2), (8.8, 39.4), (6.8, 35.4),
              (9.4, 33.0), (8.8, 27.0)]
     xs = np.linspace(8.8, -8.8, 9)[1:-1]
     bottom = [(x, 23.2 if i % 2 == 0 else 26.6) for i, x in enumerate(xs)]

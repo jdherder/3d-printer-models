@@ -34,7 +34,9 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - [x] v10: eyes 58° round from the front, facing out (`EYE["azimuth"]`), pupils glancing forward
 - [x] Owner review of v10: head should be narrower and less round
 - [x] v11: head 17.2 wide × 21.6 deep × 25.2 tall (design; was 21 × 21 × 23), beak, bill and B's narrowed to match
-- [ ] Owner review of v11
+- [x] Owner review of v11: smooth out the bump at the back of the lower beak (marked up: `source/feedback-2026-11-15-v11-jaw-bump.jpg`)
+- [x] v12: jaw narrower and tapered back, mouth corners smaller and tucked in, smile tapers toward the back
+- [ ] Owner review of v12
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Design notes (v7, from the costume photos)
@@ -153,3 +155,8 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
 - **2026-11-15 (v11):** Owner: head narrower and less round. `HEAD` radii (10.5, 10.5, 11.5) → (8.6, 10.8, 12.6), centre up
   0.5. Muzzle, jaw, smile and mouth corners narrowed ~0.6 to keep the beak in proportion; bill 8.6 → 7.6 wide; B's 2.7 →
   2.6 tall and raised 0.3. Eyes unchanged (they're placed on whatever head surface `red_body` gives).
+- **2026-11-15 (v12):** Owner circled a bump at the back of the lower beak (side and 3/4 views). After v11 narrowed the head,
+  the jaw (6.0 half-width) and mouth corners (x 5.0 + 2.3) stuck out past the head's lower edge. Jaw → 5.2 half-width,
+  centred further forward; corners → x 4.3, r (1.9, 3.8, 2.5); smile half-width 5.6 → 4.9. That let the mouth cut break
+  out through the sides behind the corners (two holes, merged Euler -4), so the smile now tapers toward the back
+  (`back_taper`). The chest blaze top was showing inside the mouth: lowered ~3.

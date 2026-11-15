@@ -56,6 +56,6 @@
     }
   ],
   "scale_note": "80 mm tall is a first guess for a 'little' figurine. Type a different height in the real-size box to preview it; HEIGHT_MM in build.py sets it.",
-  "notes_title": "v11: narrower, less round head",
-  "notes": "v11 (you said the head should be narrower and less round). The head is now an egg: about 18% narrower side to side and a little taller and deeper. The cap follows the new shape. The bill is a little narrower, and the B's are slightly smaller and higher. The beak is narrowed a little so it still fits the slimmer head. The eyes stay on the sides at the same angle and are re-seated on the new head surface. Everything else is as in v10."
+  "notes_title": "v12: smoother jaw",
+  "notes": "v12 (you circled the bump at the back of the lower beak). Once the head was narrowed, the back of the lower jaw and the mouth corners stuck out past the head's lower edge. The jaw is now narrower and tapers toward the back, and the mouth corners are smaller and tucked in, so from the side the lower beak runs smoothly into the head. The mouth opening narrows toward the back to stay inside the slimmer beak. The top of the chest blaze is lowered a little, because it was peeking through the mouth. Everything else is as in v11."
 }
