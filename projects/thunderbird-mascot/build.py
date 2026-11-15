@@ -72,7 +72,8 @@ NECK_BLEND = 6.0
 # feathers (all red, as on the costume). Built in the wing's own frame: u = thickness, v = front-back, a = down the wing.
 WING = dict(shoulder=(10.6, 1.5, 47.0), tilt_deg=15.0, sweep_deg=10.0,
             bulb=((0.0, 0.0, 1.5), (3.4, 5.0, 4.5)), blade=((0.0, 0.8, 8.5), (2.3, 6.4, 9.0)),
-            feathers=[(-1, 17.5), (0, 19.3), (1, 20.4)],   # (front/mid/back, tip distance down the wing)
+            # v21: longest feather in front (owner: they were backwards)
+            feathers=[(-1, 20.4), (0, 19.3), (1, 17.5)],   # (front/mid/back, tip distance down the wing)
             feather_root=12.0, feather_spread=3.4, feather_r=(2.4, 0.9), feather_flat=1.45)
 # v20 (owner's pick "B" of four, with the bill attached): crown 25% taller (`stretch`); the bill is a visor that is one
 # plate with the cap's base (see brim_mesh): half-width `bill_w`, reaching `bill_len` in front of the crown, `bill_t`

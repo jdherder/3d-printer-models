@@ -56,6 +56,6 @@
     }
   ],
   "scale_note": "80 mm tall is a first guess for a 'little' figurine. Type a different height in the real-size box to preview it; HEIGHT_MM in build.py sets it.",
-  "notes_title": "v20: a real cap (your pick, B, with the bill attached)",
-  "notes": "v20 = v19 + hat option B, with the bill fixed so it's attached. The crown is 25% taller. The bill is now a proper visor that is one piece with the cap's base: it comes straight out of the front of the cap, starts flat, and curves down at the sides and dips a little at the front, but only in front of the crown, so nothing hangs below the hat. The BB is bigger (about 60% taller) and raised 0.6 mm from the cap, staggered like the costume's. The figure is still 80 mm tall overall, so the taller hat makes the rest of the bird very slightly smaller."
+  "notes_title": "v21: wing feathers the right way round",
+  "notes": "v21 = v20 with the wing feathers reversed (you said they were backwards). The longest feather is now at the front of each wing, and the feathers step shorter toward the back. Everything else is as in v20."
 }

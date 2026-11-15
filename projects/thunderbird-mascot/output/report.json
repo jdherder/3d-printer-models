@@ -5,7 +5,7 @@
       39.1,
       80.0
     ],
-    "faces": 174222,
+    "faces": 174220,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 0,
@@ -36,7 +36,7 @@
         22.9,
         61.8
       ],
-      "faces": 132612,
+      "faces": 132602,
       "watertight": true,
       "winding_consistent": true,
       "euler_number": -2,
@@ -50,7 +50,7 @@
         28.1,
         69.6
       ],
-      "faces": 85014,
+      "faces": 85022,
       "watertight": true,
       "winding_consistent": true,
       "euler_number": 2,

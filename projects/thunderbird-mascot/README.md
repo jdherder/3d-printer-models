@@ -54,14 +54,15 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - [x] v20: owner: the bill makes no sense, BB more prominent, hat slightly taller; 4 options (`renders/hat-options-v20.png`);
       picked **B** but the bill must not be detached or lower than the hat: rebuilt as one plate with the cap's base
       (`renders/hat-v20-attached-bill.png`)
-- [ ] Next: small refinements from v20, one at a time, each compared side by side with the close-up before publishing
+- [x] v21: owner: the wings are backwards, the longer side should be in front. Feather lengths reversed (`renders/wings-v21.png`)
+- [ ] Next: small refinements from v21, one at a time, each compared side by side with the close-up before publishing
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Design notes (v7, from the costume photos)
 
 - Body: a tall red column (chest + belly ellipsoids blended), no waist; the head (a narrow, tall egg) flows straight into it.
 - Chest: white jagged blaze from the neck, widening to a white belly, zigzag bottom edge; red "shorts" below; white legs.
-- Wings: red blades with three flat feathers, red to the tips.
+- Wings: red blades with three flat feathers, red to the tips, longest feather in front (v21).
 - Eyes on the sides of the head (`EYE["azimuth"]` 48° since v19), like a real bird.
 - Face: one rounded white muzzle (bulk + short hook + blaze up between the eyes + lower jaw + mouth corners), with a
   wide smiling mouth cut into it (`SMILE`: straight top edge, lower lip dipping in the middle, upturned corners); the
@@ -228,3 +229,5 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
   (front line per x from the crown section). A gap between the two outlines first made two pieces (and a red/black
   overlap): the visor part now reaches 3 back into the crown. Letter regions are cut 3 behind the cap front (their
   pointed inner ends made slivers). Colour bodies disjoint; merged Euler 0.
+- **2026-11-15 (v21):** Owner: wings are backwards, the longer side should be in front. `WING` feathers (front, mid, back)
+  tip distances 17.5 / 19.3 / 20.4 → 20.4 / 19.3 / 17.5. Before/after: `renders/wings-v21.png`.
