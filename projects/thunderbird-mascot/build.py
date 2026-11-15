@@ -100,6 +100,7 @@ MUZZLE = dict(bulk=((0.0, -11.5, 56.8), (6.4, 8.6, 5.0)),
 # v16 (owner's pick "D" of four): the beak's top is one smooth arc from the face to the tip, ending in a small
 # hooked downturn (see top_arc / arc_body). None would bring back the v15 blob top.
 TOP_ARC = dict(p0=(-7.5, 64.6), p1=(-16.5, 63.8), p2=(-21.6, 53.2), w=(4.4, 2.6), h=(5.0, 3.8), tip_round=2.2)
+BEAK_POINT = None   # set: the front of the beak narrows toward an edge (see muzzle)
 LEG = dict(x=5.0, foot_x=5.8, y=1.5, z0=7.5, z1=20.0, r0=2.6, r1=3.1)
 FOOT = dict(splay_deg=12.0, heel=(0.0, 2.5, 6.2), heel_r=(3.4, 3.8, 2.3), toe_root=(0.0, 0.5, 6.0),
             toe_len=7.5, toe_r=(2.0, 1.7), toe_spread_deg=30.0)
@@ -233,6 +234,10 @@ def foot_parts(side):
 
 
 def muzzle(X, Y, Z):
+    if BEAK_POINT:   # narrow the front of the beak toward an edge (an axe head seen from the front / above)
+        bp = BEAK_POINT
+        u = np.clip((bp["from_y"] - Y) / (bp["from_y"] - bp["to_y"]), 0.0, 1.0)
+        X = X * (1.0 + bp["k"] * u ** bp["p"])
     m = MUZZLE
     d = ellipsoid(X, Y, Z, *m["bulk"])
     d = smin(d, round_cone(X, Y, Z, *m["hook"]), 3.0)
@@ -240,6 +245,8 @@ def muzzle(X, Y, Z):
     if TOP_ARC:
         d = smin(smax(d, Z - top_arc(Y), 1.0), arc_body(X, Y, Z), 2.0)
     d = smin(d, ellipsoid(X, Y, Z, *m["jaw"]), 2.5)
+    if BEAK_POINT and BEAK_POINT.get("jaw_tip"):   # the lower beak runs out to a point too
+        d = smin(d, round_cone(X, Y, Z, *BEAK_POINT["jaw_tip"]), 2.0)
     cx = m["corner"][0]
     for side in (1, -1):
         d = smin(d, ellipsoid(X, Y, Z, (side * cx[0], cx[1], cx[2]), m["corner"][1]), 2.0)
