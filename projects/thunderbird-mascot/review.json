@@ -56,6 +56,6 @@
     }
   ],
   "scale_note": "80 mm tall is a first guess for a 'little' figurine. Type a different height in the real-size box to preview it; HEIGHT_MM in build.py sets it.",
-  "notes_title": "v10: eyes on the sides of the head",
-  "notes": "v10 (you said the eyes should be more on the sides of the head, like a real bird, and that the pupils were better). Each eye now sits about 58\u00b0 round from the front of the head and faces outward, so from the front you see them on the edges of the head, and from the side each one looks straight at you. The v9 pupils are kept (big, black, white highlight) and still glance a little forward. Everything else is as in v9."
+  "notes_title": "v11: narrower, less round head",
+  "notes": "v11 (you said the head should be narrower and less round). The head is now an egg: about 18% narrower side to side and a little taller and deeper. The cap follows the new shape. The bill is a little narrower, and the B's are slightly smaller and higher. The beak is narrowed a little so it still fits the slimmer head. The eyes stay on the sides at the same angle and are re-seated on the new head surface. Everything else is as in v10."
 }
