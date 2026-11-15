@@ -97,6 +97,7 @@ MUZZLE = dict(bulk=((0.0, -11.5, 56.8), (6.4, 8.6, 5.0)),
               jaw=((0.0, -11.8, 49.8), (5.2, 7.0, 3.0)),
               mouth_round=1.0,
               corner=((4.0, -8.0, 53.0), (1.8, 4.2, 2.4)))   # mouth corners: upper and lower beak join here (mirrored)
+TOP_ARC = None   # set: the beak's top is one smooth arc (see top_arc); None keeps the v15 blob top
 LEG = dict(x=5.0, foot_x=5.8, y=1.5, z0=7.5, z1=20.0, r0=2.6, r1=3.1)
 FOOT = dict(splay_deg=12.0, heel=(0.0, 2.5, 6.2), heel_r=(3.4, 3.8, 2.3), toe_root=(0.0, 0.5, 6.0),
             toe_len=7.5, toe_r=(2.0, 1.7), toe_spread_deg=30.0)
@@ -234,11 +235,39 @@ def muzzle(X, Y, Z):
     d = ellipsoid(X, Y, Z, *m["bulk"])
     d = smin(d, round_cone(X, Y, Z, *m["hook"]), 3.0)
     d = smin(d, ellipsoid(X, Y, Z, *m["blaze"]), 3.0)
+    if TOP_ARC:
+        d = smin(smax(d, Z - top_arc(Y), 1.0), arc_body(X, Y, Z), 2.0)
     d = smin(d, ellipsoid(X, Y, Z, *m["jaw"]), 2.5)
     cx = m["corner"][0]
     for side in (1, -1):
         d = smin(d, ellipsoid(X, Y, Z, (side * cx[0], cx[1], cx[2]), m["corner"][1]), 2.0)
     return smax(d, -smile(X, Y, Z), m["mouth_round"])
+
+
+def top_arc(Y):
+    """z of the beak's top line at y: a quadratic Bezier (y, z) from where it meets the face (p0) to the tip (p2);
+    p1 sets how round the arc is. Its end tangent (p2 - p1) is the tip's downturn."""
+    a = TOP_ARC
+    t = np.linspace(0.0, 1.0, 400)
+    p0, p1, p2 = (np.array(a[k], float) for k in ("p0", "p1", "p2"))
+    pts = ((1 - t) ** 2)[:, None] * p0 + (2 * (1 - t) * t)[:, None] * p1 + (t ** 2)[:, None] * p2
+    return np.interp(-Y, -pts[:, 0], pts[:, 1]).astype(np.float32)   # y decreases along the curve
+
+
+def arc_body(X, Y, Z):
+    """The upper beak under the top line: round (superellipse) sections, `w` half-width and `h` depth tapering from
+    the base (p0) to the tip (p2), with a rounded tip end."""
+    a = TOP_ARC
+    y0, y2 = a["p0"][0], a["p2"][0]
+    u = np.clip((Y - y0) / (y2 - y0), 0.0, 1.0)            # 0 at the base, 1 at the tip
+    w = a["w"][0] + (a["w"][1] - a["w"][0]) * u
+    h = a["h"][0] + (a["h"][1] - a["h"][0]) * u
+    top = top_arc(Y)
+    c, hh = top - h / 2, h / 2
+    n = (np.abs(X / w) ** 2.2 + np.abs((Z - c) / hh) ** 2.2) ** (1 / 2.2)
+    d = (n - 1.0) * np.minimum(w, hh)
+    d = smax(d, y2 - Y, a["tip_round"])                     # rounded tip
+    return smax(d, Y - (y0 + 3.0), 1.0)                     # back end buried in the head
 
 
 def smile(X, Y, Z):
