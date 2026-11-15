@@ -51,7 +51,10 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
       picked **C**: wider grin (`SMILE` half_w 4.9 → 5.5, slightly deeper, corners up 0.4)
 - [x] v19: owner: eyes closer to the beak, a bit larger, more friendly; 4 options (`renders/eye-options-v19.png`);
       picked **C**: 48° (was 58°), ~20% bigger, pupils looking forward and up, bigger shine
-- [ ] Next: small refinements from v19, one at a time, each compared side by side with the close-up before publishing
+- [x] v20: owner: the bill makes no sense, BB more prominent, hat slightly taller; 4 options (`renders/hat-options-v20.png`);
+      picked **B** but the bill must not be detached or lower than the hat: rebuilt as one plate with the cap's base
+      (`renders/hat-v20-attached-bill.png`)
+- [ ] Next: small refinements from v20, one at a time, each compared side by side with the close-up before publishing
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Design notes (v7, from the costume photos)
@@ -64,7 +67,8 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
   wide smiling mouth cut into it (`SMILE`: straight top edge, lower lip dipping in the middle, upturned corners); the
   back of the mouth is the red head. Eyes high, under the bill: white eyeballs, big black pupils
   low and glancing forward, white highlight upper left (the keychain's "friendly" style; v7-v8 were solid black).
-- Cap: red dome, black bill, two staggered B's. Feet: small (owner's pick; the costume's are huge), black talons.
+- Cap (v20): red crown 25% taller than the head shape (`CAP["stretch"]`), a black visor bill that is one plate with
+  the cap's base and curves down only in front of the crown, two big raised staggered B's (`BB["raise_"]` 0.6). Feet: small (owner's pick; the costume's are huge), black talons.
 - The logo (v6) wasn't the right reference: its beak is long and thin, the costume's is short, round and open.
 
 ## Measurements
@@ -76,7 +80,7 @@ No real object: the size is our choice. **80 mm tall** (`HEIGHT_MM`) is a first 
 | Overall W × D × H | 47.4 × 42.3 × 80.0 | Base 47 × 41 |
 | Base | 47.4 × 40.9 × 5.4 | Black, rounded edge |
 | Eyes | ~6.5 tall | White eyeball, black pupil Ø ~4.6, white highlight Ø ~1.6 (v19) |
-| "B B" on the cap | 2.9 tall each | DejaVu Sans Bold, staggered |
+| "B B" on the cap | ~4.4 tall each, raised ~0.6 | DejaVu Sans Bold, staggered (v20) |
 | Claw tips | ~1.0 | Smallest feature |
 | Feather tips (wings) | ~1.3 thick | |
 
@@ -216,3 +220,11 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
   edge, which adds loops to the red/white bodies (merged solid still Euler 0, no self-intersections). While checking, found
   red and white overlapped by ~16 mm3 inside the head (the B decal cones reach into the head under the cap; present since
   the B's were added): red now also loses `cap_decals`. Colour bodies are disjoint again (pairwise intersection 0).
+- **2026-11-15 (v20):** Owner: the bill makes no sense (it was a floating flat ellipsoid disc reaching as far back as forward),
+  BB should be more prominent, hat slightly taller. Added `CAP` stretch (crown above the rim stretched), a visor bill, and
+  raised B's (white = cap grown by `raise_` ∩ letter cones). 4 options; owner picked B but the bill must not be detached or
+  lower than the hat: B's bill sat just under the rim and its curved sides hung below it. Rebuilt the bill as one plate:
+  visor ellipse ∪ the crown footprint (shrunk 2, inside the head), top 0.9 above the rim, bent only in front of the crown
+  (front line per x from the crown section). A gap between the two outlines first made two pieces (and a red/black
+  overlap): the visor part now reaches 3 back into the crown. Letter regions are cut 3 behind the cap front (their
+  pointed inner ends made slivers). Colour bodies disjoint; merged Euler 0.

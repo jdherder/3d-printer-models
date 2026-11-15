@@ -56,6 +56,6 @@
     }
   ],
   "scale_note": "80 mm tall is a first guess for a 'little' figurine. Type a different height in the real-size box to preview it; HEIGHT_MM in build.py sets it.",
-  "notes_title": "v19: bigger, friendlier eyes closer to the beak (your pick, C)",
-  "notes": "v19 = v18 + option C from the four eye options. The eyes sit closer to the beak (48\u00b0 round from the front instead of 58\u00b0), are about 20% bigger and a touch lower to clear the cap, and have bigger pupils looking forward and a little up, with a bigger white shine. Also fixed: the red and white parts overlapped slightly inside the head, under the B's on the cap. It was invisible but could confuse the slicer. Everything else is as in v18."
+  "notes_title": "v20: a real cap (your pick, B, with the bill attached)",
+  "notes": "v20 = v19 + hat option B, with the bill fixed so it's attached. The crown is 25% taller. The bill is now a proper visor that is one piece with the cap's base: it comes straight out of the front of the cap, starts flat, and curves down at the sides and dips a little at the front, but only in front of the crown, so nothing hangs below the hat. The BB is bigger (about 60% taller) and raised 0.6 mm from the cap, staggered like the costume's. The figure is still 80 mm tall overall, so the taller hat makes the rest of the bird very slightly smaller."
 }

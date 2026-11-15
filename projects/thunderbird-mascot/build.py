@@ -74,11 +74,12 @@ WING = dict(shoulder=(10.6, 1.5, 47.0), tilt_deg=15.0, sweep_deg=10.0,
             bulb=((0.0, 0.0, 1.5), (3.4, 5.0, 4.5)), blade=((0.0, 0.8, 8.5), (2.3, 6.4, 9.0)),
             feathers=[(-1, 17.5), (0, 19.3), (1, 20.4)],   # (front/mid/back, tip distance down the wing)
             feather_root=12.0, feather_spread=3.4, feather_r=(2.4, 0.9), feather_flat=1.45)
-CAP = dict(grow=1.2, cut_z=65.4, button_r=1.3,
-           # v20: crown height (above the rim) is stretched by `stretch`; the bill is a curved visor at the front
-           # rim: half-width `bill_w`, reaching `bill_len` forward of the crown, `bill_t` thick, sides curving down
-           # by `bill_curve`, the front dropping by `bill_droop`
-           stretch=1.0, bill_w=7.6, bill_len=7.0, bill_t=1.2, bill_curve=1.0, bill_droop=0.4, bill_old=True,
+# v20 (owner's pick "B" of four, with the bill attached): crown 25% taller (`stretch`); the bill is a visor that is one
+# plate with the cap's base (see brim_mesh): half-width `bill_w`, reaching `bill_len` in front of the crown, `bill_t`
+# thick, sides curving down by `bill_curve` and the front dipping by `bill_droop`, both only in front of the crown.
+# bill_old=True brings back the v1-v19 floating disc (brim_c, brim_r, brim_tilt_deg).
+CAP = dict(grow=1.2, cut_z=65.4, button_r=1.3, stretch=1.25,
+           bill_w=7.8, bill_len=7.5, bill_t=1.2, bill_curve=1.6, bill_droop=0.6, bill_old=False,
            brim_c=(0.0, -11.3, 67.2), brim_r=(7.6, 7.6, 1.2), brim_tilt_deg=0.0)
 # v9: friendly eyes, like the keychain's: a white eyeball, a big black pupil set a little low and toward the beak,
 # and a white highlight at the pupil's upper left (as seen from the front). Pupil and highlight are painted onto the
@@ -117,8 +118,9 @@ FOOT = dict(splay_deg=12.0, heel=(0.0, 2.5, 6.2), heel_r=(3.4, 3.8, 2.3), toe_ro
 FOOT_FLOOR = BASE["h"] - 0.8   # soles and claws are cut flat here, inside the base
 CLAW = dict(len=1.9, drop=2.6, r=(1.0, 0.45))
 CHEST = dict(apex=(0.0, 1.5, 38.0), y_ref=-8.0)   # the blaze outline is made by chest_blaze()
-BB = dict(letters=[(-1.8, 71.6), (1.8, 70.6)], height=2.6, y_ref=-6.8, raise_=0.0)   # staggered like the costume's
-                                                                                       # cap; raise_ embosses them
+# v20: bigger (2.6 -> 4.2), raised 0.6 off the cap, staggered like the costume's (left one higher), centred on the
+# taller crown's front; y_ref is the crown's front at the letters' height
+BB = dict(letters=[(-1.93, 71.9), (1.93, 70.9)], height=4.2, y_ref=-8.645, raise_=0.6)
 
 
 # ------------------------------------------------------------------------------------------------
@@ -239,18 +241,28 @@ def brim_mesh():
     marching-cubes one this thin cut the dome with sliver faces): an outline extruded, refined and bent."""
     if not CAP["bill_old"]:
         c = CAP
-        z0 = c["cut_z"] + 0.15                     # just above the rim's rounded edge
-        yf = crown_front_y(z0 + c["bill_t"])       # where the bill leaves the crown
-        tuck = 2.0                                 # how far the bill reaches back into the crown
+        # v20: the bill is one plate with the cap's base: its outline is the visor ellipse plus the crown's own
+        # footprint (shrunk so it stays inside the head), so it meets the crown all the way round; it starts flat at
+        # the crown's front and only bends (down at the sides, dipping forward) out in front of it
+        z0 = c["cut_z"] - 0.3                      # top of the bill = 0.9 above the rim: it meets the crown's face
+        zt = c["cut_z"] + 0.5
+        yf = crown_front_y(zt)
+        cy = HEAD["c"][1]
+        xs = np.linspace(0.0, 20.0, 4001, dtype=np.float32)
+        rx = float(xs[np.argmax(cap(xs, np.float32(cy), np.float32(zt)) > 0)])   # crown half-width at the rim
+        ry = cy - yf
         ell = m3d.CrossSection.circle(1.0, 160).scale((c["bill_w"], c["bill_len"])).translate((0.0, yf))
-        keep = m3d.CrossSection.square((4 * c["bill_w"], c["bill_len"] + tuck)).translate(
-            (-2 * c["bill_w"], yf - c["bill_len"]))
-        bill = (ell ^ keep).extrude(c["bill_t"]).refine_to_length(0.4)
+        front_half = m3d.CrossSection.square((4 * c["bill_w"], c["bill_len"] + 3.0)).translate(
+            (-2 * c["bill_w"], yf - c["bill_len"]))       # reaches 3 back into the crown, joining the footprint
+        foot = m3d.CrossSection.circle(1.0, 160).scale((rx - 2.0, ry - 2.0)).translate((0.0, cy))
+        bill = ((ell ^ front_half) + foot).extrude(c["bill_t"]).refine_to_length(0.4)
 
         def bend(v):
             out = v.copy()
-            fwd = np.clip((yf - v[:, 1]) / c["bill_len"], 0.0, 1.0)
-            out[:, 2] = v[:, 2] + z0 - c["bill_curve"] * (v[:, 0] / c["bill_w"]) ** 2 - c["bill_droop"] * fwd
+            x, y = v[:, 0], v[:, 1]
+            front = cy - ry * np.sqrt(np.clip(1.0 - (x / rx) ** 2, 0.0, 1.0))   # crown front at this x
+            fwd = np.clip((front - y) / c["bill_len"], 0.0, 1.0)
+            out[:, 2] = v[:, 2] + z0 - fwd * (c["bill_droop"] + c["bill_curve"] * (x / c["bill_w"]) ** 2)
             return out
         return bill.warp_batch(bend)
     c = CAP["brim_c"]
