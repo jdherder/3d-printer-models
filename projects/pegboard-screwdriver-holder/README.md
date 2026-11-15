@@ -19,6 +19,8 @@ shared pegs.
       229 → 143 cm³, fit unchanged
 - [x] v0.3 (2026-11-14): back plate windowed between the ribs. Only a strip along the hooks and one along the pins
       remain (3 mm past each peg, `PLATE_STRIP`), joined by posts behind the ribs. 143 → 119 cm³. Euler -34 (6 more openings)
+- [x] v0.4 (2026-11-15): rounded edges: outer front corners + top front edge R4 (`OUTER_R`), bay and back-plate window
+      corners R3 (`BAY_R`), rib/shelf front edges R0.8 (`EDGE_R`), top back edge R2 (helps it rock on)
 - [ ] **Owner measures the handles** (see Open questions). Handle/bolster sizes are estimates until then
 - [ ] Owner review of the concept
 - [ ] Test print one station, check the cup fit, then the full holder
@@ -84,3 +86,5 @@ hits the holder, neighbouring handles don't touch, ≤ 250 mm wide.
 - **2026-11-15:** Fix: `mount_plate`'s margin is measured from the pin row, and the build passed it as if the pins were
   in row 0, so the hung model (viewer, fit checks) had ~25 mm of plate below the pins. The print STL was unaffected
   (`print_pose` trims below the bottom shelf). Now the plate ends at the pins' undersides; `build.py` asserts it.
+- **2026-11-15:** v0.4: owner asked to round the sharp corners. Body is now one block with filleted outer edges and
+  round-cornered bays cut from it; windows rounded too. Volume unchanged (~119 cm³); checks pass.

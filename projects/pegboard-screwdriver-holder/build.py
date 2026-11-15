@@ -32,7 +32,7 @@ import meshkit as mk  # noqa: E402
 import numpy as np  # noqa: E402
 import pegboard as pb  # noqa: E402
 import trimesh  # noqa: E402
-from build123d import Box, Cone, Cylinder, Location, Rotation, export_step  # noqa: E402
+from build123d import Axis, Box, Cone, Cylinder, Location, Rotation, export_step, fillet  # noqa: E402
 from render import render_sheet  # noqa: E402
 
 OUT = HERE / "output"
@@ -69,6 +69,9 @@ FRONT_WALL = 3.0        # front of the biggest cup to the shelf's front face
 END_WALL = 3.0          # outer cup to the holder's end
 RIB_T = 2.4             # ribs between stations, from the bottom shelf to the top shelf
 BOTTOM = min(ROWS) * pb.PITCH - STYLE.r   # holder's bottom (y), flush with the pins' undersides: it prints standing on this
+OUTER_R = 4.0           # rounding of the outer front corners and the top front edge
+BAY_R = 3.0             # rounding of the inside corners of each bay and each back-plate window
+EDGE_R = 0.8            # rounding of the front edges of the ribs and shelves
 PLATE_STRIP = 3.0       # back plate kept this far beyond the pegs: a strip along the hooks and one along the pins.
                         # Between them, each bay gets a window, so only posts behind the ribs and end walls join the strips
 GUIDE_T = 3.4           # bottom shelf thickness (2.6 left after the 0.4 mm print flat)
@@ -124,17 +127,30 @@ def build():
     front = xc + max(r_cup(t) for t in TOOLS) + FRONT_WALL
     plate = pb.mount_plate(STYLE, cols=cols, rows=ROWS, thickness=PLATE_T, margin=min(ROWS) * pb.PITCH - BOTTOM, z_range=(z0, z1))
     y_cone = TOP_Y - CUP_WALL
-    body = box(PLATE_T - 0.5, front, y_cone, TOP_Y, z0, z1)                   # top slab: the cups' straight walls
+    x_back = PLATE_T - 0.5
+    walls = [z0 + RIB_T / 2] + [(a + b) / 2 for a, b in zip(zs, zs[1:])] + [z1 - RIB_T / 2]
+    # One block (top slab + bottom shelf + ribs) with rounded outer edges, then a round-cornered bay cut between each rib pair
+    body = box(x_back, front, BOTTOM, TOP_Y, z0, z1)
+    near = lambda v, w: abs(v - w) < 0.01   # noqa: E731
+    body = fillet([e for e in body.edges().filter_by(Axis.Y) if near(e.center().X, front)]
+                  + [e for e in body.edges().filter_by(Axis.Z) if near(e.center().X, front) and near(e.center().Y, TOP_Y)],
+                  radius=OUTER_R)
+    body = fillet([e for e in body.edges().filter_by(Axis.Z) if near(e.center().X, x_back) and near(e.center().Y, TOP_Y)],
+                  radius=2.0)                                                   # top back edge: helps it rock on
+    for a, b in zip(walls, walls[1:]):
+        bay = box(x_back - 0.1, front + 1, BOTTOM + GUIDE_T, y_cone, a + RIB_T / 2, b - RIB_T / 2)
+        body -= fillet(bay.edges().filter_by(Axis.X), radius=BAY_R)
+    try:                                                                        # soften the rib and shelf front edges
+        body = fillet([e for e in body.edges() if near(e.bounding_box().min.X, front) and near(e.bounding_box().max.X, front)
+                       and e.geom_type.name == "LINE"], radius=EDGE_R)
+    except Exception as exc:  # noqa: BLE001
+        print(f"note: front edge rounding skipped ({exc})")
     d = FUNNEL_WALL / math.cos(math.radians(CONE_DEG))                        # wall measured across the cone, horizontally
     k = math.tan(math.radians(CONE_DEG))
     for t, z in zip(TOOLS, zs):                                                # funnel under each cup, parallel to its cone
         rh, yb = r_hole(t), y_cone - cone_h(t) - FUNNEL_LAND
         funnel = vcone(rh + d - FUNNEL_LAND / k, r_cup(t) + d, yb, y_cone + 0.01, xc, z)
-        body += funnel & box(PLATE_T - 0.5, front, yb - 1, y_cone + 1, z0, z1)
-    body += box(PLATE_T - 0.5, front, BOTTOM, BOTTOM + GUIDE_T, z0, z1)       # bottom shelf
-    walls = [z0 + RIB_T / 2] + [(a + b) / 2 for a, b in zip(zs, zs[1:])] + [z1 - RIB_T / 2]
-    for zw in walls:
-        body += box(PLATE_T - 0.5, front, BOTTOM, TOP_Y, zw - RIB_T / 2, zw + RIB_T / 2)
+        body += funnel & box(x_back, front - 1, yb - 1, y_cone + 1, z0, z1)
     for t, z in zip(TOOLS, zs):
         rc, rh = r_cup(t), r_hole(t)
         body -= vcyl(rc, y_cone, TOP_Y + 1, xc, z)
@@ -145,7 +161,8 @@ def build():
     win_y0 = pin_y + STYLE.r + PLATE_STRIP                     # top of the pin strip
     win_y1 = hook_y - STYLE.hook_r - PLATE_STRIP               # bottom of the hook strip
     for a, b in zip(walls, walls[1:]):
-        plate -= box(-1, PLATE_T + 0.1, win_y0, win_y1, a + RIB_T / 2, b - RIB_T / 2)
+        win = box(-1, PLATE_T + 0.1, win_y0, win_y1, a + RIB_T / 2, b - RIB_T / 2)
+        plate -= fillet(win.edges().filter_by(Axis.X), radius=BAY_R)
     return plate + body
 
 

@@ -6,7 +6,7 @@
       55.5,
       67.4
     ],
-    "faces": 39000,
+    "faces": 96838,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": -34,
@@ -23,7 +23,7 @@
     "rock_in": {
       "ok": true,
       "max_tilt_deg": 94.0,
-      "states": 3308,
+      "states": 3268,
       "give_mm": 0.3
     },
     "holes_used": "2 hooks (row 1) + 2 pins (row -1), columns 0 and 8"
