@@ -6,11 +6,11 @@
       55.5,
       67.4
     ],
-    "faces": 96838,
+    "faces": 93338,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": -34,
-    "volume_cm3": 118.5,
+    "volume_cm3": 118.9,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
@@ -19,11 +19,11 @@
   "fit_on_board": {
     "board": "3/16 in white hardboard (owner's, Menards)",
     "clearance_checked_per_side": 0.1,
-    "flush_overlap_mm3_info_only": 2.35,
+    "flush_overlap_mm3_info_only": 2.34,
     "rock_in": {
       "ok": true,
       "max_tilt_deg": 94.0,
-      "states": 3268,
+      "states": 3282,
       "give_mm": 0.3
     },
     "holes_used": "2 hooks (row 1) + 2 pins (row -1), columns 0 and 8"

@@ -70,7 +70,7 @@ END_WALL = 3.0          # outer cup to the holder's end
 RIB_T = 2.4             # ribs between stations, from the bottom shelf to the top shelf
 BOTTOM = min(ROWS) * pb.PITCH - STYLE.r   # holder's bottom (y), flush with the pins' undersides: it prints standing on this
 OUTER_R = 4.0           # rounding of the outer front corners and the top front edge
-BAY_R = 3.0             # rounding of the inside corners of each bay and each back-plate window
+BAY_R = 3.0             # rounding of the inside corners of each bay (the back plate stays square: it's against the board)
 EDGE_R = 0.8            # rounding of the front edges of the ribs and shelves
 PLATE_STRIP = 3.0       # back plate kept this far beyond the pegs: a strip along the hooks and one along the pins.
                         # Between them, each bay gets a window, so only posts behind the ribs and end walls join the strips
@@ -125,7 +125,8 @@ def build():
     zs, (z0, z1), cols = layout()
     xc = x_centre()
     front = xc + max(r_cup(t) for t in TOOLS) + FRONT_WALL
-    plate = pb.mount_plate(STYLE, cols=cols, rows=ROWS, thickness=PLATE_T, margin=min(ROWS) * pb.PITCH - BOTTOM, z_range=(z0, z1))
+    plate = pb.mount_plate(STYLE, cols=cols, rows=ROWS, thickness=PLATE_T, margin=min(ROWS) * pb.PITCH - BOTTOM, z_range=(z0, z1),
+                           top_round=False)                # nothing against the board is rounded (owner)
     y_cone = TOP_Y - CUP_WALL
     x_back = PLATE_T - 0.5
     walls = [z0 + RIB_T / 2] + [(a + b) / 2 for a, b in zip(zs, zs[1:])] + [z1 - RIB_T / 2]
@@ -135,8 +136,6 @@ def build():
     body = fillet([e for e in body.edges().filter_by(Axis.Y) if near(e.center().X, front)]
                   + [e for e in body.edges().filter_by(Axis.Z) if near(e.center().X, front) and near(e.center().Y, TOP_Y)],
                   radius=OUTER_R)
-    body = fillet([e for e in body.edges().filter_by(Axis.Z) if near(e.center().X, x_back) and near(e.center().Y, TOP_Y)],
-                  radius=2.0)                                                   # top back edge: helps it rock on
     for a, b in zip(walls, walls[1:]):
         bay = box(x_back - 0.1, front + 1, BOTTOM + GUIDE_T, y_cone, a + RIB_T / 2, b - RIB_T / 2)
         body -= fillet(bay.edges().filter_by(Axis.X), radius=BAY_R)
@@ -162,7 +161,7 @@ def build():
     win_y1 = hook_y - STYLE.hook_r - PLATE_STRIP               # bottom of the hook strip
     for a, b in zip(walls, walls[1:]):
         win = box(-1, PLATE_T + 0.1, win_y0, win_y1, a + RIB_T / 2, b - RIB_T / 2)
-        plate -= fillet(win.edges().filter_by(Axis.X), radius=BAY_R)
+        plate -= win                                            # square: it's against the board
     return plate + body
 
 
