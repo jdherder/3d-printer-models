@@ -36,7 +36,9 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - [x] v11: head 17.2 wide × 21.6 deep × 25.2 tall (design; was 21 × 21 × 23), beak, bill and B's narrowed to match
 - [x] Owner review of v11: smooth out the bump at the back of the lower beak (marked up: `source/feedback-2026-11-15-v11-jaw-bump.jpg`)
 - [x] v12: jaw narrower and tapered back, mouth corners smaller and tucked in, smile tapers toward the back
-- [ ] Owner review of v12
+- [x] Owner review of v12: sent a side close-up (`source/costume-2026-11-15-beak-closeup.jpg`): the gape goes much further back, under the eye; the top slopes more gently
+- [x] v13: beak drawn from that profile: loft + white cheek shell + mouth wedge cut into the head (gape under the eye)
+- [ ] Owner review of v13 (front view of the mouth?)
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Design notes (v7, from the costume photos)
@@ -45,9 +47,10 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - Chest: white jagged blaze from the neck, widening to a white belly, zigzag bottom edge; red "shorts" below; white legs.
 - Wings: red blades with three flat feathers, red to the tips.
 - Eyes on the sides of the head (`EYE["azimuth"]` 58°), like a real bird.
-- Face: one rounded white muzzle (bulk + short hook + blaze up between the eyes + lower jaw + mouth corners), with a
-  wide smiling mouth cut into it (`SMILE`: straight top edge, lower lip dipping in the middle, upturned corners); the
-  back of the mouth is the red head. Eyes high, under the bill: white eyeballs, big black pupils
+- Face (v13, from the side close-up): one white beak loft (`BEAK` stations: gentle top slope, blunt slightly hooked
+  tip, long lower beak) plus a thin white shell over the cheeks (`FACE_SHELL`, an offset of the head inside a
+  side-view outline). The mouth is a wedge (`MOUTH` roof/floor lines) from a gape corner under the eye, cut through
+  the white and into the red head; a red core (|x| < 2.6) is left, so the inside reads red. Eyes high, under the bill: white eyeballs, big black pupils
   low and glancing forward, white highlight upper left (the keychain's "friendly" style; v7-v8 were solid black).
 - Cap: red dome, black bill, two staggered B's. Feet: small (owner's pick; the costume's are huge), black talons.
 - The logo (v6) wasn't the right reference: its beak is long and thin, the costume's is short, round and open.
@@ -65,7 +68,8 @@ No real object: the size is our choice. **80 mm tall** (`HEIGHT_MM`) is a first 
 | Claw tips | ~1.0 | Smallest feature |
 | Feather tips (wings) | ~1.3 thick | |
 
-Euler number of the merged solid is 0: base, leg, body, leg, base form one loop. That's expected.
+Euler number of the merged solid is 0: base, leg, body, leg, base form one loop. That's expected. (The open mouth can
+add one more: front opening ↔ side slits. Also fine.)
 
 Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form one loop (a "handle"). That's expected.
 
@@ -160,3 +164,8 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
   centred further forward; corners → x 4.3, r (1.9, 3.8, 2.5); smile half-width 5.6 → 4.9. That let the mouth cut break
   out through the sides behind the corners (two holes, merged Euler -4), so the smile now tapers toward the back
   (`back_taper`). The chest blaze top was showing inside the mouth: lowered ~3.
+- **2026-11-15 (v13):** Owner sent a side close-up of the costume beak: the gape (where top and bottom meet) is far back,
+  right under the eye; the top slopes gently. Replaced the blob muzzle + `SMILE` with: a loft (`BEAK`) whose back
+  stations taper into the head (a full-width back end stuck out past the narrow lower head: slivers, and a bump);
+  a white cheek shell (`FACE_SHELL`, head offset 0.9 inside a side-view outline, edges rounded 0.8); and a mouth wedge
+  (`MOUTH`) cut through the white and into the red head back to the gape at y -4.4 under the eye, leaving a red core.
