@@ -99,8 +99,10 @@ MUZZLE = dict(bulk=((0.0, -11.5, 56.8), (6.4, 8.6, 5.0)),
               corner=((4.0, -8.0, 53.0), (1.8, 4.2, 2.4)))   # mouth corners: upper and lower beak join here (mirrored)
 # v16 (owner's pick "D" of four): the beak's top is one smooth arc from the face to the tip, ending in a small
 # hooked downturn (see top_arc / arc_body). None would bring back the v15 blob top.
-TOP_ARC = dict(p0=(-7.5, 64.6), p1=(-16.5, 63.8), p2=(-21.6, 53.2), w=(4.4, 2.6), h=(5.0, 3.8), tip_round=2.2)
-BEAK_POINT = None   # set: the front of the beak narrows toward an edge (see muzzle)
+TOP_ARC = dict(p0=(-7.5, 64.6), p1=(-16.5, 63.8), p2=(-21.6, 53.2), w=(4.4, 2.6), h=(5.0, 3.8),
+               tip_round=1.2)   # v17: 2.2 -> 1.2, a crisper point
+# v17 (owner's pick "C" of four): the front of the beak narrows toward an edge, like an axe head (see muzzle)
+BEAK_POINT = dict(from_y=-12.0, to_y=-22.0, k=1.2, p=1.3)
 LEG = dict(x=5.0, foot_x=5.8, y=1.5, z0=7.5, z1=20.0, r0=2.6, r1=3.1)
 FOOT = dict(splay_deg=12.0, heel=(0.0, 2.5, 6.2), heel_r=(3.4, 3.8, 2.3), toe_root=(0.0, 0.5, 6.0),
             toe_len=7.5, toe_r=(2.0, 1.7), toe_spread_deg=30.0)

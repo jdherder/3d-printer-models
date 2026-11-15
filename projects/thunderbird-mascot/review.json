@@ -56,6 +56,6 @@
     }
   ],
   "scale_note": "80 mm tall is a first guess for a 'little' figurine. Type a different height in the real-size box to preview it; HEIGHT_MM in build.py sets it.",
-  "notes_title": "v16: smooth arc on top of the beak (your pick, D)",
-  "notes": "v16 = v15 + option D from the four beak-top options. The top of the beak is now one smooth curve from where it meets the face down to the tip, ending in a small hooked downturn. From the front, the upper beak is broader and rounder than v15's ridge. The mouth corners (v15) and everything else are unchanged."
+  "notes_title": "v17: beak comes to an axe-head point (your pick, C)",
+  "notes": "v17 = v16 + option C from the four point options. The front of the whole beak, upper and lower, narrows toward an edge like an axe head. Look from the front or the top to see it. The tip end is less rounded, so it also comes to a crisper point from the side. The side shape, arc top, hooked tip and mouth corners are unchanged."
 }

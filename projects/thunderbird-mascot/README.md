@@ -45,7 +45,9 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
       picked **C**: corners 2.5 back, mouth deeper
 - [x] v16: owner: beak top should be one gentle curve from the face to the tip, with a subtle downturn at the end;
       4 options (`renders/beak-top-options-v16.png`); picked **D**: gentle arc, hooked tip (`TOP_ARC`)
-- [ ] Next: small refinements from v16, one at a time, each compared side by side with the close-up before publishing
+- [x] v17: owner: the whole beak should come to more of a point, same general shape, "like an axe head"; 4 options
+      (`renders/beak-point-options-v17.png`); picked **C**: axe edge + sharper tip (`BEAK_POINT`, `TOP_ARC` tip_round 1.2)
+- [ ] Next: small refinements from v17, one at a time, each compared side by side with the close-up before publishing
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Design notes (v7, from the costume photos)
@@ -99,7 +101,8 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
   and the cap bill are analytic ellipsoid meshes (thin or small marching-cubes ones made sliver faces).
   Wings are built in their own tilted, swept frame (`wing_frame`). The muzzle's mouth is a smooth-subtracted smile
   (`SMILE`). Since v16 the beak's top is one Bezier arc (`TOP_ARC`, `top_arc`/`arc_body`): the blob top is trimmed
-  to the arc and an arc-shaped upper beak fills up to it.
+  to the arc and an arc-shaped upper beak fills up to it. Since v17 the beak's front narrows toward an edge
+  (`BEAK_POINT`: x is stretched by 1 + k·u^p from y = from_y to to_y, so every part of the muzzle gets thinner there).
 - **Decals** are exact boolean regions that recolour the red skin: the chest blaze (`chest_blaze`) and the B's, both
   `cone_decal`s (so are the pupils and highlights, on the eyeballs) (the outline swept from a point inside the part, so its walls meet the surface squarely).
 - **Colour bodies** (manifold3d): black = claws + bill + base + (eyeballs ∩ pupil paint); white = white parts + (eyeballs −
@@ -193,3 +196,8 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
   widened the white forehead too much from the front; narrowed the base (w 6.2 → 4.4) and blunted the tips. Four options
   (A gentle, B rounder, C flatter/longer, D hooked tip); owner picked D: p0 (-7.5, 64.6), p1 (-16.5, 63.8),
   p2 (-21.6, 53.2), w (4.4, 2.6), h (5.0, 3.8), tip_round 2.2.
+- **2026-11-15 (v17):** Owner: make the whole beak come to more of a point, keeping the shape, like an axe head. Added
+  `BEAK_POINT`: the muzzle's x is stretched toward the front (from y -12 to -22), so the beak narrows to a wedge seen from the
+  front/top while the side profile stays. Options: A mild (k 0.5), B axe edge (k 1.2), C = B + sharper tip (tip_round 2.2 → 1.2),
+  D = C + pointed lower beak. A first C/D at k 1.6 made the lips paper-thin and ragged and D's jaw a needle; toned down to
+  k 1.2. Owner picked C.
