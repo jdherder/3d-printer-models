@@ -56,6 +56,6 @@
     }
   ],
   "scale_note": "80 mm tall is a first guess for a 'little' figurine. Type a different height in the real-size box to preview it; HEIGHT_MM in build.py sets it.",
-  "notes_title": "v12: smoother jaw",
-  "notes": "v12 (you circled the bump at the back of the lower beak). Once the head was narrowed, the back of the lower jaw and the mouth corners stuck out past the head's lower edge. The jaw is now narrower and tapers toward the back, and the mouth corners are smaller and tucked in, so from the side the lower beak runs smoothly into the head. The mouth opening narrows toward the back to stay inside the slimmer beak. The top of the chest blaze is lowered a little, because it was peeking through the mouth. Everything else is as in v11."
+  "notes_title": "v14 checkpoint: v12 + gentler top slope",
+  "notes": "Checkpoint. This is v12 (your last good version) with one small change: the top of the beak runs in a gentler, straighter slope from the forehead to the tip, following your close-up photo. Everything else is v12. From here we refine in small steps, each checked side by side against your photo before it's published."
 }

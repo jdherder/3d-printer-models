@@ -38,7 +38,11 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - [x] v12: jaw narrower and tapered back, mouth corners smaller and tucked in, smile tapers toward the back
 - [x] Owner review of v12: sent a side close-up (`source/costume-2026-11-15-beak-closeup.jpg`): the gape goes further back, under the eye; the top slopes more gently
 - [x] v13 (beak rebuilt from that profile: loft + cheek panel + mouth wedge + red mouth interior): owner said it got worse ("that red block in the mouth is crazy"). **Reverted to v12.**
-- [ ] Next: owner's call on how to approach the beak from v12
+- [x] Step 1 (mouth corners further back on the v12 muzzle): tried twice, not kept: further out made a side lump,
+      tucked in closed the mouth. The v12 beak's sides end before the eye, so the gape can't reach it without a cheek wrap
+- [x] **v14 checkpoint** = v12 + gentler, straighter top slope on the beak (`MUZZLE` bulk/hook)
+- [ ] Next: small refinements from v14, one at a time, each compared side by side with the close-up before publishing
+      (possible: a small flush white cheek patch so the mouth line can run further back)
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Design notes (v7, from the costume photos)
@@ -168,3 +172,8 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
   restored to v12 (commit df1c35c). Lessons: change one thing at a time from a version the owner liked; a deep mouth
   cut through a small figure needs an interior, and a filled interior reads as a block. If the gape moves back again,
   do it as a smaller change to the v12 muzzle (extend the mouth corners back toward the eye), not a rebuild.
+- **2026-11-15 (v14, checkpoint):** Back to small steps from v12. Gentler top slope: `MUZZLE` bulk (0, -11.5, 56.5)
+  r (6.4, 8.0, 5.0) → (0, -11.5, 56.8) r (6.4, 8.6, 5.0); hook (-16, 56.8) → (-20.4, 54.3), r 4.0/1.9 →
+  (-15, 57.4) → (-21, 55.2), r 4.0/2.0. Mouth corners further back was tried twice and not kept (see Status).
+  Process from here: one change at a time, a side-by-side against `source/costume-2026-11-15-beak-closeup.jpg` (same
+  angle + side) shown to the owner before publishing.

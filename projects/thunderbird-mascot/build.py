@@ -87,10 +87,11 @@ EYE = dict(azimuth=58.0, z=62.2, r=(2.5, 1.6, 2.6), pupil_r=1.75, pupil_at=(0.55
 # Heights are z at the centre and at the corners (|x| = half_w); the cavity runs back into the head (red back wall).
 SMILE = dict(half_w=4.9, top=(54.0, 54.7), bottom=(50.2, 53.3), back_y=-6.5, edge_round=1.4,
              back_taper=0.4, taper_from_y=-12.0)
+# v14: bulk and hook moved so the top of the beak runs in a gentler, straighter slope to the tip (owner's close-up).
 # Beak: one rounded white muzzle: a bulk, a short downward hook, a narrow blaze up between the eyes and a lower jaw,
 # blended; the mouth is a cavity cut into it, deep enough that its back wall is the red head (the red inside).
-MUZZLE = dict(bulk=((0.0, -11.5, 56.5), (6.4, 8.0, 5.0)),
-              hook=((0.0, -16.0, 56.8), (0.0, -20.4, 54.3), 4.0, 1.9),
+MUZZLE = dict(bulk=((0.0, -11.5, 56.8), (6.4, 8.6, 5.0)),
+              hook=((0.0, -15.0, 57.4), (0.0, -21.0, 55.2), 4.0, 2.0),
               blaze=((0.0, -8.5, 61.0), (3.0, 3.5, 3.8)),
               jaw=((0.0, -11.8, 49.8), (5.2, 7.0, 3.0)),
               mouth_round=1.0,
