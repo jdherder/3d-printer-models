@@ -82,28 +82,19 @@ CAP = dict(grow=1.2, cut_z=65.4, brim_c=(0.0, -11.3, 67.2), brim_r=(7.6, 7.6, 1.
 # turned to face out from the head; pupil_at x is toward the front of the head (so he still glances forward).
 EYE = dict(azimuth=58.0, z=62.2, r=(2.5, 1.6, 2.6), pupil_r=1.75, pupil_at=(0.55, -0.35), highlight_r=0.55,
            highlight_at=(-0.6, 0.65))
-# v13: beak drawn from the side profile of the owner's close-up (source/costume-2026-11-15-beak-closeup.jpg):
-# - one white loft (superellipse sections, exponent BEAK_P) through stations (y, half-width, top z, bottom z): wide at
-#   the back where it wraps the cheeks up toward the eye, a long gentle slope on top down to a blunt, slightly hooked
-#   tip; the lower beak is the part under the mouth line and ends a little behind the upper tip
-# - the mouth is a wedge cut right through it, between a roof line and a floor line (y, z) that meet at the gape
-#   corner far back under the eye and open toward the front; behind the beak's surface the cut exposes the red head,
-#   which is the red inside the mouth
-BEAK = dict(stations=[(-1.0, 4.4, 61.5, 48.0), (-6.0, 6.8, 64.0, 46.9), (-10.0, 7.0, 63.0, 46.7),
-                      (-14.0, 6.1, 61.0, 46.4), (-18.0, 4.7, 58.8, 46.3), (-20.5, 3.6, 57.0, 47.0),
-                      (-21.4, 3.2, 56.0, 50.6), (-22.4, 2.6, 55.0, 50.8), (-23.2, 2.0, 53.4, 51.0)],
-            end=-23.8, end_round=1.5, back=0.0)   # back stations taper so the beak sinks into the head
-# The white wraps back over the cheeks to under the eye: a thin shell over the head (an offset of the head surface,
-# like the cap), kept inside this side-view outline (y, z), so its edges are a small step like a fabric panel's.
-FACE_SHELL = dict(t=0.9, edge_round=0.8, outline=[(-30.0, 47.6), (-3.4, 47.6), (-3.4, 55.0), (-4.2, 58.6), (-6.9, 59.2),
-                                  (-7.6, 64.2), (-30.0, 64.2)])
-# The mouth: a wedge between a roof line and a floor line (y, z) that meet at the gape corner, under the eye. It is
-# cut through the beak and the cheek shell AND into the red head, so the slit runs back along the cheek with red inside.
-MOUTH = dict(corner=(-4.4, 57.4),
-             roof=[(-4.4, 57.4), (-12.0, 55.3), (-18.0, 53.6), (-22.0, 52.3)],
-             floor=[(-4.4, 57.4), (-8.0, 55.2), (-12.0, 52.3), (-18.0, 49.6), (-22.0, 49.2)],
-             front=-21.0, round=1.0, core=2.6)
-BEAK_P = 2.2
+# v8: the mouth is a smile, not an "O" (owner: v7 looked surprised). The opening's top edge (under the upper beak)
+# is nearly straight, its bottom edge (the lower lip) dips in the middle and both rise to pinched, upturned corners.
+# Heights are z at the centre and at the corners (|x| = half_w); the cavity runs back into the head (red back wall).
+SMILE = dict(half_w=4.9, top=(54.0, 54.7), bottom=(50.2, 53.3), back_y=-6.5, edge_round=1.4,
+             back_taper=0.4, taper_from_y=-12.0)
+# Beak: one rounded white muzzle: a bulk, a short downward hook, a narrow blaze up between the eyes and a lower jaw,
+# blended; the mouth is a cavity cut into it, deep enough that its back wall is the red head (the red inside).
+MUZZLE = dict(bulk=((0.0, -11.5, 56.5), (6.4, 8.0, 5.0)),
+              hook=((0.0, -16.0, 56.8), (0.0, -20.4, 54.3), 4.0, 1.9),
+              blaze=((0.0, -8.5, 61.0), (3.0, 3.5, 3.8)),
+              jaw=((0.0, -11.8, 49.8), (5.2, 7.0, 3.0)),
+              mouth_round=1.0,
+              corner=((4.3, -10.2, 52.3), (1.9, 3.8, 2.5)))   # mouth corners: upper and lower beak join here (mirrored)
 LEG = dict(x=5.0, foot_x=5.8, y=1.5, z0=7.5, z1=20.0, r0=2.6, r1=3.1)
 FOOT = dict(splay_deg=12.0, heel=(0.0, 2.5, 6.2), heel_r=(3.4, 3.8, 2.3), toe_root=(0.0, 0.5, 6.0),
             toe_len=7.5, toe_r=(2.0, 1.7), toe_spread_deg=30.0)
@@ -206,11 +197,7 @@ def red_body(X, Y, Z):
     for side in (1, -1):
         d = smin(d, ellipsoid(X, Y, Z, np.add(SHORTS["c"], (side * SHORTS["x"], 0, 0)), SHORTS["r"]), 3.0)
     d = smin(d, head_field(X, Y, Z), NECK_BLEND)
-    d = smin(d, mirror_x(wing)(X, Y, Z), 3.0)
-    # the slit runs back into the head, but not through it: a red core (|x| < MOUTH["core"]) is left as the inside of
-    # the mouth, so it reads red from the side and the front
-    cut = smax(mouth(X, Y, Z), MOUTH["core"] - np.abs(X), MOUTH["round"])
-    return smax(d, -cut, MOUTH["round"])
+    return smin(d, mirror_x(wing)(X, Y, Z), 3.0)
 
 
 def cap(X, Y, Z):
@@ -240,57 +227,31 @@ def foot_parts(side):
     return tips
 
 
-def interp_y(Y, pts, col):
-    """Piecewise-linear profile along y (stations given front-going, i.e. decreasing y)."""
-    pts = np.asarray(pts, np.float32)
-    return np.interp(-Y, -pts[:, 0], pts[:, col])
-
-
-def sd_polygon(px, py, verts):
-    """Signed distance to a simple 2D polygon (any winding), vectorised (from projects/wagon-cup-holder/sdf.py)."""
-    v = np.asarray(verts, dtype=np.float32)
-    shape = np.broadcast(px, py).shape
-    d = np.full(shape, np.inf, dtype=np.float32)
-    sg = np.ones(shape, dtype=np.float32)
-    j = len(v) - 1
-    for i in range(len(v)):
-        ex, ey = v[j, 0] - v[i, 0], v[j, 1] - v[i, 1]
-        wx, wy = px - v[i, 0], py - v[i, 1]
-        t = np.clip((wx * ex + wy * ey) / (ex * ex + ey * ey + 1e-12), 0.0, 1.0)
-        bx, by = wx - ex * t, wy - ey * t
-        d = np.minimum(d, bx * bx + by * by)
-        c1, c2, c3 = py >= v[i, 1], py < v[j, 1], ex * wy > ey * wx
-        sg = np.where((c1 & c2 & c3) | (~c1 & ~c2 & ~c3), -sg, sg)
-        j = i
-    return sg * np.sqrt(d)
-
-
-def face_shell(X, Y, Z):
-    shell = head_field(X, Y, Z) - FACE_SHELL["t"]
-    return smax(shell, sd_polygon(Y, Z, FACE_SHELL["outline"]), FACE_SHELL["edge_round"])
-
-
 def muzzle(X, Y, Z):
-    b = BEAK
-    st = b["stations"]
-    w, t, bt = interp_y(Y, st, 1), interp_y(Y, st, 2), interp_y(Y, st, 3)
-    c, h = (t + bt) / 2, (t - bt) / 2
-    n = (np.abs(X / w) ** BEAK_P + np.abs((Z - c) / h) ** BEAK_P) ** (1.0 / BEAK_P)
-    d = (n - 1.0) * np.minimum(w, h)
-    d = smax(d, b["end"] - Y, b["end_round"])     # rounded tip
-    d = smax(d, Y - b["back"], 0.5)                # back end, buried in the head
-    d = smin(d, face_shell(X, Y, Z), 1.5)
-    return smax(d, -mouth(X, Y, Z), MOUTH["round"])
+    m = MUZZLE
+    d = ellipsoid(X, Y, Z, *m["bulk"])
+    d = smin(d, round_cone(X, Y, Z, *m["hook"]), 3.0)
+    d = smin(d, ellipsoid(X, Y, Z, *m["blaze"]), 3.0)
+    d = smin(d, ellipsoid(X, Y, Z, *m["jaw"]), 2.5)
+    cx = m["corner"][0]
+    for side in (1, -1):
+        d = smin(d, ellipsoid(X, Y, Z, (side * cx[0], cx[1], cx[2]), m["corner"][1]), 2.0)
+    return smax(d, -smile(X, Y, Z), m["mouth_round"])
 
 
-def mouth(X, Y, Z):
-    """The mouth wedge: between the roof and floor lines, from the gape corner forward (full width: the upper and
-    lower beak are separate in front of the corner, as on the costume)."""
-    m = MOUTH
-    roof, floor = interp_y(Y, m["roof"], 1), interp_y(Y, m["floor"], 1)
-    d = smax(floor - Z, Z - roof, m["round"])
-    d = smax(d, Y - m["corner"][0], m["round"])
-    return smax(d, m["front"] - Y, m["round"])   # stops short of the tip, so the hook hangs over the mouth
+def smile(X, Y, Z):
+    """The mouth opening (see SMILE): between a bottom curve and a top curve, both parabolas in x, open at the front."""
+    sm = SMILE
+    # narrower toward the back, so the cut stays inside the (narrow) beak where it meets the head; else it punches
+    # out through the sides behind the mouth corners
+    hw = sm["half_w"] - sm["back_taper"] * np.maximum(Y - sm["taper_from_y"], 0.0)
+    u = (X / hw) ** 2
+    top = sm["top"][0] + (sm["top"][1] - sm["top"][0]) * u
+    bottom = sm["bottom"][0] + (sm["bottom"][1] - sm["bottom"][0]) * u
+    k = sm["edge_round"]
+    d = smax(bottom - Z, Z - top, k)
+    d = smax(d, np.abs(X) - hw, k)
+    return smax(d, Y - sm["back_y"], k)
 
 
 def white_parts(X, Y, Z):

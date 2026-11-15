@@ -56,6 +56,6 @@
     }
   ],
   "scale_note": "80 mm tall is a first guess for a 'little' figurine. Type a different height in the real-size box to preview it; HEIGHT_MM in build.py sets it.",
-  "notes_title": "v13: beak drawn from your side close-up",
-  "notes": "v13 rebuilds the beak from your close-up photo. (1) The top of the beak slopes gently and evenly from high on the forehead down to a blunt, slightly hooked tip. (2) The white wraps back over the cheeks like the costume's fabric panel. (3) The mouth line runs back along the cheek to a corner right under the eye, where the top and bottom join, with red inside. (4) The lower beak is longer and runs under the upper one, ending a little behind its tip. Check from the side against your photo. Also look from the front: the red of the mouth now shows less from straight on than in v12."
+  "notes_title": "v12: smoother jaw",
+  "notes": "v12 (you circled the bump at the back of the lower beak). Once the head was narrowed, the back of the lower jaw and the mouth corners stuck out past the head's lower edge. The jaw is now narrower and tapers toward the back, and the mouth corners are smaller and tucked in, so from the side the lower beak runs smoothly into the head. The mouth opening narrows toward the back to stay inside the slimmer beak. The top of the chest blaze is lowered a little, because it was peeking through the mouth. Everything else is as in v11."
 }
