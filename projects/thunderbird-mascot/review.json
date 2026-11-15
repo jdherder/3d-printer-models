@@ -56,6 +56,6 @@
     }
   ],
   "scale_note": "80 mm tall is a first guess for a 'little' figurine. Type a different height in the real-size box to preview it; HEIGHT_MM in build.py sets it.",
-  "notes_title": "v21: wing feathers the right way round",
-  "notes": "v21 = v20 with the wing feathers reversed (you said they were backwards). The longest feather is now at the front of each wing, and the feathers step shorter toward the back. Everything else is as in v20."
+  "notes_title": "v22: longer wings",
+  "notes": "v22 = v21 with the wings about 15% longer. The blade and all three feathers are stretched down from the shoulder, so the wing tips now reach about the bottom of the white belly. The longest feather is still at the front. Everything else is as in v21."
 }

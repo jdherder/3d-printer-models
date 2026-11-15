@@ -55,7 +55,8 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
       picked **B** but the bill must not be detached or lower than the hat: rebuilt as one plate with the cap's base
       (`renders/hat-v20-attached-bill.png`)
 - [x] v21: owner: the wings are backwards, the longer side should be in front. Feather lengths reversed (`renders/wings-v21.png`)
-- [ ] Next: small refinements from v21, one at a time, each compared side by side with the close-up before publishing
+- [x] v22: owner: wings a bit longer. ~15% longer: blade and feathers stretched (`renders/wings-v22.png`)
+- [ ] Next: small refinements from v22, one at a time, each compared side by side with the close-up before publishing
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Design notes (v7, from the costume photos)
@@ -231,3 +232,5 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
   pointed inner ends made slivers). Colour bodies disjoint; merged Euler 0.
 - **2026-11-15 (v21):** Owner: wings are backwards, the longer side should be in front. `WING` feathers (front, mid, back)
   tip distances 17.5 / 19.3 / 20.4 → 20.4 / 19.3 / 17.5. Before/after: `renders/wings-v21.png`.
+- **2026-11-15 (v22):** Owner: wings a bit longer. ~15%: `WING` blade centre/length (8.5, 9.0) → (9.6, 10.2), feather root
+  12.0 → 13.6, tips 20.4 / 19.3 / 17.5 → 23.4 / 22.1 / 20.1. Tips now reach about the bottom of the white belly.
