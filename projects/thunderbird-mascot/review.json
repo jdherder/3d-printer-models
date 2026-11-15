@@ -56,6 +56,6 @@
     }
   ],
   "scale_note": "80 mm tall is a first guess for a 'little' figurine. Type a different height in the real-size box to preview it; HEIGHT_MM in build.py sets it.",
-  "notes_title": "v14 checkpoint: v12 + gentler top slope",
-  "notes": "Checkpoint. This is v12 (your last good version) with one small change: the top of the beak runs in a gentler, straighter slope from the forehead to the tip, following your close-up photo. Everything else is v12. From here we refine in small steps, each checked side by side against your photo before it's published."
+  "notes_title": "v15: mouth corners further back (your pick, C)",
+  "notes": "v15 = v14 + option C from the four corner options. The mouth corners sit 2.5 mm further back (design scale) and a touch higher, and the mouth opening reaches deeper. At your photo's angle you see more red running back toward the cheek, and the smile is unchanged from the front. Everything else is as in v14."
 }

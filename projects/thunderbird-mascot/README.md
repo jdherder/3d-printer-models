@@ -41,8 +41,9 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - [x] Step 1 (mouth corners further back on the v12 muzzle): tried twice, not kept: further out made a side lump,
       tucked in closed the mouth. The v12 beak's sides end before the eye, so the gape can't reach it without a cheek wrap
 - [x] **v14 checkpoint** = v12 + gentler, straighter top slope on the beak (`MUZZLE` bulk/hook)
-- [ ] Next: small refinements from v14, one at a time, each compared side by side with the close-up before publishing
-      (possible: a small flush white cheek patch so the mouth line can run further back)
+- [x] v15: owner asked for the mouth corners further back, subtly, as 4 options (`renders/corner-options-v15.png`);
+      picked **C**: corners 2.5 back, mouth deeper
+- [ ] Next: small refinements from v15, one at a time, each compared side by side with the close-up before publishing
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Design notes (v7, from the costume photos)
@@ -177,3 +178,8 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
   (-15, 57.4) → (-21, 55.2), r 4.0/2.0. Mouth corners further back was tried twice and not kept (see Status).
   Process from here: one change at a time, a side-by-side against `source/costume-2026-11-15-beak-closeup.jpg` (same
   angle + side) shown to the owner before publishing.
+- **2026-11-15 (v15):** Owner: move the mouth corners back subtly, show 4 options. Made A (back 1.5), B (back 2.5 + up 1),
+  C (back 2.5 + deeper mouth), D (long crease) as a side-by-side sheet against the close-up (`renders/corner-options-v15.png`);
+  all passed checks. Owner picked C: `MUZZLE` corner (4.3, -10.2, 52.3) r (1.9, 3.8, 2.5) → (4.0, -8.0, 53.0)
+  r (1.8, 4.2, 2.4); `SMILE` back_y -6.5 → -5.5, back_taper 0.4 → 0.3, corner heights top 54.7 → 55.1, bottom 53.3 → 53.8.
+  Showing a few small options side by side worked much better than single big changes.

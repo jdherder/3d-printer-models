@@ -85,8 +85,9 @@ EYE = dict(azimuth=58.0, z=62.2, r=(2.5, 1.6, 2.6), pupil_r=1.75, pupil_at=(0.55
 # v8: the mouth is a smile, not an "O" (owner: v7 looked surprised). The opening's top edge (under the upper beak)
 # is nearly straight, its bottom edge (the lower lip) dips in the middle and both rise to pinched, upturned corners.
 # Heights are z at the centre and at the corners (|x| = half_w); the cavity runs back into the head (red back wall).
-SMILE = dict(half_w=4.9, top=(54.0, 54.7), bottom=(50.2, 53.3), back_y=-6.5, edge_round=1.4,
-             back_taper=0.4, taper_from_y=-12.0)
+# v15 (owner's pick "C" of four): corners 2.5 further back, mouth opening deeper (back_y -6.5 -> -5.5, less taper)
+SMILE = dict(half_w=4.9, top=(54.0, 55.1), bottom=(50.2, 53.8), back_y=-5.5, edge_round=1.4,
+             back_taper=0.3, taper_from_y=-12.0)
 # v14: bulk and hook moved so the top of the beak runs in a gentler, straighter slope to the tip (owner's close-up).
 # Beak: one rounded white muzzle: a bulk, a short downward hook, a narrow blaze up between the eyes and a lower jaw,
 # blended; the mouth is a cavity cut into it, deep enough that its back wall is the red head (the red inside).
@@ -95,7 +96,7 @@ MUZZLE = dict(bulk=((0.0, -11.5, 56.8), (6.4, 8.6, 5.0)),
               blaze=((0.0, -8.5, 61.0), (3.0, 3.5, 3.8)),
               jaw=((0.0, -11.8, 49.8), (5.2, 7.0, 3.0)),
               mouth_round=1.0,
-              corner=((4.3, -10.2, 52.3), (1.9, 3.8, 2.5)))   # mouth corners: upper and lower beak join here (mirrored)
+              corner=((4.0, -8.0, 53.0), (1.8, 4.2, 2.4)))   # mouth corners: upper and lower beak join here (mirrored)
 LEG = dict(x=5.0, foot_x=5.8, y=1.5, z0=7.5, z1=20.0, r0=2.6, r1=3.1)
 FOOT = dict(splay_deg=12.0, heel=(0.0, 2.5, 6.2), heel_r=(3.4, 3.8, 2.3), toe_root=(0.0, 0.5, 6.0),
             toe_len=7.5, toe_r=(2.0, 1.7), toe_spread_deg=30.0)
