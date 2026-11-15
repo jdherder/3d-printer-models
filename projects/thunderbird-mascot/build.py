@@ -74,7 +74,12 @@ WING = dict(shoulder=(10.6, 1.5, 47.0), tilt_deg=15.0, sweep_deg=10.0,
             bulb=((0.0, 0.0, 1.5), (3.4, 5.0, 4.5)), blade=((0.0, 0.8, 8.5), (2.3, 6.4, 9.0)),
             feathers=[(-1, 17.5), (0, 19.3), (1, 20.4)],   # (front/mid/back, tip distance down the wing)
             feather_root=12.0, feather_spread=3.4, feather_r=(2.4, 0.9), feather_flat=1.45)
-CAP = dict(grow=1.2, cut_z=65.4, brim_c=(0.0, -11.3, 67.2), brim_r=(7.6, 7.6, 1.2), brim_tilt_deg=0.0, button_r=1.3)
+CAP = dict(grow=1.2, cut_z=65.4, button_r=1.3,
+           # v20: crown height (above the rim) is stretched by `stretch`; the bill is a curved visor at the front
+           # rim: half-width `bill_w`, reaching `bill_len` forward of the crown, `bill_t` thick, sides curving down
+           # by `bill_curve`, the front dropping by `bill_droop`
+           stretch=1.0, bill_w=7.6, bill_len=7.0, bill_t=1.2, bill_curve=1.0, bill_droop=0.4, bill_old=True,
+           brim_c=(0.0, -11.3, 67.2), brim_r=(7.6, 7.6, 1.2), brim_tilt_deg=0.0)
 # v9: friendly eyes, like the keychain's: a white eyeball, a big black pupil set a little low and toward the beak,
 # and a white highlight at the pupil's upper left (as seen from the front). Pupil and highlight are painted onto the
 # eyeball (cone decals from its centre), so they're flush: nothing thin to print. Offsets are on the eye's front, in mm.
@@ -112,7 +117,8 @@ FOOT = dict(splay_deg=12.0, heel=(0.0, 2.5, 6.2), heel_r=(3.4, 3.8, 2.3), toe_ro
 FOOT_FLOOR = BASE["h"] - 0.8   # soles and claws are cut flat here, inside the base
 CLAW = dict(len=1.9, drop=2.6, r=(1.0, 0.45))
 CHEST = dict(apex=(0.0, 1.5, 38.0), y_ref=-8.0)   # the blaze outline is made by chest_blaze()
-BB = dict(letters=[(-1.8, 71.6), (1.8, 70.6)], height=2.6, y_ref=-6.8)   # staggered like the costume's cap
+BB = dict(letters=[(-1.8, 71.6), (1.8, 70.6)], height=2.6, y_ref=-6.8, raise_=0.0)   # staggered like the costume's
+                                                                                       # cap; raise_ embosses them
 
 
 # ------------------------------------------------------------------------------------------------
@@ -212,16 +218,41 @@ def red_body(X, Y, Z):
 
 
 def cap(X, Y, Z):
-    g = CAP["grow"]
-    dome = head_field(X, Y, Z) - g      # follows the real head (cheeks included), so nothing pokes through
-    dome = smax(dome, CAP["cut_z"] - Z, 0.6)
-    top = HEAD["c"][2] + HEAD["r"][2] + g
+    g, z0, st = CAP["grow"], CAP["cut_z"], CAP["stretch"]
+    zz = np.where(Z > z0, z0 + (Z - z0) / st, Z)          # a taller crown: the head shape stretched above the rim
+    dome = head_field(X, Y, zz) - g     # follows the real head (cheeks included), so nothing pokes through
+    dome = smax(dome, z0 - Z, 0.6)
+    top = z0 + (HEAD["c"][2] + HEAD["r"][2] + g - z0) * st
     button = ellipsoid(X, Y, Z, (0.0, 0.0, top), (CAP["button_r"],) * 2 + (CAP["button_r"] * 0.8,))
     return smin(dome, button, 0.8)
 
 
+def crown_front_y(z):
+    """y of the crown's front surface (x = 0) at height z."""
+    ys = np.linspace(-25.0, 0.0, 5001, dtype=np.float32)
+    f = cap(np.float32(0.0), ys, np.float32(z))
+    return float(ys[np.argmax(f < 0)])
+
+
 def brim_mesh():
-    """The bill as an analytic ellipsoid mesh (a marching-cubes one this thin cut the dome with sliver faces)."""
+    """The bill (black). v20+: a visor on the crown's front rim, curved down at the sides, built analytically (a
+    marching-cubes one this thin cut the dome with sliver faces): an outline extruded, refined and bent."""
+    if not CAP["bill_old"]:
+        c = CAP
+        z0 = c["cut_z"] + 0.15                     # just above the rim's rounded edge
+        yf = crown_front_y(z0 + c["bill_t"])       # where the bill leaves the crown
+        tuck = 2.0                                 # how far the bill reaches back into the crown
+        ell = m3d.CrossSection.circle(1.0, 160).scale((c["bill_w"], c["bill_len"])).translate((0.0, yf))
+        keep = m3d.CrossSection.square((4 * c["bill_w"], c["bill_len"] + tuck)).translate(
+            (-2 * c["bill_w"], yf - c["bill_len"]))
+        bill = (ell ^ keep).extrude(c["bill_t"]).refine_to_length(0.4)
+
+        def bend(v):
+            out = v.copy()
+            fwd = np.clip((yf - v[:, 1]) / c["bill_len"], 0.0, 1.0)
+            out[:, 2] = v[:, 2] + z0 - c["bill_curve"] * (v[:, 0] / c["bill_w"]) ** 2 - c["bill_droop"] * fwd
+            return out
+        return bill.warp_batch(bend)
     c = CAP["brim_c"]
     return (m3d.Manifold.sphere(1.0, 128).scale(tuple(CAP["brim_r"])).rotate((CAP["brim_tilt_deg"], 0.0, 0.0))   # + = front down
             .translate(tuple(c)))
@@ -469,7 +500,9 @@ def chest_blaze():
 def build_bodies():
     print("meshing shape groups ...")
     red = mesh_field(red_body, (-22, -16, 13), (22, 16, 74))
-    capm = mesh_field(cap, (-18, -26, 63), (18, 18, 78))
+    capm = mesh_field(cap, (-18, -26, 63), (18, 18, 84))
+    raised = BB["raise_"] > 0
+    capr = mesh_field(lambda X, Y, Z: cap(X, Y, Z) - BB["raise_"], (-18, -26, 63), (18, 18, 84)) if raised else capm
     white = mesh_field(white_parts, (-14, -26, 3), (14, 8, 67))
     balls, pupils = eyes()
     black = mesh_field(claws, (-26, -32, 3), (26, 0, 12), h=0.2) + brim_mesh()
@@ -484,12 +517,14 @@ def build_bodies():
 
     def place(m):
         return m.translate(shift).scale((s, s, s))
-    red, capm, white, black, balls, pupils, basem = map(place, (red, capm, white, black, balls, pupils, basem))
+    red, capm, capr, white, black, balls, pupils, basem = map(place, (red, capm, capr, white, black, balls, pupils, basem))
     red_solid = red + capm
     head_c = np.add(HEAD["c"], (0.0, 0.0, 0.5))
     # Decals on the body (chest) and on the cap (BB) are kept apart.
     body_decals = place(cone_decal(chest_blaze(), CHEST["apex"], CHEST["y_ref"]))
-    cap_decals = place(cone_decal(bb_text(), head_c, BB["y_ref"]))
+    # the letter regions stop 3 behind the cap's front: their pointed inner ends (deep in the head) made slivers
+    front = m3d.Manifold.cube((60.0, 40.0, 60.0)).translate((-30.0, BB["y_ref"] + 3.0 - 40.0, 40.0))
+    cap_decals = place(cone_decal(bb_text(), head_c, BB["y_ref"]) ^ front)
 
     # Never subtract a body that shares surface with the one it's cut from (red ^ decals lies on red's skin):
     # coincident faces leave zero-volume slivers. So red loses the decal regions themselves, not their red-clipped copies.
@@ -497,11 +532,11 @@ def build_bodies():
     # whole balls in one go (subtracting the two halves one by one would cut along shared faces).
     black_other = black + basem
     black_b = black_other + (balls ^ pupils)
-    white_b = (white + (balls - pupils) + ((red ^ body_decals) - capm) + (capm ^ cap_decals)) - black_other
+    white_b = (white + (balls - pupils) + ((red ^ body_decals) - capm) + (capr ^ cap_decals)) - black_other
     # red loses the B regions too: they reach from the cap down into the head under it, which white already holds
     # (before v19 red and white overlapped there by ~16 mm3, hidden inside the head)
     red_b = ((red - body_decals - cap_decals) + (capm - cap_decals)) - (white + balls + black_other)
-    merged = red_solid + white + balls + black + basem   # raw shapes: the colour bodies share faces exactly
+    merged = red_solid + white + balls + black + basem + ((capr ^ cap_decals) if raised else m3d.Manifold())   # raw shapes: the colour bodies share faces exactly
     bodies = {"red": red_b, "white": white_b, "black": black_b}
     return {k: drop_slivers(v) for k, v in bodies.items()}, drop_slivers(merged), s
 
