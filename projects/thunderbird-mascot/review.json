@@ -56,6 +56,6 @@
     }
   ],
   "scale_note": "80 mm tall is a first guess for a 'little' figurine. Type a different height in the real-size box to preview it; HEIGHT_MM in build.py sets it.",
-  "notes_title": "v18: wider smile (your pick, C)",
-  "notes": "v18 = v17 + option C from the four smile options. The mouth opening runs wider and a little deeper, with the corners slightly up, so it reads more clearly as a smile from the front and from your photo's angle. The axe-head beak, arched top and everything else are as in v17."
+  "notes_title": "v19: bigger, friendlier eyes closer to the beak (your pick, C)",
+  "notes": "v19 = v18 + option C from the four eye options. The eyes sit closer to the beak (48\u00b0 round from the front instead of 58\u00b0), are about 20% bigger and a touch lower to clear the cap, and have bigger pupils looking forward and a little up, with a bigger white shine. Also fixed: the red and white parts overlapped slightly inside the head, under the B's on the cap. It was invisible but could confuse the slicer. Everything else is as in v18."
 }

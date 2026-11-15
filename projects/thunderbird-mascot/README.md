@@ -49,7 +49,9 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
       (`renders/beak-point-options-v17.png`); picked **C**: axe edge + sharper tip (`BEAK_POINT`, `TOP_ARC` tip_round 1.2)
 - [x] v18: owner: the beak/mouth should look more like a smile; 4 options (`renders/smile-options-v18.png`);
       picked **C**: wider grin (`SMILE` half_w 4.9 → 5.5, slightly deeper, corners up 0.4)
-- [ ] Next: small refinements from v18, one at a time, each compared side by side with the close-up before publishing
+- [x] v19: owner: eyes closer to the beak, a bit larger, more friendly; 4 options (`renders/eye-options-v19.png`);
+      picked **C**: 48° (was 58°), ~20% bigger, pupils looking forward and up, bigger shine
+- [ ] Next: small refinements from v19, one at a time, each compared side by side with the close-up before publishing
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Design notes (v7, from the costume photos)
@@ -57,7 +59,7 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - Body: a tall red column (chest + belly ellipsoids blended), no waist; the head (a narrow, tall egg) flows straight into it.
 - Chest: white jagged blaze from the neck, widening to a white belly, zigzag bottom edge; red "shorts" below; white legs.
 - Wings: red blades with three flat feathers, red to the tips.
-- Eyes on the sides of the head (`EYE["azimuth"]` 58°), like a real bird.
+- Eyes on the sides of the head (`EYE["azimuth"]` 48° since v19), like a real bird.
 - Face: one rounded white muzzle (bulk + short hook + blaze up between the eyes + lower jaw + mouth corners), with a
   wide smiling mouth cut into it (`SMILE`: straight top edge, lower lip dipping in the middle, upturned corners); the
   back of the mouth is the red head. Eyes high, under the bill: white eyeballs, big black pupils
@@ -73,7 +75,7 @@ No real object: the size is our choice. **80 mm tall** (`HEIGHT_MM`) is a first 
 |---|---|---|
 | Overall W × D × H | 47.4 × 42.3 × 80.0 | Base 47 × 41 |
 | Base | 47.4 × 40.9 × 5.4 | Black, rounded edge |
-| Eyes | 5.6 tall | White eyeball, black pupil Ø 3.8, white highlight Ø 1.2 |
+| Eyes | ~6.5 tall | White eyeball, black pupil Ø ~4.6, white highlight Ø ~1.6 (v19) |
 | "B B" on the cap | 2.9 tall each | DejaVu Sans Bold, staggered |
 | Claw tips | ~1.0 | Smallest feature |
 | Feather tips (wings) | ~1.3 thick | |
@@ -208,3 +210,9 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
   eased; a little roughness remains at the corners from the front in B/D (and a trace in v17). Owner picked C: `SMILE`
   half_w 4.9 → 5.5, back_taper 0.3 → 0.25, top (54.0, 55.1) → (54.0, 55.6), bottom (50.2, 53.8) → (49.7, 54.3); mouth
   corners up 0.4 (z 53.0 → 53.4).
+- **2026-11-15 (v19):** Owner: eyes closer to the beak, a bit larger, more friendly; 4 options. Owner picked C: `EYE` azimuth
+  58 → 48, z 62.2 → 61.7, r (2.5, 1.6, 2.6) → (3.0, 1.8, 3.0), pupil_r 1.75 → 2.15, pupil_at (0.55, -0.35) → (0.75, -0.15),
+  highlight_r 0.55 → 0.75, highlight_at (-0.6, 0.65) → (-0.7, 0.75). The bigger eye's lower edge now meets the white beak's
+  edge, which adds loops to the red/white bodies (merged solid still Euler 0, no self-intersections). While checking, found
+  red and white overlapped by ~16 mm3 inside the head (the B decal cones reach into the head under the cap; present since
+  the B's were added): red now also loses `cap_decals`. Colour bodies are disjoint again (pairwise intersection 0).

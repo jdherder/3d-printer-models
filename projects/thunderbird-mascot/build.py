@@ -80,8 +80,10 @@ CAP = dict(grow=1.2, cut_z=65.4, brim_c=(0.0, -11.3, 67.2), brim_r=(7.6, 7.6, 1.
 # eyeball (cone decals from its centre), so they're flush: nothing thin to print. Offsets are on the eye's front, in mm.
 # v10: on the sides of the head like a real bird (owner): each eye sits `azimuth` degrees round from straight ahead,
 # turned to face out from the head; pupil_at x is toward the front of the head (so he still glances forward).
-EYE = dict(azimuth=58.0, z=62.2, r=(2.5, 1.6, 2.6), pupil_r=1.75, pupil_at=(0.55, -0.35), highlight_r=0.55,
-           highlight_at=(-0.6, 0.65))
+# v19 (owner's pick "C" of four): closer to the beak (58 -> 48 deg), ~20% bigger, a bit lower to clear the cap,
+# bigger pupils looking forward and a little up, bigger shine
+EYE = dict(azimuth=48.0, z=61.7, r=(3.0, 1.8, 3.0), pupil_r=2.15, pupil_at=(0.75, -0.15), highlight_r=0.75,
+           highlight_at=(-0.7, 0.75))
 # v8: the mouth is a smile, not an "O" (owner: v7 looked surprised). The opening's top edge (under the upper beak)
 # is nearly straight, its bottom edge (the lower lip) dips in the middle and both rise to pinched, upturned corners.
 # Heights are z at the centre and at the corners (|x| = half_w); the cavity runs back into the head (red back wall).
@@ -496,7 +498,9 @@ def build_bodies():
     black_other = black + basem
     black_b = black_other + (balls ^ pupils)
     white_b = (white + (balls - pupils) + ((red ^ body_decals) - capm) + (capm ^ cap_decals)) - black_other
-    red_b = ((red - body_decals) + (capm - cap_decals)) - (white + balls + black_other)
+    # red loses the B regions too: they reach from the cap down into the head under it, which white already holds
+    # (before v19 red and white overlapped there by ~16 mm3, hidden inside the head)
+    red_b = ((red - body_decals - cap_decals) + (capm - cap_decals)) - (white + balls + black_other)
     merged = red_solid + white + balls + black + basem   # raw shapes: the colour bodies share faces exactly
     bodies = {"red": red_b, "white": white_b, "black": black_b}
     return {k: drop_slivers(v) for k, v in bodies.items()}, drop_slivers(merged), s
