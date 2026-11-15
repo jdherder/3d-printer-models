@@ -2,10 +2,10 @@
   "merged": {
     "extents_mm": [
       46.4,
-      42.2,
+      40.2,
       80.0
     ],
-    "faces": 167656,
+    "faces": 167104,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 0,
@@ -17,7 +17,7 @@
   "params_mm": {
     "height": 80.0,
     "width": 46.4,
-    "depth": 42.2,
+    "depth": 40.2,
     "base_w": 46.4,
     "base_d": 40.1,
     "base_h": 5.3,
@@ -36,25 +36,25 @@
         23.7,
         61.2
       ],
-      "faces": 114544,
+      "faces": 114816,
       "watertight": true,
       "winding_consistent": true,
       "euler_number": 2,
-      "volume_cm3": 17.2,
+      "volume_cm3": 17.1,
       "fits_A1_as_is": true,
       "fits_A1_any_axis_order": true
     },
     "white": {
       "extents_mm": [
         26.4,
-        30.9,
+        29.0,
         70.9
       ],
-      "faces": 86650,
+      "faces": 86818,
       "watertight": true,
       "winding_consistent": true,
       "euler_number": 0,
-      "volume_cm3": 4.9,
+      "volume_cm3": 5.0,
       "fits_A1_as_is": true,
       "fits_A1_any_axis_order": true
     },

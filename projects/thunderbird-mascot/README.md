@@ -43,7 +43,9 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - [x] **v14 checkpoint** = v12 + gentler, straighter top slope on the beak (`MUZZLE` bulk/hook)
 - [x] v15: owner asked for the mouth corners further back, subtly, as 4 options (`renders/corner-options-v15.png`);
       picked **C**: corners 2.5 back, mouth deeper
-- [ ] Next: small refinements from v15, one at a time, each compared side by side with the close-up before publishing
+- [x] v16: owner: beak top should be one gentle curve from the face to the tip, with a subtle downturn at the end;
+      4 options (`renders/beak-top-options-v16.png`); picked **D**: gentle arc, hooked tip (`TOP_ARC`)
+- [ ] Next: small refinements from v16, one at a time, each compared side by side with the close-up before publishing
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Design notes (v7, from the costume photos)
@@ -95,7 +97,9 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
 - **Shapes** are signed-distance fields, meshed by marching cubes (0.3 mm voxel) and decimated (pymeshlab): red body
   (torso, head, shorts, wings, smoothly blended), red cap dome, white parts (muzzle, legs, feet), black claws. Eyeballs
   and the cap bill are analytic ellipsoid meshes (thin or small marching-cubes ones made sliver faces).
-  Wings are built in their own tilted, swept frame (`wing_frame`). The muzzle's mouth is a smooth-subtracted ellipsoid.
+  Wings are built in their own tilted, swept frame (`wing_frame`). The muzzle's mouth is a smooth-subtracted smile
+  (`SMILE`). Since v16 the beak's top is one Bezier arc (`TOP_ARC`, `top_arc`/`arc_body`): the blob top is trimmed
+  to the arc and an arc-shaped upper beak fills up to it.
 - **Decals** are exact boolean regions that recolour the red skin: the chest blaze (`chest_blaze`) and the B's, both
   `cone_decal`s (so are the pupils and highlights, on the eyeballs) (the outline swept from a point inside the part, so its walls meet the surface squarely).
 - **Colour bodies** (manifold3d): black = claws + bill + base + (eyeballs ∩ pupil paint); white = white parts + (eyeballs −
@@ -183,3 +187,9 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
   all passed checks. Owner picked C: `MUZZLE` corner (4.3, -10.2, 52.3) r (1.9, 3.8, 2.5) → (4.0, -8.0, 53.0)
   r (1.8, 4.2, 2.4); `SMILE` back_y -6.5 → -5.5, back_taper 0.4 → 0.3, corner heights top 54.7 → 55.1, bottom 53.3 → 53.8.
   Showing a few small options side by side worked much better than single big changes.
+- **2026-11-15 (v16):** Owner: the very top of the beak should be a gentle curve from the base (touching the face) to the
+  tip, with a subtle downturn at the end. Added `TOP_ARC`: a quadratic Bezier (y, z) top line; the old blob top is trimmed
+  to it and an arc-shaped upper beak (superellipse sections, width/depth tapering base→tip) fills up to it. First pass
+  widened the white forehead too much from the front; narrowed the base (w 6.2 → 4.4) and blunted the tips. Four options
+  (A gentle, B rounder, C flatter/longer, D hooked tip); owner picked D: p0 (-7.5, 64.6), p1 (-16.5, 63.8),
+  p2 (-21.6, 53.2), w (4.4, 2.6), h (5.0, 3.8), tip_round 2.2.
