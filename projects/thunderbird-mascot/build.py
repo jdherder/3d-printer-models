@@ -7,7 +7,7 @@ chibi interpretation built from smooth signed-distance shapes, meshed with march
 
   -> shape groups, each one smooth field (parts of one group blend into each other):
        red body (torso, head, red "shorts", wings) | red cap (dome, button) |
-       white parts (beak muzzle with an open mouth, legs, feet) | black (eyes, cap bill, claws)
+       white parts (beak muzzle with an open mouth, legs, feet) | black (pupils, cap bill, claws)
   -> colour "decals" painted onto the red with exact boolean regions: the white chest blaze (jagged sides,
      zigzag bottom edge) and the white staggered "B B" on the cap
   -> a black display base
@@ -75,7 +75,11 @@ WING = dict(shoulder=(10.6, 1.5, 47.0), tilt_deg=15.0, sweep_deg=10.0,
             feathers=[(-1, 17.5), (0, 19.3), (1, 20.4)],   # (front/mid/back, tip distance down the wing)
             feather_root=12.0, feather_spread=3.4, feather_r=(2.4, 0.9), feather_flat=1.45)
 CAP = dict(grow=1.2, cut_z=65.4, brim_c=(0.0, -11.5, 67.2), brim_r=(8.6, 7.6, 1.2), brim_tilt_deg=0.0, button_r=1.3)
-EYE = dict(x=6.0, z=62.6, r=(2.0, 1.3, 2.2), highlight_r=0.55, highlight_at=(0.5, 0.7))
+# v9: friendly eyes, like the keychain's: a white eyeball, a big black pupil set a little low and toward the beak,
+# and a white highlight at the pupil's upper left (as seen from the front). Pupil and highlight are painted onto the
+# eyeball (cone decals from its centre), so they're flush: nothing thin to print. Offsets are on the eye's front, in mm.
+EYE = dict(x=6.2, z=62.2, r=(2.5, 1.6, 2.6), pupil_r=1.75, pupil_at=(-0.45, -0.35), highlight_r=0.55,
+           highlight_at=(-0.6, 0.65))
 # v8: the mouth is a smile, not an "O" (owner: v7 looked surprised). The opening's top edge (under the upper beak)
 # is nearly straight, its bottom edge (the lower lip) dips in the middle and both rise to pinched, upturned corners.
 # Heights are z at the centre and at the corners (|x| = half_w); the cavity runs back into the head (red back wall).
@@ -263,7 +267,7 @@ def eye_centre(side):
     ys = np.linspace(-20.0, HEAD["c"][1], 4001, dtype=np.float32)
     f = red_body(np.float32(x), ys, np.float32(z))
     y_surf = float(ys[np.argmax(f < 0)])
-    return np.array([x, y_surf + 0.45, z])
+    return np.array([x, y_surf + 0.6, z])
 
 
 def claws(X, Y, Z):
@@ -276,23 +280,21 @@ def claws(X, Y, Z):
     return np.maximum(d, FOOT_FLOOR + 0.35 - Z)    # not coplanar with the soles (coplanar faces break booleans)
 
 
-def eyes_and_highlights():
-    """Eyes (black ellipsoids) and their highlights (white spheres) as clean analytic meshes: marching-cubes facets
-    this small make sliver triangles where one is cut from the other."""
-    eyes = hl = None
+def eyes():
+    """(eyeballs, pupil regions): white analytic eyeballs, and the regions that paint them black (pupil cone minus
+    highlight cone). x offsets are as seen from the front (viewer's left is -x for both eyes)."""
+    balls = paint = None
     for side in (1, -1):
         c = eye_centre(side)
-        e = m3d.Manifold.sphere(1.0, 96).scale(tuple(EYE["r"])).translate(tuple(c))
-        # upper inner, on the eye's front: a point on the eye's surface, the sphere centre 0.35 below it (so it
-        # stands 0.35 proud and stays clear of where the eye meets the head)
-        rx, ry, rz = EYE["r"]
-        dx, dz = -side * EYE["highlight_at"][0], EYE["highlight_at"][1]
-        dy = -ry * np.sqrt(1 - (dx / rx) ** 2 - (dz / rz) ** 2)
-        n = np.array([dx / rx ** 2, dy / ry ** 2, dz / rz ** 2])
-        p = c + np.array([dx, dy, dz])
-        h = m3d.Manifold.sphere(EYE["highlight_r"], 48).translate(tuple(p - 0.35 * n / np.linalg.norm(n)))
-        eyes, hl = (e, h) if eyes is None else (eyes + e, hl + h)
-    return eyes, hl
+        ball = m3d.Manifold.sphere(1.0, 96).scale(tuple(EYE["r"])).translate(tuple(c))
+        y_front = c[1] - EYE["r"][1]
+        px, pz = c[0] + side * EYE["pupil_at"][0], c[2] + EYE["pupil_at"][1]   # toward the beak, a little low
+        pupil = m3d.CrossSection.circle(EYE["pupil_r"], 64).translate((px, pz))
+        hl = m3d.CrossSection.circle(EYE["highlight_r"], 48).translate(
+            (px + EYE["highlight_at"][0], pz + EYE["highlight_at"][1]))
+        p = cone_decal(pupil, tuple(c), y_front) - cone_decal(hl, tuple(c), y_front)
+        balls, paint = (ball, p) if balls is None else (balls + ball, paint + p)
+    return balls, paint
 
 
 def base(X, Y, Z):
@@ -411,8 +413,8 @@ def build_bodies():
     red = mesh_field(red_body, (-22, -16, 13), (22, 16, 74))
     capm = mesh_field(cap, (-18, -26, 63), (18, 18, 78))
     white = mesh_field(white_parts, (-14, -26, 3), (14, 8, 67))
-    eyes, hilite = eyes_and_highlights()
-    black = mesh_field(claws, (-26, -32, 3), (26, 0, 12), h=0.2) + eyes + brim_mesh()
+    balls, pupils = eyes()
+    black = mesh_field(claws, (-26, -32, 3), (26, 0, 12), h=0.2) + brim_mesh()
     basem = mesh_field(base, (-32, -32, 0), (32, 26, BASE["h"]), faces=20000)
 
     # Scale and place the inputs before the booleans: transforming the finished bodies re-rounds their float32
@@ -424,7 +426,7 @@ def build_bodies():
 
     def place(m):
         return m.translate(shift).scale((s, s, s))
-    red, capm, white, black, hilite, basem = map(place, (red, capm, white, black, hilite, basem))
+    red, capm, white, black, balls, pupils, basem = map(place, (red, capm, white, black, balls, pupils, basem))
     red_solid = red + capm
     head_c = np.add(HEAD["c"], (0.0, 0.0, 0.5))
     # Decals on the body (chest) and on the cap (BB) are kept apart.
@@ -433,11 +435,13 @@ def build_bodies():
 
     # Never subtract a body that shares surface with the one it's cut from (red ^ decals lies on red's skin):
     # coincident faces leave zero-volume slivers. So red loses the decal regions themselves, not their red-clipped copies.
-    black_b = (black - hilite) + basem
-    white_add = white + hilite
-    white_b = (white_add + ((red ^ body_decals) - capm) + (capm ^ cap_decals)) - black_b
-    red_b = ((red - body_decals) + (capm - cap_decals)) - white_add - black_b
-    merged = red_solid + white + hilite + black + basem   # raw shapes: the colour bodies share faces exactly
+    # The eyeballs are split by their pupil regions: (balls ^ pupils) is black, (balls - pupils) white; red loses the
+    # whole balls in one go (subtracting the two halves one by one would cut along shared faces).
+    black_other = black + basem
+    black_b = black_other + (balls ^ pupils)
+    white_b = (white + (balls - pupils) + ((red ^ body_decals) - capm) + (capm ^ cap_decals)) - black_other
+    red_b = ((red - body_decals) + (capm - cap_decals)) - (white + balls + black_other)
+    merged = red_solid + white + balls + black + basem   # raw shapes: the colour bodies share faces exactly
     bodies = {"red": red_b, "white": white_b, "black": black_b}
     return {k: drop_slivers(v) for k, v in bodies.items()}, drop_slivers(merged), s
 
@@ -538,6 +542,7 @@ def main():
         "base_h": round(BASE["h"] * s, 1),
         "eye_h": round(2 * EYE["r"][2] * s, 1), "bb_h": round(BB["height"] * s, 1),
         "claw_tip_d": round(2 * CLAW["r"][1] * s, 2), "highlight_d": round(2 * EYE["highlight_r"] * s, 2),
+        "pupil_d": round(2 * EYE["pupil_r"] * s, 1),
     }
     report = {"merged": info, "params_mm": params, "design_scale": round(s, 4),
               "scale_status": "owner's choice (no real object): HEIGHT_MM = %g" % HEIGHT_MM,

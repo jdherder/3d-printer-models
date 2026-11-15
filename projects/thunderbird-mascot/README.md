@@ -28,7 +28,9 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - [x] v7: rebuilt from the costume photos (see Design notes); v1-v6 history is in the Log
 - [x] Owner review of v7: "def the closest the beak has been", but looks surprised, not smiling
 - [x] v8: mouth reshaped into a grin (`SMILE`)
-- [ ] Owner review of v8
+- [x] Owner review of v8: make the eyes friendlier, like the keychain's
+- [x] v9: white eyeballs, big black pupils (low, toward the beak), white highlight upper left, painted flush
+- [ ] Owner review of v9
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Design notes (v7, from the costume photos)
@@ -38,7 +40,8 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - Wings: red blades with three flat feathers, red to the tips.
 - Face: one rounded white muzzle (bulk + short hook + blaze up between the eyes + lower jaw + mouth corners), with a
   wide smiling mouth cut into it (`SMILE`: straight top edge, lower lip dipping in the middle, upturned corners); the
-  back of the mouth is the red head. Black eyes high at the sides, under the bill.
+  back of the mouth is the red head. Eyes high at the sides, under the bill: white eyeballs, big black pupils
+  low and toward the beak, white highlight upper left (the keychain's "friendly" style; v7-v8 were solid black).
 - Cap: red dome, black bill, two staggered B's. Feet: small (owner's pick; the costume's are huge), black talons.
 - The logo (v6) wasn't the right reference: its beak is long and thin, the costume's is short, round and open.
 
@@ -50,7 +53,7 @@ No real object: the size is our choice. **80 mm tall** (`HEIGHT_MM`) is a first 
 |---|---|---|
 | Overall W × D × H | 47.4 × 42.3 × 80.0 | Base 47 × 41 |
 | Base | 47.4 × 40.9 × 5.4 | Black, rounded edge |
-| Eyes | 4.7 tall | Black, Ø 1.2 white highlight |
+| Eyes | 5.6 tall | White eyeball, black pupil Ø 3.8, white highlight Ø 1.2 |
 | "B B" on the cap | 2.9 tall each | DejaVu Sans Bold, staggered |
 | Claw tips | ~1.0 | Smallest feature |
 | Feather tips (wings) | ~1.3 thick | |
@@ -76,13 +79,13 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
 
 `build.py` (~45 s):
 - **Shapes** are signed-distance fields, meshed by marching cubes (0.3 mm voxel) and decimated (pymeshlab): red body
-  (torso, head, shorts, wings, smoothly blended), red cap dome, white parts (muzzle, legs, feet), black claws. Eyes,
-  highlights and the cap bill are analytic ellipsoid meshes (thin or small marching-cubes ones made sliver faces).
+  (torso, head, shorts, wings, smoothly blended), red cap dome, white parts (muzzle, legs, feet), black claws. Eyeballs
+  and the cap bill are analytic ellipsoid meshes (thin or small marching-cubes ones made sliver faces).
   Wings are built in their own tilted, swept frame (`wing_frame`). The muzzle's mouth is a smooth-subtracted ellipsoid.
 - **Decals** are exact boolean regions that recolour the red skin: the chest blaze (`chest_blaze`) and the B's, both
-  `cone_decal`s (the outline swept from a point inside the part, so its walls meet the surface squarely).
-- **Colour bodies** (manifold3d): black = claws + eyes + bill − highlights + base; white = white parts + highlights +
-  decal regions − black; red = red − decals − white − black.
+  `cone_decal`s (so are the pupils and highlights, on the eyeballs) (the outline swept from a point inside the part, so its walls meet the surface squarely).
+- **Colour bodies** (manifold3d): black = claws + bill + base + (eyeballs ∩ pupil paint); white = white parts + (eyeballs −
+  pupil paint) + decal regions − black; red = red − decals − (white parts + eyeballs + black), in one subtraction.
 - **Lessons** (each cost a rebuild): never subtract a solid that shares skin with the one it's cut from; avoid coplanar
   or grazing contacts (soles vs claws, bill vs cap edge, eye vs head, eye vs cap rim, decal edge vs another edge);
   scale *before* the booleans; build the merged STL from the raw shapes, not the colour bodies; a cut (the mouth)
@@ -134,3 +137,7 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
 - **2026-11-14 (v8):** Owner: beak is the closest yet, but he looks surprised, not smiling. The v7 mouth was an ellipsoid
   cut (an "O"). Replaced with `smile()`: between two parabolas in x (top nearly flat 54.0 → 54.7 at the corners, bottom
   50.2 → 53.3), so the lower lip dips and the corners turn up, open at the front, back wall the red head.
+- **2026-11-15 (v9):** Owner: friendlier eyes, like the keychain's. Solid black ellipsoids → white eyeballs (2.5 × 1.6 ×
+  2.6 design) with a big black pupil (r 1.75, offset 0.45 toward the beak and 0.35 down) and a white highlight (r 0.55)
+  at its upper left, painted on with cone decals from the eyeball centre (flush). Red loses the whole eyeballs in
+  one subtraction, so no faces are shared between cuts.

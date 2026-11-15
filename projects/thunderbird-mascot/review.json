@@ -12,14 +12,14 @@
     },
     {
       "path": "renders/view-white.stl",
-      "label": "White (beak, chest blaze, legs, feet, B B)",
+      "label": "White (beak, eyeballs, highlights, chest blaze, legs, feet, B B)",
       "style": "solid",
       "color": "#f2f2f2",
       "crease": 0.9
     },
     {
       "path": "renders/view-black.stl",
-      "label": "Black (eyes, cap bill, claws, base)",
+      "label": "Black (pupils, cap bill, claws, base)",
       "style": "solid",
       "color": "#2b2b2e",
       "crease": 0.9
@@ -49,9 +49,13 @@
     {
       "label": "\"BB\" letters on the cap",
       "param": "bb_h"
+    },
+    {
+      "label": "Pupil",
+      "param": "pupil_d"
     }
   ],
   "scale_note": "80 mm tall is a first guess for a 'little' figurine. Type a different height in the real-size box to preview it; HEIGHT_MM in build.py sets it.",
-  "notes_title": "v8: smiling, not surprised",
-  "notes": "v8 (you said v7's beak was the closest yet, but he looked surprised rather than smiling). The mouth was a round 'O'. Now it's a wide grin: the top edge under the upper beak is nearly straight, the lower lip dips in the middle, and both meet in upturned corners, like the costume's red smile. Everything else is as in v7."
+  "notes_title": "v9: friendly eyes",
+  "notes": "v9 (you asked for friendlier eyes, like the keychain's). The solid black eyes are now white eyeballs with a big black pupil, set a little low and in toward the beak, and a white highlight at the upper left of each pupil. That's the 'friendly' style you picked for the keychain. The pupil and highlight are flush with the eyeball (colour only), so there's nothing tiny sticking out to print. Everything else is as in v8."
 }

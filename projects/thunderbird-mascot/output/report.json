@@ -5,7 +5,7 @@
       42.3,
       80.0
     ],
-    "faces": 172716,
+    "faces": 171850,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 0,
@@ -21,10 +21,11 @@
     "base_w": 47.4,
     "base_d": 40.9,
     "base_h": 5.4,
-    "eye_h": 4.7,
+    "eye_h": 5.6,
     "bb_h": 2.9,
     "claw_tip_d": 0.97,
-    "highlight_d": 1.19
+    "highlight_d": 1.19,
+    "pupil_d": 3.8
   },
   "design_scale": 1.0776,
   "scale_status": "owner's choice (no real object): HEIGHT_MM = 80",
@@ -35,7 +36,7 @@
         22.9,
         60.8
       ],
-      "faces": 113262,
+      "faces": 113158,
       "watertight": true,
       "winding_consistent": true,
       "euler_number": 0,
@@ -49,11 +50,11 @@
         30.8,
         71.4
       ],
-      "faces": 82928,
+      "faces": 90388,
       "watertight": true,
       "winding_consistent": true,
       "euler_number": -2,
-      "volume_cm3": 5.4,
+      "volume_cm3": 5.5,
       "fits_A1_as_is": true,
       "fits_A1_any_axis_order": true
     },
@@ -63,10 +64,10 @@
         41.0,
         73.7
       ],
-      "faces": 44880,
+      "faces": 35674,
       "watertight": true,
       "winding_consistent": true,
-      "euler_number": 8,
+      "euler_number": 4,
       "volume_cm3": 8.5,
       "fits_A1_as_is": true,
       "fits_A1_any_axis_order": true
