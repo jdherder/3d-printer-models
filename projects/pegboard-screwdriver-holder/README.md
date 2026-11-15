@@ -81,3 +81,6 @@ hits the holder, neighbouring handles don't touch, ≤ 250 mm wide.
   down, plus 3 mm under the cone); now a slab + one funnel per cup. 229 → 143 cm³; tilt limits and checks unchanged.
 - **2026-11-14:** v0.3: owner asked why the back plate runs so far down. Pegs stay put (hooks row 1, pins row -1); the
   plate between them is cut away in each bay, leaving hook and pin strips joined behind the ribs. Checks and tilt unchanged.
+- **2026-11-15:** Fix: `mount_plate`'s margin is measured from the pin row, and the build passed it as if the pins were
+  in row 0, so the hung model (viewer, fit checks) had ~25 mm of plate below the pins. The print STL was unaffected
+  (`print_pose` trims below the bottom shelf). Now the plate ends at the pins' undersides; `build.py` asserts it.

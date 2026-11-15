@@ -122,7 +122,7 @@ def build():
     zs, (z0, z1), cols = layout()
     xc = x_centre()
     front = xc + max(r_cup(t) for t in TOOLS) + FRONT_WALL
-    plate = pb.mount_plate(STYLE, cols=cols, rows=ROWS, thickness=PLATE_T, margin=-BOTTOM, z_range=(z0, z1))
+    plate = pb.mount_plate(STYLE, cols=cols, rows=ROWS, thickness=PLATE_T, margin=min(ROWS) * pb.PITCH - BOTTOM, z_range=(z0, z1))
     y_cone = TOP_Y - CUP_WALL
     body = box(PLATE_T - 0.5, front, y_cone, TOP_Y, z0, z1)                   # top slab: the cups' straight walls
     d = FUNNEL_WALL / math.cos(math.radians(CONE_DEG))                        # wall measured across the cone, horizontally
@@ -204,6 +204,7 @@ def main():
     mesh.export(OUT / f"{NAME}.stl")
 
     hung = mk.cad_to_mesh(part)
+    assert abs(hung.bounds[0][1] - BOTTOM) < 0.05, f"hung part reaches below its bottom shelf: {hung.bounds[0][1]:.1f}"
     hook_y = max(ROWS) * pb.PITCH
     clash = pb.interference_mm3(hung, pb.board_mesh(BOARD, rows=range(-1, 3), cols=range(-1, cols[1] + 2),
                                                     clearance=pb.FIT_CLEARANCE))
