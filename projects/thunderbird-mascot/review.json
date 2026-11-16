@@ -12,7 +12,7 @@
     },
     {
       "path": "renders/view-white.stl",
-      "label": "White (beak, eyeballs, highlights, chest blaze, legs, feet, B B)",
+      "label": "White (beak, eyeballs, highlights, chest pattern, legs, feet, B B)",
       "style": "solid",
       "color": "#f2f2f2",
       "crease": 0.9
@@ -56,6 +56,6 @@
     }
   ],
   "scale_note": "80 mm tall is a first guess for a 'little' figurine. Type a different height in the real-size box to preview it; HEIGHT_MM in build.py sets it.",
-  "notes_title": "v22: longer wings",
-  "notes": "v22 = v21 with the wings about 15% longer. The blade and all three feathers are stretched down from the shoulder, so the wing tips now reach about the bottom of the white belly. The longest feather is still at the front. Everything else is as in v21."
+  "notes_title": "v23: the costume's chest pattern (your pick, A)",
+  "notes": "v23 = v22 with the white chest pattern redrawn from your full-front costume photo (option A). It starts narrow at the neck, with long sharp spikes pointing out and up on both sides of the upper chest. Below them, the left edge runs in a straight diagonal out to the belly and the right edge sweeps in one deep curve. The bottom is nearly the full body width, with a row of points where the red shorts' flame teeth come up into the white. Everything else is as in v22."
 }

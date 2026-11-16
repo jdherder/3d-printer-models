@@ -493,17 +493,33 @@ def bb_text():
     return out
 
 
-def chest_blaze():
-    """The white blaze: narrow at the neck, jagged spikes out to both sides, widening to the belly, with a zigzag
-    bottom edge (white points hanging into the red). The left side is shifted up a little: the costume's isn't
-    symmetric."""
-    right = [(1.0, 47.6), (2.6, 45.8), (5.6, 47.2), (4.0, 44.2), (7.6, 44.6), (5.6, 40.2), (8.8, 39.4), (6.8, 35.4),
-             (9.4, 33.0), (8.8, 27.0)]
-    xs = np.linspace(8.8, -8.8, 9)[1:-1]
-    bottom = [(x, 23.2 if i % 2 == 0 else 26.6) for i, x in enumerate(xs)]
-    left = [(-x, z + 1.0) for x, z in reversed(right)]
-    left[0] = (-8.8, 27.0)
-    return right + bottom + left
+def chest_blaze(spike=1.0, waist=1.0, hem_teeth=7, hem_depth=3.2, top=50.6):
+    """v23: the white pattern in source/costume-2026-11-15-full-front.png (XZ, +x = viewer's right; owner's pick A).
+    It starts narrow at the neck; long thin spikes point out and up (~45 deg) on both sides of the upper chest; below
+    them the left edge runs in a straight diagonal out to the belly and the right edge sweeps in one deep smooth curve;
+    the bottom is nearly the full body width, its hem a row of points (the red shorts' flame teeth come up into it).
+    spike / waist / hem_depth were the knobs for the option sheet (B 0.75 spikes, C 0.8 waist, D 1.2 + 4.0 hem)."""
+    def sp(root, tip):
+        return (root[0] + (tip[0] - root[0]) * spike, root[1] + (tip[1] - root[1]) * spike)
+    left = [((-1.4, 48.4), (-6.0, 50.6)), ((-2.4, 46.0), (-8.6, 48.4)), ((-3.2, 43.4), (-9.8, 45.0)),
+            ((-3.8, 40.8), (-9.2, 41.4))]
+    right = [((1.4, 48.0), (6.2, 50.4)), ((2.6, 45.4), (9.0, 47.4)), ((3.4, 42.6), (9.8, 43.6))]
+    pts = [(0.2, top)]
+    for root, tip in right:                   # right spikes, top to bottom
+        pts += [root, sp(root, tip)]
+    pts += [(3.8, 40.4)]
+    for t in np.linspace(0.1, 1.0, 10):       # the deep curve on the right, out to the belly
+        x = 3.8 + (10.6 - 3.8) * t ** 2.2 - 0.9 * (1 - waist) * np.sin(np.pi * t) * 4
+        pts.append((x, 40.4 - (40.4 - 26.8) * t))
+    xs = np.linspace(10.6, -10.6, 2 * hem_teeth + 1)   # hem: red teeth point up into the white
+    pts += [(x, 24.0 + (hem_depth if k % 2 == 1 else 0.0)) for k, x in enumerate(xs)]
+    pts += [(-10.6, 26.8)]
+    for t in np.linspace(0.0, 1.0, 4)[1:-1]:  # the straight diagonal on the left, up to the spikes
+        pts.append((-10.6 + (10.6 - 4.2 * waist) * t, 26.8 + (39.0 - 26.8) * t))
+    pts += [(-4.2 * waist, 39.0)]
+    for root, tip in reversed(left):          # left spikes, bottom to top
+        pts += [sp(root, tip), root]
+    return [(float(x), float(z)) for x, z in pts]
 
 
 # ------------------------------------------------------------------------------------------------

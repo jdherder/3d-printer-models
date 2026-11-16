@@ -56,13 +56,18 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
       (`renders/hat-v20-attached-bill.png`)
 - [x] v21: owner: the wings are backwards, the longer side should be in front. Feather lengths reversed (`renders/wings-v21.png`)
 - [x] v22: owner: wings a bit longer. ~15% longer: blade and feathers stretched (`renders/wings-v22.png`)
-- [ ] Next: small refinements from v22, one at a time, each compared side by side with the close-up before publishing
+- [x] v23: owner: the chest should be more of a lightning pattern. First sheet (bolt / forks / red bolt / fat bolt,
+      `renders/chest-options-v23-first-try.png`); owner sent a full-front photo (`source/costume-2026-11-15-full-front.png`)
+      and asked to match its white pattern. Second sheet (`renders/chest-options-v23.png`); picked **A** "for now"
+- [ ] Next: small refinements from v23 (the chest may get another pass: C slimmer waist, D longer spikes are a knob away)
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Design notes (v7, from the costume photos)
 
 - Body: a tall red column (chest + belly ellipsoids blended), no waist; the head (a narrow, tall egg) flows straight into it.
-- Chest: white jagged blaze from the neck, widening to a white belly, zigzag bottom edge; red "shorts" below; white legs.
+- Chest (v23, from the full-front photo): white from a narrow neck, long spikes out and up across the upper chest, a
+  straight diagonal on the left and a deep curve on the right down to a near full-width belly with a pointed hem
+  (`chest_blaze`); red "shorts" below; white legs.
 - Wings: red blades with three flat feathers, red to the tips, longest feather in front (v21).
 - Eyes on the sides of the head (`EYE["azimuth"]` 48° since v19), like a real bird.
 - Face: one rounded white muzzle (bulk + short hook + blaze up between the eyes + lower jaw + mouth corners), with a
@@ -234,3 +239,8 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
   tip distances 17.5 / 19.3 / 20.4 → 20.4 / 19.3 / 17.5. Before/after: `renders/wings-v21.png`.
 - **2026-11-15 (v22):** Owner: wings a bit longer. ~15%: `WING` blade centre/length (8.5, 9.0) → (9.6, 10.2), feather root
   12.0 → 13.6, tips 20.4 / 19.3 / 17.5 → 23.4 / 22.1 / 20.1. Tips now reach about the bottom of the white belly.
+- **2026-11-16 (v23):** Owner: the chest is supposed to be more of a lightning pattern ("Thunderbird"). First sheet: A bolt,
+  B forks, C red bolt in the blaze, D fat bolt. Owner then sent a full-front photo and asked to match its white pattern.
+  First attempt from it still had stubby triangle spikes and a round belly; redrawn with long thin spikes out and up,
+  straight left diagonal, deep right curve, near full-width pointed hem. Owner picked A "for now". `chest_blaze` keeps the
+  sheet's knobs: spike, waist, hem_teeth, hem_depth.
