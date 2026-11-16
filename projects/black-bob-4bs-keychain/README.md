@@ -21,7 +21,9 @@ above the black line** (owner, v2): the front B is flush with it.
 - [x] v2: front B flush with the black line (3.4), back B 2.8. 3.8 mm thick (the frame text is the top)
 - [x] Owner review of v2: Be helpful to the left, Be the best you to the bottom, bottom text upright like the top
 - [x] v3: sides rearranged, bottom upright
-- [ ] Owner review of v3
+- [x] Owner review of v3: likes the design. Talked through print waste (below)
+- [x] v4: black only 0.4 deep (was 0.8): 2 three-colour layers instead of 4, ~4 fewer AMS swaps. Looks the same
+- [ ] Test print
 - [ ] Test print (P2S + AMS): check the front/back B step reads, and the small "BE THE BEST YOU"
 
 ## Measurements
@@ -37,7 +39,7 @@ No real measurements. The size is the designer's choice and matches the concept 
 | Frame text | cap 3.6; "BE THE BEST YOU" 3.24 (bottom, upright) | Liberation Sans Bold. The long one is shrunk to fit 42 mm (`TEXT_MAX_LEN`) |
 | Bs | cap 29, tilted 45°, pitch 23.9, stagger 8 | `BB_*`. The B advance is ~28.9, so they overlap ~5. `BB_FRONT = 2`: the right B is in front |
 | Heights (tops) | base 0.8, window 2.4, back B 2.8, front B = frame + line 3.4, text 3.8 | Front B is 0.6 (3 layers) above the back B, flush with the line. Total 3.8 |
-| Colour depth | white 1.6, black 0.8 | Red below. 1.6 white came from keychain #1 (1.0 printed pinkish) |
+| Colour depth | white 1.6, black 0.4 | Red below. 1.6 white came from keychain #1 (1.0 printed pinkish). Black is opaque at 0.4 (v4, was 0.8) |
 | Keyring hole | 4.0, 3.0 wall | Tab centred on top |
 | Smallest feature | 0.4 | Crop slivers narrower than that are dropped (`MIN_FEATURE`) |
 
@@ -47,8 +49,19 @@ No real measurements. The size is the designer's choice and matches the concept 
 - Open `output/black-bob-4bs-keychain-multicolor.3mf`, and load it as one object with multiple parts if asked. Set the
   parts to red, white, black. Flat, back down, no supports, 0.2 mm layers (19 layers).
 - Layers 1–4 are all red. Colour swaps start at 0.8 mm.
+- **Waste (v4):** per plate, layers 5–13 are red + white (~1 swap each), 16–17 red + white + black (~2 each), so ~15 swaps
+  (v3: ~17). One keychain is ~12 g (red 10.1, white 1.9, black 0.05); alone it purges more than that.
+  **Fill the plate** (~9–12 fit beside the prime tower): copies share the swaps, so purge per keychain drops below ~1 g.
+  Check "Flushed" in Bambu Studio's slice preview.
+- Slicer savings to try: flush multiplier ~0.7–0.8 for changes into red or black (keep full into white), a narrow prime
+  tower, "Flush into this object" on a single-colour part on the same plate.
+- PLA softens ~55 °C: use PETG for keychains that live in a car.
 
 ## Open questions
+
+- More waste savings, not done (owner's call): white base instead of red (the first ~9 layers white-only, ~10 swaps,
+  but a white back and red over ~1 mm of white may print lighter); white text starting at 2.8 instead of 2.2 (~2–4 fewer
+  swaps, but risks pink text).
 
 - Is the 0.6 mm step enough to separate the two Bs? The front B can't go higher (the line caps it), so a bigger step means
   a lower back B (`BACK_B_TOP`, min ~2.6) or raising the frame and line together (`FRAME_TOP`).
@@ -74,6 +87,10 @@ touching the other B) into a non-manifold edge.
 - **Review page:** https://claude.ai/artifact/AJfe2ZpCpQAtfduTFEBzjr (`renders/viewer.html`; republish to this URL)
 
 ## Log
+
+- **2026-11-16 (v4):** Owner liked v3 and asked about printer and waste concerns. Swaps come from mixed-colour layers, not
+  colour volume: ~17 per plate in v3. Options: fill the plate, thinner black, white base, shallower white text, slicer flush
+  settings. Owner picked the thinner black: `COLOUR_DEPTH` black 0.8 → 0.4 (black now 3.0–3.4), ~15 swaps.
 
 - **2026-11-16 (v3):** Owner: put Be helpful on the left, move Be the best you to the bottom, and make the bottom read the same way
   as the top. `SIDES` now holds (text, side, text rotation): the bottom is upright, the left reads bottom-to-top, the right top-to-bottom.

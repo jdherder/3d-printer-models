@@ -81,6 +81,6 @@
     }
   ],
   "scale_note": "Real size: 56 mm square (the concept sketch's size), 63 mm tall with the tab. Type 60 in the real-size box to preview the first keychain's size.",
-  "notes_title": "v3: sides rearranged, bottom upright",
-  "notes": "v3: BE HELPFUL moved to the left side (reading bottom to top), BE THE BEST YOU moved to the bottom, and the bottom now reads upright like BE SAFE on top. BE KIND stays on the right. Heights are unchanged from v2: the front B is flush with the black line (3.4 mm), the back B is 2.8 mm (a 0.6 mm step), the window is 2.4 mm, and the frame text is the highest point (3.8 mm)."
+  "notes_title": "v4: thinner black (fewer colour swaps)",
+  "notes": "v4: the black line is now only 0.4 mm deep (2 layers, red below it), down from 0.8. It looks the same from the top and sides, since black is opaque at 0.4, but only 2 layers now mix red, white and black instead of 4. That's about 4 fewer AMS colour swaps per plate (~15, was ~17). Everything else is as in v3: Be safe on top, Be kind right, Be helpful left, Be the best you on the bottom (upright). The front B is flush with the line (3.4 mm), the back B is 2.8 mm, and the frame text is 3.8 mm. To cut waste further, fill the plate: copies share the swaps."
 }

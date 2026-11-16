@@ -65,7 +65,8 @@ FRAME_TOP = 3.4            # red frame and the black line on its inside edge
 TEXT_TOP = 3.8             # white frame text, embossed 0.4
 FRONT_B_TOP = FRAME_TOP    # the B in front: flush with the black line (owner: the BB can't stand above the border)
 BACK_B_TOP = 2.8           # the B behind: 0.4 off the field, 0.6 (3 layers) under the front B: the step separates them
-COLOUR_DEPTH = {"white": 1.6, "black": 0.8}   # only the top this much is that colour; red below
+COLOUR_DEPTH = {"white": 1.6, "black": 0.4}   # only the top this much is that colour; red below. Black is opaque at
+                                               # 0.4 (2 layers); 0.8 (v1-v3) only added 3-colour layers (AMS swaps)
 
 TAB_W = 10.0               # keyring tab: rounded, centred above the frame
 TAB_HOLE_D = 4.0
