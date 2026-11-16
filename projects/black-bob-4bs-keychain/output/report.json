@@ -1,0 +1,55 @@
+{
+  "scale_status": "designer's choice: 56 mm square frame (matches the 56 mm concept sketch)",
+  "print": {
+    "extents_mm": [
+      56.0,
+      63.0,
+      4.0
+    ],
+    "faces": 11996,
+    "watertight": true,
+    "winding_consistent": true,
+    "euler_number": 0,
+    "volume_cm3": 10.1,
+    "fits_A1_as_is": true,
+    "fits_A1_any_axis_order": true,
+    "self_intersecting_faces": 2
+  },
+  "print_orientation": "flat on the bed, plain red back down (no supports)",
+  "text_caps_mm": {
+    "BE SAFE": 3.6,
+    "BE KIND": 3.6,
+    "BE HELPFUL": 3.6,
+    "BE THE BEST YOU": 3.24
+  },
+  "region_areas_mm2": {
+    "frame": 1345.5,
+    "line": 120.5,
+    "text": 181.3,
+    "field": 751.5,
+    "back_b": 328.7,
+    "front_b": 385.6
+  },
+  "params_mm": {
+    "size": 56.0,
+    "overall_width": 56.0,
+    "overall_height": 63.0,
+    "thickness": 4.0,
+    "frame_w": 8.0,
+    "line_w": 0.8,
+    "window": 38.4,
+    "base": 0.8,
+    "field_top": 2.4,
+    "frame_top": 3.4,
+    "text_top": 3.8,
+    "back_b_top": 3.2,
+    "front_b_top": 4.0,
+    "bb_cap": 29.0,
+    "bb_angle_deg": 45.0,
+    "bb_stagger": 8.0,
+    "bb_pitch": 23.9,
+    "text_cap": 3.6,
+    "text_cap_longest": 3.24,
+    "tab_hole_d": 4.0
+  }
+}
