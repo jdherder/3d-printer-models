@@ -62,15 +62,15 @@ COLOURS = {"red": "#c8202c", "white": "#f2f2f2", "black": "#2b2b2e"}
 # down the chest that widens into a white belly with a zigzag bottom edge; red "shorts"; white legs; red wings with red
 # feathered tips; small white feet (owner's pick) with black talons.
 BASE = dict(c=(0.0, -2.0), r=(22.0, 19.0), h=5.0, round=1.6)
-CHEST_E = dict(c=(0.0, 1.5, 42.0), r=(10.5, 9.2, 12.0))     # torso = chest + belly blended: a column
-BELLY_E = dict(c=(0.0, 0.5, 30.0), r=(11.0, 9.6, 10.0))
+CHEST_E = dict(c=(0.0, 1.5, 42.0), r=(9.4, 8.6, 12.0))     # v24: ~10% thinner (owner)     # torso = chest + belly blended: a column
+BELLY_E = dict(c=(0.0, 0.5, 30.0), r=(9.9, 9.0, 10.0))
 TORSO_BLEND = 6.0
-SHORTS = dict(x=4.8, c=(0.0, 1.5, 21.5), r=(5.0, 5.5, 4.2))   # red thighs (mirrored in x)
+SHORTS = dict(x=4.4, c=(0.0, 1.5, 21.5), r=(4.6, 5.2, 4.2))   # red thighs (mirrored in x)
 HEAD = dict(c=(0.0, 0.5, 61.0), r=(8.6, 10.8, 12.6))          # v11: narrower and taller (owner: "less round")
 NECK_BLEND = 6.0
 # Wings: a flat blade hanging from the shoulder, tilted out at the bottom and swept back, ending in three flat
 # feathers (all red, as on the costume). Built in the wing's own frame: u = thickness, v = front-back, a = down the wing.
-WING = dict(shoulder=(10.6, 1.5, 47.0), tilt_deg=15.0, sweep_deg=10.0,
+WING = dict(shoulder=(9.6, 1.5, 47.0), tilt_deg=15.0, sweep_deg=10.0,
             bulb=((0.0, 0.0, 1.5), (3.4, 5.0, 4.5)), blade=((0.0, 0.8, 9.6), (2.3, 6.4, 10.2)),
             # v21: longest feather in front (owner: they were backwards); v22: ~15% longer (owner)
             feathers=[(-1, 23.4), (0, 22.1), (1, 20.1)],   # (front/mid/back, tip distance down the wing)
@@ -493,7 +493,7 @@ def bb_text():
     return out
 
 
-def chest_blaze(spike=1.0, waist=1.0, hem_teeth=7, hem_depth=3.2, top=50.6):
+def chest_blaze(spike=1.0, waist=1.0, hem_teeth=7, hem_depth=3.2, top=50.6, x_scale=0.9):
     """v23: the white pattern in source/costume-2026-11-15-full-front.png (XZ, +x = viewer's right; owner's pick A).
     It starts narrow at the neck; long thin spikes point out and up (~45 deg) on both sides of the upper chest; below
     them the left edge runs in a straight diagonal out to the belly and the right edge sweeps in one deep smooth curve;
@@ -519,7 +519,7 @@ def chest_blaze(spike=1.0, waist=1.0, hem_teeth=7, hem_depth=3.2, top=50.6):
     pts += [(-4.2 * waist, 39.0)]
     for root, tip in reversed(left):          # left spikes, bottom to top
         pts += [sp(root, tip), root]
-    return [(float(x), float(z)) for x, z in pts]
+    return [(float(x * x_scale), float(z)) for x, z in pts]   # x_scale: v24 thinner body (was 1.0)
 
 
 # ------------------------------------------------------------------------------------------------

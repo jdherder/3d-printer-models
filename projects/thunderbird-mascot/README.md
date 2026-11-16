@@ -59,7 +59,8 @@ scan, so the shapes are clean and easy to change by parameter. It's a sibling of
 - [x] v23: owner: the chest should be more of a lightning pattern. First sheet (bolt / forks / red bolt / fat bolt,
       `renders/chest-options-v23-first-try.png`); owner sent a full-front photo (`source/costume-2026-11-15-full-front.png`)
       and asked to match its white pattern. Second sheet (`renders/chest-options-v23.png`); picked **A** "for now"
-- [ ] Next: small refinements from v23 (the chest may get another pass: C slimmer waist, D longer spikes are a knob away)
+- [x] v24: owner: a little thinner. Torso, belly, shorts ~10% narrower, wings moved in, chest pattern x 0.9 (`renders/thinner-v24.png`)
+- [ ] Next: small refinements from v24 (the chest may get another pass: C slimmer waist, D longer spikes are a knob away)
 - [ ] Test print (P2S + AMS 2 Pro), then adjust
 
 ## Design notes (v7, from the costume photos)
@@ -244,3 +245,6 @@ Euler number of the merged solid is 0, not 2: base, leg, body, leg, base form on
   First attempt from it still had stubby triangle spikes and a round belly; redrawn with long thin spikes out and up,
   straight left diagonal, deep right curve, near full-width pointed hem. Owner picked A "for now". `chest_blaze` keeps the
   sheet's knobs: spike, waist, hem_teeth, hem_depth.
+- **2026-11-16 (v24):** Owner: a little thinner. `CHEST_E` r (10.5, 9.2) → (9.4, 8.6), `BELLY_E` (11.0, 9.6) → (9.9, 9.0),
+  `SHORTS` x 4.8 → 4.4, r (5.0, 5.5) → (4.6, 5.2); wing shoulders x 10.6 → 9.6 to stay on the body; `chest_blaze`
+  x_scale 0.9. Head, beak, hat, legs, feet unchanged.

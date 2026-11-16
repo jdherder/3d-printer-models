@@ -5,11 +5,11 @@
       39.1,
       80.0
     ],
-    "faces": 174372,
+    "faces": 174652,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 0,
-    "volume_cm3": 27.8,
+    "volume_cm3": 26.3,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
@@ -32,15 +32,15 @@
   "bodies": {
     "red": {
       "extents_mm": [
-        35.4,
+        33.3,
         22.9,
-        61.8
+        61.9
       ],
-      "faces": 133918,
+      "faces": 133592,
       "watertight": true,
       "winding_consistent": true,
       "euler_number": -2,
-      "volume_cm3": 16.1,
+      "volume_cm3": 14.9,
       "fits_A1_as_is": true,
       "fits_A1_any_axis_order": true
     },
@@ -50,11 +50,11 @@
         28.1,
         69.6
       ],
-      "faces": 85230,
+      "faces": 84656,
       "watertight": true,
       "winding_consistent": true,
       "euler_number": 0,
-      "volume_cm3": 4.3,
+      "volume_cm3": 4.0,
       "fits_A1_as_is": true,
       "fits_A1_any_axis_order": true
     },
