@@ -4,16 +4,16 @@
     "extents_mm": [
       56.0,
       63.0,
-      4.0
+      3.8
     ],
-    "faces": 11996,
+    "faces": 11462,
     "watertight": true,
     "winding_consistent": true,
     "euler_number": 0,
-    "volume_cm3": 10.1,
+    "volume_cm3": 9.7,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
-    "self_intersecting_faces": 2
+    "self_intersecting_faces": 0
   },
   "print_orientation": "flat on the bed, plain red back down (no supports)",
   "text_caps_mm": {
@@ -34,7 +34,7 @@
     "size": 56.0,
     "overall_width": 56.0,
     "overall_height": 63.0,
-    "thickness": 4.0,
+    "thickness": 3.8,
     "frame_w": 8.0,
     "line_w": 0.8,
     "window": 38.4,
@@ -42,8 +42,8 @@
     "field_top": 2.4,
     "frame_top": 3.4,
     "text_top": 3.8,
-    "back_b_top": 3.2,
-    "front_b_top": 4.0,
+    "back_b_top": 2.8,
+    "front_b_top": 3.4,
     "bb_cap": 29.0,
     "bb_angle_deg": 45.0,
     "bb_stagger": 8.0,

@@ -1,30 +1,86 @@
 {
   "page_title": "Black Bob 4 B's Keychain",
   "title": "Black Bob \"4 B's\" keychain",
-  "subtitle": "Concept C2d: a big tilted, cropped BB framed by the four B's · 56 mm square · red, white, black · shown hanging · millimetres",
+  "subtitle": "Concept C2d: a big tilted, cropped BB framed by the four B's \u00b7 56 mm square \u00b7 red, white, black \u00b7 shown hanging \u00b7 millimetres",
   "meshes": [
-    {"path": "renders/view-red.stl", "label": "Red (frame, both Bs, base)", "style": "solid", "color": "#c8202c"},
-    {"path": "renders/view-white.stl", "label": "White (window, frame text)", "style": "solid", "color": "#f2f2f2"},
-    {"path": "renders/view-black.stl", "label": "Black (line inside the frame)", "style": "solid", "color": "#2b2b2e"}
+    {
+      "path": "renders/view-red.stl",
+      "label": "Red (frame, both Bs, base)",
+      "style": "solid",
+      "color": "#c8202c"
+    },
+    {
+      "path": "renders/view-white.stl",
+      "label": "White (window, frame text)",
+      "style": "solid",
+      "color": "#f2f2f2"
+    },
+    {
+      "path": "renders/view-black.stl",
+      "label": "Black (line inside the frame)",
+      "style": "solid",
+      "color": "#2b2b2e"
+    }
   ],
   "dims": [
-    {"label": "Frame (square)", "param": "size"},
-    {"label": "Overall height incl. keyring tab", "param": "overall_height"},
-    {"label": "Thickness", "param": "thickness"},
-    {"label": "White window", "param": "window"},
-    {"label": "Black line width", "param": "line_w"},
-    {"label": "B cap height", "param": "bb_cap"},
-    {"label": "Red base (back)", "param": "base"},
-    {"label": "White window top (recessed)", "param": "field_top"},
-    {"label": "Back B top", "param": "back_b_top"},
-    {"label": "Frame + black line top", "param": "frame_top"},
-    {"label": "Frame text top (embossed)", "param": "text_top"},
-    {"label": "Front B top (highest)", "param": "front_b_top"},
-    {"label": "Frame text cap height", "param": "text_cap"},
-    {"label": "\"BE THE BEST YOU\" cap height", "param": "text_cap_longest"},
-    {"label": "Keyring hole", "param": "tab_hole_d"}
+    {
+      "label": "Frame (square)",
+      "param": "size"
+    },
+    {
+      "label": "Overall height incl. keyring tab",
+      "param": "overall_height"
+    },
+    {
+      "label": "Thickness",
+      "param": "thickness"
+    },
+    {
+      "label": "White window",
+      "param": "window"
+    },
+    {
+      "label": "Black line width",
+      "param": "line_w"
+    },
+    {
+      "label": "B cap height",
+      "param": "bb_cap"
+    },
+    {
+      "label": "Red base (back)",
+      "param": "base"
+    },
+    {
+      "label": "White window top (recessed)",
+      "param": "field_top"
+    },
+    {
+      "label": "Back B top",
+      "param": "back_b_top"
+    },
+    {
+      "label": "Front B + frame + black line top",
+      "param": "frame_top"
+    },
+    {
+      "label": "Frame text top (embossed)",
+      "param": "text_top"
+    },
+    {
+      "label": "Frame text cap height",
+      "param": "text_cap"
+    },
+    {
+      "label": "\"BE THE BEST YOU\" cap height",
+      "param": "text_cap_longest"
+    },
+    {
+      "label": "Keyring hole",
+      "param": "tab_hole_d"
+    }
   ],
   "scale_note": "Real size: 56 mm square (the concept sketch's size), 63 mm tall with the tab. Type 60 in the real-size box to preview the first keychain's size.",
-  "notes_title": "v1: first build of concept C2d",
-  "notes": "Two Liberation Sans Bold Bs (29 mm tall), tilted 45°, the first one 8 mm higher, overlapping, and cropped by the white window. No gap where they overlap: the front (right) B stands 0.8 mm above the back one, and that step separates them. The black line sits on the inside edge of the red frame. Heights: window 2.4, back B 3.2, frame and line 3.4, frame text 3.8, front B 4.0. Look at the overlap from a low angle: is the step enough? Also check that \"BE THE BEST YOU\" (shrunk to 3.2 mm to fit its side) reads OK."
+  "notes_title": "v2: BB no higher than the black line",
+  "notes": "v2: the BB no longer stands above the black border. The front (right) B is flush with the black line and the red frame (3.4 mm), and the back B is 2.8 mm, so a 0.6 mm (3-layer) step still separates them. The window is 2.4 mm, and the frame text (3.8 mm) is now the highest point. Look at the overlap from a low angle: is the 0.6 step enough? Everything else is unchanged from v1: two Liberation Sans Bold Bs (29 mm tall), tilted 45\u00b0, the first 8 mm higher, cropped by the window."
 }

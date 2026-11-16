@@ -62,8 +62,8 @@ BASE = 0.8                 # red under everything
 FIELD_TOP = 2.4            # white window (1.6 white over the red base: thinner printed pinkish on keychain #1)
 FRAME_TOP = 3.4            # red frame and the black line on its inside edge
 TEXT_TOP = 3.8             # white frame text, embossed 0.4
-BACK_B_TOP = 3.2           # the B behind: 0.8 off the field
-FRONT_B_TOP = 4.0          # the B in front: 0.8 above the back B (the height step is what separates them)
+FRONT_B_TOP = FRAME_TOP    # the B in front: flush with the black line (owner: the BB can't stand above the border)
+BACK_B_TOP = 2.8           # the B behind: 0.4 off the field, 0.6 (3 layers) under the front B: the step separates them
 COLOUR_DEPTH = {"white": 1.6, "black": 0.8}   # only the top this much is that colour; red below
 
 TAB_W = 10.0               # keyring tab: rounded, centred above the frame
@@ -140,6 +140,10 @@ def build_regions():
     field = opening(window.difference(front).difference(back))
     leftover = window.difference(front).difference(back).difference(field)   # slivers: join the back B
     back = back.union(leftover).buffer(0)
+    # Snap everything to a 1 µm grid so neighbouring regions share exact vertices (near-coincident ones made a
+    # degenerate sliver triangle where the two Bs meet).
+    snap = lambda g: shapely.set_precision(g, 0.001)  # noqa: E731
+    frame, line, text, field, back, front = map(snap, (frame, line, text, field, back, front))
 
     regions = {
         "frame": (frame, "red", FRAME_TOP),
@@ -259,7 +263,7 @@ def main():
     lift = -float(merged.bounds[0, 1])
     for col, m in bodies.items():
         v = m.copy()
-        v.apply_translation([0, 0, -FRONT_B_TOP / 2])
+        v.apply_translation([0, 0, -float(merged.bounds[1, 2]) / 2])
         v.apply_transform(stand)
         v.apply_translation([0, 0, lift])
         v.export(RENDERS / f"view-{col}.stl")
