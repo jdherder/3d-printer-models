@@ -1,0 +1,61 @@
+{
+  "page_title": "Thunderbird Mascot",
+  "title": "Black Bob Thunderbird figurine",
+  "subtitle": "Chibi figurine of the costume mascot \u00b7 80 mm tall on a display base \u00b7 red, white, black \u00b7 millimetres",
+  "meshes": [
+    {
+      "path": "renders/view-red.stl",
+      "label": "Red (body, head, shorts, wings, cap)",
+      "style": "solid",
+      "color": "#c8202c",
+      "crease": 0.9
+    },
+    {
+      "path": "renders/view-white.stl",
+      "label": "White (beak, eyeballs, highlights, chest pattern, legs, feet, B B)",
+      "style": "solid",
+      "color": "#f2f2f2",
+      "crease": 0.9
+    },
+    {
+      "path": "renders/view-black.stl",
+      "label": "Black (pupils, cap bill, claws, base)",
+      "style": "solid",
+      "color": "#2b2b2e",
+      "crease": 0.9
+    }
+  ],
+  "dims": [
+    {
+      "label": "Height (base to cap)",
+      "param": "height"
+    },
+    {
+      "label": "Base width",
+      "param": "base_w"
+    },
+    {
+      "label": "Base depth",
+      "param": "base_d"
+    },
+    {
+      "label": "Base thickness",
+      "param": "base_h"
+    },
+    {
+      "label": "Eye height",
+      "param": "eye_h"
+    },
+    {
+      "label": "\"BB\" letters on the cap",
+      "param": "bb_h"
+    },
+    {
+      "label": "Pupil",
+      "param": "pupil_d"
+    }
+  ],
+  "scale_note": "80 mm tall is a first guess for a 'little' figurine. Type a different height in the real-size box to preview it; HEIGHT_MM in build.py sets it.",
+  "notes_title": "v24: a little thinner",
+  "notes": "v24 = v23 with the body about 10% thinner: the torso, belly and red shorts are narrower and a little shallower. The wings moved in to stay attached, and the chest pattern is narrowed to match. The head, beak, hat, legs and feet are unchanged."
+}
