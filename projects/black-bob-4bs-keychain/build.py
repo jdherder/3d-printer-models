@@ -45,8 +45,9 @@ FRAME_W = 8.0              # red frame band, outer edge to the black line
 LINE_W = 0.8               # black line on the inside edge of the frame (2 extrusion widths)
 WINDOW_R = 4.0             # window corner radius (outer edge of the black line)
 
-# The four B's, clockwise from the top, each reading along the frame (top upright, right top-to-bottom, ...).
-SIDES = [("BE SAFE", 0), ("BE KIND", -90), ("BE HELPFUL", 180), ("BE THE BEST YOU", 90)]
+# The four B's: (text, side, text rotation), angles CCW from the top side. Top and bottom both read upright (owner, v3);
+# right reads top-to-bottom, left bottom-to-top.
+SIDES = [("BE SAFE", 0, 0), ("BE KIND", -90, -90), ("BE HELPFUL", 90, 90), ("BE THE BEST YOU", 180, 0)]
 TEXT_CAP = 3.6             # cap height of the frame text
 TEXT_MAX_LEN = 42.0        # longest a side's text may run; "BE THE BEST YOU" is shrunk to fit (cap ~3.2)
 
@@ -118,13 +119,14 @@ def build_regions():
     # Frame text: centred in the band, reading clockwise round the frame.
     band_mid = SIZE / 2 - FRAME_W / 2
     texts, text_caps = [], {}
-    for txt, ang in SIDES:
+    for txt, side, ang in SIDES:
         t = text_shape(txt, TEXT_CAP)
         w = t.bounds[2] - t.bounds[0]
         cap = TEXT_CAP * min(1.0, TEXT_MAX_LEN / w)
         t = text_shape(txt, cap)
         text_caps[txt] = round(cap, 2)
-        t = affinity.rotate(affinity.translate(t, 0, band_mid), ang, origin=(0, 0))
+        cx, cy = affinity.rotate(Point(0, band_mid), side, origin=(0, 0)).coords[0]
+        t = affinity.translate(affinity.rotate(t, ang, origin=(0, 0)), cx, cy)
         texts.append(t)
     text = unary_union(texts)
     frame = body.difference(window_out).difference(text)

@@ -81,6 +81,6 @@
     }
   ],
   "scale_note": "Real size: 56 mm square (the concept sketch's size), 63 mm tall with the tab. Type 60 in the real-size box to preview the first keychain's size.",
-  "notes_title": "v2: BB no higher than the black line",
-  "notes": "v2: the BB no longer stands above the black border. The front (right) B is flush with the black line and the red frame (3.4 mm), and the back B is 2.8 mm, so a 0.6 mm (3-layer) step still separates them. The window is 2.4 mm, and the frame text (3.8 mm) is now the highest point. Look at the overlap from a low angle: is the 0.6 step enough? Everything else is unchanged from v1: two Liberation Sans Bold Bs (29 mm tall), tilted 45\u00b0, the first 8 mm higher, cropped by the window."
+  "notes_title": "v3: sides rearranged, bottom upright",
+  "notes": "v3: BE HELPFUL moved to the left side (reading bottom to top), BE THE BEST YOU moved to the bottom, and the bottom now reads upright like BE SAFE on top. BE KIND stays on the right. Heights are unchanged from v2: the front B is flush with the black line (3.4 mm), the back B is 2.8 mm (a 0.6 mm step), the window is 2.4 mm, and the frame text is the highest point (3.8 mm)."
 }
