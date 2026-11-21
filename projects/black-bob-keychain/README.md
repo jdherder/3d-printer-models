@@ -63,6 +63,11 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 - Layers 1–4 are all red. The colour swaps run from 0.8 mm up. For a plate of several, add copies in Bambu Studio:
   they share the swaps, so the purge per keychain goes down.
 - Single colour: `output/black-bob-keychain.stl` (the relief still shows. Paint or ink the top if you like).
+- **Stringing** (fine hairs, mostly white, seen on the 2026-11-21 print with default Generic PLA): expected with this
+  design, since every layer from 0.8 mm up has many small islands per colour (letters, outline segments, slits), so
+  lots of travels plus 2-3 swaps per layer. Fixes in order: dry the spools in the AMS 2 Pro (white especially); a
+  white-only filament preset ("Save as", not "Save", or every slot on that preset changes) at -5 to -10 °C; keep the
+  prime tower on; "Avoid crossing walls" on; leftover wisps come off with a quick heat-gun pass.
 
 ## Open questions
 
@@ -99,6 +104,8 @@ No real measurements. The size is the owner's choice: "55 or 60 mm". **60 mm** w
 
 ## Log
 
+- **2026-11-21:** Owner printed with default Generic PLA: looks good, some fine strings (mostly white). Earlier, lowering
+  the white's temp changed a shared filament preset, so all colours ran cooler. Stringing notes added under Print settings.
 - **2026-11-12 (v9):** Owner: "worked well overall", but the larger white areas looked a bit pink. White PLA over the red base needs
   more depth: `COLOUR_DEPTH` white 1.0 → 1.6 (8 layers). To fit it under the field, every top moved up 0.6 (field 1.8 → 2.4 ...
   cap 3.4 → 4.0). The step heights between colours are unchanged. The base (red back) stays 0.8.
