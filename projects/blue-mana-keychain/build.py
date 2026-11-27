@@ -11,7 +11,7 @@ source/blue-mana-2026-11-27-sticker-570px.jpg (the owner's sticker image)
      0.4 mm nozzle prints are merged into their surroundings
   -> layered heights on a plain white base (4 AMS colours): white field lowest, slate waves behind, royal ring and
      swirls, cyan swirls in front, the drop highest with its highlight cut in
-  -> keyring tab at 12 o'clock
+  -> no keyring tab since v3 (the person it's for doesn't need one); KEYRING_TAB = True puts it back at 12 o'clock
   -> 3 print colours (v2): the slate waves print royal blue, at their own height (PRINT_AS)
   -> output/blue-mana-keychain.stl              single-colour print (all bodies merged)
   -> output/blue-mana-keychain-multicolor.3mf   one object, three parts (white, royal, cyan) for the AMS
@@ -46,7 +46,7 @@ ART = HERE / "source" / "blue-mana-2026-11-27-sticker-570px.jpg"
 NAME = "blue-mana-keychain"
 
 # --- Design parameters (mm) ------------------------------------------------------------------------------------------
-WIDTH = 60.0               # across the sticker outline (die-cut line), left to right; the tab adds to the height
+WIDTH = 60.0               # across the sticker outline (die-cut line), left to right
 BASE = 0.8                 # plain white base under everything (4 layers): the back is white, colour swaps are above it
 FIELD_TOP = 2.0            # white: the field round the drop, the gaps between the swirls and the sticker's border rim
 SLATE_TOP = 2.4            # slate-blue waves: the back layer of the swirl ring
@@ -54,6 +54,7 @@ ROYAL_TOP = 2.8            # royal-blue ring band and swirls: the middle layer
 CYAN_TOP = 3.2             # cyan swirls: the front layer
 DROP_TOP = 3.6             # the drop: the highest point
 HIGHLIGHT_TOP = 3.0        # the drop's white highlight, cut 0.6 into it
+KEYRING_TAB = False        # v3: off (owner: the person it's for doesn't need it). True adds the tab + hole below
 TAB_R = 4.5                # keyring tab (radius), at 12 o'clock
 TAB_HOLE_D = 4.0           # for a split ring
 TAB_CENTRE_OUT = 3.0       # tab/hole centre, this far above the top of the outline
@@ -190,15 +191,16 @@ def build_regions():
     highlight_mask = drop_filled & ~drop_mask
     drop = poly(drop_filled)
 
-    # Keyring tab: a disc above the top of the outline, joined to it with rounded corners, with a hole.
-    top = outline.bounds[3]
-    tc = Point(0.0, top + TAB_CENTRE_OUT)
-    tab = unary_union([tc.buffer(TAB_R, 64), box(-TAB_R, top - 6, TAB_R, tc.y)])
-    closed = unary_union([outline, tab]).buffer(TAB_FILLET, 64).buffer(-TAB_FILLET, 64)
-    # Fillet only the tab's inside corners; the rest of the outline keeps its scallops.
-    body = unary_union([outline, tab, closed.intersection(box(-TAB_R - 4, top - 4, TAB_R + 4, top + 20))])
-    hole = tc.buffer(TAB_HOLE_D / 2, 64)
-    body = body.difference(hole)
+    body = outline
+    if KEYRING_TAB:
+        # Keyring tab: a disc above the top of the outline, joined to it with rounded corners, with a hole.
+        top = outline.bounds[3]
+        tc = Point(0.0, top + TAB_CENTRE_OUT)
+        tab = unary_union([tc.buffer(TAB_R, 64), box(-TAB_R, top - 6, TAB_R, tc.y)])
+        closed = unary_union([outline, tab]).buffer(TAB_FILLET, 64).buffer(-TAB_FILLET, 64)
+        # Fillet only the tab's inside corners; the rest of the outline keeps its scallops.
+        body = unary_union([outline, tab, closed.intersection(box(-TAB_R - 4, top - 4, TAB_R + 4, top + 20))])
+        body = body.difference(tc.buffer(TAB_HOLE_D / 2, 64))
 
     regions = {"field": (body, "white", FIELD_TOP)}
     for n, top_z in (("slate", SLATE_TOP), ("royal", ROYAL_TOP), ("cyan", CYAN_TOP)):
@@ -209,7 +211,7 @@ def build_regions():
     regions["drop"] = (drop, "royal", DROP_TOP)
     regions["highlight"] = (poly(highlight_mask), "white", HIGHLIGHT_TOP)
     regions = {kk: (clean(p, min_area=MIN_AREA), c, t) for kk, (p, c, t) in regions.items()}
-    info = dict(mm_per_src_px=k, centre_px=(cx, cy), tab_centre=(tc.x, tc.y), lab=lab, to_mm=to_mm,
+    info = dict(mm_per_src_px=k, centre_px=(cx, cy), lab=lab, to_mm=to_mm,
                 src_extent=(-cx * k, (w - cx) * k, (cy - h) * k, cy * k))
     return regions, body, info
 
@@ -373,7 +375,7 @@ def main():
         "overall_height": round(float(merged.extents[1]), 1),
         "base": BASE, "field_top": FIELD_TOP, "slate_top": SLATE_TOP, "royal_top": ROYAL_TOP,
         "cyan_top": CYAN_TOP, "drop_top": DROP_TOP, "highlight_top": HIGHLIGHT_TOP,
-        "tab_hole_d": TAB_HOLE_D, "tab_hole_wall": round(TAB_R - TAB_HOLE_D / 2, 2),
+        "keyring_tab": KEYRING_TAB,
         "print_colours": printed, "print_as": PRINT_AS,
         "min_line": MIN_LINE, "min_gap": MIN_GAP, "mm_per_source_px": round(info["mm_per_src_px"], 4),
     }

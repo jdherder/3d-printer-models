@@ -3,21 +3,21 @@
   "print": {
     "extents_mm": [
       60.1,
-      67.8,
+      60.3,
       3.6
     ],
-    "faces": 50956,
+    "faces": 47344,
     "watertight": true,
     "winding_consistent": true,
-    "euler_number": 0,
-    "volume_cm3": 6.2,
+    "euler_number": 2,
+    "volume_cm3": 6.1,
     "fits_A1_as_is": true,
     "fits_A1_any_axis_order": true,
     "self_intersecting_faces": 0
   },
   "print_orientation": "flat on the bed, plain white back down (no supports)",
   "region_areas_mm2": {
-    "field": 2642.5,
+    "field": 2576.3,
     "slate": 323.8,
     "royal": 164.8,
     "cyan": 173.2,
@@ -27,7 +27,7 @@
   "params_mm": {
     "width": 60.0,
     "overall_width": 60.1,
-    "overall_height": 67.8,
+    "overall_height": 60.3,
     "base": 0.8,
     "field_top": 2.0,
     "slate_top": 2.4,
@@ -35,8 +35,7 @@
     "cyan_top": 3.2,
     "drop_top": 3.6,
     "highlight_top": 3.0,
-    "tab_hole_d": 4.0,
-    "tab_hole_wall": 2.5,
+    "keyring_tab": false,
     "print_colours": [
       "white",
       "royal",

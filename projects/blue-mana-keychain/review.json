@@ -1,7 +1,7 @@
 {
   "page_title": "Blue Mana Keychain",
   "title": "Blue mana keychain",
-  "subtitle": "Traced from the sticker art \u00b7 60 mm across \u00b7 layered heights like the Black Bob keychain \u00b7 white, royal, cyan (3 colours) \u00b7 shown hanging \u00b7 millimetres",
+  "subtitle": "No keyring tab \u00b7 traced from the sticker art \u00b7 60 mm across \u00b7 layered heights like the Black Bob keychain \u00b7 white, royal, cyan (3 colours) \u00b7 millimetres",
   "meshes": [
     {
       "path": "renders/view-white.stl",
@@ -28,7 +28,7 @@
       "param": "width"
     },
     {
-      "label": "Overall height incl. keyring tab",
+      "label": "Overall height",
       "param": "overall_height"
     },
     {
@@ -58,13 +58,9 @@
     {
       "label": "Drop highlight (cut in)",
       "param": "highlight_top"
-    },
-    {
-      "label": "Keyring hole",
-      "param": "tab_hole_d"
     }
   ],
-  "scale_note": "60 mm across the sticker outline, the same size class as the Black Bob keychain. The tab adds ~8 mm on top. Type another width in the real-size box to preview it.",
-  "notes_title": "v2: 3 colours",
-  "notes": "v2: the slate back waves now print royal blue, so it's 3 colours (white, royal, cyan). That frees an AMS slot and cuts purge. The waves keep their own lower height (2.4 vs 2.8 for the royal swirls), so the layering still shows, just as a height step instead of a colour change. Folding slate into cyan instead washed the ring out. The shapes are unchanged from v1, and the 4-colour version is still in output/ (blue-mana-keychain-4colour-multicolor.3mf). Look at: do the back waves still read as a separate layer?"
+  "scale_note": "60 mm across the sticker outline, the same size class as the Black Bob keychain. Type another width in the real-size box to preview it.",
+  "notes_title": "v3: no keyring tab",
+  "notes": "v3: the keyring tab and its hole are gone (the person it's for doesn't need them), so it's just the sticker shape, about 60 x 60 mm. Everything else is the same as v2: 3 colours (white, royal, cyan), the slate back waves printed royal at their own lower height, and the drop on top. The 4-colour 3MF is still in output/. The tab is one switch in build.py (KEYRING_TAB) if it's ever wanted back."
 }
