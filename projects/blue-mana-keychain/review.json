@@ -1,0 +1,26 @@
+{
+  "page_title": "Blue Mana Keychain",
+  "title": "Blue mana keychain",
+  "subtitle": "Traced from the sticker art · 60 mm across · layered heights like the Black Bob keychain · white, slate, royal, cyan (4 AMS slots) · shown hanging · millimetres",
+  "meshes": [
+    {"path": "renders/view-white.stl", "label": "White (base, field, border, highlight)", "style": "solid", "color": "#f2f2f2"},
+    {"path": "renders/view-slate.stl", "label": "Slate (back waves)", "style": "solid", "color": "#7497bd"},
+    {"path": "renders/view-royal.stl", "label": "Royal blue (ring swirls, drop)", "style": "solid", "color": "#0a64b0"},
+    {"path": "renders/view-cyan.stl", "label": "Cyan (front swirls)", "style": "solid", "color": "#22a8e3"}
+  ],
+  "dims": [
+    {"label": "Width (sticker outline)", "param": "width"},
+    {"label": "Overall height incl. keyring tab", "param": "overall_height"},
+    {"label": "White base (back)", "param": "base"},
+    {"label": "White field and border", "param": "field_top"},
+    {"label": "Slate waves", "param": "slate_top"},
+    {"label": "Royal swirls", "param": "royal_top"},
+    {"label": "Cyan swirls", "param": "cyan_top"},
+    {"label": "Drop (highest)", "param": "drop_top"},
+    {"label": "Drop highlight (cut in)", "param": "highlight_top"},
+    {"label": "Keyring hole", "param": "tab_hole_d"}
+  ],
+  "scale_note": "60 mm across the sticker outline, the same size class as the Black Bob keychain. The tab adds ~8 mm on top. Type another width in the real-size box to preview it.",
+  "notes_title": "v1: first trace",
+  "notes": "Same recipe as the Black Bob keychain: traced from the art, each colour at its own height on a plain base. The sticker's white border is the keychain's rim, so the base and back are white. Stacking follows the art: white field lowest (2.0), slate waves behind (2.4), royal swirls (2.8), cyan swirls in front (3.2), the drop on top (3.6) with its highlight cut in. The sticker's distressed texture, the hatched shadow under the drop and anything thinner than ~0.3 mm are left out so it prints clean. Look at: are the swirls close enough to the art? Is the stacking order right? Would you rather have 3 colours (fold slate into royal)?"
+}
