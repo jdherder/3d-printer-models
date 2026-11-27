@@ -12,9 +12,11 @@ source/blue-mana-2026-11-27-sticker-570px.jpg (the owner's sticker image)
   -> layered heights on a plain white base (4 AMS colours): white field lowest, slate waves behind, royal ring and
      swirls, cyan swirls in front, the drop highest with its highlight cut in
   -> keyring tab at 12 o'clock
+  -> 3 print colours (v2): the slate waves print royal blue, at their own height (PRINT_AS)
   -> output/blue-mana-keychain.stl              single-colour print (all bodies merged)
-  -> output/blue-mana-keychain-multicolor.3mf   one object, four parts (white, slate, royal, cyan) for the AMS
-  -> output/blue-mana-keychain-{white,slate,royal,cyan}.stl
+  -> output/blue-mana-keychain-multicolor.3mf   one object, three parts (white, royal, cyan) for the AMS
+  -> output/blue-mana-keychain-{white,royal,cyan}.stl
+  -> output/blue-mana-keychain-4colour-multicolor.3mf   v1's four colours (white, slate, royal, cyan), same shapes
   -> output/report.json, renders/*.png
 """
 
@@ -59,6 +61,10 @@ TAB_FILLET = 1.5           # rounds the tab-to-outline corners
 # Colour over the white base: below this depth a column is white (fewer layers mix colours: fewer swaps, less purge).
 # Blues hide white well; the lighter slate and cyan get a little more.
 COLOUR_DEPTH = {"royal": 0.8, "slate": 1.0, "cyan": 1.0}
+# v2 (owner: try 3 colours): the slate waves print royal blue, frees an AMS slot and cuts purge. They keep their own
+# height (back layer, 2.4), so the relief still separates them from the royal swirls (2.8). Folding slate into cyan
+# instead washed the ring out (renders/three-colour-options.png). The 4-colour version is still built (FOUR_COLOUR_3MF).
+PRINT_AS = {"slate": "royal"}
 MIN_LINE = 0.3             # colour features (lines, tips) narrower than this are merged away: below what prints
 MIN_GAP = 0.25             # white gaps between swirls narrower than this close up (the texture's scratches)
 MIN_AREA = 0.2             # islands and holes smaller than this (mm^2) merge into their surroundings (texture specks)
@@ -291,15 +297,35 @@ def compare_render(regions, outline, info, path, ext):
     plt.close(fig)
 
 
+def options_render(regions, outline, path):
+    """The 4-colour version next to the two ways of printing it in 3 colours."""
+    ext = full_extent(outline)
+    fig, axes = plt.subplots(1, 3, figsize=(27, 10.5))
+    for ax, (title, as_) in zip(axes, [("v1: 4 colours", {}), ("3 colours: slate printed royal (v2)", {"slate": "royal"}),
+                                       ("3 colours: slate printed cyan", {"slate": "cyan"})]):
+        img, _, _ = lit(recolour(regions, as_), outline, ext, 0.06)
+        ax.imshow(img, extent=ext)
+        ax.set_title(title, fontsize=18)
+        ax.axis("off")
+    fig.savefig(path, dpi=60, bbox_inches="tight")
+    plt.close(fig)
+
+
+def recolour(regions, as_):
+    return {k: (p, as_.get(c, c), t) for k, (p, c, t) in regions.items()}
+
+
 def main():
     OUT.mkdir(exist_ok=True)
     RENDERS.mkdir(exist_ok=True)
     regions, outline, info = build_regions()
 
     # Only the top COLOUR_DEPTH of a coloured region is that colour; white fills in below it (and is the base).
-    def colour_span(col):
+    # as_ maps an art colour to the filament it prints in.
+    def colour_span(col, as_):
         def span(name):
             _, c, top = regions[name]
+            c = as_.get(c, c)
             start = max(BASE, top - COLOUR_DEPTH.get(c, top))
             if col == "white":
                 return (0.0, top) if c == "white" else (0.0, start)
@@ -309,33 +335,33 @@ def main():
     def check(m, name):
         assert m.is_watertight and m.is_winding_consistent, f"{name} body not watertight"
 
-    spans = {col: colour_span(col) for col in COLOURS}
+    printed = [c for c in COLOURS if c not in PRINT_AS]
+    variants = {"": (PRINT_AS, printed), "-4colour": ({}, list(COLOURS))}
+    spans = {f"{col}{v}": colour_span(col, as_) for v, (as_, cols) in variants.items() for col in cols}
     spans["merged"] = lambda n: (0.0, regions[n][2])
-    faces = separate_pinches(regions, outline, spans, r=0.08, rounds=12)
+    faces = separate_pinches(regions, outline, spans, r=0.08, rounds=12)   # manifold for both colourings
 
-    colour_meshes = {}
-    for col in COLOURS:
-        m = column_mesh(faces, spans[col])
-        check(m, col)
-        colour_meshes[col] = m
-        m.export(OUT / f"{NAME}-{col}.stl")
+    for v, (as_, cols) in variants.items():
+        scene = trimesh.Scene()
+        for col in cols:
+            m = column_mesh(faces, spans[f"{col}{v}"])
+            check(m, col + v)
+            scene.add_geometry(m, node_name=col, geom_name=col)
+            if not v:
+                m.export(OUT / f"{NAME}-{col}.stl")
+        scene.export(OUT / f"{NAME}{v}-multicolor.3mf")
 
     merged = column_mesh(faces, spans["merged"])
     check(merged, "merged")
     rep = mk.report(merged)
     merged.export(OUT / f"{NAME}.stl")
 
-    scene = trimesh.Scene()
-    for col, m in colour_meshes.items():
-        scene.add_geometry(m, node_name=col, geom_name=col)
-    scene.export(OUT / f"{NAME}-multicolor.3mf")
-
     # Viewer copies, standing up as it hangs (drawing Y -> Z), lifted so the bottom sits on Z=0.
     stand = trimesh.transformations.rotation_matrix(np.pi / 2, [1, 0, 0])
     lift = -float(merged.bounds[0, 1])
     light_faces = partition(regions, outline, simplify=0.05)
-    for col in COLOURS:
-        v = column_mesh(light_faces, colour_span(col))
+    for col in printed:
+        v = column_mesh(light_faces, colour_span(col, PRINT_AS))
         v.apply_translation([0, 0, -DROP_TOP / 2])
         v.apply_transform(stand)
         v.apply_translation([0, 0, lift])
@@ -348,6 +374,7 @@ def main():
         "base": BASE, "field_top": FIELD_TOP, "slate_top": SLATE_TOP, "royal_top": ROYAL_TOP,
         "cyan_top": CYAN_TOP, "drop_top": DROP_TOP, "highlight_top": HIGHLIGHT_TOP,
         "tab_hole_d": TAB_HOLE_D, "tab_hole_wall": round(TAB_R - TAB_HOLE_D / 2, 2),
+        "print_colours": printed, "print_as": PRINT_AS,
         "min_line": MIN_LINE, "min_gap": MIN_GAP, "mm_per_source_px": round(info["mm_per_src_px"], 4),
     }
     report = {
@@ -360,6 +387,8 @@ def main():
     (OUT / "report.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))
 
+    options_render(regions, outline, RENDERS / "three-colour-options.png")
+    regions = recolour(regions, PRINT_AS)
     layout_render(regions, outline, info, RENDERS / "layout.png")
     relief_render(regions, outline, RENDERS / "relief.png")
     relief_render(regions, outline, RENDERS / "relief-swirls.png", zoom=(-30, -8, 2, 22))

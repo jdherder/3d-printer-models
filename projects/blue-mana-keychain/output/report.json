@@ -37,6 +37,14 @@
     "highlight_top": 3.0,
     "tab_hole_d": 4.0,
     "tab_hole_wall": 2.5,
+    "print_colours": [
+      "white",
+      "royal",
+      "cyan"
+    ],
+    "print_as": {
+      "slate": "royal"
+    },
     "min_line": 0.3,
     "min_gap": 0.25,
     "mm_per_source_px": 0.1339

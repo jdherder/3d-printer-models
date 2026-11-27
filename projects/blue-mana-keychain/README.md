@@ -14,7 +14,9 @@ the art does (slate waves behind, royal in the middle, cyan in front), and the w
 
 - [x] Source: `source/blue-mana-2026-11-27-sticker-570px.jpg`, the image the owner sent (570 px JPEG, a die-cut sticker mock-up)
 - [x] v1: traced, 4 colours (white, slate, royal, cyan: fills the AMS), 60 mm wide, keyring tab. Watertight, 0 self-intersections, Euler 0 (the tab hole)
-- [ ] Owner review: likeness of the swirls, stacking order, 4 vs 3 colours, size
+- [x] Owner review of v1: "looks nice", checkpointed (commit 45a6a17). Asked to try 3 colours
+- [x] v2: 3 colours: the slate waves print royal (`PRINT_AS`), keeping their own height. The 4-colour 3MF is still built
+- [ ] Owner review of v2: do the back waves still read as their own layer? Likeness, size
 - [ ] Test print (P2S + AMS), then adjust heights and line widths
 
 ## Measurements
@@ -26,6 +28,7 @@ No real measurements. The size is a pick, matching the Black Bob keychain's 60 m
 | Width (sticker outline) | 60.0 | `WIDTH`. The sticker's white border is kept as the rim (~1.5–2.5 wide) |
 | Overall incl. tab | 60 × 68 | |
 | Heights (top of each colour) | white base 0.8, white field 2.0, drop highlight 3.0, slate 2.4, royal 2.8, cyan 3.2, drop 3.6 | Total 3.6 |
+| Print colours | white, royal, cyan | v2. Slate prints royal (`PRINT_AS`); the 4-colour 3MF keeps slate |
 | Colour depth | royal 0.8, slate 1.0, cyan 1.0 | Below that it's white (`COLOUR_DEPTH`). Blue over white hides well, unlike white over red on Black Bob |
 | Keyring hole | 4.0, 2.5 wall | Tab at 12 o'clock, on the outline's top scallop |
 | Smallest colour line | 0.3 | `MIN_LINE`. Thinner lines and tips are merged away. Arachne prints ~0.34 minimum |
@@ -35,9 +38,10 @@ No real measurements. The size is a pick, matching the Black Bob keychain's 60 m
 
 ## Print settings
 
-- **P2S + AMS 2 Pro** (A1 + AMS lite works too): white, slate (grey-blue), royal blue, cyan. PLA is fine; PETG holds up better on keys.
+- **P2S + AMS 2 Pro** (A1 + AMS lite works too): white, royal blue, cyan. PLA is fine; PETG holds up better on keys.
 - Open `output/blue-mana-keychain-multicolor.3mf`. If Bambu Studio asks, load it as one object with multiple parts,
-  then set the parts: white, slate, royal, cyan. Flat, back down, no supports, 0.2 mm layers (18 layers).
+  then set the parts: white, royal, cyan. For v1's 4 colours, open `output/blue-mana-keychain-4colour-multicolor.3mf`
+  (white, slate, royal, cyan). Flat, back down, no supports, 0.2 mm layers (18 layers).
 - Layers 1–4 are all white. Colour swaps run from 1.2 mm up.
 - Single colour: `output/blue-mana-keychain.stl` (the relief still shows).
 
@@ -45,8 +49,8 @@ No real measurements. The size is a pick, matching the Black Bob keychain's 60 m
 
 - Close enough to the art? The distressed texture, the hatched shadow under the drop, and lines under 0.3 mm are left out
   on purpose. Some thin swirls break into pieces where the art's lines are thinner than a nozzle line.
-- 4 colours or 3? Slate could fold into royal (or the cyan into slate) to free an AMS slot and cut purge.
-- Stacking order: is slate behind / royal middle / cyan front right?
+- With 3 colours, do the royal back waves (2.4) still read as separate from the royal swirls (2.8)? If not, a bigger step
+  (e.g. back waves 2.3, royal swirls 3.0) would help.
 - Size: 60 mm like Black Bob, or bigger (65–70) so more of the fine swirl detail survives?
 
 ## Pipeline
@@ -66,13 +70,18 @@ No real measurements. The size is a pick, matching the Black Bob keychain's 60 m
 
 ## Files
 
-- `output/blue-mana-keychain-multicolor.3mf`: print this (4 parts)
+- `output/blue-mana-keychain-multicolor.3mf`: print this (3 parts)
+- `output/blue-mana-keychain-4colour-multicolor.3mf`: v1's 4 colours, same shapes
 - `output/blue-mana-keychain.stl`: single-colour solid
-- `output/blue-mana-keychain-{white,slate,royal,cyan}.stl`: colour bodies
-- `renders/layout.png` (art vs colours vs heights), `renders/compare-swirls.png` (art vs model), `renders/relief*.png`, `renders/model.png`
+- `output/blue-mana-keychain-{white,royal,cyan}.stl`: colour bodies (3-colour)
+- `renders/three-colour-options.png` (4 colours vs slate→royal vs slate→cyan), `renders/layout.png` (art vs colours vs heights), `renders/compare-swirls.png` (art vs model), `renders/relief*.png`, `renders/model.png`
 - **Review page:** https://claude.ai/artifact/CK1D2ASRK94q7oek7SJq2r (`renders/viewer.html`; republish to this URL)
 
 ## Log
+
+- **2026-11-27 (v2):** Owner: v1 "looks nice", checkpoint it, then try 3 colours. Rendered both ways (slate → royal, slate → cyan).
+  Slate → cyan washed the ring out; slate → royal keeps a dark back layer with cyan in front, so v2 uses that (`PRINT_AS`).
+  The waves keep their 2.4 height. Pinch separation runs over both colourings, so the 4-colour 3MF is still built and manifold.
 
 - **2026-11-27 (v1):** Owner asked for a keychain like Black Bob from their blue mana sticker image. Picked defaults for review:
   60 mm wide, all 4 art colours (fills the AMS), white base (the sticker's border is white, and blues hide white in 0.8–1.0 mm),
