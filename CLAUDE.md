@@ -50,6 +50,7 @@ tools/                  shared Python tooling (import from project build scripts
   inspect_mesh.py       CLI report for any mesh
   make_viewer.py        interactive 3D review page (viewer_template.html) from review.json
   pegboard.py           pegboard standard + shared hook/pin pegs for custom pegboard parts (docs/pegboard.md)
+  relief.py             layered multicolour relief from traced art: planar partition → watertight colour bodies (keychains)
 projects/
   _template/            copy this to start a new project
   <name>/
